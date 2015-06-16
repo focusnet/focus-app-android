@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -13,6 +12,8 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,26 +36,29 @@ import eu.focusnet.focus.model.DrawerListItem;
 /**
  * Created by admin on 15.06.2015.
  */
-public class BaseActivity extends Activity {
+public class MainActivity extends AppCompatActivity  {
 
-    public static final String TAG  = BaseActivity.class.getName();
+    private static final String TAG  = MainActivity.class.getName();
 
-    protected DrawerLayout drawerLayout;
-    protected ListView drawerListMenu;
-    protected ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private ListView drawerListMenu;
+    private ActionBarDrawerToggle drawerToggle;
 
     // nav drawer title
-    protected CharSequence drawerTitle;
+    private CharSequence drawerTitle;
 
     // used to store app title
-    protected CharSequence savedTitle;
+    private CharSequence savedTitle;
 
     // slide menu items
-    protected String[] navMenuTitles;
-    protected TypedArray navMenuIcons;
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
 
-    protected ArrayList<DrawerListItem> drawerItems;
-    protected DrawerListAdapter adapter;
+    private ArrayList<DrawerListItem> drawerItems;
+    private DrawerListAdapter adapter;
+
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +96,10 @@ public class BaseActivity extends Activity {
             String menuTitle = navMenuTitles[i];
             DrawerListItem drawListItem = new DrawerListItem(getBitmap(navMenuIcons.getResourceId(i, -1)), menuTitle);
             //find out the synchronize menu
-            if(menuTitle.equals(getResources().getString(R.string.synchronize))) {
+            if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info
                 String lastUpdate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
-                drawListItem.setInfo(getResources().getString(R.string.update) + " " + lastUpdate);
+                drawListItem.setInfo(getResources().getString(R.string.drawer_menu_update) + " " + lastUpdate);
                 drawListItem.setIsInfoVisible(true);
             }
             drawerItems.add(drawListItem);
@@ -113,22 +116,22 @@ public class BaseActivity extends Activity {
 
         drawerListMenu.setAdapter(adapter);
 
-        // enabling action bar app icon
-        ActionBar actionBar = getActionBar();
-        actionBar.setIcon(android.R.color.transparent);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        toolbar = (Toolbar)findViewById(R.layout.toolbar);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = new ActionBarDrawerToggle(
                 this,               /* host Activity */
-                drawerLayout,       /* DrawerLayout object */
+                drawerLayout,      /* DrawerLayout object */
+                toolbar,
                 R.string.app_name, /* "open drawer" description */
                 R.string.app_name /* "close drawer" description */
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle(savedTitle);
+                getSupportActionBar().setTitle(savedTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
@@ -136,11 +139,13 @@ public class BaseActivity extends Activity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(drawerTitle);
+                getSupportActionBar().setTitle(drawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
+
+        drawerToggle.setDrawerIndicatorEnabled(true);
 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
@@ -184,7 +189,7 @@ public class BaseActivity extends Activity {
     @Override
     public void setTitle(CharSequence title) {
         savedTitle = title;
-        getActionBar().setTitle(savedTitle);
+        getSupportActionBar().setTitle(savedTitle);
     }
 
     /**

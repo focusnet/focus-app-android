@@ -1,7 +1,5 @@
 package eu.focusnet.focus.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
@@ -26,12 +24,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.focus.adapter.DrawerListAdapter;
+import eu.focusnet.focus.common.AbtractDrawListItem;
 import eu.focusnet.focus.fragment.BookmarkFragment;
 import eu.focusnet.focus.fragment.ProjectFragment;
 import eu.focusnet.focus.fragment.SettingFragment;
 import eu.focusnet.focus.fragment.SynchronizeFragment;
 import eu.focusnet.focus.fragment.UserManualFragment;
-import eu.focusnet.focus.model.DrawerListItem;
+import eu.focusnet.focus.model.HeaderDrawerListItem;
+import eu.focusnet.focus.model.StandardDrawerListItem;
 
 /**
  * Created by admin on 15.06.2015.
@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity  {
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
 
-    private ArrayList<DrawerListItem> drawerItems;
-    private DrawerListAdapter adapter;
+    private ArrayList<AbtractDrawListItem> drawerItems;
 
     private Toolbar toolbar;
 
@@ -74,6 +73,7 @@ public class MainActivity extends AppCompatActivity  {
                 .build());
 
 
+
         setContentView(R.layout.activity_main);
 
         //save the title
@@ -90,17 +90,17 @@ public class MainActivity extends AppCompatActivity  {
         // get the list for the drawer menu
         drawerListMenu = (ListView) findViewById(R.id.drawer_list_menu);
 
-        drawerItems = new ArrayList<DrawerListItem>();
+        drawerItems = new ArrayList<AbtractDrawListItem>();
+        drawerItems.add(new HeaderDrawerListItem(getBitmap(R.drawable.focus_logo_small), "John Smith", "Company ABC", "js@example.com"));
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            DrawerListItem drawListItem = new DrawerListItem(getBitmap(navMenuIcons.getResourceId(i, -1)), menuTitle);
+            StandardDrawerListItem drawListItem = new StandardDrawerListItem(getBitmap(navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for now Info
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info
                 String lastUpdate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
                 drawListItem.setInfo(getResources().getString(R.string.drawer_menu_update) + " " + lastUpdate);
-                drawListItem.setIsInfoVisible(true);
             }
             drawerItems.add(drawListItem);
         }
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity  {
         drawerListMenu.setOnItemClickListener(new SlideMenuClickListener());
 
         // setting the nav drawer list adapter
-        adapter = new DrawerListAdapter(getApplicationContext(), drawerItems);
+        DrawerListAdapter adapter = new DrawerListAdapter(getApplicationContext(), drawerItems);
 
         drawerListMenu.setAdapter(adapter);
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity  {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(savedTitle);
+                setTitle(savedTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity  {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(drawerTitle);
+                setTitle(drawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity  {
 
         if (savedInstanceState == null) {
             // on first time display view for first nav item
-            showView(0);
+            showView(1);
         }
     }
 
@@ -226,19 +226,19 @@ public class MainActivity extends AppCompatActivity  {
     private void showView(int position) {
         Fragment fragment = null;
         switch (position) {
-            case 0:
+            case 1:
                 fragment = new ProjectFragment();
                 break;
-            case 1:
+            case 2:
                 fragment = new BookmarkFragment();
                 break;
-            case 2:
+            case 3:
                 fragment = new SynchronizeFragment();
                 break;
-            case 3:
+            case 4:
                 fragment = new SettingFragment();
                 break;
-            case 4:
+            case 5:
                 fragment = new UserManualFragment();
                 break;
             default:
@@ -251,14 +251,11 @@ public class MainActivity extends AppCompatActivity  {
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
 
-             // Highlight the selected item, update the title, and close the drawe
+             // Highlight the selected item, update the title, and close the drawer
               drawerListMenu.setItemChecked(position, true);
               drawerListMenu.setSelection(position);
-              setTitle(navMenuTitles[position]);
+              setTitle(navMenuTitles[position - 1]);
               drawerLayout.closeDrawer(drawerListMenu);
-        }
-        else {
-            Log.e(TAG, "Error creating Intent");
         }
     }
 

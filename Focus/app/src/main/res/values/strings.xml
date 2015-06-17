@@ -22,12 +22,11 @@
     <!-- Nav Drawer List Item Icons -->
     <string-array name="drawer_icons">
         <item>@drawable/ic_home</item>
-        <item>@drawable/ic_home</item>
-        <item>@drawable/ic_home</item>
-        <item>@drawable/ic_home</item>
-        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_starred</item>
+        <item>@drawable/ic_synchronize</item>
+        <item>@drawable/ic_settings</item>
+        <item>@drawable/ic_user_manual</item>
     </string-array>
-
 
     <!-- Drawer menu -->
     <string name="drawer_menu_synchronize">Synchronize</string>

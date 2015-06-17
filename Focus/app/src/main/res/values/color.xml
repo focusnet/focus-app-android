@@ -4,5 +4,5 @@
     <color name="list_item_title">#000</color>
     <color name="list_item_background">#fff</color>
     <color name="list_item_background_pressed">#88CC88</color>
-    <color name="list_divider">#FFCC00</color>
+    <!--<color name="list_divider">#FFCC00</color>-->
 </resources>

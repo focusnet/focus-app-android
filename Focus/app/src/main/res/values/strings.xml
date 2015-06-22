@@ -40,4 +40,10 @@
     <string name="usermanual_fragment">Fragment User manual</string>
     <string name="synchronize_fragment">Fragment synchronize</string>
 
+    <!-- TODO: only for test-->
+    <string-array name="http_methods">
+        <item>GET</item>
+        <item>POST</item>
+    </string-array>
+
 </resources>

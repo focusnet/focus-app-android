@@ -1,8 +1,17 @@
 package eu.focusnet.focus.fragment;
 
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +22,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import eu.focusnet.focus.activity.MainActivity;
 import eu.focusnet.focus.activity.R;
 import eu.focusnet.focus.service.DataProviderService;
+import eu.focusnet.focus.util.Util;
 
 
 /**
@@ -26,8 +37,7 @@ public class BookmarkFragment extends Fragment {
     private String selectedHttpMethod;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_bookmark, container, false);
 
@@ -50,7 +60,7 @@ public class BookmarkFragment extends Fragment {
         getResourceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText webserviceUrlText = (EditText)getView().findViewById(R.id.webservice_textView);
+                EditText webserviceUrlText = (EditText) getView().findViewById(R.id.webservice_textView);
                 String url = webserviceUrlText.getText().toString();
                 new PreferenceDataReaderTask().execute(url, selectedHttpMethod);
 
@@ -60,7 +70,19 @@ public class BookmarkFragment extends Fragment {
         return viewRoot;
     }
 
+
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
+
+        private final ProgressDialog progressDialog;
+
+        public PreferenceDataReaderTask(){
+            progressDialog = Util.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.show();
+        }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -73,8 +95,13 @@ public class BookmarkFragment extends Fragment {
 //            Gson gson = new Gson();
 //            if(result != null)
 //               userPref = gson.fromJson(result, UserPreference.class);
-                TextView prefTextView = (TextView)getView().findViewById(R.id.preference);
-                prefTextView.setText(result);
+
+            int id = 3; //The id of the notification and the navigation id to display the appropriate fragment ()
+            TextView prefTextView = (TextView)getView().findViewById(R.id.preference);
+            prefTextView.setText(result);
+            Util.displayNotification(getActivity(), MainActivity.class, R.mipmap.ic_launcher, "Title", "Content", id);
+            if(progressDialog.isShowing())
+                progressDialog.dismiss();
         }
     }
 }

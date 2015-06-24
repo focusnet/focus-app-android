@@ -11,9 +11,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import eu.focusnet.focus.activity.R;
-import eu.focusnet.focus.common.AbtractDrawListItem;
+import eu.focusnet.focus.common.AbtractListItem;
 import eu.focusnet.focus.model.HeaderDrawerListItem;
-import eu.focusnet.focus.model.StandardDrawerListItem;
+import eu.focusnet.focus.model.StandardListItem;
 
 /**
  * Created by admin on 15.06.2015.
@@ -21,16 +21,16 @@ import eu.focusnet.focus.model.StandardDrawerListItem;
 public class DrawerListAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
-    private ArrayList<AbtractDrawListItem> drawerListItems;
+    private ArrayList<AbtractListItem> drawerListItems;
 
-    public DrawerListAdapter(Context context, ArrayList<AbtractDrawListItem> drawerListItems){
+    public DrawerListAdapter(Context context, ArrayList<AbtractListItem> drawerListItems){
         this.inflater = LayoutInflater.from(context);
         this.drawerListItems =  drawerListItems;
     }
 
     @Override
     public int getViewTypeCount() {
-        return HeaderDrawerListItem.TYPE_HEADER + StandardDrawerListItem.TYPE_STANDARD;
+        return HeaderDrawerListItem.TYPE_HEADER + StandardListItem.TYPE_STANDARD;
     }
 
     @Override
@@ -86,14 +86,14 @@ public class DrawerListAdapter extends BaseAdapter {
             holder = (ViewHolder)row.getTag();
         }
 
-        AbtractDrawListItem drawerListItem = drawerListItems.get(position);
+        AbtractListItem drawerListItem = drawerListItems.get(position);
         if(itemViewType == HeaderDrawerListItem.TYPE_HEADER){
             HeaderDrawerListItem headerDrawerListItem = (HeaderDrawerListItem) drawerListItem;
             holder.email.setText(headerDrawerListItem.getEmail());
             holder.company.setText(headerDrawerListItem.getCompany());
         }
         else{
-            holder.info.setText(((StandardDrawerListItem)drawerListItem).getInfo());
+            holder.info.setText(((StandardListItem)drawerListItem).getInfo());
         }
 
         //Present in old menu items

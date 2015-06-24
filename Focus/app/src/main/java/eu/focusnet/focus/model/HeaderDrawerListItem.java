@@ -2,12 +2,12 @@ package eu.focusnet.focus.model;
 
 import android.graphics.Bitmap;
 
-import eu.focusnet.focus.common.AbtractDrawListItem;
+import eu.focusnet.focus.common.AbtractListItem;
 
 /**
  * Created by admin on 17.06.2015.
  */
-public class HeaderDrawerListItem extends AbtractDrawListItem{
+public class HeaderDrawerListItem extends AbtractListItem {
 
     private String email, company;
     public static final int TYPE_HEADER = 0;

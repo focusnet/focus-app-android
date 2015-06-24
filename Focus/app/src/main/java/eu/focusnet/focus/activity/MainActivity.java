@@ -2,10 +2,9 @@ package eu.focusnet.focus.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
@@ -24,14 +23,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.focus.adapter.DrawerListAdapter;
-import eu.focusnet.focus.common.AbtractDrawListItem;
+import eu.focusnet.focus.common.AbtractListItem;
 import eu.focusnet.focus.fragment.BookmarkFragment;
 import eu.focusnet.focus.fragment.ProjectFragment;
 import eu.focusnet.focus.fragment.SettingFragment;
 import eu.focusnet.focus.fragment.SynchronizeFragment;
 import eu.focusnet.focus.fragment.UserManualFragment;
 import eu.focusnet.focus.model.HeaderDrawerListItem;
-import eu.focusnet.focus.model.StandardDrawerListItem;
+import eu.focusnet.focus.model.StandardListItem;
+import eu.focusnet.focus.util.Util;
 
 /**
  * Created by admin on 15.06.2015.
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity  {
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
 
-    private ArrayList<AbtractDrawListItem> drawerItems;
+    private ArrayList<AbtractListItem> drawerItems;
 
     private Toolbar toolbar;
 
@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
-
-
         setContentView(R.layout.activity_main);
 
         //save the title
@@ -81,6 +79,7 @@ public class MainActivity extends AppCompatActivity  {
 
         // load menu items
         navMenuTitles = getResources().getStringArray(R.array.drawer_items);
+
         // load menu icons
         navMenuIcons = getResources().obtainTypedArray(R.array.drawer_icons);
 
@@ -90,12 +89,12 @@ public class MainActivity extends AppCompatActivity  {
         // get the list for the drawer menu
         drawerListMenu = (ListView) findViewById(R.id.drawer_list_menu);
 
-        drawerItems = new ArrayList<AbtractDrawListItem>();
-        drawerItems.add(new HeaderDrawerListItem(getBitmap(R.drawable.focus_logo_small), "John Smith", "Company ABC", "js@example.com"));
+        drawerItems = new ArrayList<AbtractListItem>();
+        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this ,R.drawable.focus_logo_small), "John Smith", "Company ABC", "js@example.com"));
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            StandardDrawerListItem drawListItem = new StandardDrawerListItem(getBitmap(navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for now Info
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for now Info
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info
@@ -150,9 +149,14 @@ public class MainActivity extends AppCompatActivity  {
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
 
-        if (savedInstanceState == null) {
+        Bundle extras = getIntent().getExtras();
+        if (savedInstanceState == null && extras == null) {
             // on first time display view for first nav item
             showView(1);
+        }
+        //if started from a notification display the appropriate fragment
+        else if(extras != null && new Integer(extras.getInt("notificationId")) != null){
+            showView(extras.getInt("notificationId"));
         }
     }
 
@@ -196,7 +200,6 @@ public class MainActivity extends AppCompatActivity  {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -211,17 +214,31 @@ public class MainActivity extends AppCompatActivity  {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * Slide menu item click listener
-     * */
-    private class SlideMenuClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // display view for selected nav drawer item
-            showView(position);
+
+    @Override
+    public void onBackPressed() {
+        //Navigate back to the ProjectFragment or exit the application
+        Log.d(TAG, "Back button pressed");
+        FragmentManager fragmentMng = getFragmentManager();
+
+        int fragmentBackStackNumber = fragmentMng.getBackStackEntryCount();
+        //If we have 2 fragments in the stack remove the last inserted
+        if(fragmentBackStackNumber == 2){
+            Log.d(TAG, "Number of fragment on the stack: " + fragmentBackStackNumber);
+            //remove the last inserted fragment from the stack
+            fragmentMng.popBackStack();
+            // Highlight the item (ProjectFragment)
+             highlightSelectedMenuItem(1);
+            //Set title
+            setTitle(navMenuTitles[1 - 1]);
+            drawerLayout.closeDrawer(drawerListMenu);
+        }
+        else{
+            Log.d(TAG, "There are NOT fragments on the stack or only 1");
+            //Exit the application
+            super.onBackPressed();
         }
     }
-
 
     private void showView(int position) {
         Fragment fragment = null;
@@ -245,22 +262,40 @@ public class MainActivity extends AppCompatActivity  {
                 break;
         }
 
-        if(fragment != null){
+        //TODO this should be done in a better way
+        FragmentManager fragmentManager = getFragmentManager();
+        int fragmentBackStackNumber = fragmentManager.getBackStackEntryCount();
+        //If we have two fragments in the stack remove the last inserted
+        //so that we only have one fragment in the stack(the ProjectFragment)
+        if(fragmentBackStackNumber == 2) {
+            //remove the last inserted fragment from the stack
+            fragmentManager.popBackStack();
+        }
 
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+        FragmentTransaction fragTrans = fragmentManager.beginTransaction();
+        fragTrans.replace(R.id.frame_container, fragment).addToBackStack("FragmentBackStack").commit();
 
-             // Highlight the selected item, update the title, and close the drawer
-              drawerListMenu.setItemChecked(position, true);
-              drawerListMenu.setSelection(position);
-              setTitle(navMenuTitles[position - 1]);
-              drawerLayout.closeDrawer(drawerListMenu);
+        // Highlight the selected item
+        highlightSelectedMenuItem(position);
+        //set title
+        setTitle(navMenuTitles[position - 1]);
+        drawerLayout.closeDrawer(drawerListMenu);
+    }
+
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // display view for selected nav drawer item
+            showView(position);
         }
     }
 
-    private Bitmap getBitmap(int image) {
-        return BitmapFactory.decodeResource(getResources(), image);
+    private void highlightSelectedMenuItem(int position){
+        // Highlight the selected item
+        drawerListMenu.setItemChecked(position, true);
+        drawerListMenu.setSelection(position);
     }
-
 }

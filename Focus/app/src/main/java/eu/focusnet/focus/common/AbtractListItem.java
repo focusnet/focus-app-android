@@ -5,12 +5,12 @@ import android.graphics.Bitmap;
 /**
  * Created by admin on 17.06.2015.
  */
-public abstract class AbtractDrawListItem {
+public abstract class AbtractListItem {
 
     protected String title;
     protected Bitmap icon;
 
-    public AbtractDrawListItem(Bitmap icon, String title) {
+    public AbtractListItem(Bitmap icon, String title) {
         this.icon = icon;
         this.title = title;
     }

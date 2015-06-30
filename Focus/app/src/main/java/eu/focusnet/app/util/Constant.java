@@ -11,5 +11,7 @@ public class Constant {
                             SETTING_FRAGMENT = 4,
                             USER_MANUAL_FRAGMENT = 5;
 
+    public static final String NOTIFICATION_ID = "NotificationID";
+
     private Constant(){}
 }

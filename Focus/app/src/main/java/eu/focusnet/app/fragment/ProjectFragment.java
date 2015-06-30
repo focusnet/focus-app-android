@@ -1,20 +1,24 @@
 package eu.focusnet.app.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ListFragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.adapter.StandarListAdapter;
+import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 import eu.focusnet.app.activity.R;
 
@@ -22,67 +26,90 @@ import eu.focusnet.app.activity.R;
 /**
  * Created by admin on 15.06.2015.
  */
-public class ProjectFragment extends Fragment {
+public class ProjectFragment extends ListFragment implements FragmentInterface {
 
     private String[] projectTitels;
     private TypedArray projectIcons;
-    private ListView projectList;
+    private String[] notificationTitels;
+    private TypedArray notificationIcons;
+    private CharSequence title;
+    private int position;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_project, container, false);
+        View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 
-        projectList = (ListView)viewRoot.findViewById(R.id.notification_list);
-
-        projectTitels = getResources().getStringArray(R.array.drawer_items);
-
-        // load menu icons
-        projectIcons = getResources().obtainTypedArray(R.array.drawer_icons);
+        projectTitels = getResources().getStringArray(R.array.focus_project_items);
+        // load icons
+        projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
 
         ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-        AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)),
-                                                            "My Projects",
-                                                             Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)));
+        AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
+                                                                      getString(R.string.focus_header_project),
+                                                                      Util.getBitmap(getActivity(), R.drawable.ic_filter));
 
         abstractItems.add(headerProjectsListItem);
 
         for(int i = 0; i < projectTitels.length; i++){
             String notifTitle = projectTitels[i];
-            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)), notifTitle, "Info", Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)));
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)), notifTitle, "Info projects", Util.getBitmap(getActivity(), R.drawable.ic_star));
             abstractItems.add(drawListItem);
         }
 
-        AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)),
-                "New notifications",
-                Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)));
+        AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
+                getString(R.string.focus_header_notification),
+                Util.getBitmap(getActivity(),  R.drawable.ic_filter));
         abstractItems.add(headerNotificationListItem);
 
-        for(int i = 0; i < projectTitels.length; i++){
-            String notifTitle = projectTitels[i];
-            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)), notifTitle, "Info", null);
+        notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
+        // load icons
+        notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
+
+        for(int i = 0; i < notificationTitels.length; i++){
+            String notifTitle = notificationTitels[i];
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null);
             abstractItems.add(drawListItem);
         }
 
         // Recycle the typed array
         projectIcons.recycle();
+        notificationIcons.recycle();
 
-        StandarListAdapter adapter = new StandarListAdapter(getActivity(), abstractItems);
-        projectList.setAdapter(adapter);
-        projectList.setOnItemClickListener(new NotificationClickListener());
-
+        StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
+        setListAdapter(adapter);
         return viewRoot;
     }
 
-    /**
-     * Slide menu item click listener
-     * */
-    private class NotificationClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // display view for selected nav drawer item
-           Util.displayToast(getActivity(), "Selected position:"+position);
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        //only for test purposes
+        if(position != 0){
+            FragmentInterface fragment = new CuttingFragment();
+            fragment.setTitle(projectTitels[position-1]);
+            Util.replaceFragment((Fragment)fragment, getActivity().getFragmentManager());
         }
     }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        this.title = title;
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setPosition(int position){
+        this.position = position;
+
+    }
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
 }

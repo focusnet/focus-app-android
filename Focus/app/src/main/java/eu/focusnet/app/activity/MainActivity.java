@@ -24,6 +24,7 @@ import java.util.Date;
 
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.fragment.SettingFragment;
@@ -150,13 +151,14 @@ public class MainActivity extends AppCompatActivity  {
         drawerLayout.setDrawerListener(drawerToggle);
 
         Bundle extras = getIntent().getExtras();
+
         if (savedInstanceState == null && extras == null) {
             // on first time display view for first nav item
-            showView(1);
+            showView(Constant.PROJECT_FRAGMENT);
         }
         //if started from a notification display the appropriate fragment
-        else if(extras != null && new Integer(extras.getInt("notificationId")) != null){
-            showView(extras.getInt("notificationId"));
+        else if(extras != null && new Integer(extras.getInt(Constant.NOTIFICATION_ID)) != null){
+            showView(extras.getInt(Constant.NOTIFICATION_ID));
         }
     }
 
@@ -217,31 +219,40 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-        //Navigate back to the ProjectFragment or exit the application
+        //Navigate back to the last Fragment or exit the application
         Log.d(TAG, "Back button pressed");
         FragmentManager fragmentMng = getFragmentManager();
-
         int fragmentBackStackNumber = fragmentMng.getBackStackEntryCount();
-        //If we have 2 fragments in the stack remove the last inserted
-        if(fragmentBackStackNumber == 2){
+        // If we have more than one fragments in the stack remove the last inserted
+        if(fragmentBackStackNumber > 1){
             Log.d(TAG, "Number of fragment on the stack: " + fragmentBackStackNumber);
             //remove the last inserted fragment from the stack
-            fragmentMng.popBackStack();
-            // Highlight the item (ProjectFragment)
-             highlightSelectedMenuItem(Constant.PROJECT_FRAGMENT);
-            //Set title
-            setTitle(navMenuTitles[Constant.PROJECT_FRAGMENT - 1]);
+            fragmentMng.popBackStackImmediate();
+            //Get the current fragment
+            FragmentInterface fragment = (FragmentInterface) Util.getCurrentFragment(fragmentMng);
+
+            Log.d(TAG, "Title :" + fragment.getTitle());
+            // Set title
+            setTitle(fragment.getTitle());
+
+            Log.d(TAG, "Position :" + fragment.getPosition());
+            // Highlight the item
+            highlightSelectedMenuItem(fragment.getPosition());
+
+            //In case the drawer menu is open and the user click the back button,
+            // the drawer menu will be closed
             drawerLayout.closeDrawer(drawerListMenu);
         }
         else{
-            Log.d(TAG, "There are NOT fragments on the stack or only 1");
-            //Exit the application
+            Log.d(TAG, "There is only one fragment in the stack, the application will exit");
+            // Exit the application
             super.onBackPressed();
         }
     }
 
     private void showView(int position) {
-        Fragment fragment = null;
+        FragmentInterface fragment = null;
+
         switch (position) {
             case Constant.PROJECT_FRAGMENT:
                 fragment = new ProjectFragment();
@@ -262,24 +273,16 @@ public class MainActivity extends AppCompatActivity  {
                 break;
         }
 
-        //TODO this should be done in a better way
-        FragmentManager fragmentManager = getFragmentManager();
-        int fragmentBackStackNumber = fragmentManager.getBackStackEntryCount();
-        //If we have two fragments in the stack remove the last inserted
-        //so that we only have one fragment in the stack(the ProjectFragment)
-        if(fragmentBackStackNumber == 2) {
-            //remove the last inserted fragment from the stack
-            fragmentManager.popBackStack();
-        }
-
         if(fragment != null) {
-            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-            fragTrans.replace(R.id.frame_container, fragment).addToBackStack("FragmentBackStack").commit();
-
+            int effectivePosition = position - 1;
+            String title = navMenuTitles[effectivePosition];
+            fragment.setTitle(title);
+            fragment.setPosition(effectivePosition);
+            Util.replaceFragment((Fragment)fragment, getFragmentManager());
             // Highlight the selected item
-            highlightSelectedMenuItem(position);
+            highlightSelectedMenuItem(effectivePosition);
             //set title
-            setTitle(navMenuTitles[position - 1]);
+            setTitle(title);
             drawerLayout.closeDrawer(drawerListMenu);
         }
     }
@@ -297,7 +300,7 @@ public class MainActivity extends AppCompatActivity  {
 
     private void highlightSelectedMenuItem(int position){
         // Highlight the selected item
-        drawerListMenu.setItemChecked(position, true);
+        drawerListMenu.setItemChecked(position + 1, true);
         drawerListMenu.setSelection(position);
     }
 }

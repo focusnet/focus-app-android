@@ -19,6 +19,5 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:dividerHeight="1dp"
-        android:listSelector="@drawable/list_item_selector"
         android:background="@color/list_item_background"/>
 </android.support.v4.widget.DrawerLayout>

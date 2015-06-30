@@ -18,12 +18,12 @@ import eu.focusnet.app.activity.R;
 /**
  * Created by admin on 24.06.2015.
  */
-public class StandarListAdapter extends BaseAdapter {
+public class StandardListAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private ArrayList<AbstractListItem> abstractListItems;
 
-    public StandarListAdapter(Context context, ArrayList<AbstractListItem> abstractListItems){
+    public StandardListAdapter(Context context, ArrayList<AbstractListItem> abstractListItems){;
         this.inflater = android.view.LayoutInflater.from(context);
         this.abstractListItems =  abstractListItems;
     }
@@ -93,7 +93,7 @@ public class StandarListAdapter extends BaseAdapter {
             holder.rightIcon.setImageBitmap(((StandardListItem)abstractListItem).getRightIcon());
         }
 
-        //Present in old menu items
+        //Present in all menu items
         holder.leftIcon.setImageBitmap(abstractListItem.getIcon());
         holder.title.setText(abstractListItem.getTitle());
 

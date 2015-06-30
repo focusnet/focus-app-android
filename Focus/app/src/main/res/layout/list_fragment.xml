@@ -1,14 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:background="#432b9034"
-    android:layout_height="match_parent" tools:context="eu.focusnet.focus.fragment_bookmark">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/project_fragment" />
+    android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/notification_list"
+        android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -16,5 +11,4 @@
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_item_selector"
         android:background="@color/list_item_background"/>
-
 </FrameLayout>

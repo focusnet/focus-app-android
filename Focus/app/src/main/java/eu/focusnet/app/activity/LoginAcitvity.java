@@ -21,7 +21,7 @@ public class LoginAcitvity extends Activity {
     }
 
     public void onClick(View view){
-        //TODO get the values of the textViews and find out if the user has an account
+        //TODO get the values of the EditText and find out if the user has an account
         Intent i = new Intent("eu.focusnet.focus.activity.MainActivity");
         startActivity(i);
         finish();

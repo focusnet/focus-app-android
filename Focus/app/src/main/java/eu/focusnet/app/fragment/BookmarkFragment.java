@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import eu.focusnet.app.common.FragmentInterface;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 import eu.focusnet.app.activity.MainActivity;
 import eu.focusnet.app.activity.R;
@@ -23,10 +25,12 @@ import eu.focusnet.app.service.DataProviderService;
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends Fragment {
+public class BookmarkFragment extends Fragment implements FragmentInterface {
 
     private String[] httpMethods;
     private String selectedHttpMethod;
+    private CharSequence title;
+    private int position;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +66,27 @@ public class BookmarkFragment extends Fragment {
         return viewRoot;
     }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        this.title = title;
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setPosition(int position){
+        this.position = position;
+
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
 
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
 
@@ -87,11 +112,10 @@ public class BookmarkFragment extends Fragment {
 //            Gson gson = new Gson();
 //            if(result != null)
 //               userPref = gson.fromJson(result, UserPreference.class);
-
-            int id = 3; //The id of the notification and the navigation id to display the appropriate fragment ()
+            int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
             TextView prefTextView = (TextView)getView().findViewById(R.id.preference);
             prefTextView.setText(result);
-            Util.displayNotification(getActivity(), MainActivity.class, R.mipmap.ic_launcher, "Title", "Content", id);
+            Util.displayNotification(getActivity(), MainActivity.class, R.drawable.ic_tree, "Title", "Content", id);
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
         }

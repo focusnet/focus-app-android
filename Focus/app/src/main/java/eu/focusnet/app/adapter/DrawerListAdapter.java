@@ -94,10 +94,9 @@ public class DrawerListAdapter extends BaseAdapter {
             holder.info.setText(((StandardListItem)drawerListItem).getInfo());
         }
 
-        //Present in old menu items
+        //Present in all menu items
         holder.icon.setImageBitmap(drawerListItem.getIcon());
         holder.title.setText(drawerListItem.getTitle());
-
 
         return row;
     }

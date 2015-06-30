@@ -33,12 +33,92 @@
     <string name="drawer_menu_update">Last update:</string>
 
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="project_fragment">Fragment project</string>
     <string name="bookmark_fragment">Fragment bookmark</string>
     <string name="settings_fragment">Fragment settings</string>
     <string name="usermanual_fragment">Fragment User manual</string>
     <string name="synchronize_fragment">Fragment synchronize</string>
+
+
+    <!-- My Focus screen -->
+
+    <string name="focus_header_project">My Projects</string>
+    <string name="focus_header_notification">New notifications</string>
+
+    <!-- Project Items -->
+    <string-array name="focus_project_items">
+        <item >Cutting of stand #412</item>
+        <item >Company machines overview</item>
+        <item >Company roadmap</item>
+        <item >Cutting of stand #673</item>
+        <item >Stand #455</item>
+    </string-array>
+
+    <!-- Project Item Icons -->
+    <string-array name="focus_project_icons">
+        <item>@drawable/ic_scissors</item>
+        <item>@drawable/ic_location_arrow</item>
+        <item>@drawable/ic_road</item>
+        <item>@drawable/ic_scissors</item>
+        <item>@drawable/ic_tachometer</item>
+    </string-array>
+
+    <!-- Notification Items -->
+    <string-array name="focus_notification_items">
+        <item >Cutting of stand #412 / Delay announce (2 days)</item>
+        <item >Cutting of stand #412 / Fowarder in maintenance on 23.12.2014</item>
+    </string-array>
+
+    <!-- Notification Item Icons -->
+    <string-array name="focus_notification_icons">
+        <item>@drawable/ic_envelope</item>
+        <item>@drawable/ic_envelope</item>
+    </string-array>
+
+    <!-- End of Focus screen -->
+
+
+    <!-- My Cutting screen -->
+    <string name="cutting_header_dashboard">Dashboards</string>
+    <string name="cutting_header_tool">Tools</string>
+    <string name="cutting_header_notification">Notifications (1 new)</string>
+
+    <string-array name="cutting_dashboard_items">
+        <item >Productivity Panel</item>
+        <item >Human Resources Overview</item>
+    </string-array>
+
+    <string-array name="cutting_dashboard_icons">
+        <item>@drawable/ic_chevron_right</item>
+        <item>@drawable/ic_chevron_right</item>
+    </string-array>
+
+    <string-array name="cutting_tool_items">
+        <item >Polterluchs</item>
+        <item >Time Control</item>
+        <item >Planing Control</item>
+    </string-array>
+
+    <string-array name="cutting_tool_icons">
+        <item>@drawable/ic_calculator</item>
+        <item>@drawable/ic_clock_o</item>
+        <item>@drawable/ic_clock_o</item>
+    </string-array>
+
+    <!-- Notification Items -->
+    <string-array name="cutting_notification_items">
+        <item >Delay approval request (2 days)</item>
+        <item >Fowarder in maintenance until 23.12.2015</item>
+    </string-array>
+
+    <!-- Notification Item Icons -->
+    <string-array name="cutting_notification_icons">
+        <item>@drawable/ic_envelope</item>
+        <item>@drawable/ic_envelope</item>
+    </string-array>
+
+    <!-- End of Cutting screen -->
 
     <!-- TODO: only for test-->
     <string-array name="http_methods">

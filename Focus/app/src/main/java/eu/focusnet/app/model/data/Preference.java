@@ -1,0 +1,38 @@
+package eu.focusnet.app.model.data;
+
+import java.util.Date;
+
+public class Preference extends FocusObject {
+
+	private Setting settings;
+	private Bookmark bookmarks;
+
+	public Preference(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks) {
+		super(type, url, owner, editor, version, creationDateTime, editionDateTime, active);
+		this.settings = settings;
+		this.bookmarks = bookmarks;
+	}
+
+	public Preference(String type, Setting settings, Bookmark bookmarks) {
+		this.settings = settings;
+		this.bookmarks = bookmarks;
+	}
+
+	public Preference() {}
+
+	public Setting getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Setting settings) {
+		this.settings = settings;
+	}
+
+	public Bookmark getBookmarks() {
+		return bookmarks;
+	}
+
+	public void setBookmarks(Bookmark bookmarks) {
+		this.bookmarks = bookmarks;
+	}
+}

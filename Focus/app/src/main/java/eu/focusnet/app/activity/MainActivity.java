@@ -2,7 +2,6 @@ package eu.focusnet.app.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,11 +25,13 @@ import java.util.Date;
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.common.FragmentInterface;
+import eu.focusnet.app.db.UserDAO;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
+import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity  {
     private DrawerLayout drawerLayout;
     private ListView drawerListMenu;
     private ActionBarDrawerToggle drawerToggle;
+    private UserDAO userDbAdapter;
 
     // nav drawer title
     private CharSequence drawerTitle;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
+        userDbAdapter = new UserDAO(this);
         setContentView(R.layout.activity_main);
 
         //save the title
@@ -92,7 +96,16 @@ public class MainActivity extends AppCompatActivity  {
         drawerListMenu = (ListView) findViewById(R.id.drawer_list_menu);
 
         drawerItems = new ArrayList<AbstractListItem>();
-        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), "John Smith", "Company ABC", "js@example.com"));
+
+        try {
+            userDbAdapter.open();
+            User user = userDbAdapter.getUser(1);
+            drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
+            Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+            userDbAdapter.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
@@ -155,10 +168,28 @@ public class MainActivity extends AppCompatActivity  {
         if (savedInstanceState == null && extras == null) {
             // on first time display view for first nav item
             showView(Constant.PROJECT_FRAGMENT);
+            try {
+                userDbAdapter.open();
+                User user = userDbAdapter.getUser(1);
+                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+                userDbAdapter.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
-        //if started from a notification display the appropriate fragment
-        else if(extras != null && new Integer(extras.getInt(Constant.NOTIFICATION_ID)) != null){
-            showView(extras.getInt(Constant.NOTIFICATION_ID));
+
+        else if(extras != null){
+//            if(extras.get(Constant.USER_DATA) != null){
+//                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
+//                Log.d(TAG, data.get(0));
+//                Util.displayToast(this, data.get(0));
+//                showView(Constant.PROJECT_FRAGMENT);
+//            }
+//            else {
+                //if started from a notification display the appropriate fragment
+                showView(extras.getInt(Constant.NOTIFICATION_ID));
+//            }
         }
     }
 

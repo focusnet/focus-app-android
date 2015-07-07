@@ -4,29 +4,29 @@ import java.util.ArrayList;
 
 public class Bookmark {
 	
-	private ArrayList<Page> pages;
-	private ArrayList<Tool> tools;
+	private ArrayList<BookmarkLink> pages;
+	private ArrayList<BookmarkLink> tools;
 
 	public Bookmark() {}
 	
-	public Bookmark(ArrayList<Page> pages, ArrayList<Tool> tools) {
+	public Bookmark(ArrayList<BookmarkLink> pages, ArrayList<BookmarkLink> tools) {
 		this.pages = pages;
 		this.tools = tools;
 	}
 
-	public ArrayList<Page> getPages() {
+	public ArrayList<BookmarkLink> getPages() {
 		return pages;
 	}
 
-	public void setPages(ArrayList<Page> pages) {
+	public void setPages(ArrayList<BookmarkLink> pages) {
 		this.pages = pages;
 	}
 
-	public ArrayList<Tool> getTools() {
+	public ArrayList<BookmarkLink> getTools() {
 		return tools;
 	}
 
-	public void setTools(ArrayList<Tool> tools) {
+	public void setTools(ArrayList<BookmarkLink> tools) {
 		this.tools = tools;
 	}
 	

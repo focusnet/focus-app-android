@@ -3,100 +3,77 @@ package eu.focusnet.app.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-
-import java.sql.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 
 import eu.focusnet.app.model.data.User;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by admin on 06.07.2015.
  */
 public class UserDAO {
 
-    public static final String DATABASE_TABLE = "users";
+    private String[] columnsToRetrieve = {Constant.USER_ID, Constant.EMAIL, Constant.COMPANY, Constant.FIRST_NAME, Constant.LAST_NAME,
+            Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION, Constant.ACTIVE};
 
-    public static final String ID = "id",
-                               FIRST_NAME = "first_name",
-                               LAST_NAME = "last_name",
-                               EMAIL = "email",
-                               COMPANY = "company",
-                               TYPE = "type",
-                               URL = "url",
-                               OWNER = "owner",
-                               EDITOR = "editor",
-                               CREATION_DATE_TIME = "creation_date_time",
-                               EDITION_DATE_TIME = "edition_date_time",
-                               VERSION = "version",
-                               ACTIVE = "active",
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase database;
 
-                               CREATE_TABLE_QUERY = "CREATE TABLE "+DATABASE_TABLE+""+
-                                                    "("+ID+" INTEGER PRIMARY KEY  NOT NULL , "+
-                                                    FIRST_NAME+" TEXT," +
-                                                    LAST_NAME+" TEXT, " +
-                                                    EMAIL+" TEXT, " +
-                                                    COMPANY+" TEXT, " +
-                                                    TYPE+" TEXT, " +
-                                                    URL+" TEXT," +
-                                                    OWNER+" TEXT," +
-                                                    EDITOR+" TEXT, " +
-                                                    CREATION_DATE_TIME+" TEXT, " +
-                                                    EDITION_DATE_TIME+" TEXT, " +
-                                                    VERSION+" INTEGER, " +
-                                                    ACTIVE+" BOOL)";
-
-    private DatabaseAdapter dbAdapter;
-
-    public UserDAO(Context ctx) {
-        dbAdapter = new DatabaseAdapter(ctx);
+    public UserDAO(Context context) {
+        this.dbHelper = DatabaseHelper.getInstance(context);
     }
 
-    public void open() throws SQLException {
-       dbAdapter.open();
+    public void open(){
+        if(database == null || !database.isOpen()) {
+            database = dbHelper.getWritableDatabase();
+        }
     }
 
     public void close() {
-       dbAdapter.close();
+        dbHelper.close();
     }
 
-    public Long insertUser(User user){
+
+    public Long createUser(User user){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID, user.getId());
-        contentValues.put(EMAIL, user.getEmail());
-        contentValues.put(COMPANY, user.getCompany());
-        contentValues.put(FIRST_NAME, user.getFirstName());
-        contentValues.put(LAST_NAME, user.getLastName());
-        contentValues.put(TYPE, user.getType());
-        contentValues.put(URL, user.getUrl());
-        contentValues.put(OWNER, user.getOwner());
-        contentValues.put(EDITOR, user.getEditor());
-        contentValues.put(CREATION_DATE_TIME, String.valueOf(user.getCreationDateTime()));
-        contentValues.put(EDITION_DATE_TIME, String.valueOf(user.getEditionDateTime()));
-        contentValues.put(VERSION, user.getVersion());
-        contentValues.put(ACTIVE, user.isActive());
-        return dbAdapter.db.insert(DATABASE_TABLE, null, contentValues);
+        contentValues.put(Constant.USER_ID, user.getId());
+        contentValues.put(Constant.EMAIL, user.getEmail());
+        contentValues.put(Constant.COMPANY, user.getCompany());
+        contentValues.put(Constant.FIRST_NAME, user.getFirstName());
+        contentValues.put(Constant.LAST_NAME, user.getLastName());
+        contentValues.put(Constant.TYPE, user.getType());
+        contentValues.put(Constant.URL, user.getUrl());
+        contentValues.put(Constant.OWNER, user.getOwner());
+        contentValues.put(Constant.EDITOR, user.getEditor());
+        contentValues.put(Constant.CREATION_DATE_TIME, String.valueOf(user.getCreationDateTime()));
+        contentValues.put(Constant.EDITION_DATE_TIME, String.valueOf(user.getEditionDateTime()));
+        contentValues.put(Constant.VERSION, user.getVersion());
+        contentValues.put(Constant.ACTIVE, user.isActive());
+        return database.insert(Constant.DATABASE_TABLE_USER, null, contentValues);
     }
 
-    public User getUser(int userId){
-        String[] columnsToRetrieve = {ID, EMAIL, COMPANY,FIRST_NAME, LAST_NAME, TYPE, URL, OWNER,
-                         EDITOR, CREATION_DATE_TIME, EDITION_DATE_TIME, VERSION, ACTIVE};
+    public User findUserById(Long userId){
+
         String[] params = {String.valueOf(userId)};
-        Cursor cursor = dbAdapter.db.query(DATABASE_TABLE, columnsToRetrieve, ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_USER, columnsToRetrieve, Constant.USER_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
         }
 
         User user = new User();
-        user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
-        user.setLastName(cursor.getString(cursor.getColumnIndex(LAST_NAME)));
-        user.setEmail(cursor.getString(cursor.getColumnIndex(EMAIL)));
-        user.setCompany(cursor.getString(cursor.getColumnIndex(COMPANY)));
+        user.setId(cursor.getLong(cursor.getColumnIndex(Constant.USER_ID)));
+        user.setFirstName(cursor.getString(cursor.getColumnIndex(Constant.FIRST_NAME)));
+        user.setLastName(cursor.getString(cursor.getColumnIndex(Constant.LAST_NAME)));
+        user.setEmail(cursor.getString(cursor.getColumnIndex(Constant.EMAIL)));
+        user.setCompany(cursor.getString(cursor.getColumnIndex(Constant.COMPANY)));
         //TODO add the other properties
 
+        cursor.close();
         return user;
     }
 
-    public boolean deleteUser(Long userId){
-        return dbAdapter.db.delete(DATABASE_TABLE, ID+"="+userId, null) > 0;
+    public boolean deleteUserById(Long userId){
+        return database.delete(Constant.DATABASE_TABLE_USER, Constant.USER_ID+"="+userId, null) > 0;
      }
 
     //TODO update

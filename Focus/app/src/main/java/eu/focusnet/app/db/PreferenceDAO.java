@@ -3,10 +3,12 @@ package eu.focusnet.app.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.SQLException;
 
 import eu.focusnet.app.model.data.Preference;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by admin on 07.07.2015.
@@ -14,74 +16,57 @@ import eu.focusnet.app.model.data.Preference;
 
 public class PreferenceDAO {
 
-    public static final String DATABASE_TABLE = "preferences";
+    private String[] columnsToRetrieve = {Constant.PREFERENCE_ID, Constant.EMAIL, Constant.COMPANY, Constant.FIRST_NAME, Constant.LAST_NAME,
+            Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION, Constant.ACTIVE};
 
-    public static final String ID = "id",
-            TYPE = "type",
-            URL = "url",
-            OWNER = "owner",
-            EDITOR = "editor",
-            CREATION_DATE_TIME = "creation_date_time",
-            EDITION_DATE_TIME = "edition_date_time",
-            VERSION = "version",
-            ACTIVE = "active",
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase database;
 
-    CREATE_TABLE_QUERY = "CREATE TABLE "+DATABASE_TABLE+""+
-            "("+ID+" INTEGER PRIMARY KEY AUTOINCREMENT , "+
-            TYPE+" TEXT, " +
-            URL+" TEXT," +
-            OWNER+" TEXT," +
-            EDITOR+" TEXT, " +
-            CREATION_DATE_TIME+" TEXT, " +
-            EDITION_DATE_TIME+" TEXT, " +
-            VERSION+" INTEGER, " +
-            ACTIVE+" BOOL)";
-
-    private DatabaseAdapter dbAdapter;
 
     public PreferenceDAO(Context ctx) {
-        dbAdapter = new DatabaseAdapter(ctx);
+        this.dbHelper = DatabaseHelper.getInstance(ctx);
     }
 
-    public void open() throws SQLException {
-        dbAdapter.open();
+
+    public void open(){
+        if(database == null || !database.isOpen()) {
+            database = dbHelper.getWritableDatabase();
+        }
     }
 
     public void close() {
-        dbAdapter.close();
+        dbHelper.close();
     }
 
-    public Long insertPreference(Preference preference){
+    public Long createPreference(Preference preference){
         ContentValues contentValues = new ContentValues();;
-        contentValues.put(TYPE, preference.getType());
-        contentValues.put(URL, preference.getUrl());
-        contentValues.put(OWNER, preference.getOwner());
-        contentValues.put(EDITOR, preference.getEditor());
-        contentValues.put(CREATION_DATE_TIME, String.valueOf(preference.getCreationDateTime()));
-        contentValues.put(EDITION_DATE_TIME, String.valueOf(preference.getEditionDateTime()));
-        contentValues.put(VERSION, preference.getVersion());
-        contentValues.put(ACTIVE, preference.isActive());
-        return dbAdapter.db.insert(DATABASE_TABLE, null, contentValues);
+        contentValues.put(Constant.TYPE, preference.getType());
+        contentValues.put(Constant.URL, preference.getUrl());
+        contentValues.put(Constant.OWNER, preference.getOwner());
+        contentValues.put(Constant.EDITOR, preference.getEditor());
+        contentValues.put(Constant.CREATION_DATE_TIME, String.valueOf(preference.getCreationDateTime()));
+        contentValues.put(Constant.EDITION_DATE_TIME, String.valueOf(preference.getEditionDateTime()));
+        contentValues.put(Constant.VERSION, preference.getVersion());
+        contentValues.put(Constant.ACTIVE, preference.isActive());
+        return database.insert(Constant.DATABASE_TABLE_PREFERENCE, null, contentValues);
     }
 
-    public Preference getPreference(int preferenceId){
-        String[] columnsToRetrieve = {ID, TYPE, URL, OWNER,
-                EDITOR, CREATION_DATE_TIME, EDITION_DATE_TIME, VERSION, ACTIVE};
+    public Preference findPreference(Long preferenceId){
         String[] params = {String.valueOf(preferenceId)};
-        Cursor cursor = dbAdapter.db.query(DATABASE_TABLE, columnsToRetrieve, ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.PREFERENCE_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
         }
 
         Preference preference = new Preference();
-//        user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
+//      user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
 
         //TODO add the other properties
         return preference;
     }
 
     public boolean deletePreference(Long preferenceId){
-        return dbAdapter.db.delete(DATABASE_TABLE, ID+"="+preferenceId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.PREFERENCE_ID+"="+preferenceId, null) > 0;
     }
 
     //TODO update

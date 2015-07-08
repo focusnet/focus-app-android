@@ -5,6 +5,7 @@ package eu.focusnet.app.model.data;
  */
 public class BookmarkLink {
 
+    private Long id;
     private String name,
                    path;
 
@@ -17,6 +18,14 @@ public class BookmarkLink {
         this.name = name;
         this.path = path;
         this.order = order;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity  {
     private DrawerLayout drawerLayout;
     private ListView drawerListMenu;
     private ActionBarDrawerToggle drawerToggle;
-    private UserDAO userDbAdapter;
+    private UserDAO userDao;
 
     // nav drawer title
     private CharSequence drawerTitle;
@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
-        userDbAdapter = new UserDAO(this);
+        userDao = new UserDAO(this);
+
         setContentView(R.layout.activity_main);
 
         //save the title
@@ -97,15 +98,13 @@ public class MainActivity extends AppCompatActivity  {
 
         drawerItems = new ArrayList<AbstractListItem>();
 
-        try {
-            userDbAdapter.open();
-            User user = userDbAdapter.getUser(1);
-            drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
-            Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
-            userDbAdapter.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        userDao.open();
+
+        User user = userDao.findUserById(new Long(1));
+        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
+        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
@@ -168,15 +167,7 @@ public class MainActivity extends AppCompatActivity  {
         if (savedInstanceState == null && extras == null) {
             // on first time display view for first nav item
             showView(Constant.PROJECT_FRAGMENT);
-            try {
-                userDbAdapter.open();
-                User user = userDbAdapter.getUser(1);
                 Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
-                userDbAdapter.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
 
         else if(extras != null){
@@ -279,6 +270,30 @@ public class MainActivity extends AppCompatActivity  {
             // Exit the application
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        userDao.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        userDao.close();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        userDao.open();
+        if(userDao.deleteUserById(new Long(1)))
+            Log.d(TAG, "USER DELETE");
+        else
+            Log.d(TAG, "USER DELETE");
+
+        userDao.close();
+        super.onDestroy();
     }
 
     private void showView(int position) {

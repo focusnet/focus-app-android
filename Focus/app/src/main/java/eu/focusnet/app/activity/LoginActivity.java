@@ -47,13 +47,15 @@ public class LoginActivity extends Activity {
     private class DataReaderTask extends AsyncTask<String, String, Void> {
 
         private ProgressDialog progressDialog;
-        private UserDAO userDbAdapter;
+        private UserDAO userDao;
         private Gson gson;
 
         public DataReaderTask(Context context){
             progressDialog = Util.createProgressDialog(context, "Authentication process running", "Please wait...");
-            userDbAdapter = new UserDAO(context);
+            userDao = new UserDAO(context);
             gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+            userDao.open();
+
         }
 
         @Override
@@ -75,18 +77,13 @@ public class LoginActivity extends Activity {
         protected void onProgressUpdate(String... values) {
             data.add(values[0]);
             User user = gson.fromJson(values[0], User.class);
-            try {
-                userDbAdapter.open();
-                userDbAdapter.insertUser(user);
-                userDbAdapter.close();
-            } catch (SQLException e) {
-                e.printStackTrace(); //TODO
-            }
-
+                user.setId(new Long(1));
+                userDao.createUser(user);
         }
 
         @Override
         protected void onPostExecute(Void unused) {
+            userDao.close();
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");

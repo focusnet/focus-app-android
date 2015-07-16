@@ -25,8 +25,6 @@ public class SplashActivity extends Activity {
                 try {
                     sleep(3000);
                        startActivity(new Intent("eu.focusnet.app.activity.LoginActivity"));
-//                    Intent i = new Intent("eu.focusnet.focus.activity.MainActivity");
-//                    startActivity(i);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -16,23 +16,11 @@ public class UserDAO {
     private String[] columnsToRetrieve = {Constant.USER_ID, Constant.EMAIL, Constant.COMPANY, Constant.FIRST_NAME, Constant.LAST_NAME,
             Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION, Constant.ACTIVE};
 
-    private DatabaseHelper dbHelper;
     private SQLiteDatabase database;
 
-    public UserDAO(Context context) {
-        this.dbHelper = DatabaseHelper.getInstance(context);
+    public UserDAO(SQLiteDatabase database){
+        this.database = database;
     }
-
-    public void open(){
-        if(database == null || !database.isOpen()) {
-            database = dbHelper.getWritableDatabase();
-        }
-    }
-
-    public void close() {
-        dbHelper.close();
-    }
-
 
     public Long createUser(User user){
         ContentValues contentValues = new ContentValues();

@@ -1,31 +1,39 @@
 package eu.focusnet.app.fragment;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.app.ListFragment;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
-import eu.focusnet.app.common.FragmentInterface;
-import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.Date;
+
 import eu.focusnet.app.activity.MainActivity;
+import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.adapter.StandardListAdapter;
+import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.common.FragmentInterface;
+import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.PreferenceDAO;
+import eu.focusnet.app.model.data.Bookmark;
+import eu.focusnet.app.model.data.BookmarkLink;
+import eu.focusnet.app.model.data.Preference;
+import eu.focusnet.app.model.ui.HeaderListItem;
+import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.util.Util;
 import eu.focusnet.app.activity.R;
-import eu.focusnet.app.service.DataProviderService;
 
 
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends Fragment implements FragmentInterface {
+public class BookmarkFragment extends ListFragment implements FragmentInterface {
 
     private String[] httpMethods;
     private String selectedHttpMethod;
@@ -35,36 +43,47 @@ public class BookmarkFragment extends Fragment implements FragmentInterface {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_bookmark, container, false);
 
-        httpMethods = getResources().getStringArray(R.array.http_methods);
-        Spinner spinner = (Spinner)viewRoot.findViewById(R.id.http_method_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, httpMethods);
-        spinner.setAdapter(adapter);
+        View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedHttpMethod = httpMethods[position];
-            }
+        DatabaseAdapter databaseAdapter = ((MainActivity)getActivity()).getDatabaseAdapter();
+        databaseAdapter.open();
+        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+        Preference preference = preferenceDAO.findPreference(new Long(1));
+        databaseAdapter.close();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        Bookmark bookmark = preference.getBookmarks();
+        ArrayList<BookmarkLink> pages = bookmark.getPages();
+        ArrayList<BookmarkLink> tools = bookmark.getTools();
 
-        Button getResourceButton = (Button) viewRoot.findViewById(R.id.get_resource_button);
-        getResourceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText webserviceUrlText = (EditText) getView().findViewById(R.id.webservice_textView);
-                String url = webserviceUrlText.getText().toString();
-                new PreferenceDataReaderTask().execute(url, selectedHttpMethod); //selectedHttpMethod no needed anymore
+        ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
+        AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
+                                                                     getResources().getString(R.string.bookmark_header_dashboard), Util.getBitmap(getActivity(), R.drawable.ic_filter));
+        abstractItems.add(headerProjectsListItem);
 
-            }
-        });
+        for(BookmarkLink bl : pages){
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_chevron_right), bl.getName(),
+                                                                bl.getPath(), Util.getBitmap(getActivity(), R.drawable.ic_user_manual));    //TODO order by item_order when retrieving from db
+            abstractItems.add(drawListItem);
+        }
 
+
+        AbstractListItem headerToolListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_settings),
+                getString(R.string.bookmark_header_tool), Util.getBitmap(getActivity(), R.drawable.ic_filter));
+        abstractItems.add(headerToolListItem);
+
+
+        for(BookmarkLink bl : tools ){
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_clock_o), bl.getName(),
+                                                            bl.getPath(),  Util.getBitmap(getActivity(), R.drawable.ic_user_manual));  //TODO order by item_order when retrieving from db
+            abstractItems.add(drawListItem);
+        }
+
+        StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
+        setListAdapter(adapter);
         return viewRoot;
     }
+
 
     @Override
     public void setTitle(CharSequence title) {
@@ -85,39 +104,5 @@ public class BookmarkFragment extends Fragment implements FragmentInterface {
     @Override
     public int getPosition() {
         return position;
-    }
-
-
-    private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
-
-        private final ProgressDialog progressDialog;
-
-        public PreferenceDataReaderTask(){
-            progressDialog = Util.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            return DataProviderService.retrieveData(urls[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            //TODO uncomment this for the UserPreference
-//            Gson gson = new Gson();
-//            if(result != null)
-//               userPref = gson.fromJson(result, UserPreference.class);
-            int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
-            TextView prefTextView = (TextView)getView().findViewById(R.id.preference);
-            prefTextView.setText(result);
-            Util.displayNotification(getActivity(), MainActivity.class, R.drawable.ic_tree, "Title", "Content", id);
-            if(progressDialog.isShowing())
-                progressDialog.dismiss();
-        }
     }
 }

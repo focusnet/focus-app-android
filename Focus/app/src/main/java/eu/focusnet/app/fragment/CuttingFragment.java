@@ -22,7 +22,7 @@ import eu.focusnet.app.util.Util;
 /**
  * Created by admin on 29.06.2015.
  */
-public class CuttingFragment extends ListFragment implements FragmentInterface{
+public class CuttingFragment extends ListFragment implements FragmentInterface {
 
     private CharSequence title;
     private String[] dashboardsTitels;

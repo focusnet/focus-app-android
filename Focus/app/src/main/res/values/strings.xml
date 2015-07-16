@@ -120,6 +120,12 @@
 
     <!-- End of Cutting screen -->
 
+    <!-- Bookmark  screen -->
+    <string name="bookmark_header_dashboard">Projects / Dashboards</string>
+    <string name="bookmark_header_tool">Tools</string>
+    <!-- End  screen -->
+
+
     <!-- TODO: only for test-->
     <string-array name="http_methods">
         <item>GET</item>

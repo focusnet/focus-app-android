@@ -16,22 +16,12 @@ import eu.focusnet.app.util.Constant;
 public class BookmarkLinkDao {
 
     private String[] columnsToRetrieve = {Constant.BOOKMARK_LINK_ID, Constant.NAME, Constant.ORDER, Constant.PATH, Constant.BL_TYPE, Constant.FK_BOOKMARK_ID};
+    public static enum BOOKMARK_LINK_TYPE {PAGE, TOOL}
 
-    private DatabaseHelper dbHelper;
     private SQLiteDatabase database;
 
-    public BookmarkLinkDao(Context context) {
-        this.dbHelper = DatabaseHelper.getInstance(context);
-    }
-
-    public void open(){
-        if(database == null || !database.isOpen()) {
-            database = dbHelper.getWritableDatabase();
-        }
-    }
-
-    public void close() {
-        dbHelper.close();
+    public BookmarkLinkDao(SQLiteDatabase database){
+        this.database = database;
     }
 
     public Long createBookmarkLing(BookmarkLink bookmarkLink, String type, Long bookmark_id){
@@ -44,24 +34,23 @@ public class BookmarkLinkDao {
         return database.insert(Constant.DATABASE_TABLE_BOOKMARK_LINK, null, contentValues);
     }
 
-    public BookmarkLink findBookmarkLingById(Long bookmarkLinkId){
+    public BookmarkLink findBookmarkLink(Long bookmarkLinkId){
 
         String[] params = {String.valueOf(bookmarkLinkId)};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.BOOKMARK_LINK_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
         }
-
         BookmarkLink bookmarkLink = getBookmarkLink(cursor);
         cursor.close();
 
         return bookmarkLink;
     }
 
-    public ArrayList<BookmarkLink> findBookmarkLingsByBookMarkId(Long bookmarkId){
+    public ArrayList<BookmarkLink> findBookmarkLingsByType(Long bookmarkId, String type){
         ArrayList<BookmarkLink> bookmarkLinks = new ArrayList<>();
-        String[] params = {String.valueOf(bookmarkId)};
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.FK_BOOKMARK_ID +"=?", params, null, null, null);
+        String[] params = {String.valueOf(bookmarkId), type};
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.FK_BOOKMARK_ID +"=? AND "+Constant.BL_TYPE+"=?", params, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()){
                 do {
@@ -75,7 +64,7 @@ public class BookmarkLinkDao {
         return bookmarkLinks;
     }
 
-    public boolean deleteBookmarkLingById(Long bookmarLinkkId){
+    public boolean deleteBookmarkLing(Long bookmarLinkkId){
         return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.BOOKMARK_LINK_ID+"="+bookmarLinkkId, null) > 0;
     }
 

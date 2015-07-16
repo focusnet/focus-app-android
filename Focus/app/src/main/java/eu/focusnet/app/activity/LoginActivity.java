@@ -12,12 +12,14 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.PreferenceDAO;
 import eu.focusnet.app.db.UserDAO;
+import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.service.DataProviderService;
 import eu.focusnet.app.util.Util;
@@ -38,8 +40,8 @@ public class LoginActivity extends Activity {
 
     public void onClick(View view){
         //TODO
-        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/users/1/information");//,
-                                  //       "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-pref");
+        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/users/1/information",
+                                         "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-pref");
 //        "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-content" //TODO app-content
     }
 
@@ -47,14 +49,17 @@ public class LoginActivity extends Activity {
     private class DataReaderTask extends AsyncTask<String, String, Void> {
 
         private ProgressDialog progressDialog;
-        private UserDAO userDao;
+
         private Gson gson;
+        private Context context;
+        private int counter;
+        private DatabaseAdapter databaseAdapter;
 
         public DataReaderTask(Context context){
+            this.context = context;
             progressDialog = Util.createProgressDialog(context, "Authentication process running", "Please wait...");
-            userDao = new UserDAO(context);
             gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-            userDao.open();
+            databaseAdapter = new DatabaseAdapter(context);
 
         }
 
@@ -65,7 +70,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Void doInBackground(String... urls) {
-            Log.d(TAG, "Number of path to retrieve the resources: "+urls.length);
+            Log.d(TAG, "Number of path to retrieve the resources: " + urls.length);
             for (int i = 0; i < urls.length; i++) {
                 Log.d(TAG, "Url: "+urls[i]);
                 publishProgress(DataProviderService.retrieveData(urls[i]));
@@ -75,15 +80,37 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onProgressUpdate(String... values) {
-            data.add(values[0]);
-            User user = gson.fromJson(values[0], User.class);
+            Log.d(TAG, "Counter: " + (counter));
+            String value = values[0];
+            if(counter == 0){
+                Log.d(TAG, "Creating User");
+                User user = gson.fromJson(value, User.class);
+                databaseAdapter.open();
+                UserDAO userDao = new UserDAO(databaseAdapter.getDb());
                 user.setId(new Long(1));
                 userDao.createUser(user);
+                databaseAdapter.close();
+            }
+            else if(counter == 1){
+                Log.d(TAG, "Creating Preferences");
+
+                Preference preference = gson.fromJson(value, Preference.class);
+                preference.setId(new Long(1));
+                databaseAdapter.open();
+                PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+                preferenceDAO.createPreference(preference); //TODO bookmark and setting's id
+                databaseAdapter.close();
+            }
+            else{
+                //TODO content
+            }
+            counter++;
+            data.add(value);
+            Util.displayToast(context, value);
         }
 
         @Override
         protected void onPostExecute(Void unused) {
-            userDao.close();
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");

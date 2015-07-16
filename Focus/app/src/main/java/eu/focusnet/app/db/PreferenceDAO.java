@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.sql.SQLException;
+import java.util.Date;
 
+import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.Preference;
+import eu.focusnet.app.model.data.Setting;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -16,30 +18,28 @@ import eu.focusnet.app.util.Constant;
 
 public class PreferenceDAO {
 
-    private String[] columnsToRetrieve = {Constant.PREFERENCE_ID, Constant.EMAIL, Constant.COMPANY, Constant.FIRST_NAME, Constant.LAST_NAME,
-            Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION, Constant.ACTIVE};
+    private String[] columnsToRetrieve = {Constant.PREFERENCE_ID,
+            Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION,
+            Constant.ACTIVE, Constant.FK_BOOKMARK_ID, Constant.FK_SETTINGS_ID};
 
-    private DatabaseHelper dbHelper;
     private SQLiteDatabase database;
 
-
-    public PreferenceDAO(Context ctx) {
-        this.dbHelper = DatabaseHelper.getInstance(ctx);
-    }
-
-
-    public void open(){
-        if(database == null || !database.isOpen()) {
-            database = dbHelper.getWritableDatabase();
-        }
-    }
-
-    public void close() {
-        dbHelper.close();
+    public PreferenceDAO(SQLiteDatabase database){
+        this.database = database;
     }
 
     public Long createPreference(Preference preference){
-        ContentValues contentValues = new ContentValues();;
+
+        Setting setting = preference.getSettings();
+        SettingDao sDao = new SettingDao(this.database);
+        Long settingId = sDao.createSetting(setting);
+
+        Bookmark bookmark = preference.getBookmarks();
+        BookmarkDao bmDao = new BookmarkDao(this.database);
+        Long bookmarkId = bmDao.createBookmark(bookmark);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Constant.PREFERENCE_ID, preference.getId());
         contentValues.put(Constant.TYPE, preference.getType());
         contentValues.put(Constant.URL, preference.getUrl());
         contentValues.put(Constant.OWNER, preference.getOwner());
@@ -48,20 +48,35 @@ public class PreferenceDAO {
         contentValues.put(Constant.EDITION_DATE_TIME, String.valueOf(preference.getEditionDateTime()));
         contentValues.put(Constant.VERSION, preference.getVersion());
         contentValues.put(Constant.ACTIVE, preference.isActive());
+        contentValues.put(Constant.VERSION, preference.getVersion());
+        contentValues.put(Constant.ACTIVE, preference.isActive());
+        contentValues.put(Constant.FK_BOOKMARK_ID, bookmarkId);
+        contentValues.put(Constant.FK_SETTINGS_ID, settingId);
         return database.insert(Constant.DATABASE_TABLE_PREFERENCE, null, contentValues);
     }
 
     public Preference findPreference(Long preferenceId){
         String[] params = {String.valueOf(preferenceId)};
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.PREFERENCE_ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.PREFERENCE_ID + "=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
         }
 
-        Preference preference = new Preference();
-//      user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
+        Long fkBookmarksId = cursor.getLong(cursor.getColumnIndex(Constant.FK_BOOKMARK_ID));
+        Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.SETTING_ID));
 
-        //TODO add the other properties
+        Preference preference = getPreference(cursor);
+        cursor.close();
+
+        BookmarkDao bookmarkDao = new BookmarkDao(database);
+        Bookmark bookmark = bookmarkDao.findBookmark(fkBookmarksId);
+
+        SettingDao settingDao = new SettingDao(database);
+        Setting setting = settingDao.findSettingById(fkSettingsId);
+
+        preference.setBookmarks(bookmark);
+        preference.setSettings(setting);
+
         return preference;
     }
 
@@ -70,4 +85,18 @@ public class PreferenceDAO {
     }
 
     //TODO update
+
+
+    private Preference getPreference(Cursor cursor){
+        Preference preference = new Preference();
+        preference.setId(cursor.getLong(cursor.getColumnIndex(Constant.PREFERENCE_ID)));
+        preference.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
+        preference.setUrl(cursor.getString(cursor.getColumnIndex(Constant.URL)));
+        preference.setOwner(cursor.getString(cursor.getColumnIndex(Constant.OWNER)));
+        preference.setEditor(cursor.getString(cursor.getColumnIndex(Constant.EDITOR)));
+//        preference.setCreationDateTime(new Date(cursor.getString(cursor.getColumnIndex(Constant.CREATION_DATE_TIME))));
+//        preference.setEditionDateTime(new Date(cursor.getString(cursor.getColumnIndex(Constant.EDITION_DATE_TIME))));  //TODO
+        preference.setVersion(cursor.getInt(cursor.getColumnIndex(Constant.VERSION)));
+        return preference;
+    }
 }

@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +24,8 @@ import java.util.Date;
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.common.FragmentInterface;
+import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.PreferenceDAO;
 import eu.focusnet.app.db.UserDAO;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.ProjectFragment;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private Toolbar toolbar;
 
+    private DatabaseAdapter databaseAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +80,9 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
-        userDao = new UserDAO(this);
+        databaseAdapter = new DatabaseAdapter(this);
+        databaseAdapter.open();
+        userDao = new UserDAO(databaseAdapter.getDb());
 
         setContentView(R.layout.activity_main);
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity  {
         drawerItems = new ArrayList<AbstractListItem>();
 
 
-        userDao.open();
+//        userDao.open();
 
         User user = userDao.findUserById(new Long(1));
         drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
@@ -274,25 +279,29 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onResume() {
-        userDao.open();
+        databaseAdapter.open();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        userDao.close();
+       databaseAdapter.close();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        userDao.open();
-        if(userDao.deleteUserById(new Long(1)))
-            Log.d(TAG, "USER DELETE");
-        else
-            Log.d(TAG, "USER DELETE");
+        databaseAdapter.open();
+        userDao = new UserDAO(databaseAdapter.getDb());
+        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+        if(userDao.deleteUserById(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
+            Log.d(TAG, "USER AND PREFERENCES DELETED");
+        }
+        else {
+            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
+        }
+        databaseAdapter.close();
 
-        userDao.close();
         super.onDestroy();
     }
 
@@ -348,5 +357,9 @@ public class MainActivity extends AppCompatActivity  {
         // Highlight the selected item
         drawerListMenu.setItemChecked(position + 1, true);
         drawerListMenu.setSelection(position);
+    }
+
+    public DatabaseAdapter getDatabaseAdapter() {
+        return databaseAdapter;
     }
 }

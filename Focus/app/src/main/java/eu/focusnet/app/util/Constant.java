@@ -11,6 +11,7 @@ public class Constant {
                             SETTING_FRAGMENT = 4,
                             USER_MANUAL_FRAGMENT = 5;
 
+
     public static final String NOTIFICATION_ID = "NotificationID",
                                USER_DATA = "UserData",
                                USER_PREFERENCES = "UserPreferences";
@@ -73,10 +74,12 @@ public class Constant {
     // Table Bookmarks information
     public static final String DATABASE_TABLE_BOOKMARK = "bookmarks";
 
-    public static final String BOOKMARK_ID = "id";
+    public static final String BOOKMARK_ID = "id",
+                                        DUMMY = "dummy"; //TODO
 
     public static final String CREATE_TABLE_BOOKMARKS_QUERY = "CREATE TABLE "+ DATABASE_TABLE_BOOKMARK +""+
-                                "("+ BOOKMARK_ID +" INTEGER PRIMARY KEY AUTOINCREMENT)";
+                                "("+ BOOKMARK_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                                     DUMMY+" TEXT)";
 
     //End table Bookmarks
 
@@ -87,7 +90,7 @@ public class Constant {
     public static final String BOOKMARK_LINK_ID = "id",
                                                     NAME = "name",
                                                     PATH = "path",
-                                                    ORDER = "order",
+                                                    ORDER = "item_order",
                                                     BL_TYPE = "bl_type";
 
 
@@ -108,7 +111,7 @@ public class Constant {
     public static final String PREFERENCE_ID = "id";
 
     public static final String CREATE_TABLE_PREFERENCE_QUERY = "CREATE TABLE "+ DATABASE_TABLE_PREFERENCE +""+
-            "("+ PREFERENCE_ID +" INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "("+ PREFERENCE_ID +" INTEGER PRIMARY KEY," +
             TYPE+" TEXT, " +
             URL+" TEXT," +
             OWNER+" TEXT," +

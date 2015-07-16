@@ -1,7 +1,8 @@
 package eu.focusnet.app.model.data;
 
 public class Setting {
-	
+
+	private Long id;
 	private String language;
 
 	public Setting() {}
@@ -16,5 +17,12 @@ public class Setting {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

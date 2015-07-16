@@ -30,14 +30,14 @@ public class SettingDao {
     public Setting findSettingById(Long settingId){
 
         String[] params = {String.valueOf(settingId)};
+        Setting setting = new Setting();
+
         Cursor cursor = database.query(Constant.DATABASE_TABLE_SETTING, columnsToRetrieve, Constant.SETTING_ID +"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
+            setting.setLanguage(cursor.getString(cursor.getColumnIndex(Constant.LANGUAGE)));
+            cursor.close();
         }
-
-        Setting setting = new Setting();
-        setting.setLanguage(cursor.getString(cursor.getColumnIndex(Constant.LANGUAGE)));
-        cursor.close();
 
         return setting;
     }

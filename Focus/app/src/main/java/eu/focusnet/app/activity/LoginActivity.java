@@ -65,6 +65,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
+            databaseAdapter.open();
             progressDialog.show();
         }
 
@@ -82,24 +83,21 @@ public class LoginActivity extends Activity {
         protected void onProgressUpdate(String... values) {
             Log.d(TAG, "Counter: " + (counter));
             String value = values[0];
-            if(counter == 0){
+            if(counter == 0) {
                 Log.d(TAG, "Creating User");
                 User user = gson.fromJson(value, User.class);
-                databaseAdapter.open();
+
                 UserDAO userDao = new UserDAO(databaseAdapter.getDb());
                 user.setId(new Long(1));
                 userDao.createUser(user);
-                databaseAdapter.close();
             }
             else if(counter == 1){
                 Log.d(TAG, "Creating Preferences");
 
                 Preference preference = gson.fromJson(value, Preference.class);
                 preference.setId(new Long(1));
-                databaseAdapter.open();
                 PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
                 preferenceDAO.createPreference(preference); //TODO bookmark and setting's id
-                databaseAdapter.close();
             }
             else{
                 //TODO content
@@ -111,6 +109,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void unused) {
+            databaseAdapter.close();
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");

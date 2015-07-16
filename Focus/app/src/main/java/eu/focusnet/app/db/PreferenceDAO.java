@@ -57,25 +57,27 @@ public class PreferenceDAO {
 
     public Preference findPreference(Long preferenceId){
         String[] params = {String.valueOf(preferenceId)};
+        Preference preference = new Preference();
+
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.PREFERENCE_ID + "=?", params, null, null, null);
+
         if(cursor != null){
             cursor.moveToFirst();
+            Long fkBookmarksId = cursor.getLong(cursor.getColumnIndex(Constant.FK_BOOKMARK_ID));
+            Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.SETTING_ID));
+
+            preference = getPreference(cursor);
+
+            BookmarkDao bookmarkDao = new BookmarkDao(database);
+            Bookmark bookmark = bookmarkDao.findBookmark(fkBookmarksId);
+
+            SettingDao settingDao = new SettingDao(database);
+            Setting setting = settingDao.findSettingById(fkSettingsId);
+
+            preference.setBookmarks(bookmark);
+            preference.setSettings(setting);
+            cursor.close();
         }
-
-        Long fkBookmarksId = cursor.getLong(cursor.getColumnIndex(Constant.FK_BOOKMARK_ID));
-        Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.SETTING_ID));
-
-        Preference preference = getPreference(cursor);
-        cursor.close();
-
-        BookmarkDao bookmarkDao = new BookmarkDao(database);
-        Bookmark bookmark = bookmarkDao.findBookmark(fkBookmarksId);
-
-        SettingDao settingDao = new SettingDao(database);
-        Setting setting = settingDao.findSettingById(fkSettingsId);
-
-        preference.setBookmarks(bookmark);
-        preference.setSettings(setting);
 
         return preference;
     }

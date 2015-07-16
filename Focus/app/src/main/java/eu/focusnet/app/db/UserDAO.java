@@ -41,22 +41,19 @@ public class UserDAO {
     }
 
     public User findUserById(Long userId){
-
+        User user = new User();
         String[] params = {String.valueOf(userId)};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_USER, columnsToRetrieve, Constant.USER_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
+            user.setId(cursor.getLong(cursor.getColumnIndex(Constant.USER_ID)));
+            user.setFirstName(cursor.getString(cursor.getColumnIndex(Constant.FIRST_NAME)));
+            user.setLastName(cursor.getString(cursor.getColumnIndex(Constant.LAST_NAME)));
+            user.setEmail(cursor.getString(cursor.getColumnIndex(Constant.EMAIL)));
+            user.setCompany(cursor.getString(cursor.getColumnIndex(Constant.COMPANY)));
+            cursor.close();
         }
-
-        User user = new User();
-        user.setId(cursor.getLong(cursor.getColumnIndex(Constant.USER_ID)));
-        user.setFirstName(cursor.getString(cursor.getColumnIndex(Constant.FIRST_NAME)));
-        user.setLastName(cursor.getString(cursor.getColumnIndex(Constant.LAST_NAME)));
-        user.setEmail(cursor.getString(cursor.getColumnIndex(Constant.EMAIL)));
-        user.setCompany(cursor.getString(cursor.getColumnIndex(Constant.COMPANY)));
         //TODO add the other properties
-
-        cursor.close();
         return user;
     }
 

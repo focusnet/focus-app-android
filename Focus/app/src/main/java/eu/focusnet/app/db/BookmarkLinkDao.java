@@ -37,12 +37,14 @@ public class BookmarkLinkDao {
     public BookmarkLink findBookmarkLink(Long bookmarkLinkId){
 
         String[] params = {String.valueOf(bookmarkLinkId)};
+        BookmarkLink bookmarkLink = new BookmarkLink();
+
         Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.BOOKMARK_LINK_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
+            bookmarkLink = getBookmarkLink(cursor);
+            cursor.close();
         }
-        BookmarkLink bookmarkLink = getBookmarkLink(cursor);
-        cursor.close();
 
         return bookmarkLink;
     }
@@ -57,9 +59,8 @@ public class BookmarkLinkDao {
                     bookmarkLinks.add(getBookmarkLink(cursor));
                 }while (cursor.moveToNext());
             }
-
+            cursor.close();
         }
-        cursor.close();
 
         return bookmarkLinks;
     }

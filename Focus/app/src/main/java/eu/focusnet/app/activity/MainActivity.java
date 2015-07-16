@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
+        setContentView(R.layout.activity_main);
+
         databaseAdapter = new DatabaseAdapter(this);
         databaseAdapter.open();
         userDao = new UserDAO(databaseAdapter.getDb());
-
-        setContentView(R.layout.activity_main);
 
         //save the title
         savedTitle = drawerTitle = getTitle();
@@ -291,15 +291,15 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onDestroy() {
-        databaseAdapter.open();
-        userDao = new UserDAO(databaseAdapter.getDb());
-        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
-        if(userDao.deleteUserById(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
-            Log.d(TAG, "USER AND PREFERENCES DELETED");
-        }
-        else {
-            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
-        }
+//        databaseAdapter.open();
+//        userDao = new UserDAO(databaseAdapter.getDb());
+//        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+//        if(userDao.deleteUserById(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
+//            Log.d(TAG, "USER AND PREFERENCES DELETED");
+//        }
+//        else {
+//            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
+//        }
         databaseAdapter.close();
 
         super.onDestroy();

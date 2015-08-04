@@ -17,8 +17,8 @@ import java.util.Date;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDAO;
-import eu.focusnet.app.db.UserDAO;
+import eu.focusnet.app.db.PreferenceDao;
+import eu.focusnet.app.db.UserDao;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.service.DataProviderService;
@@ -31,6 +31,7 @@ public class LoginActivity extends Activity {
 
     private static final String TAG  = LoginActivity.class.getName();
     private ArrayList<String> data = new ArrayList<>();
+    private int userId = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,8 @@ public class LoginActivity extends Activity {
 
     public void onClick(View view){
         //TODO
-        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/users/1/information",
-                                         "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-pref");
+        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/users/"+userId+"/information",
+                                         "http://focus.yatt.ch/resources-server/data/users/"+userId+"/focus-mobile-app-pref");
 //        "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-content" //TODO app-content
     }
 
@@ -87,16 +88,16 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "Creating User");
                 User user = gson.fromJson(value, User.class);
 
-                UserDAO userDao = new UserDAO(databaseAdapter.getDb());
-                user.setId(new Long(1));
+                UserDao userDao = new UserDao(databaseAdapter.getDb());
+                user.setId(new Long(userId));
                 userDao.createUser(user);
             }
             else if(counter == 1){
                 Log.d(TAG, "Creating Preferences");
 
                 Preference preference = gson.fromJson(value, Preference.class);
-                preference.setId(new Long(1));
-                PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+                preference.setId(new Long(userId));
+                PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
                 preferenceDAO.createPreference(preference); //TODO bookmark and setting's id
             }
             else{

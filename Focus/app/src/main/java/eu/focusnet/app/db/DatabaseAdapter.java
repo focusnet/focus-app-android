@@ -16,7 +16,7 @@ public class DatabaseAdapter {
     private static final String DATABASE_NAME = "Focus_DB";
     private static final int DATABASE_VERSION = 1;
 
-    DataBaseHelper dataBaseHelper;
+    private DataBaseHelper dataBaseHelper;
     private SQLiteDatabase db;
 
     public DatabaseAdapter(Context context){
@@ -51,6 +51,13 @@ public class DatabaseAdapter {
             db.execSQL(Constant.CREATE_TABLE_PREFERENCE_QUERY);
             db.execSQL(Constant.CREATE_TABLE_USER_QUERY);
 
+            db.execSQL(Constant.CREATE_TABLE_APP_CONTENT_QUERY);
+            db.execSQL(Constant.CREATE_TABLE_PROJECT_QUERY);
+            db.execSQL(Constant.CREATE_TABLE_PAGE_QUERY);
+            db.execSQL(Constant.CREATE_TABLE_WIDGETS_QUERY);
+            db.execSQL(Constant.CREATE_TABLE_LINKER_QUERY);
+            db.execSQL(Constant.CREATE_TABLE_WIDGET_LINKER_QUERY);
+
 
         }
 
@@ -61,6 +68,14 @@ public class DatabaseAdapter {
             db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_SETTING);
             db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_PREFERENCE);
             db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_USER);
+
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_APP_CONTENT);
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_PROJECT);
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_PAGE);
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_WIDGET);
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_LINKER);
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_WIDGET_LINKER);
+
             onCreate(db);
         }
 

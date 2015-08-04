@@ -25,8 +25,7 @@ import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDAO;
-import eu.focusnet.app.db.UserDAO;
+import eu.focusnet.app.db.UserDao;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.fragment.SettingFragment;
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity  {
     private DrawerLayout drawerLayout;
     private ListView drawerListMenu;
     private ActionBarDrawerToggle drawerToggle;
-    private UserDAO userDao;
+    private UserDao userDao;
 
     // nav drawer title
     private CharSequence drawerTitle;
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity  {
 
         databaseAdapter = new DatabaseAdapter(this);
         databaseAdapter.open();
-        userDao = new UserDAO(databaseAdapter.getDb());
+        userDao = new UserDao(databaseAdapter.getDb());
 
         //save the title
         savedTitle = drawerTitle = getTitle();
@@ -102,9 +101,6 @@ public class MainActivity extends AppCompatActivity  {
         drawerListMenu = (ListView) findViewById(R.id.drawer_list_menu);
 
         drawerItems = new ArrayList<AbstractListItem>();
-
-
-//        userDao.open();
 
         User user = userDao.findUserById(new Long(1));
         drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));

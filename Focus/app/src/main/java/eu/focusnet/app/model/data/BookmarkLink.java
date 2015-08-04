@@ -11,7 +11,6 @@ public class BookmarkLink {
 
     private int order;
 
-
     public BookmarkLink() {}
 
     public BookmarkLink(String name, String path, int order) {

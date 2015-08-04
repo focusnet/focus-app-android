@@ -11,14 +11,14 @@ import eu.focusnet.app.util.Constant;
 /**
  * Created by admin on 06.07.2015.
  */
-public class UserDAO {
+public class UserDao {
 
     private String[] columnsToRetrieve = {Constant.USER_ID, Constant.EMAIL, Constant.COMPANY, Constant.FIRST_NAME, Constant.LAST_NAME,
             Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION, Constant.ACTIVE};
 
     private SQLiteDatabase database;
 
-    public UserDAO(SQLiteDatabase database){
+    public UserDao(SQLiteDatabase database){
         this.database = database;
     }
 

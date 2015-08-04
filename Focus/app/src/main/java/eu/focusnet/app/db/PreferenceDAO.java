@@ -16,7 +16,7 @@ import eu.focusnet.app.util.Constant;
  * Created by admin on 07.07.2015.
  */
 
-public class PreferenceDAO {
+public class PreferenceDao {
 
     private String[] columnsToRetrieve = {Constant.PREFERENCE_ID,
             Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION,
@@ -24,7 +24,7 @@ public class PreferenceDAO {
 
     private SQLiteDatabase database;
 
-    public PreferenceDAO(SQLiteDatabase database){
+    public PreferenceDao(SQLiteDatabase database){
         this.database = database;
     }
 

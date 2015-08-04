@@ -42,45 +42,6 @@ public class ProjectFragment extends ListFragment implements FragmentInterface {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
         new ProjectBuilderTask().execute();
-
-//        projectTitels = getResources().getStringArray(R.array.focus_project_items);
-//        // load icons
-//        projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
-//
-//        ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-//        AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
-//                                                                      getString(R.string.focus_header_project),
-//                                                                      Util.getBitmap(getActivity(), R.drawable.ic_filter));
-//
-//        abstractItems.add(headerProjectsListItem);
-//
-//        for(int i = 0; i < projectTitels.length; i++){
-//            String notifTitle = projectTitels[i];
-//            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)), notifTitle, "Info projects", Util.getBitmap(getActivity(), R.drawable.ic_star));
-//            abstractItems.add(drawListItem);
-//        }
-//
-//        AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
-//                getString(R.string.focus_header_notification),
-//                Util.getBitmap(getActivity(),  R.drawable.ic_filter));
-//        abstractItems.add(headerNotificationListItem);
-//
-//        notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
-//        // load icons
-//        notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
-//
-//        for(int i = 0; i < notificationTitels.length; i++){
-//            String notifTitle = notificationTitels[i];
-//            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null);
-//            abstractItems.add(drawListItem);
-//        }
-//
-//        // Recycle the typed array
-//        projectIcons.recycle();
-//        notificationIcons.recycle();
-//
-//        StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
-//        setListAdapter(adapter);
         return viewRoot;
     }
 
@@ -114,8 +75,7 @@ public class ProjectFragment extends ListFragment implements FragmentInterface {
         return position;
     }
 
-
-
+    
     private class ProjectBuilderTask extends AsyncTask<Void, Void, Void> {
         private StandardListAdapter adapter;
 

@@ -14,7 +14,7 @@ import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDAO;
+import eu.focusnet.app.db.PreferenceDao;
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
@@ -72,7 +72,7 @@ public class BookmarkFragment extends ListFragment implements FragmentInterface 
         protected Void doInBackground(Void... voids) {
             DatabaseAdapter databaseAdapter = ((MainActivity)getActivity()).getDatabaseAdapter();
             databaseAdapter.open();
-            PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+            PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
             Preference preference = preferenceDAO.findPreference(new Long(1));
             databaseAdapter.close();
 
@@ -90,7 +90,6 @@ public class BookmarkFragment extends ListFragment implements FragmentInterface 
                         bl.getPath(), Util.getBitmap(getActivity(), R.drawable.ic_user_manual));    //TODO order by item_order when retrieving from db
                 abstractItems.add(drawListItem);
             }
-
 
             AbstractListItem headerToolListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_settings),
                     getString(R.string.bookmark_header_tool), Util.getBitmap(getActivity(), R.drawable.ic_filter));

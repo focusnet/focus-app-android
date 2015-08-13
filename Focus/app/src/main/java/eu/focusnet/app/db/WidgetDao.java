@@ -20,19 +20,19 @@ public class WidgetDao {
     private String[] columnsToRetrieve = {Constant.WIDGET_ID, Constant.TYPE, Constant.PARAMS, Constant.FK_PROJECT_ID};
 
     private SQLiteDatabase database;
-    private Gson gson;
+  //  private Gson gson;
 
     public WidgetDao(SQLiteDatabase database){
         this.database = database;
-        this.gson = new Gson();
+    //    this.gson = new Gson();
     }
 
     public Long createWidget(Widget widget, String fkProjectId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.WIDGET_ID, widget.getGuid());
         contentValues.put(Constant.TYPE, widget.getType());
-        String params = gson.toJson(widget.getParams());
-        contentValues.put(Constant.PARAMS, params);
+//        String params = gson.toJson(widget.getParams());
+  //      contentValues.put(Constant.PARAMS, params);
         contentValues.put(Constant.FK_PROJECT_ID, fkProjectId);
         return database.insert(Constant.DATABASE_TABLE_WIDGET, null, contentValues);
     }
@@ -79,7 +79,7 @@ public class WidgetDao {
         widget.setGuid(cursor.getString(cursor.getColumnIndex(Constant.WIDGET_ID)));
         widget.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
         String params = cursor.getString(cursor.getColumnIndex(Constant.PARAMS));
-        widget.setParams(gson.fromJson(params, Map.class));
+   //     widget.setParams(gson.fromJson(params, Map.class));
         return widget;
     }
 }

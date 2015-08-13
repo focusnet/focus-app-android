@@ -23,9 +23,15 @@ public class DatabaseAdapter {
         dataBaseHelper = new DataBaseHelper(context);
     }
 
-    public DatabaseAdapter open(){
+    public DatabaseAdapter openWritableDatabase(){
         if(db == null || !db.isOpen())
            db = dataBaseHelper.getWritableDatabase();
+        return  this;
+    }
+
+    public DatabaseAdapter openReadableDatabase(){
+        if(db == null || !db.isOpen())
+            db = dataBaseHelper.getReadableDatabase();
         return  this;
     }
 

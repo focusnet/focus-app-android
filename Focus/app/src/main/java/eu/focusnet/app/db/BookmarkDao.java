@@ -1,7 +1,6 @@
 package eu.focusnet.app.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -49,8 +48,8 @@ public class BookmarkDao {
         if(cursor != null){
             cursor.moveToFirst();
             BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(database);
-            ArrayList<BookmarkLink> pages = bookmarkLinkDao.findBookmarkLingsByType(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE.toString());
-            ArrayList<BookmarkLink> tools = bookmarkLinkDao.findBookmarkLingsByType(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.TOOL.toString());
+            ArrayList<BookmarkLink> pages = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE.toString());
+            ArrayList<BookmarkLink> tools = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.TOOL.toString());
             bookmark.setPages(pages);
             bookmark.setTools(tools);
             cursor.close();

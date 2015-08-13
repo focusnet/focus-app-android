@@ -49,7 +49,7 @@ public class BookmarkLinkDao {
         return bookmarkLink;
     }
 
-    public ArrayList<BookmarkLink> findBookmarkLingsByType(Long bookmarkId, String type){
+    public ArrayList<BookmarkLink> findBookmarkLings(Long bookmarkId, String type){
         ArrayList<BookmarkLink> bookmarkLinks = new ArrayList<>();
         String[] params = {String.valueOf(bookmarkId), type};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.FK_BOOKMARK_ID +"=? AND "+Constant.BL_TYPE+"=?", params, null, null, null);

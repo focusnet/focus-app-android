@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -38,10 +37,6 @@ public class AppContentDao {
         contentValues.put(Constant.VERSION, appContent.getVersion());
         contentValues.put(Constant.ACTIVE, appContent.isActive());
 
-        ProjectDao projectDao = new ProjectDao(database);
-        for(Project p : appContent.getProjects())
-            projectDao.createProject(p, appContent.getId());
-
         return database.insert(Constant.DATABASE_TABLE_APP_CONTENT, null, contentValues);
     }
 
@@ -54,7 +49,7 @@ public class AppContentDao {
         if(cursor != null){
             cursor.moveToFirst();
 
-            appContent = getPreference(cursor);
+            appContent = getAppContent(cursor);
 //            ProjectDao projectDao = new ProjectDao(database);
 //            appContent.setProjects(projectDao.findProject(appContentId));  //TODO
 
@@ -64,14 +59,14 @@ public class AppContentDao {
         return appContent;
     }
 
-    public boolean deletePreference(Long preferenceId){
-        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.PREFERENCE_ID+"="+preferenceId, null) > 0;
+    public boolean deleteAppContent(Long appContentId){
+        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.PREFERENCE_ID+"="+appContentId, null) > 0;
     }
 
     //TODO update
 
 
-    private AppContent getPreference(Cursor cursor){
+    private AppContent getAppContent(Cursor cursor){
         AppContent appContent = new AppContent();
         appContent.setId(cursor.getLong(cursor.getColumnIndex(Constant.APP_CONTENT_ID)));
         appContent.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));

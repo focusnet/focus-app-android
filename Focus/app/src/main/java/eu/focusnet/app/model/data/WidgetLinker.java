@@ -1,5 +1,7 @@
 package eu.focusnet.app.model.data;
 
+import java.util.Map;
+
 /**
  * Created by admin on 03.08.2015.
  */
@@ -7,9 +9,9 @@ public class WidgetLinker {
 
     private String widgetid;
     private int order;
-    private String layout; //TODO
+    private Map<String, String> layout;
 
-    public WidgetLinker(String widgetid, int order, String layout) {
+    public WidgetLinker(String widgetid, int order, Map<String, String> layout) {
         this.widgetid = widgetid;
         this.order = order;
         this.layout = layout;
@@ -33,11 +35,11 @@ public class WidgetLinker {
         this.order = order;
     }
 
-    public String getLayout() {
+    public Map<String, String> getLayout() {
         return layout;
     }
 
-    public void setLayout(String layout) {
+    public void setLayout(Map<String, String> layout) {
         this.layout = layout;
     }
 }

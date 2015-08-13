@@ -27,7 +27,7 @@ public class SettingDao {
         return database.insert(Constant.DATABASE_TABLE_SETTING, null, contentValues);
     }
 
-    public Setting findSettingById(Long settingId){
+    public Setting findSetting(Long settingId){
 
         String[] params = {String.valueOf(settingId)};
         Setting setting = new Setting();

@@ -140,7 +140,7 @@ public class Constant {
     public static final String APP_CONTENT_ID = "id";
 
     public static final String CREATE_TABLE_APP_CONTENT_QUERY = "CREATE TABLE "+ DATABASE_TABLE_APP_CONTENT +""+
-            "("+ APP_CONTENT_ID +" INTEGER PRIMARY KEY," + "("+ PREFERENCE_ID +" INTEGER PRIMARY KEY," +
+            "("+ APP_CONTENT_ID +" INTEGER PRIMARY KEY,"+
             TYPE+" TEXT, " +
             URL+" TEXT," +
             OWNER+" TEXT," +

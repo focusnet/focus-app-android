@@ -1,11 +1,8 @@
 package eu.focusnet.app.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import java.util.Date;
 
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.Preference;
@@ -72,7 +69,7 @@ public class PreferenceDao {
             Bookmark bookmark = bookmarkDao.findBookmark(fkBookmarksId);
 
             SettingDao settingDao = new SettingDao(database);
-            Setting setting = settingDao.findSettingById(fkSettingsId);
+            Setting setting = settingDao.findSetting(fkSettingsId);
 
             preference.setBookmarks(bookmark);
             preference.setSettings(setting);

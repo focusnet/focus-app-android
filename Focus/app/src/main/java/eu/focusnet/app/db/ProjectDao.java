@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+
 import eu.focusnet.app.model.data.Linker;
 import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Project;
@@ -25,38 +27,22 @@ public class ProjectDao {
 
     public Long createProject(Project project, Long fkAppContentID){
         ContentValues contentValues = new ContentValues();
-        String projectId = project.getGuid();
-        contentValues.put(Constant.PROJECT_ID, projectId);
+        contentValues.put(Constant.PROJECT_ID, project.getGuid());
         contentValues.put(Constant.ITERATOR, project.getIterator());
         contentValues.put(Constant.TITLE, project.getTitle());
         contentValues.put(Constant.DESCRIPTION, project.getDescription());
+
         contentValues.put(Constant.ORDER, project.getOrder());
         contentValues.put(Constant.FK_APP_CONTENT_ID, fkAppContentID);
 
-        WidgetDao widgetDao = new WidgetDao(database);
-        for(Widget w : project.getWidgets())
-            widgetDao.createWidget(w, projectId);
-
-        PageDao pageDao = new PageDao(database);
-        for(Page p : project.getPages())
-            pageDao.createPage(p, projectId);
-
-        LinkerDao linkerDao = new LinkerDao(database);
-        for(Linker l : project.getDashboards())
-            linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
-
-        for(Linker l : project.getTools())
-            linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.TOOL);
-
-
-        return database.insert(Constant.DATABASE_TABLE_BOOKMARK_LINK, null, contentValues);
+        return database.insert(Constant.DATABASE_TABLE_PROJECT, null, contentValues);
     }
 
     public Project findProject(String projectId){
         String[] params = {projectId};
         Project project = new Project();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.PROJECT_ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PROJECT, columnsToRetrieve, Constant.PROJECT_ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             project = getProject(cursor);
@@ -75,6 +61,37 @@ public class ProjectDao {
         }
 
         return project;
+    }
+
+
+    public ArrayList<Project> findAllProjects(){
+
+        ArrayList<Project> projects = new ArrayList<>();
+
+        String selectAllProjectsQuery = "SELECT * FROM " + Constant.DATABASE_TABLE_PROJECT;
+
+        Cursor cursor = database.rawQuery(selectAllProjectsQuery, null);
+        if(cursor.moveToFirst()){
+            do {
+                Project project = getProject(cursor);
+                String projectId = project.getGuid();
+                WidgetDao widgetDao = new WidgetDao(database);
+                project.setWidgets(widgetDao.findWidget(projectId));
+
+                PageDao pageDao = new PageDao(database);
+                project.setPages(pageDao.findPages(projectId));
+
+                LinkerDao linkerDao = new LinkerDao(database);
+                project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
+                project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+                projects.add(project);
+            }
+            while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return projects;
     }
 
     public boolean deleteProject(Long projectId){

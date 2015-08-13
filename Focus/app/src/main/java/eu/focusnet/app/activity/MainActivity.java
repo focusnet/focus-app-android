@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
         databaseAdapter = new DatabaseAdapter(this);
-        databaseAdapter.open();
+        databaseAdapter.openReadableDatabase();
         userDao = new UserDao(databaseAdapter.getDb());
 
         //save the title
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity  {
 
         drawerItems = new ArrayList<AbstractListItem>();
 
-        User user = userDao.findUserById(new Long(1));
+        User user = userDao.findUser(new Long(1));
         drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
         Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity  {
                 this,               /* host Activity */
                 drawerLayout,      /* DrawerLayout object */
                 toolbar,
-                R.string.app_name, /* "open drawer" description */
+                R.string.app_name, /* "openWritableDatabase drawer" description */
                 R.string.app_name /* "close drawer" description */
         ) {
             /** Called when a drawer has settled in a completely closed state. */
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity  {
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
-            /** Called when a drawer has settled in a completely open state. */
+            /** Called when a drawer has settled in a completely openWritableDatabase state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 setTitle(drawerTitle);
@@ -165,12 +165,14 @@ public class MainActivity extends AppCompatActivity  {
 
         Bundle extras = getIntent().getExtras();
 
+        //TODO change this
         if (savedInstanceState == null && extras == null) {
             // on first time display view for first nav item
             showView(Constant.PROJECT_FRAGMENT);
                 Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
         }
 
+        //TODO change this
         else if(extras != null){
 //            if(extras.get(Constant.USER_DATA) != null){
 //                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
@@ -262,7 +264,7 @@ public class MainActivity extends AppCompatActivity  {
             // Highlight the item
             highlightSelectedMenuItem(fragment.getPosition());
 
-            //In case the drawer menu is open and the user click the back button,
+            //In case the drawer menu is openWritableDatabase and the user click the back button,
             // the drawer menu will be closed
             drawerLayout.closeDrawer(drawerListMenu);
         }
@@ -275,7 +277,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onResume() {
-        databaseAdapter.open();
+        databaseAdapter.openWritableDatabase();
         super.onResume();
     }
 
@@ -287,10 +289,10 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onDestroy() {
-//        databaseAdapter.open();
+//        databaseAdapter.openWritableDatabase();
 //        userDao = new UserDAO(databaseAdapter.getDb());
 //        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
-//        if(userDao.deleteUserById(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
+//        if(userDao.deleteUser(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
 //            Log.d(TAG, "USER AND PREFERENCES DELETED");
 //        }
 //        else {

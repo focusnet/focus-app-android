@@ -30,10 +30,6 @@ public class PageDao {
         contentValues.put(Constant.DESCRIPTION, page.getDescription());
         contentValues.put(Constant.FK_PROJECT_ID, fkProjectId);
 
-        WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
-        for(WidgetLinker wl : page.getWidgets())
-            widgetLinkerDao.createWidgetLinker(wl, page.getGuid());
-
         return database.insert(Constant.DATABASE_TABLE_PAGE, null, contentValues);
     }
 

@@ -40,7 +40,7 @@ public class UserDao {
         return database.insert(Constant.DATABASE_TABLE_USER, null, contentValues);
     }
 
-    public User findUserById(Long userId){
+    public User findUser(Long userId){
         User user = new User();
         String[] params = {String.valueOf(userId)};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_USER, columnsToRetrieve, Constant.USER_ID+"=?", params, null, null, null);
@@ -57,7 +57,7 @@ public class UserDao {
         return user;
     }
 
-    public boolean deleteUserById(Long userId){
+    public boolean deleteUser(Long userId){
         return database.delete(Constant.DATABASE_TABLE_USER, Constant.USER_ID+"="+userId, null) > 0;
      }
 

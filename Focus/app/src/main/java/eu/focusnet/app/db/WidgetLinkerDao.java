@@ -25,7 +25,7 @@ public class WidgetLinkerDao {
     public Long createWidgetLinker(WidgetLinker widgetLinker, String fkPageId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.ITEM_ORDER, widgetLinker.getOrder());
-        contentValues.put(Constant.LAYOUT, widgetLinker.getLayout());
+        contentValues.put(Constant.LAYOUT, widgetLinker.getLayout().toString()); //TODO
         contentValues.put(Constant.FK_WIDGET_ID, widgetLinker.getWidgetid());
         contentValues.put(Constant.FK_PAGE_ID, fkPageId);
         return database.insert(Constant.DATABASE_TABLE_WIDGET_LINKER, null, contentValues);
@@ -70,7 +70,7 @@ public class WidgetLinkerDao {
 
     private WidgetLinker getLinker(Cursor cursor){
         WidgetLinker widgetLinker = new WidgetLinker();
-        widgetLinker.setLayout(cursor.getString(cursor.getColumnIndex(Constant.LAYOUT)));
+       // widgetLinker.setLayout(cursor.getString(cursor.getColumnIndex(Constant.LAYOUT))); //TODO
         widgetLinker.setWidgetid(cursor.getString(cursor.getColumnIndex(Constant.FK_WIDGET_ID)));
         widgetLinker.setOrder(cursor.getInt(cursor.getColumnIndex(Constant.ITEM_ORDER)));
         return widgetLinker;

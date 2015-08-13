@@ -71,7 +71,7 @@ public class BookmarkFragment extends ListFragment implements FragmentInterface 
         @Override
         protected Void doInBackground(Void... voids) {
             DatabaseAdapter databaseAdapter = ((MainActivity)getActivity()).getDatabaseAdapter();
-            databaseAdapter.open();
+            databaseAdapter.openWritableDatabase();
             PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
             Preference preference = preferenceDAO.findPreference(new Long(1));
             databaseAdapter.close();

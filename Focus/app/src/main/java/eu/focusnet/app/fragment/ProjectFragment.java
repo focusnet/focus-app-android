@@ -15,16 +15,13 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.activity.MainActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 import eu.focusnet.app.activity.R;
 
@@ -32,15 +29,13 @@ import eu.focusnet.app.activity.R;
 /**
  * Created by admin on 15.06.2015.
  */
-public class ProjectFragment extends ListFragment implements FragmentInterface {
+public class ProjectFragment extends ListFragment {
 
-//    private String[] projectTitels;
     private TypedArray projectIcons;
     private String[] notificationTitels;
     private TypedArray notificationIcons;
     private CharSequence title;
     private int position;
-    private DatabaseAdapter databaseAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,47 +47,20 @@ public class ProjectFragment extends ListFragment implements FragmentInterface {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.databaseAdapter = ((MainActivity) activity).getDatabaseAdapter();
-    }
-
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         //only for test purposes
         if(position != 0){
-            FragmentInterface fragment = new CuttingFragment();
+         //   FragmentInterface fragment = new CuttingFragment();
       //      fragment.setTitle(projectTitels[position-1]);
-            Util.replaceFragment((Fragment)fragment, getActivity().getFragmentManager());
+       //     FragmentService.replaceFragment((Fragment) fragment, getActivity().getFragmentManager());
         }
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        this.title = title;
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setPosition(int position){
-        this.position = position;
-
-    }
-
-    @Override
-    public int getPosition() {
-        return position;
-    }
 
     private class ProjectBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
         @Override
         protected StandardListAdapter doInBackground(Void... voids) {
-//            projectTitels = getResources().getStringArray(R.array.focus_project_items);
             // load icons
             projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
 
@@ -104,18 +72,16 @@ public class ProjectFragment extends ListFragment implements FragmentInterface {
             abstractItems.add(headerProjectsListItem);
 
 
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
+            databaseAdapter.openWritableDatabase();
             ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
+            databaseAdapter.openWritableDatabase();
             ArrayList<Project> projects = projectDao.findAllProjects();
+            databaseAdapter.close();
             for(Project p : projects){
                 StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), p.getTitle(), p.getDescription(), Util.getBitmap(getActivity(), R.drawable.ic_star));
                 abstractItems.add(drawListItem);
             }
-
-//            for(int i = 0; i < projectTitels.length; i++){
-//                String notifTitle = projectTitels[i];
-//                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(i, -1)), notifTitle, "Info projects", Util.getBitmap(getActivity(), R.drawable.ic_star));
-//                abstractItems.add(drawListItem);
-//            }
 
             AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
                     getString(R.string.focus_header_notification),

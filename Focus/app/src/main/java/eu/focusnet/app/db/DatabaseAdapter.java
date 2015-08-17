@@ -29,12 +29,6 @@ public class DatabaseAdapter {
         return  this;
     }
 
-    public DatabaseAdapter openReadableDatabase(){
-        if(db == null || !db.isOpen())
-            db = dataBaseHelper.getReadableDatabase();
-        return  this;
-    }
-
     public void close(){
         dataBaseHelper.close();
     }

@@ -1,11 +1,12 @@
 package eu.focusnet.app.model.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by admin on 06.07.2015.
  */
-public class FocusObject {
+public class FocusObject implements Serializable {
 
     private String type,
                    url,

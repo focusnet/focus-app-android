@@ -16,13 +16,12 @@ import android.widget.TextView;
 
 import eu.focusnet.app.activity.MainActivity;
 import eu.focusnet.app.activity.R;
-import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.service.DataProviderService;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 
 
-public class SettingFragment extends Fragment implements FragmentInterface {
+public class SettingFragment extends Fragment {
 
     private String[] httpMethods;
     private String selectedHttpMethod;
@@ -64,28 +63,6 @@ public class SettingFragment extends Fragment implements FragmentInterface {
         return viewRoot;
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        this.title = title;
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setPosition(int position){
-        this.position = position;
-
-    }
-
-    @Override
-    public int getPosition() {
-        return position;
-    }
-
-
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
 
         private final ProgressDialog progressDialog;
@@ -106,10 +83,6 @@ public class SettingFragment extends Fragment implements FragmentInterface {
 
         @Override
         protected void onPostExecute(String result) {
-            //TODO uncomment this for the UserPreference
-//            Gson gson = new Gson();
-//            if(result != null)
-//               userPref = gson.fromJson(result, UserPreference.class);
             int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
             TextView prefTextView = (TextView)getView().findViewById(R.id.settings);
             prefTextView.setText(result);

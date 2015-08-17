@@ -35,6 +35,7 @@ import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.data.Widget;
 import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.service.DataProviderService;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 
 /**
@@ -66,6 +67,7 @@ public class LoginActivity extends Activity {
         private Gson gson;
         private Context context;
         private DatabaseAdapter databaseAdapter;
+        private User user;
 
         public DataReaderTask(Context context){
             this.context = context;
@@ -94,7 +96,7 @@ public class LoginActivity extends Activity {
 
                 if(i == 0) {
                     Log.d(TAG, "Creating User");
-                    User user = gson.fromJson(value, User.class);
+                    user = gson.fromJson(value, User.class);
 
                     UserDao userDao = new UserDao(database);
                     user.setId(new Long(userId));
@@ -178,6 +180,7 @@ public class LoginActivity extends Activity {
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");
+            i.putExtra(Constant.USER_DATA, user);
             startActivity(i);
             finish();
         }

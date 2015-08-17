@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Util;
@@ -22,7 +21,8 @@ import eu.focusnet.app.util.Util;
 /**
  * Created by admin on 29.06.2015.
  */
-public class CuttingFragment extends ListFragment implements FragmentInterface {
+public class CuttingFragment extends ListFragment {
+
 
     private CharSequence title;
     private String[] dashboardsTitels;
@@ -107,21 +107,5 @@ public class CuttingFragment extends ListFragment implements FragmentInterface {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Util.displayToast(getActivity(), "Selected position:"+position);
-    }
-
-    //Position no needed
-    @Override
-    public void setPosition(int position){}
-    @Override
-    public int getPosition() {return -1;}
-
-    @Override
-    public void setTitle(CharSequence title) {
-        this.title = title;
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return title;
     }
 }

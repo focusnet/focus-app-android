@@ -23,9 +23,6 @@ import java.util.Date;
 
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.common.FragmentInterface;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.UserDao;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.fragment.SettingFragment;
@@ -34,6 +31,7 @@ import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.service.FragmentService;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 
@@ -47,24 +45,15 @@ public class MainActivity extends AppCompatActivity  {
     private DrawerLayout drawerLayout;
     private ListView drawerListMenu;
     private ActionBarDrawerToggle drawerToggle;
-    private UserDao userDao;
-
     // nav drawer title
     private CharSequence drawerTitle;
-
     // used to store app title
     private CharSequence savedTitle;
-
     // slide menu items
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
-
     private ArrayList<AbstractListItem> drawerItems;
-
     private Toolbar toolbar;
-
-    private DatabaseAdapter databaseAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +69,6 @@ public class MainActivity extends AppCompatActivity  {
                 .build());
 
         setContentView(R.layout.activity_main);
-
-        databaseAdapter = new DatabaseAdapter(this);
-        databaseAdapter.openReadableDatabase();
-        userDao = new UserDao(databaseAdapter.getDb());
 
         //save the title
         savedTitle = drawerTitle = getTitle();
@@ -102,9 +87,10 @@ public class MainActivity extends AppCompatActivity  {
 
         drawerItems = new ArrayList<AbstractListItem>();
 
-        User user = userDao.findUser(new Long(1));
+        Bundle extras = getIntent().getExtras();
+        User user  = (User) extras.getSerializable(Constant.USER_DATA);
         drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
-        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
 
 
         for(int i = 0; i < navMenuTitles.length; i++){
@@ -163,17 +149,16 @@ public class MainActivity extends AppCompatActivity  {
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
 
-        Bundle extras = getIntent().getExtras();
 
+        //TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
+//        if (savedInstanceState == null) {
+//            // on first time display view for first nav item
+             showView(Constant.PROJECT_FRAGMENT);
+//                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+//        }
+//
         //TODO change this
-        if (savedInstanceState == null && extras == null) {
-            // on first time display view for first nav item
-            showView(Constant.PROJECT_FRAGMENT);
-                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
-        }
-
-        //TODO change this
-        else if(extras != null){
+   //     else if(extras != null){
 //            if(extras.get(Constant.USER_DATA) != null){
 //                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
 //                Log.d(TAG, data.get(0));
@@ -182,9 +167,10 @@ public class MainActivity extends AppCompatActivity  {
 //            }
 //            else {
                 //if started from a notification display the appropriate fragment
-                showView(extras.getInt(Constant.NOTIFICATION_ID));
+  //              showView(extras.getInt(Constant.NOTIFICATION_ID));
 //            }
-        }
+//        }
+        //////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     @Override
@@ -253,16 +239,22 @@ public class MainActivity extends AppCompatActivity  {
             Log.d(TAG, "Number of fragment on the stack: " + fragmentBackStackNumber);
             //remove the last inserted fragment from the stack
             fragmentMng.popBackStackImmediate();
+
             //Get the current fragment
-            FragmentInterface fragment = (FragmentInterface) Util.getCurrentFragment(fragmentMng);
+             Fragment fragment = (Fragment) FragmentService.getCurrentFragment(fragmentMng);
 
-            Log.d(TAG, "Title :" + fragment.getTitle());
-            // Set title
-            setTitle(fragment.getTitle());
+             Log.d(TAG, "Getting the fragment's argument");
+             Bundle bundle = fragment.getArguments();
 
-            Log.d(TAG, "Position :" + fragment.getPosition());
+             String title = (String) bundle.get("Title");
+             Log.d(TAG, "Title :" + title);
+             // Set title
+             setTitle(title);
+
+            int position = (int) bundle.get("Position");
+             Log.d(TAG, "Position :" + position);
             // Highlight the item
-            highlightSelectedMenuItem(fragment.getPosition());
+            highlightSelectedMenuItem(position);
 
             //In case the drawer menu is openWritableDatabase and the user click the back button,
             // the drawer menu will be closed
@@ -275,36 +267,35 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    @Override
-    protected void onResume() {
-        databaseAdapter.openWritableDatabase();
-        super.onResume();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 
-    @Override
-    protected void onPause() {
-       databaseAdapter.close();
-        super.onPause();
-    }
+//    @Override
+//    protected void onPause() {
+//    //   databaseAdapter.close();
+//        super.onPause();
+//    }
 
-    @Override
-    protected void onDestroy() {
-//        databaseAdapter.openWritableDatabase();
-//        userDao = new UserDAO(databaseAdapter.getDb());
-//        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
-//        if(userDao.deleteUser(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
-//            Log.d(TAG, "USER AND PREFERENCES DELETED");
-//        }
-//        else {
-//            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
-//        }
-        databaseAdapter.close();
-
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+////        databaseAdapter.openWritableDatabase();
+////        userDao = new UserDAO(databaseAdapter.getDb());
+////        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
+////        if(userDao.deleteUser(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
+////            Log.d(TAG, "USER AND PREFERENCES DELETED");
+////        }
+////        else {
+////            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
+////        }
+////        databaseAdapter.close();
+//
+//        super.onDestroy();
+//    }
 
     private void showView(int position) {
-        FragmentInterface fragment = null;
+        Fragment fragment = null;
 
         switch (position) {
             case Constant.PROJECT_FRAGMENT:
@@ -329,25 +320,16 @@ public class MainActivity extends AppCompatActivity  {
         if(fragment != null) {
             int effectivePosition = position - 1;
             String title = navMenuTitles[effectivePosition];
-            fragment.setTitle(title);
-            fragment.setPosition(effectivePosition);
-            Util.replaceFragment((Fragment)fragment, getFragmentManager());
+            Bundle bundle = new Bundle();
+            bundle.putString("Title", title);
+            bundle.putInt("Position", effectivePosition);
+            fragment.setArguments(bundle);
+            FragmentService.replaceFragment((Fragment) fragment, getFragmentManager());
             // Highlight the selected item
             highlightSelectedMenuItem(effectivePosition);
             //set title
             setTitle(title);
             drawerLayout.closeDrawer(drawerListMenu);
-        }
-    }
-
-    /**
-     * Slide menu item click listener
-     * */
-    private class SlideMenuClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // display view for selected nav drawer item
-            showView(position);
         }
     }
 
@@ -357,7 +339,14 @@ public class MainActivity extends AppCompatActivity  {
         drawerListMenu.setSelection(position);
     }
 
-    public DatabaseAdapter getDatabaseAdapter() {
-        return databaseAdapter;
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //display view for selected nav drawer item
+            showView(position);
+        }
     }
 }

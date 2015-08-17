@@ -77,28 +77,4 @@ public class Util {
     public static Bitmap getBitmap(Context context, int image) {
         return BitmapFactory.decodeResource(context.getResources(), image);
     }
-
-    public static void replaceFragment(Fragment fragment, FragmentManager fragmentManager){
-        String backStateName = fragment.getClass().getName();
-        Log.d(TAG, "The backStateName: " + backStateName);
-        boolean fragmentInBackStack = fragmentManager.popBackStackImmediate(backStateName, 0);
-        Log.d(TAG, "Is poped: "+fragmentInBackStack);
-
-        if(!fragmentInBackStack) {
-            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-            fragTrans.replace(R.id.frame_container, fragment, backStateName);
-            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragTrans.addToBackStack(backStateName);
-            fragTrans.commit();
-        }
-    }
-
-    public static Fragment getCurrentFragment(FragmentManager fragmentManager){
-        //Get the top fragment's tag from the stack
-        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
-        Log.d(TAG, "Current fragment's tag: "+fragmentTag);
-        //Get the fragment with this fragment's name and return it
-        return fragmentManager.findFragmentByTag(fragmentTag);
-    }
-
 }

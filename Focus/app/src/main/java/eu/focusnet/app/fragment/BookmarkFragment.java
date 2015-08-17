@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.activity.MainActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.common.FragmentInterface;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PreferenceDao;
 import eu.focusnet.app.model.data.Bookmark;
@@ -27,7 +25,7 @@ import eu.focusnet.app.activity.R;
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends ListFragment implements FragmentInterface {
+public class BookmarkFragment extends ListFragment {
 
     private String[] httpMethods;
     private String selectedHttpMethod;
@@ -42,35 +40,12 @@ public class BookmarkFragment extends ListFragment implements FragmentInterface 
         return viewRoot;
     }
 
-
-    @Override
-    public void setTitle(CharSequence title) {
-        this.title = title;
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setPosition(int position){
-        this.position = position;
-
-    }
-
-    @Override
-    public int getPosition() {
-        return position;
-    }
-
-
     private class BookmarkBuilderTask extends AsyncTask<Void, Void, Void> {
         private StandardListAdapter adapter;
 
         @Override
         protected Void doInBackground(Void... voids) {
-            DatabaseAdapter databaseAdapter = ((MainActivity)getActivity()).getDatabaseAdapter();
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
             databaseAdapter.openWritableDatabase();
             PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
             Preference preference = preferenceDAO.findPreference(new Long(1));

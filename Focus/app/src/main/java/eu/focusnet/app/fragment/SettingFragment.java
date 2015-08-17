@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import eu.focusnet.app.activity.MainActivity;
+import eu.focusnet.app.activity.FocusActivity;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.service.DataProviderService;
 import eu.focusnet.app.util.Constant;
@@ -25,8 +25,6 @@ public class SettingFragment extends Fragment {
 
     private String[] httpMethods;
     private String selectedHttpMethod;
-    private CharSequence title;
-    private  int position;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,7 +84,7 @@ public class SettingFragment extends Fragment {
             int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
             TextView prefTextView = (TextView)getView().findViewById(R.id.settings);
             prefTextView.setText(result);
-            Util.displayNotification(getActivity(), MainActivity.class, R.drawable.ic_tree, "Title", "Content", id);
+            Util.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
         }

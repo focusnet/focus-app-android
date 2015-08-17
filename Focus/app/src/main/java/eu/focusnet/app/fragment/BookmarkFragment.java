@@ -27,11 +27,6 @@ import eu.focusnet.app.activity.R;
  */
 public class BookmarkFragment extends ListFragment {
 
-    private String[] httpMethods;
-    private String selectedHttpMethod;
-    private CharSequence title;
-    private int position;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

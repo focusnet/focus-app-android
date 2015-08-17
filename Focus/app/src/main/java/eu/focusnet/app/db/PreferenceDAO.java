@@ -15,7 +15,7 @@ import eu.focusnet.app.util.Constant;
 
 public class PreferenceDao {
 
-    private String[] columnsToRetrieve = {Constant.PREFERENCE_ID,
+    private String[] columnsToRetrieve = {Constant.ID,
             Constant.TYPE, Constant.URL, Constant.OWNER, Constant.EDITOR, Constant.CREATION_DATE_TIME, Constant.EDITION_DATE_TIME, Constant.VERSION,
             Constant.ACTIVE, Constant.FK_BOOKMARK_ID, Constant.FK_SETTINGS_ID};
 
@@ -36,7 +36,7 @@ public class PreferenceDao {
         Long bookmarkId = bmDao.createBookmark(bookmark);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Constant.PREFERENCE_ID, preference.getId());
+        contentValues.put(Constant.ID, preference.getId());
         contentValues.put(Constant.TYPE, preference.getType());
         contentValues.put(Constant.URL, preference.getUrl());
         contentValues.put(Constant.OWNER, preference.getOwner());
@@ -56,12 +56,12 @@ public class PreferenceDao {
         String[] params = {String.valueOf(preferenceId)};
         Preference preference = new Preference();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.PREFERENCE_ID + "=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
 
         if(cursor != null){
             cursor.moveToFirst();
             Long fkBookmarksId = cursor.getLong(cursor.getColumnIndex(Constant.FK_BOOKMARK_ID));
-            Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.SETTING_ID));
+            Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.ID));
 
             preference = getPreference(cursor);
 
@@ -80,7 +80,7 @@ public class PreferenceDao {
     }
 
     public boolean deletePreference(Long preferenceId){
-        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.PREFERENCE_ID+"="+preferenceId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.ID+"="+preferenceId, null) > 0;
     }
 
     //TODO update
@@ -88,7 +88,7 @@ public class PreferenceDao {
 
     private Preference getPreference(Cursor cursor){
         Preference preference = new Preference();
-        preference.setId(cursor.getLong(cursor.getColumnIndex(Constant.PREFERENCE_ID)));
+        preference.setId(cursor.getLong(cursor.getColumnIndex(Constant.ID)));
         preference.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
         preference.setUrl(cursor.getString(cursor.getColumnIndex(Constant.URL)));
         preference.setOwner(cursor.getString(cursor.getColumnIndex(Constant.OWNER)));

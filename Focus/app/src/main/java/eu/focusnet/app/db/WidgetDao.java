@@ -17,7 +17,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class WidgetDao {
 
-    private String[] columnsToRetrieve = {Constant.WIDGET_ID, Constant.TYPE, Constant.PARAMS, Constant.FK_PROJECT_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.TYPE, Constant.PARAMS, Constant.FK_PROJECT_ID};
 
     private SQLiteDatabase database;
   //  private Gson gson;
@@ -29,7 +29,7 @@ public class WidgetDao {
 
     public Long createWidget(Widget widget, String fkProjectId){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Constant.WIDGET_ID, widget.getGuid());
+        contentValues.put(Constant.ID, widget.getGuid());
         contentValues.put(Constant.TYPE, widget.getType());
 //        String params = gson.toJson(widget.getParams());
   //      contentValues.put(Constant.PARAMS, params);
@@ -42,7 +42,7 @@ public class WidgetDao {
         String[] params = {String.valueOf(widgetId)};
         Widget widget = new Widget();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.WIDGET_ID + "=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             widget = getWidget(cursor);
@@ -69,14 +69,14 @@ public class WidgetDao {
     }
 
     public boolean deleteWidget(Long widgetId){
-        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.WIDGET_ID+"="+widgetId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.ID+"="+widgetId, null) > 0;
     }
 
     //TODO update
 
     private Widget getWidget(Cursor cursor){
         Widget widget = new Widget();
-        widget.setGuid(cursor.getString(cursor.getColumnIndex(Constant.WIDGET_ID)));
+        widget.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         widget.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
         String params = cursor.getString(cursor.getColumnIndex(Constant.PARAMS));
    //     widget.setParams(gson.fromJson(params, Map.class));

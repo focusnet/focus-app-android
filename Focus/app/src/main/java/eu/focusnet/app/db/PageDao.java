@@ -15,7 +15,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class PageDao {
 
-    private String[] columnsToRetrieve = {Constant.PAGE_ID, Constant.TITLE, Constant.DESCRIPTION, Constant.FK_PROJECT_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.TITLE, Constant.DESCRIPTION, Constant.FK_PROJECT_ID};
 
     private SQLiteDatabase database;
 
@@ -25,7 +25,7 @@ public class PageDao {
 
     public Long createPage(Page page, String fkProjectId){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Constant.PAGE_ID, page.getGuid());
+        contentValues.put(Constant.ID, page.getGuid());
         contentValues.put(Constant.TITLE, page.getTitle());
         contentValues.put(Constant.DESCRIPTION, page.getDescription());
         contentValues.put(Constant.FK_PROJECT_ID, fkProjectId);
@@ -38,7 +38,7 @@ public class PageDao {
         String[] params = {String.valueOf(pageId)};
         Page page = new Page();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_PAGE, columnsToRetrieve, Constant.PAGE_ID + "=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PAGE, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null) {
             cursor.moveToFirst();
             page = getPage(cursor);
@@ -72,14 +72,14 @@ public class PageDao {
     }
 
     public boolean deletePage(Long pageId){
-        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.PAGE_ID+"="+pageId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.ID+"="+pageId, null) > 0;
     }
 
     //TODO update
 
     private Page getPage(Cursor cursor){
         Page page = new Page();
-        page.setGuid(cursor.getString(cursor.getColumnIndex(Constant.PAGE_ID)));
+        page.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         page.setTitle(cursor.getString(cursor.getColumnIndex(Constant.TITLE)));
         page.setDescription(cursor.getString(cursor.getColumnIndex(Constant.DESCRIPTION)));
         return page;

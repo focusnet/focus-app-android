@@ -13,7 +13,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class SettingDao {
 
-    private String[] columnsToRetrieve = {Constant.SETTING_ID, Constant.LANGUAGE};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.LANGUAGE};
 
     private SQLiteDatabase database;
 
@@ -32,7 +32,7 @@ public class SettingDao {
         String[] params = {String.valueOf(settingId)};
         Setting setting = new Setting();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_SETTING, columnsToRetrieve, Constant.SETTING_ID +"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_SETTING, columnsToRetrieve, Constant.ID +"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             setting.setLanguage(cursor.getString(cursor.getColumnIndex(Constant.LANGUAGE)));

@@ -15,7 +15,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class BookmarkDao {
 
-    private String[] columnsToRetrieve = {Constant.BOOKMARK_ID, Constant.DUMMY};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.DUMMY};
 
     private SQLiteDatabase database;
 
@@ -44,7 +44,7 @@ public class BookmarkDao {
         String[] params = {String.valueOf(bookmarkId)};
         Bookmark bookmark = new Bookmark();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK, columnsToRetrieve, Constant.BOOKMARK_ID +"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK, columnsToRetrieve, Constant.ID +"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(database);
@@ -59,7 +59,7 @@ public class BookmarkDao {
     }
 
     public boolean deleteBookmark(Long bookmarkId){
-        return database.delete(Constant.DATABASE_TABLE_BOOKMARK, Constant.BOOKMARK_ID +"="+bookmarkId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_BOOKMARK, Constant.ID +"="+bookmarkId, null) > 0;
     }
 
 

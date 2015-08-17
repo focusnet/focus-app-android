@@ -1,11 +1,12 @@
 package eu.focusnet.app.model.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by admin on 03.08.2015.
  */
-public class Project {
+public class Project implements Serializable {
 
     private String guid;
     private String iterator; //TODO define this object

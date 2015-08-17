@@ -14,7 +14,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class LinkerDao {
 
-    private String[] columnsToRetrieve = {Constant.LINKER_ID, Constant.ITEM_ORDER, Constant.LK_TYPE, Constant.FK_PAGE_ID, Constant.FK_PROJECT_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.ITEM_ORDER, Constant.LK_TYPE, Constant.FK_PAGE_ID, Constant.FK_PROJECT_ID};
     public static enum LINKER_TYPE {DASHBOARD, TOOL}
 
     private SQLiteDatabase database;
@@ -37,7 +37,7 @@ public class LinkerDao {
         String[] params = {String.valueOf(linkerId)};
         Linker linker = new Linker();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_LINKER, columnsToRetrieve, Constant.LINKER_ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_LINKER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             linker = getLinker(cursor);
@@ -64,7 +64,7 @@ public class LinkerDao {
     }
 
     public boolean deleteLinker(Long linkerId){
-        return database.delete(Constant.DATABASE_TABLE_LINKER, Constant.LINKER_ID+"="+linkerId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_LINKER, Constant.ID+"="+linkerId, null) > 0;
     }
 
     //TODO update

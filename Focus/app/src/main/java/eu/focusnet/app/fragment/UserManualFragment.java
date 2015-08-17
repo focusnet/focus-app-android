@@ -14,9 +14,6 @@ import eu.focusnet.app.activity.R;
  */
 public class UserManualFragment extends Fragment {
 
-    private CharSequence title;
-    private int position;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

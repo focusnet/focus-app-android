@@ -1,12 +1,8 @@
 package eu.focusnet.app.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.res.TypedArray;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,100 +11,99 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.ProjectDao;
-import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Util;
-import eu.focusnet.app.activity.R;
-
 
 /**
- * Created by admin on 15.06.2015.
+ * Created by admin on 29.06.2015.
  */
 public class ProjectFragment extends ListFragment {
 
-    private TypedArray projectIcons;
+    private String[] dashboardsTitels;
+    private TypedArray dashboardsIcons;
+    private String[] toolsTitels;
+    private TypedArray toolsIcons;
     private String[] notificationTitels;
     private TypedArray notificationIcons;
-    private CharSequence title;
-    private int position;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-        new ProjectBuilderTask().execute();
+
+        dashboardsTitels = getResources().getStringArray(R.array.cutting_dashboard_items);
+        // load icons
+        dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
+
+        ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
+        AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
+                getString(R.string.cutting_header_dashboard),
+                null);
+
+        abstractItems.add(headerProjectsListItem);
+
+        for(int i = 0; i < dashboardsTitels.length; i++){
+            String notifTitle = dashboardsTitels[i];
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), dashboardsIcons.getResourceId(i, -1)), notifTitle, "Info dashboards", Util.getBitmap(getActivity(), R.drawable.ic_star));
+            abstractItems.add(drawListItem);
+        }
+
+        AbstractListItem headerToolListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_settings),
+                getString(R.string.cutting_header_tool),
+                null);
+        abstractItems.add(headerToolListItem);
+
+        toolsTitels = getResources().getStringArray(R.array.cutting_tool_items);
+        // load icons
+        toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
+
+        for(int i = 0; i < toolsTitels.length; i++){
+            String notifTitle = toolsTitels[i];
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), toolsIcons.getResourceId(i, -1)), notifTitle, "Info Tools", Util.getBitmap(getActivity(), R.drawable.ic_star_o));
+            abstractItems.add(drawListItem);
+        }
+
+
+        AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
+                getString(R.string.cutting_header_notification),
+                Util.getBitmap(getActivity(),  R.drawable.ic_filter));
+        abstractItems.add(headerNotificationListItem);
+
+
+        notificationTitels = getResources().getStringArray(R.array.cutting_notification_items);
+        // load icons
+        notificationIcons = getResources().obtainTypedArray(R.array.cutting_notification_icons);
+
+        for(int i = 0; i < notificationTitels.length; i++){
+            String notifTitle = notificationTitels[i];
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null);
+            abstractItems.add(drawListItem);
+        }
+
+        // Recycle the typed array
+        dashboardsIcons.recycle();
+        toolsIcons.recycle();
+        notificationIcons.recycle();
+
+        StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
+        setListAdapter(adapter);
         return viewRoot;
     }
 
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        activity.setTitle(this.title);
+//    }
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        //only for test purposes
-        if(position != 0){
-         //   FragmentInterface fragment = new CuttingFragment();
-      //      fragment.setTitle(projectTitels[position-1]);
-       //     FragmentService.replaceFragment((Fragment) fragment, getActivity().getFragmentManager());
-        }
+        Util.displayToast(getActivity(), "Selected position:"+position);
     }
-
-
-    private class ProjectBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
-
-        @Override
-        protected StandardListAdapter doInBackground(Void... voids) {
-            // load icons
-            projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
-
-            ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
-                    getString(R.string.focus_header_project),
-                    Util.getBitmap(getActivity(), R.drawable.ic_filter));
-
-            abstractItems.add(headerProjectsListItem);
-
-
-            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-            databaseAdapter.openWritableDatabase();
-            ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
-            databaseAdapter.openWritableDatabase();
-            ArrayList<Project> projects = projectDao.findAllProjects();
-            databaseAdapter.close();
-            for(Project p : projects){
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), p.getTitle(), p.getDescription(), Util.getBitmap(getActivity(), R.drawable.ic_star));
-                abstractItems.add(drawListItem);
-            }
-
-            AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
-                    getString(R.string.focus_header_notification),
-                    Util.getBitmap(getActivity(),  R.drawable.ic_filter));
-            abstractItems.add(headerNotificationListItem);
-
-            notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
-            // load icons
-            notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
-
-            for(int i = 0; i < notificationTitels.length; i++){
-                String notifTitle = notificationTitels[i];
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null);
-                abstractItems.add(drawListItem);
-            }
-
-            // Recycle the typed array
-            projectIcons.recycle();
-            notificationIcons.recycle();
-
-            return new StandardListAdapter(getActivity(), abstractItems);
-        }
-
-        @Override
-        protected void onPostExecute(StandardListAdapter standardListAdapter) {
-            setListAdapter(standardListAdapter);
-        }
-    }
-
 }

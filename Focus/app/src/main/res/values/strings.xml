@@ -131,5 +131,8 @@
         <item>GET</item>
         <item>POST</item>
     </string-array>
+    <string name="title_activity_main_activity2">MainActivity2Activity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

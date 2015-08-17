@@ -14,7 +14,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class WidgetLinkerDao {
 
-    private String[] columnsToRetrieve = {Constant.WIDGET_LINKER_ID, Constant.ITEM_ORDER, Constant.LAYOUT, Constant.FK_WIDGET_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.ITEM_ORDER, Constant.LAYOUT, Constant.FK_WIDGET_ID};
 
     private SQLiteDatabase database;
 
@@ -36,7 +36,7 @@ public class WidgetLinkerDao {
         String[] params = {String.valueOf(widgetLinkerId)};
         WidgetLinker widgetLinker = new WidgetLinker();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.WIDGET_LINKER_ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             widgetLinker = getLinker(cursor);
@@ -63,7 +63,7 @@ public class WidgetLinkerDao {
 
 
     public boolean deleteWidgetLinker(Long widgetLinkerId){
-        return database.delete(Constant.DATABASE_TABLE_WIDGET_LINKER, Constant.WIDGET_LINKER_ID+"="+widgetLinkerId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_WIDGET_LINKER, Constant.ID+"="+widgetLinkerId, null) > 0;
     }
 
     //TODO update

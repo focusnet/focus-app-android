@@ -24,7 +24,7 @@ import java.util.Date;
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.fragment.BookmarkFragment;
-import eu.focusnet.app.fragment.ProjectFragment;
+import eu.focusnet.app.fragment.FocusFragment;
 import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
@@ -38,9 +38,9 @@ import eu.focusnet.app.util.Util;
 /**
  * Created by admin on 15.06.2015.
  */
-public class MainActivity extends AppCompatActivity  {
+public class FocusActivity extends AppCompatActivity  {
 
-    private static final String TAG  = MainActivity.class.getName();
+    private static final String TAG  = FocusActivity.class.getName();
 
     private DrawerLayout drawerLayout;
     private ListView drawerListMenu;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_focus);
 
         //save the title
         savedTitle = drawerTitle = getTitle();
@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity  {
         drawerItems = new ArrayList<AbstractListItem>();
 
         Bundle extras = getIntent().getExtras();
-        User user  = (User) extras.getSerializable(Constant.USER_DATA);
-        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() +" "+user.getLastName(), user.getCompany(), user.getEmail()));
-        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
+        User user = (User) extras.getSerializable(Constant.USER_DATA);
 
+        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity  {
         //TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
 //        if (savedInstanceState == null) {
 //            // on first time display view for first nav item
-             showView(Constant.PROJECT_FRAGMENT);
+             showView(Constant.FOCUS_FRAGMENT);
 //                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
 //        }
 //
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity  {
 //                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
 //                Log.d(TAG, data.get(0));
 //                Util.displayToast(this, data.get(0));
-//                showView(Constant.PROJECT_FRAGMENT);
+//                showView(Constant.FOCUS_FRAGMENT);
 //            }
 //            else {
                 //if started from a notification display the appropriate fragment
@@ -227,7 +227,6 @@ public class MainActivity extends AppCompatActivity  {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public void onBackPressed() {
         //Navigate back to the last Fragment or exit the application
@@ -246,12 +245,12 @@ public class MainActivity extends AppCompatActivity  {
              Log.d(TAG, "Getting the fragment's argument");
              Bundle bundle = fragment.getArguments();
 
-             String title = (String) bundle.get("Title");
+             String title = (String) bundle.get(Constant.FRAGMENT_TITLE);
              Log.d(TAG, "Title :" + title);
              // Set title
              setTitle(title);
 
-            int position = (int) bundle.get("Position");
+            int position = (int) bundle.get(Constant.FRAGMENT_POSITION);
              Log.d(TAG, "Position :" + position);
             // Highlight the item
             highlightSelectedMenuItem(position);
@@ -298,8 +297,8 @@ public class MainActivity extends AppCompatActivity  {
         Fragment fragment = null;
 
         switch (position) {
-            case Constant.PROJECT_FRAGMENT:
-                fragment = new ProjectFragment();
+            case Constant.FOCUS_FRAGMENT:
+                fragment = new FocusFragment();
                 break;
             case Constant.BOOKMARK_FRAGMENT:
                 fragment = new BookmarkFragment();
@@ -321,10 +320,10 @@ public class MainActivity extends AppCompatActivity  {
             int effectivePosition = position - 1;
             String title = navMenuTitles[effectivePosition];
             Bundle bundle = new Bundle();
-            bundle.putString("Title", title);
-            bundle.putInt("Position", effectivePosition);
+            bundle.putString(Constant.FRAGMENT_TITLE, title);
+            bundle.putInt(Constant.FRAGMENT_POSITION, effectivePosition);
             fragment.setArguments(bundle);
-            FragmentService.replaceFragment((Fragment) fragment, getFragmentManager());
+            FragmentService.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
             // Highlight the selected item
             highlightSelectedMenuItem(effectivePosition);
             //set title

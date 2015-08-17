@@ -15,7 +15,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class BookmarkLinkDao {
 
-    private String[] columnsToRetrieve = {Constant.BOOKMARK_LINK_ID, Constant.NAME, Constant.ORDER, Constant.PATH, Constant.BL_TYPE, Constant.FK_BOOKMARK_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.NAME, Constant.ORDER, Constant.PATH, Constant.BL_TYPE, Constant.FK_BOOKMARK_ID};
     public static enum BOOKMARK_LINK_TYPE {PAGE, TOOL}
 
     private SQLiteDatabase database;
@@ -39,7 +39,7 @@ public class BookmarkLinkDao {
         String[] params = {String.valueOf(bookmarkLinkId)};
         BookmarkLink bookmarkLink = new BookmarkLink();
 
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.BOOKMARK_LINK_ID+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             bookmarkLink = getBookmarkLink(cursor);
@@ -66,7 +66,7 @@ public class BookmarkLinkDao {
     }
 
     public boolean deleteBookmarkLing(Long bookmarLinkkId){
-        return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.BOOKMARK_LINK_ID+"="+bookmarLinkkId, null) > 0;
+        return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.ID+"="+bookmarLinkkId, null) > 0;
     }
 
     //TODO update
@@ -74,7 +74,7 @@ public class BookmarkLinkDao {
 
     private BookmarkLink getBookmarkLink(Cursor cursor){
         BookmarkLink bookmarkLink = new BookmarkLink();
-        bookmarkLink.setId(cursor.getLong(cursor.getColumnIndex(Constant.BOOKMARK_LINK_ID)));
+        bookmarkLink.setId(cursor.getLong(cursor.getColumnIndex(Constant.ID)));
         bookmarkLink.setName(cursor.getString(cursor.getColumnIndex(Constant.NAME)));
         bookmarkLink.setOrder(cursor.getInt(cursor.getColumnIndex(Constant.ORDER)));
         bookmarkLink.setPath(cursor.getString(cursor.getColumnIndex(Constant.PATH)));

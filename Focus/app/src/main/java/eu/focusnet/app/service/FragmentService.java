@@ -14,7 +14,7 @@ public class FragmentService {
 
     private static final String TAG = FragmentService.class.getName();
 
-    public static void replaceFragment(Fragment fragment, FragmentManager fragmentManager){
+    public static void replaceFragment(int containerViewId, Fragment fragment, FragmentManager fragmentManager){
         String fragementName = fragment.getClass().getName();
         Log.d(TAG, "The fragment's name: " + fragementName);
         boolean isFragementPoped = fragmentManager.popBackStackImmediate(fragementName, 0);
@@ -22,7 +22,7 @@ public class FragmentService {
 
         if(!isFragementPoped) {
             FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-            fragTrans.replace(R.id.frame_container, fragment, fragementName);
+            fragTrans.replace(containerViewId, fragment, fragementName);
             fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragTrans.addToBackStack(fragementName);
             fragTrans.commit();

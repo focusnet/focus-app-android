@@ -9,9 +9,15 @@ import eu.focusnet.app.common.AbstractListItem;
  */
 public class StandardListItem extends AbstractListItem {
 
+    private String id;
     private String info;
     private Bitmap rightIcon;
     public static final int TYPE_STANDARD = 1;
+
+    public StandardListItem(String id, Bitmap icon, String title, String info, Bitmap rightIcon) {
+     this(icon, title, info, rightIcon);
+        this.id = id;
+    }
 
     public StandardListItem(Bitmap icon, String title, String info, Bitmap rightIcon) {
         super(icon, title);
@@ -33,6 +39,14 @@ public class StandardListItem extends AbstractListItem {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

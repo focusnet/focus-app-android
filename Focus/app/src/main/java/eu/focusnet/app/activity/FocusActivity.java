@@ -68,6 +68,7 @@ public class FocusActivity extends AppCompatActivity  {
                 .penaltyLog()
                 .build());
 
+
         setContentView(R.layout.activity_focus);
 
         //save the title
@@ -336,6 +337,8 @@ public class FocusActivity extends AppCompatActivity  {
         // Highlight the selected item
         drawerListMenu.setItemChecked(position + 1, true);
         drawerListMenu.setSelection(position);
+
+
     }
 
     /**

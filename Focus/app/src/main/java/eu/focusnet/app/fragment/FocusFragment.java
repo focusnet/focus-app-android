@@ -41,27 +41,29 @@ public class FocusFragment extends ListFragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-        new ProjectBuilderTask().execute();
+        new FocusBuilderTask().execute();
         return viewRoot;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        //0 represent here the Project's header and notifHeaderPosition the Notification's header,
-        if(position > 0 && position < notifHeaderPosition){
-            Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-            intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
-            startActivity(intent);
-        }
-        else if(position > notifHeaderPosition){
-            //TODO navigate to notifications ...
+        if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+            if(position > notifHeaderPosition){
+                //TODO navigate to notifications ...
+            }
+            else{
+                Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+                intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
+                intent.putExtra(Constant.PROJECT_NAME, selectedItem.getTitle());
+                startActivity(intent);
+            }
         }
     }
 
 
-    private class ProjectBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
+    private class FocusBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
         @Override
         protected StandardListAdapter doInBackground(Void... voids) {

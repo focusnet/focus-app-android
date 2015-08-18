@@ -18,7 +18,9 @@ public class ProjectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_project);
+        setTitle(getIntent().getStringExtra(Constant.PROJECT_NAME));
 
         Fragment fragment = new ProjectFragment();
         Bundle bundle = new Bundle();

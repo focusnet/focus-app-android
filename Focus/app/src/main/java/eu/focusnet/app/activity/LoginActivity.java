@@ -71,21 +71,21 @@ public class LoginActivity extends Activity {
 
         public DataReaderTask(Context context){
             this.context = context;
-            progressDialog = Util.createProgressDialog(context, "Authentication process running", "Please wait...");
             gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+            progressDialog = Util.createProgressDialog(context, "Authentication process running", "Please wait...");
             databaseAdapter = new DatabaseAdapter(context);
-
         }
 
         @Override
         protected void onPreExecute() {
-            databaseAdapter.openWritableDatabase();
             progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(String... urls) {
             Log.d(TAG, "Number of path to retrieve the resources: " + urls.length);
+
+            databaseAdapter.openWritableDatabase();
             SQLiteDatabase database = databaseAdapter.getDb();
 
             for(int i = 0; i < urls.length; i++) {
@@ -165,6 +165,9 @@ public class LoginActivity extends Activity {
 
                 publishProgress(value); //TODO remove this, when the app is finished
             }
+
+            databaseAdapter.close();
+
             return null;
         }
 
@@ -176,7 +179,6 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void unused) {
-            databaseAdapter.close();
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");

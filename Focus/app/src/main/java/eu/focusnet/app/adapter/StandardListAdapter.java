@@ -101,6 +101,7 @@ public class StandardListAdapter extends BaseAdapter {
         return row;
     }
 
+
     private class ViewHolder {
         public ImageView leftIcon;
         public TextView title;

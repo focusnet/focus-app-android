@@ -57,7 +57,7 @@ public class BookmarkFragment extends ListFragment {
 
             for(BookmarkLink bl : pages){
                 StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_chevron_right), bl.getName(),
-                        bl.getPath(), Util.getBitmap(getActivity(), R.drawable.ic_user_manual));    //TODO order by item_order when retrieving from db
+                        bl.getPath(),null, false);
                 abstractItems.add(drawListItem);
             }
 
@@ -68,7 +68,7 @@ public class BookmarkFragment extends ListFragment {
 
             for(BookmarkLink bl : tools ){
                 StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_clock_o), bl.getName(),
-                        bl.getPath(),  Util.getBitmap(getActivity(), R.drawable.ic_user_manual));  //TODO order by item_order when retrieving from db
+                        bl.getPath(),null, false);
                 abstractItems.add(drawListItem);
             }
 

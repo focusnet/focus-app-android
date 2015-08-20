@@ -1,7 +1,6 @@
 package eu.focusnet.app.activity;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.service.FragmentService;
+import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 
@@ -96,7 +95,7 @@ public class FocusActivity extends AppCompatActivity  {
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null, null); //Null for Info and left icon
+            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null, null, false); //Null for Info and left icon
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info
@@ -232,7 +231,7 @@ public class FocusActivity extends AppCompatActivity  {
     public void onBackPressed() {
         //Navigate back to the last Fragment or exit the application
         Log.d(TAG, "Back button pressed");
-        FragmentManager fragmentMng = getFragmentManager();
+        android.app.FragmentManager fragmentMng = getFragmentManager();
         int fragmentBackStackNumber = fragmentMng.getBackStackEntryCount();
         // If we have more than one fragments in the stack remove the last inserted
         if(fragmentBackStackNumber > 1){
@@ -241,7 +240,7 @@ public class FocusActivity extends AppCompatActivity  {
             fragmentMng.popBackStackImmediate();
 
             //Get the current fragment
-             Fragment fragment = (Fragment) FragmentService.getCurrentFragment(fragmentMng);
+             Fragment fragment = (Fragment) FragmentManager.getCurrentFragment(fragmentMng);
 
              Log.d(TAG, "Getting the fragment's argument");
              Bundle bundle = fragment.getArguments();
@@ -324,7 +323,7 @@ public class FocusActivity extends AppCompatActivity  {
             bundle.putString(Constant.FRAGMENT_TITLE, title);
             bundle.putInt(Constant.FRAGMENT_POSITION, effectivePosition);
             fragment.setArguments(bundle);
-            FragmentService.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
+            FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
             // Highlight the selected item
             highlightSelectedMenuItem(effectivePosition);
             //set title

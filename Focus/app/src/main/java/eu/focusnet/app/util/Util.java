@@ -11,9 +11,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -21,6 +28,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import eu.focusnet.app.activity.R;
 
@@ -76,5 +84,65 @@ public class Util {
 
     public static Bitmap getBitmap(Context context, int image) {
         return BitmapFactory.decodeResource(context.getResources(), image);
+    }
+
+    public static LinearLayout buildDialogLayout(Context context){
+
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        TextView textView = new TextView(context);
+        textView.setLayoutParams(layoutParams);
+        textView.setTextAppearance(context, android.R.attr.textAppearanceLarge);
+        textView.setText("Hallo Welt!");
+
+        EditText editText = new EditText(context);
+        editText.setLayoutParams(layoutParams);
+
+        linearLayout.addView(textView);
+       // linearLayout.addView(editText);
+
+//        setContentView(layout);
+//
+//
+//        LinearLayout linearLayout = new LinearLayout(this);
+//        LL.setBackgroundColor(Color.CYAN);
+//        LL.setOrientation(LinearLayout.VERTICAL);
+//
+//        LayoutParams LLParams = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+//
+//        LL.setWeightSum(6f);
+//        LL.setLayoutParams(LLParams);
+//
+//
+//        ImageView ladder = new ImageView(this);
+//        ladder.setImageResource(R.drawable.ic_launcher);
+//
+//        FrameLayout.LayoutParams ladderParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM);
+//        ladder.setLayoutParams(ladderParams);
+//
+//        FrameLayout ladderFL = new FrameLayout(this);
+//        LinearLayout.LayoutParams ladderFLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 0);
+//        ladderFLParams.weight = 5f;
+//        ladderFL.setLayoutParams(ladderFLParams);
+//        ladderFL.setBackgroundColor(Color.GREEN);
+//        View dummyView = new View(this);
+//
+//        LinearLayout.LayoutParams dummyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0);
+//        dummyParams.weight = 1f;
+//        dummyView.setLayoutParams(dummyParams);
+//        dummyView.setBackgroundColor(Color.RED);
+//
+//
+//
+//        ladderFL.addView(ladder);
+//        LL.addView(ladderFL);
+//        LL.addView(dummyView);
+//        RelativeLayout rl=((RelativeLayout) findViewById(R.id.screenRL));
+//        rl.addView(LL);
+        return  linearLayout;
     }
 }

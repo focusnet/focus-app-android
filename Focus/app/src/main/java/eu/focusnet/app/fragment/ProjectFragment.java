@@ -64,8 +64,6 @@ public class ProjectFragment extends ListFragment {
             }
             else{
                 Util.displayToast(getActivity(), "Dashboard selected");
-                ImageView remember = (ImageView)v.findViewById(R.id.right_icon);
-                remember.setImageBitmap(Util.getBitmap(getActivity(), R.drawable.ic_star_o));
             }
         }
     }
@@ -105,7 +103,7 @@ public class ProjectFragment extends ListFragment {
             abstractItems.add(headerProjectsListItem);
 
             for(Linker dashboard : dashboards){
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star));
+                StandardListItem drawListItem = new StandardListItem(dashboard.getPageid(), Util.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star), true);
                 abstractItems.add(drawListItem);
             }
 
@@ -121,7 +119,7 @@ public class ProjectFragment extends ListFragment {
             ArrayList<Linker> tools = project.getTools();
 
             for(Linker tool : tools){
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star_o));
+                StandardListItem drawListItem = new StandardListItem(tool.getPageid(), Util.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star_o), false);
                 abstractItems.add(drawListItem);
             }
 

@@ -83,7 +83,7 @@ public class FocusFragment extends ListFragment {
             ArrayList<Project> projects = projectDao.findAllProjects();
             databaseAdapter.close();
             for(Project p : projects){
-                StandardListItem drawListItem = new StandardListItem(p.getGuid(), Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), p.getTitle(), p.getDescription(), Util.getBitmap(getActivity(), R.drawable.ic_star));
+                StandardListItem drawListItem = new StandardListItem(p.getGuid(), Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), p.getTitle(), p.getDescription(), Util.getBitmap(getActivity(), R.drawable.ic_star), true);
                 abstractItems.add(drawListItem);
             }
 
@@ -100,7 +100,7 @@ public class FocusFragment extends ListFragment {
 
             for(int i = 0; i < notificationTitels.length; i++){
                 String notifTitle = notificationTitels[i];
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null);
+                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null, false);
                 abstractItems.add(drawListItem);
             }
 

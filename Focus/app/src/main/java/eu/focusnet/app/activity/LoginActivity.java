@@ -34,7 +34,7 @@ import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.data.Widget;
 import eu.focusnet.app.model.data.WidgetLinker;
-import eu.focusnet.app.service.DataProviderService;
+import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.Util;
 
@@ -92,7 +92,7 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "Url: " + urls[i]);
                 Log.d(TAG, "Counter: " + (i));
 
-                String value = DataProviderService.retrieveData(urls[i]);
+                String value = DataProviderManager.retrieveData(urls[i]);
 
                 if(i == 0) {
                     Log.d(TAG, "Creating User");

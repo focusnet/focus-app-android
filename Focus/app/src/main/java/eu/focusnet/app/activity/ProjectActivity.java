@@ -1,16 +1,13 @@
 package eu.focusnet.app.activity;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import eu.focusnet.app.fragment.ProjectFragment;
-import eu.focusnet.app.model.data.Project;
-import eu.focusnet.app.service.FragmentService;
+import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 
 public class ProjectActivity extends AppCompatActivity {
@@ -26,7 +23,7 @@ public class ProjectActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.PROJECT_ID, getIntent().getStringExtra(Constant.PROJECT_ID));
         fragment.setArguments(bundle);
-        FragmentService.replaceFragment(R.id.project_container, fragment, getFragmentManager());
+        FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
 
     }
 
@@ -51,4 +48,5 @@ public class ProjectActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

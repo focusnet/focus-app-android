@@ -14,9 +14,13 @@ public class BookmarkLink {
     public BookmarkLink() {}
 
     public BookmarkLink(String name, String path, int order) {
+        this(name, path);
+        this.order = order;
+    }
+
+    public BookmarkLink(String name, String path) {
         this.name = name;
         this.path = path;
-        this.order = order;
     }
 
     public Long getId() {

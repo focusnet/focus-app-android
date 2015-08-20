@@ -12,17 +12,20 @@ public class StandardListItem extends AbstractListItem {
     private String id;
     private String info;
     private Bitmap rightIcon;
+    private boolean isRightIconActive;
+
     public static final int TYPE_STANDARD = 1;
 
-    public StandardListItem(String id, Bitmap icon, String title, String info, Bitmap rightIcon) {
-     this(icon, title, info, rightIcon);
+    public StandardListItem(String id, Bitmap icon, String title, String info, Bitmap rightIcon, boolean isRightIconActive) {
+     this(icon, title, info, rightIcon, isRightIconActive);
         this.id = id;
     }
 
-    public StandardListItem(Bitmap icon, String title, String info, Bitmap rightIcon) {
+    public StandardListItem(Bitmap icon, String title, String info, Bitmap rightIcon, boolean isRightIconActive) {
         super(icon, title);
         this.info = info;
         this.rightIcon = rightIcon;
+        this.isRightIconActive = isRightIconActive;
     }
 
     public Bitmap getRightIcon() {
@@ -47,6 +50,14 @@ public class StandardListItem extends AbstractListItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isRightIconActive() {
+        return isRightIconActive;
+    }
+
+    public void setIsRightIconActive(boolean isRightIconActive) {
+        this.isRightIconActive = isRightIconActive;
     }
 
     @Override

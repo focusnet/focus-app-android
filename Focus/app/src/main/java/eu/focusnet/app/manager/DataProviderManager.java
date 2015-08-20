@@ -1,4 +1,4 @@
-package eu.focusnet.app.service;
+package eu.focusnet.app.manager;
 
 import android.util.Log;
 
@@ -12,9 +12,9 @@ import eu.focusnet.app.util.NetworkUtil;
 /**
  * Created by admin on 22.06.2015.
  */
-public class DataProviderService {
+public class DataProviderManager {
 
-    private static final String TAG  = DataProviderService.class.getName();
+    private static final String TAG  = DataProviderManager.class.getName();
 
     public static String retrieveData(String path){
         StringBuffer buffer = new StringBuffer();

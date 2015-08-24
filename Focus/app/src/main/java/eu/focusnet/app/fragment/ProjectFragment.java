@@ -3,22 +3,21 @@ package eu.focusnet.app.fragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.database.sqlite.SQLiteDatabase;
-import android.media.CamcorderProfile;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.db.BookmarkLinkDao;
+import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Linker;
@@ -27,14 +26,14 @@ import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.NavigationUtil;
 
 /**
  * Created by admin on 29.06.2015.
  */
 public class ProjectFragment extends ListFragment {
 
-    private String pageId;
     private TypedArray dashboardsIcons;
     private TypedArray toolsIcons;
     private TypedArray notificationIcons;
@@ -57,13 +56,13 @@ public class ProjectFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
             if(position > notificationsHeaderPosition){
-                Util.displayToast(getActivity(), "Notification selected");
+                GuiUtil.displayToast(getActivity(), "Notification selected");
             }
             else if(position > toolsHeaderPosition){
-                Util.displayToast(getActivity(), "Tools selected");
+                GuiUtil.displayToast(getActivity(), "Tools selected");
             }
             else{
-                Util.displayToast(getActivity(), "Dashboard selected");
+                GuiUtil.displayToast(getActivity(), "Dashboard selected");
             }
         }
     }
@@ -83,11 +82,9 @@ public class ProjectFragment extends ListFragment {
         protected StandardListAdapter doInBackground(Void... params) {
 
             databaseAdapter.openWritableDatabase();
-            SQLiteDatabase database = databaseAdapter.getDb();
-            ProjectDao projectDao = new ProjectDao(database);
-
+            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
+            ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
             Project project = projectDao.findProject(projectId);
-            databaseAdapter.close();
 
             ArrayList<Linker> dashboards = project.getDashboards();
 
@@ -96,18 +93,29 @@ public class ProjectFragment extends ListFragment {
 
             ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
 
-            AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
+            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
                     getString(R.string.cutting_header_dashboard),
                     null);
 
             abstractItems.add(headerProjectsListItem);
 
             for(Linker dashboard : dashboards){
-                StandardListItem drawListItem = new StandardListItem(dashboard.getPageid(), Util.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star), true);
+                String pageId = dashboard.getPageid();
+                int dashboardOrder = dashboard.getOrder();
+                String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
+                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                boolean isRightIconActive = true;
+                String path = projectId+"/"+pageId;
+                if(bookmarkLinkDao.findBookmarkLink(pageId, path, bookmarkLinkType, dashboardOrder) == null){
+                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                    isRightIconActive = false;
+                }
+                StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
+                                                                     pageId, null, dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
                 abstractItems.add(drawListItem);
             }
 
-            AbstractListItem headerToolListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_settings),
+            AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
                     getString(R.string.cutting_header_tool),
                     null);
 
@@ -119,13 +127,28 @@ public class ProjectFragment extends ListFragment {
             ArrayList<Linker> tools = project.getTools();
 
             for(Linker tool : tools){
-                StandardListItem drawListItem = new StandardListItem(tool.getPageid(), Util.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getPageid(), null, Util.getBitmap(getActivity(), R.drawable.ic_star_o), false);
+                String pageId = tool.getPageid();
+                int toolOrder = tool.getOrder();
+                String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
+                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                boolean isRightIconActive = true;
+
+                String path = projectId+"/"+pageId;
+
+                if(bookmarkLinkDao.findBookmarkLink(pageId, path, bookmarkLinkType, toolOrder) == null){
+                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                    isRightIconActive = false;
+                }
+                StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), pageId, null,
+                                                                     toolOrder ,rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
                 abstractItems.add(drawListItem);
             }
 
-            AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
+            databaseAdapter.close();
+
+            AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
                     getString(R.string.cutting_header_notification),
-                    Util.getBitmap(getActivity(),  R.drawable.ic_filter));
+                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
             abstractItems.add(headerNotificationListItem);
 
             notificationsHeaderPosition  = abstractItems.size() - 1;

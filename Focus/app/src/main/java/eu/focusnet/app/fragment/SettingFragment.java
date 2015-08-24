@@ -18,7 +18,7 @@ import eu.focusnet.app.activity.FocusActivity;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
 
 
 public class SettingFragment extends Fragment {
@@ -66,7 +66,7 @@ public class SettingFragment extends Fragment {
         private final ProgressDialog progressDialog;
 
         public PreferenceDataReaderTask(){
-            progressDialog = Util.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
+            progressDialog = GuiUtil.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
         }
 
         @Override
@@ -84,7 +84,7 @@ public class SettingFragment extends Fragment {
             int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
             TextView prefTextView = (TextView)getView().findViewById(R.id.settings);
             prefTextView.setText(result);
-            Util.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
+            GuiUtil.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
         }

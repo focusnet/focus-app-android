@@ -40,7 +40,7 @@ public class ProjectDao {
 
     public Project findProject(String projectId){
         String[] params = {projectId};
-        Project project = new Project();
+        Project project = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PROJECT, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){

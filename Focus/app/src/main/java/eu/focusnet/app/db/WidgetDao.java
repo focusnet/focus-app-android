@@ -40,7 +40,7 @@ public class WidgetDao {
     public Widget findWidget(Long widgetId){
 
         String[] params = {String.valueOf(widgetId)};
-        Widget widget = new Widget();
+        Widget widget = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null){

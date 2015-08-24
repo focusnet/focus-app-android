@@ -18,7 +18,7 @@ import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
 import eu.focusnet.app.activity.R;
 
 
@@ -51,24 +51,26 @@ public class BookmarkFragment extends ListFragment {
             ArrayList<BookmarkLink> tools = bookmark.getTools();
 
             ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
-                    getResources().getString(R.string.bookmark_header_dashboard), Util.getBitmap(getActivity(), R.drawable.ic_filter));
+            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                                                                         getResources().getString(R.string.bookmark_header_dashboard), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
             abstractItems.add(headerProjectsListItem);
 
             for(BookmarkLink bl : pages){
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_chevron_right), bl.getName(),
-                        bl.getPath(),null, false);
+                //TODO set correct id (for now the name is set as id)
+                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+                                                                     bl.getName(), bl.getPath());
                 abstractItems.add(drawListItem);
             }
 
-            AbstractListItem headerToolListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_settings),
-                    getString(R.string.bookmark_header_tool), Util.getBitmap(getActivity(), R.drawable.ic_filter));
+            AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
+                    getString(R.string.bookmark_header_tool), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
             abstractItems.add(headerToolListItem);
 
 
             for(BookmarkLink bl : tools ){
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), R.drawable.ic_clock_o), bl.getName(),
-                        bl.getPath(),null, false);
+                //TODO set correct id (for now the name is set as id)
+                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
+                                                                     bl.getName(), bl.getPath());
                 abstractItems.add(drawListItem);
             }
 

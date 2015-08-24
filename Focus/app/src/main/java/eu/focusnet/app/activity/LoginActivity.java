@@ -36,7 +36,7 @@ import eu.focusnet.app.model.data.Widget;
 import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
 
 /**
  * Created by admin on 16.06.2015.
@@ -72,7 +72,7 @@ public class LoginActivity extends Activity {
         public DataReaderTask(Context context){
             this.context = context;
             gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-            progressDialog = Util.createProgressDialog(context, "Authentication process running", "Please wait...");
+            progressDialog = GuiUtil.createProgressDialog(context, "Authentication process running", "Please wait...");
             databaseAdapter = new DatabaseAdapter(context);
         }
 
@@ -174,7 +174,7 @@ public class LoginActivity extends Activity {
         //TODO remove this, when the app is finished
         @Override
         protected void onProgressUpdate(String... values) {
-            Util.displayToast(context, values[0]);
+            GuiUtil.displayToast(context, values[0]);
         }
 
         @Override

@@ -36,7 +36,7 @@ public class PageDao {
     public Page findPage(Long pageId){
 
         String[] params = {String.valueOf(pageId)};
-        Page page = new Page();
+        Page page = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PAGE, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null) {

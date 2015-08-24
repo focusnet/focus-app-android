@@ -41,11 +41,12 @@ public class UserDao {
     }
 
     public User findUser(Long userId){
-        User user = new User();
+        User user = null;
         String[] params = {String.valueOf(userId)};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_USER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
+            user = new User();
             user.setId(cursor.getLong(cursor.getColumnIndex(Constant.ID)));
             user.setFirstName(cursor.getString(cursor.getColumnIndex(Constant.FIRST_NAME)));
             user.setLastName(cursor.getString(cursor.getColumnIndex(Constant.LAST_NAME)));

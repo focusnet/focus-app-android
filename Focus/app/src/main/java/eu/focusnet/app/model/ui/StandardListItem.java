@@ -13,20 +13,25 @@ public class StandardListItem extends AbstractListItem {
     private String info;
     private Bitmap rightIcon;
     private boolean isRightIconActive;
+    private String typeOfBookmark; //no to good
+    private int order; //no to good
 
     public static final int TYPE_STANDARD = 1;
 
-    public StandardListItem(String id, Bitmap icon, String title, String info, Bitmap rightIcon, boolean isRightIconActive) {
-     this(icon, title, info, rightIcon, isRightIconActive);
+    public StandardListItem(String id, Bitmap icon, String title, String info){
+        super(icon, title);
+        this.info = info;
         this.id = id;
     }
 
-    public StandardListItem(Bitmap icon, String title, String info, Bitmap rightIcon, boolean isRightIconActive) {
-        super(icon, title);
-        this.info = info;
+    public StandardListItem(String id, Bitmap icon, String title, String info, int order, Bitmap rightIcon, boolean isRightIconActive, String typeOfBookmark) {
+        this(id, icon, title, info);
+        this.order = order;
         this.rightIcon = rightIcon;
         this.isRightIconActive = isRightIconActive;
+        this.typeOfBookmark = typeOfBookmark;
     }
+
 
     public Bitmap getRightIcon() {
         return rightIcon;
@@ -52,12 +57,28 @@ public class StandardListItem extends AbstractListItem {
         this.id = id;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     public boolean isRightIconActive() {
         return isRightIconActive;
     }
 
     public void setIsRightIconActive(boolean isRightIconActive) {
         this.isRightIconActive = isRightIconActive;
+    }
+
+    public String getTypeOfBookmark() {
+        return typeOfBookmark;
+    }
+
+    public void setTypeOfBookmark(String typeOfBookmark) {
+        this.typeOfBookmark = typeOfBookmark;
     }
 
     @Override

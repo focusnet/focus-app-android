@@ -16,7 +16,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/list_item_title"
             android:layout_gravity="center"
-            android:id="@+id/dialog_title" /> <!--TODO internationalize all these message-->
+            android:id="@+id/dialog_title"
+            android:layout_margin="15dp" /> <!--TODO internationalize all these message-->
 
     </LinearLayout>
 
@@ -34,14 +35,22 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/list_item_title"
                 android:text="Name: "
-                android:id="@+id/name" /> <!--TODO internationalize all these message-->
+                android:id="@+id/name"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="10dp" /> <!--TODO internationalize all these message-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/list_item_title"
-                android:id="@+id/selectedContext" />
+                android:id="@+id/selectedContext"
+                android:text="adfasfadsf"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp" />
 
             <!--<EditText-->
             <!--android:layout_width="wrap_content"-->

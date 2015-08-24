@@ -42,18 +42,19 @@ public class AppContentDao {
 
     public AppContent findAppContent(Long appContentId){
         String[] params = {String.valueOf(appContentId)};
-        AppContent appContent = new AppContent();
+        AppContent appContent =null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_APP_CONTENT, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
 
         if(cursor != null){
             cursor.moveToFirst();
 
-            appContent = getAppContent(cursor);
+                appContent = getAppContent(cursor);
 //            ProjectDao projectDao = new ProjectDao(database);
 //            appContent.setProjects(projectDao.findProject(appContentId));  //TODO
 
-            cursor.close();
+                cursor.close();
+
         }
 
         return appContent;

@@ -54,14 +54,14 @@ public class PreferenceDao {
 
     public Preference findPreference(Long preferenceId){
         String[] params = {String.valueOf(preferenceId)};
-        Preference preference = new Preference();
+        Preference preference = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PREFERENCE, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
 
         if(cursor != null){
             cursor.moveToFirst();
             Long fkBookmarksId = cursor.getLong(cursor.getColumnIndex(Constant.FK_BOOKMARK_ID));
-            Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.ID));
+            Long fkSettingsId = cursor.getLong(cursor.getColumnIndex(Constant.FK_SETTINGS_ID));
 
             preference = getPreference(cursor);
 

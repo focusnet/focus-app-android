@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import eu.focusnet.app.model.data.BookmarkLink;
@@ -37,12 +38,28 @@ public class BookmarkLinkDao {
     public BookmarkLink findBookmarkLink(Long bookmarkLinkId){
 
         String[] params = {String.valueOf(bookmarkLinkId)};
-        BookmarkLink bookmarkLink = new BookmarkLink();
+        BookmarkLink bookmarkLink = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
-            cursor.moveToFirst();
-            bookmarkLink = getBookmarkLink(cursor);
+            if(cursor.moveToFirst()) {
+                bookmarkLink = getBookmarkLink(cursor);
+                cursor.close();
+            }
+        }
+
+        return bookmarkLink;
+    }
+
+    public BookmarkLink findBookmarkLink(String name, String path, String bl_type, int order){
+        //TODO may this method return more than one bookmarklink?
+        String[] params = {name, path, bl_type, String.valueOf(order)};
+        BookmarkLink bookmarkLink = null;
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=?", params, null, null, null);
+        if(cursor != null){
+            if(cursor.moveToFirst()) {
+                bookmarkLink = getBookmarkLink(cursor);
+            }
             cursor.close();
         }
 
@@ -65,8 +82,14 @@ public class BookmarkLinkDao {
         return bookmarkLinks;
     }
 
-    public boolean deleteBookmarkLing(Long bookmarLinkkId){
-        return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.ID+"="+bookmarLinkkId, null) > 0;
+    public boolean deleteBookmarkLing(Long bookmarkLinkId){
+        return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.ID+"="+bookmarkLinkId, null) > 0;
+    }
+
+    public boolean deleteBookmarkLing(String name, String path, String bl_type, int order, Long fk_bookmarks_id){
+        String[] params = {name, path, bl_type, String.valueOf(order), String.valueOf(fk_bookmarks_id)};
+        return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK,
+                Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=? AND "+Constant.FK_BOOKMARK_ID+"=?", params) > 0;
     }
 
     //TODO update

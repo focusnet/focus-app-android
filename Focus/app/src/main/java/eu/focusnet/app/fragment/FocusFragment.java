@@ -3,6 +3,7 @@ package eu.focusnet.app.fragment;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,13 +15,15 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.db.BookmarkLinkDao;
+import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
 import eu.focusnet.app.activity.R;
 
 
@@ -71,25 +74,37 @@ public class FocusFragment extends ListFragment {
             projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
 
             abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_file),
+            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
                     getString(R.string.focus_header_project),
-                    Util.getBitmap(getActivity(), R.drawable.ic_filter));
+                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
 
             abstractItems.add(headerProjectsListItem);
 
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
             databaseAdapter.openWritableDatabase();
             ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
+            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
             ArrayList<Project> projects = projectDao.findAllProjects();
-            databaseAdapter.close();
             for(Project p : projects){
-                StandardListItem drawListItem = new StandardListItem(p.getGuid(), Util.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), p.getTitle(), p.getDescription(), Util.getBitmap(getActivity(), R.drawable.ic_star), true);
+                String projectId = p.getGuid();
+                String projectTitle = p.getTitle();
+                int projectOrder = p.getOrder();
+                String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
+                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                boolean isRightIconActive = true;
+                if(bookmarkLinkDao.findBookmarkLink(projectTitle, projectId, bookmarkLinkType, projectOrder) == null){
+                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                    isRightIconActive = false;
+                }
+                StandardListItem drawListItem = new StandardListItem(projectId, GuiUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
+                                                                     projectOrder, rightIcon , isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
                 abstractItems.add(drawListItem);
             }
+            databaseAdapter.close();
 
-            AbstractListItem headerNotificationListItem = new HeaderListItem(Util.getBitmap(getActivity(), R.drawable.ic_notification),
+            AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
                     getString(R.string.focus_header_notification),
-                    Util.getBitmap(getActivity(),  R.drawable.ic_filter));
+                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
             abstractItems.add(headerNotificationListItem);
 
             notifHeaderPosition = abstractItems.size() - 1;
@@ -100,7 +115,8 @@ public class FocusFragment extends ListFragment {
 
             for(int i = 0; i < notificationTitels.length; i++){
                 String notifTitle = notificationTitels[i];
-                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications", null, false);
+                //TODO set correct id (for now the title is set as id)
+                StandardListItem drawListItem = new StandardListItem(notifTitle, GuiUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
                 abstractItems.add(drawListItem);
             }
 

@@ -32,7 +32,7 @@ import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.GuiUtil;
 
 /**
  * Created by admin on 15.06.2015.
@@ -90,12 +90,12 @@ public class FocusActivity extends AppCompatActivity  {
         Bundle extras = getIntent().getExtras();
         User user = (User) extras.getSerializable(Constant.USER_DATA);
 
-        drawerItems.add(new HeaderDrawerListItem(Util.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-        Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
+        drawerItems.add(new HeaderDrawerListItem(GuiUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+        GuiUtil.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            StandardListItem drawListItem = new StandardListItem(Util.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null, null, false); //Null for Info and left icon
+            StandardListItem drawListItem = new StandardListItem(null, GuiUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for id and info
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info

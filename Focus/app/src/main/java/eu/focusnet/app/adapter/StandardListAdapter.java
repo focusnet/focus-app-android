@@ -20,7 +20,8 @@ import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.activity.R;
-import eu.focusnet.app.util.Util;
+import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.GuiUtil;
 
 /**
  * Created by admin on 24.06.2015.
@@ -99,50 +100,50 @@ public class StandardListAdapter extends BaseAdapter {
                             final Dialog dialog = builder.create();
 
                             TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-
                             TextView selectedContext = (TextView) dialogView.findViewById(R.id.selectedContext);
                             selectedContext.setText(standardListItem.getTitle());
 
                             Button ok = (Button) dialogView.findViewById(R.id.ok);
-
                             Button cancel = (Button) dialogView.findViewById(R.id.cancel);
                             cancel.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Log.d(TAG, "Cancel clicked");
                                     //Do nothing
-                                    dialog.cancel();
+                                    dialog.dismiss();
                                 }
                             });
 
                             boolean isRightIconActive = standardListItem.isRightIconActive();
                             Log.d(TAG, "Is right icon active: " + isRightIconActive);
+
+                            final Intent intent = new Intent(context, BookmarkService.class);
+                            intent.putExtra(Constant.NAME, standardListItem.getTitle());
+                            intent.putExtra(Constant.PATH, standardListItem.getId());
+                            intent.putExtra(Constant.ORDER, standardListItem.getOrder());
+                            intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
+
                             if (isRightIconActive) {
-                                dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks"); //TODO internationalize all these message
+                                dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
                                 ok.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        //TODO remove from bookmarks
                                         standardListItem.setIsRightIconActive(false);
-                                        imageView.setImageBitmap(Util.getBitmap(context, R.drawable.ic_star_o));
+                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star_o));
+                                        intent.putExtra(Constant.IS_TO_SAVE, false);
+                                        context.startService(intent);
                                         Log.d(TAG, "OK clicked");
                                         dialog.dismiss();
                                     }
                                 });
                             } else {
                                 dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
-                                ok.setOnClickListener(new View.OnClickListener() {
+                                    ok.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         standardListItem.setIsRightIconActive(true);
-                                        imageView.setImageBitmap(Util.getBitmap(context, R.drawable.ic_star));
-
-                                        //TODO add the context to bookmarks (DB, webservice)
-                                        String path = standardListItem.getId();
-                                        String title = standardListItem.getTitle(); //TODO
-                                        Intent intent = new Intent(context, BookmarkService.class);
-//                                        intent.putExtra("title", title);
-//                                        intent.putExtra("path", path);
+                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star));
+                                        intent.putExtra(Constant.IS_TO_SAVE, true);
                                         context.startService(intent);
                                         Log.d(TAG, "OK clicked");
                                         dialog.dismiss();

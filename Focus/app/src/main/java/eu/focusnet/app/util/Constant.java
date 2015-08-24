@@ -19,7 +19,11 @@ public class Constant {
                                PROJECT_DATA = "ProjectData",
                                USER_PREFERENCES = "UserPreferences",
                                FRAGMENT_POSITION = "FragmentPosition",
-                               FRAGMENT_TITLE = "FragmentTitle";
+                               FRAGMENT_TITLE = "FragmentTitle",
+                               BOOKMARK_TYPE = "BookmarkType",
+                               IS_TO_SAVE = "isToSave";
+
+
 
 
 

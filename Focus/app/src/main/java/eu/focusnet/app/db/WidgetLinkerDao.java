@@ -34,7 +34,7 @@ public class WidgetLinkerDao {
     public WidgetLinker findWidgetLinker(Long widgetLinkerId){
 
         String[] params = {String.valueOf(widgetLinkerId)};
-        WidgetLinker widgetLinker = new WidgetLinker();
+        WidgetLinker widgetLinker = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){

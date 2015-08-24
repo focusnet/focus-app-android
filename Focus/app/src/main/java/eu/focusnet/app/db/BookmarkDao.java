@@ -42,17 +42,20 @@ public class BookmarkDao {
     public Bookmark findBookmark(Long bookmarkId){
 
         String[] params = {String.valueOf(bookmarkId)};
-        Bookmark bookmark = new Bookmark();
+        Bookmark bookmark = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK, columnsToRetrieve, Constant.ID +"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
-            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(database);
-            ArrayList<BookmarkLink> pages = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE.toString());
-            ArrayList<BookmarkLink> tools = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.TOOL.toString());
-            bookmark.setPages(pages);
-            bookmark.setTools(tools);
-            cursor.close();
+                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(database);
+                ArrayList<BookmarkLink> pages = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE.toString());
+                ArrayList<BookmarkLink> tools = bookmarkLinkDao.findBookmarkLings(bookmarkId, BookmarkLinkDao.BOOKMARK_LINK_TYPE.TOOL.toString());
+                bookmark = new Bookmark();
+                bookmark.setId(bookmarkId);
+                bookmark.setPages(pages);
+                bookmark.setTools(tools);
+                cursor.close();
+
         }
 
         return bookmark;

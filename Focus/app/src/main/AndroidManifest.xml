@@ -43,6 +43,8 @@
         </activity>
         <activity
             android:name=".ProjectActivity"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTop"
             android:parentActivityName=".FocusActivity" >
             <intent-filter>
                 <action android:name="eu.focusnet.app.activity.ProjectActivity" />
@@ -50,11 +52,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PageActivity"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".ProjectActivity" >
+            <intent-filter>
+                <action android:name="eu.focusnet.app.activity.PageActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+
 
         <service
             android:name=".BookmarkService"
             android:exported="false" >
         </service>
+
     </application>
 
 </manifest>

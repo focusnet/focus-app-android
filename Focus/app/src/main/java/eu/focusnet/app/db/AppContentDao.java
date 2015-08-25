@@ -48,13 +48,10 @@ public class AppContentDao {
 
         if(cursor != null){
             cursor.moveToFirst();
-
-                appContent = getAppContent(cursor);
-//            ProjectDao projectDao = new ProjectDao(database);
-//            appContent.setProjects(projectDao.findProject(appContentId));  //TODO
-
-                cursor.close();
-
+            appContent = getAppContent(cursor);
+//          ProjectDao projectDao = new ProjectDao(database);
+//          appContent.setProjects(projectDao.findProject(appContentId));  //TODO
+            cursor.close();
         }
 
         return appContent;

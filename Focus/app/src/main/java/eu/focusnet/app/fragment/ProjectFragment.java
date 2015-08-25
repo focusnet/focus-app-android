@@ -2,6 +2,7 @@ package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -19,9 +20,11 @@ import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Linker;
 import eu.focusnet.app.model.data.Notification;
+import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
@@ -38,6 +41,7 @@ public class ProjectFragment extends ListFragment {
     private TypedArray toolsIcons;
     private TypedArray notificationIcons;
     private int toolsHeaderPosition, notificationsHeaderPosition;
+    private ArrayList<AbstractListItem> abstractItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,16 +61,21 @@ public class ProjectFragment extends ListFragment {
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
             if(position > notificationsHeaderPosition){
                 GuiUtil.displayToast(getActivity(), "Notification selected");
+
             }
             else if(position > toolsHeaderPosition){
                 GuiUtil.displayToast(getActivity(), "Tools selected");
             }
             else{
                 GuiUtil.displayToast(getActivity(), "Dashboard selected");
+                Intent intent = new Intent("eu.focusnet.app.activity.PageActivity");
+//                StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+//                intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
+//                intent.putExtra(Constant.PROJECT_NAME, selectedItem.getTitle());
+                startActivity(intent);
             }
         }
     }
-
 
     private class ProjectBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
@@ -83,6 +92,7 @@ public class ProjectFragment extends ListFragment {
 
             databaseAdapter.openWritableDatabase();
             BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
+           // PageDao pageDao = new PageDao(databaseAdapter.getDb());
             ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
             Project project = projectDao.findProject(projectId);
 
@@ -91,7 +101,7 @@ public class ProjectFragment extends ListFragment {
             // load icons
             dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
 
-            ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
+            abstractItems = new ArrayList<AbstractListItem>();
 
             AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
                     getString(R.string.cutting_header_dashboard),
@@ -101,6 +111,7 @@ public class ProjectFragment extends ListFragment {
 
             for(Linker dashboard : dashboards){
                 String pageId = dashboard.getPageid();
+                //Page page = pageDao.findPage(pageId);
                 int dashboardOrder = dashboard.getOrder();
                 String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
                 Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);

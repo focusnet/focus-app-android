@@ -56,7 +56,7 @@ public class FocusFragment extends ListFragment {
             }
             else{
                 Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
                 intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
                 intent.putExtra(Constant.PROJECT_NAME, selectedItem.getTitle());

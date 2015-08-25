@@ -44,7 +44,7 @@ import eu.focusnet.app.util.GuiUtil;
 public class LoginActivity extends Activity {
 
     private static final String TAG  = LoginActivity.class.getName();
-    private int userId = 1;
+    private int userId = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +54,9 @@ public class LoginActivity extends Activity {
 
     public void onClick(View view){
 
-        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/users/" + userId + "/information",
-                "http://focus.yatt.ch/resources-server/data/users/" + userId + "/focus-mobile-app-pref",
-                "http://focus.yatt.ch/data-model/documentation/examples/focus-mobile-app-content-definition/001-test.json");
-                                         // "http://focus.yatt.ch/resources-server/data/users/1/focus-mobile-app-content"); //TODO app-content
+        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/user/"+userId+"/user-information",
+                "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-user-preferences",
+                "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-content-definition");
     }
 
 

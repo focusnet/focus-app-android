@@ -41,7 +41,7 @@ public class BookmarkService extends IntentService {
         databaseAdapter.openWritableDatabase();
         PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
         //TODO need the preference ID
-        Preference foundPref = preferenceDao.findPreference(new Long(1));
+        Preference foundPref = preferenceDao.findPreference(new Long(123));
         if (foundPref != null) {
             Bookmark bookmarks = foundPref.getBookmarks();
             BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
@@ -53,7 +53,7 @@ public class BookmarkService extends IntentService {
                 }
                 else{
                     Log.d(TAG, "It is to delete");
-                    bookmarkLinkDao.deleteBookmarkLing(title, path, bookmarkType, order, bookmarkId);
+                    bookmarkLinkDao.deleteBookmarkLing(path, bookmarkType, bookmarkId);
                 }
             }
         }

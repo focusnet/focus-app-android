@@ -43,7 +43,8 @@ public class BookmarkFragment extends ListFragment {
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
             databaseAdapter.openWritableDatabase();
             PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
-            Preference preference = preferenceDAO.findPreference(new Long(1));
+            //TODO get the preference's ID
+            Preference preference = preferenceDAO.findPreference(new Long(123));
             databaseAdapter.close();
 
             Bookmark bookmark = preference.getBookmarks();

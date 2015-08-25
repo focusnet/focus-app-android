@@ -106,7 +106,7 @@ public class ProjectFragment extends ListFragment {
                 Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
                 boolean isRightIconActive = true;
                 String path = projectId+"/"+pageId;
-                if(bookmarkLinkDao.findBookmarkLink(pageId, path, bookmarkLinkType, dashboardOrder) == null){
+                if(bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null){
                     rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                     isRightIconActive = false;
                 }
@@ -135,7 +135,7 @@ public class ProjectFragment extends ListFragment {
 
                 String path = projectId+"/"+pageId;
 
-                if(bookmarkLinkDao.findBookmarkLink(pageId, path, bookmarkLinkType, toolOrder) == null){
+                if(bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null){
                     rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                     isRightIconActive = false;
                 }

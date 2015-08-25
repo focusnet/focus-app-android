@@ -92,7 +92,7 @@ public class FocusFragment extends ListFragment {
                 String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
                 Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
                 boolean isRightIconActive = true;
-                if(bookmarkLinkDao.findBookmarkLink(projectTitle, projectId, bookmarkLinkType, projectOrder) == null){
+                if(bookmarkLinkDao.findBookmarkLink(projectId, bookmarkLinkType) == null){
                     rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                     isRightIconActive = false;
                 }

@@ -51,11 +51,26 @@ public class BookmarkLinkDao {
         return bookmarkLink;
     }
 
-    public BookmarkLink findBookmarkLink(String name, String path, String bl_type, int order){
+//    public BookmarkLink findBookmarkLink(String name, String path, String bl_type, int order){
+//        //TODO may this method return more than one bookmarklink?
+//        String[] params = {name, path, bl_type, String.valueOf(order)};
+//        BookmarkLink bookmarkLink = null;
+//        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=?", params, null, null, null);
+//        if(cursor != null){
+//            if(cursor.moveToFirst()) {
+//                bookmarkLink = getBookmarkLink(cursor);
+//            }
+//            cursor.close();
+//        }
+//
+//        return bookmarkLink;
+//    }
+
+    public BookmarkLink findBookmarkLink(String path, String bl_type){
         //TODO may this method return more than one bookmarklink?
-        String[] params = {name, path, bl_type, String.valueOf(order)};
+        String[] params = {path, bl_type};
         BookmarkLink bookmarkLink = null;
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.PATH+"=? AND "+Constant.BL_TYPE+"=?", params, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()) {
                 bookmarkLink = getBookmarkLink(cursor);
@@ -86,10 +101,10 @@ public class BookmarkLinkDao {
         return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK, Constant.ID+"="+bookmarkLinkId, null) > 0;
     }
 
-    public boolean deleteBookmarkLing(String name, String path, String bl_type, int order, Long fk_bookmarks_id){
-        String[] params = {name, path, bl_type, String.valueOf(order), String.valueOf(fk_bookmarks_id)};
+    public boolean deleteBookmarkLing(String path, String bl_type, Long fk_bookmarks_id){
+        String[] params = {path, bl_type, String.valueOf(fk_bookmarks_id)};
         return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK,
-                Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=? AND "+Constant.FK_BOOKMARK_ID+"=?", params) > 0;
+                Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.FK_BOOKMARK_ID+"=?", params) > 0;
     }
 
     //TODO update

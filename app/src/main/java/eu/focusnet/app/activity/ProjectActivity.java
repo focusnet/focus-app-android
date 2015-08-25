@@ -12,19 +12,35 @@ import eu.focusnet.app.util.Constant;
 
 public class ProjectActivity extends AppCompatActivity {
 
+    private String projectName, projectId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_project);
-        setTitle(getIntent().getStringExtra(Constant.PROJECT_NAME));
 
+        if(projectName == null && projectId == null) {
+            projectName = getIntent().getStringExtra(Constant.PROJECT_NAME);
+            projectId = getIntent().getStringExtra(Constant.PROJECT_ID);
+        }
+        else{
+            projectName = savedInstanceState.getString(Constant.PROJECT_NAME);
+            projectId = savedInstanceState.getString(Constant.PROJECT_ID);
+        }
+
+        setTitle(projectName);
         Fragment fragment = new ProjectFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.PROJECT_ID, getIntent().getStringExtra(Constant.PROJECT_ID));
+        bundle.putString(Constant.PROJECT_ID, projectId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+        saveInstanceState.putString(Constant.PROJECT_NAME, projectName);
+        saveInstanceState.putString(Constant.PROJECT_ID, projectId);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class PageDao {
         return database.insert(Constant.DATABASE_TABLE_PAGE, null, contentValues);
     }
 
-    public Page findPage(Long pageId){
+    public Page findPage(String pageId){
 
         String[] params = {String.valueOf(pageId)};
         Page page = null;

@@ -5,19 +5,18 @@ package eu.focusnet.app.util;
  */
 public class NavigationUtil {
 
-
     public static String retrievePath(String path){
-        if(path.contains("[]") && path.contains("/")){
+        if(path.contains("[") && path.contains("]") && path.contains("/")){
             //TODO
-            return null;
+            return "[]/";
         }
-        else if(path.contains("[]")){
+        else if(path.contains("[") && path.contains("]")){
             //TODO
-            return null;
+            return "[]";
         }
         else if(path.contains("/")){
             //TODO
-            return null;
+            return "/";
         }
 
         return path;

@@ -19,6 +19,7 @@ import eu.focusnet.app.activity.R;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.NetworkUtil;
 
 
 public class SettingFragment extends Fragment {
@@ -76,7 +77,17 @@ public class SettingFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... urls) {
-            return DataProviderManager.retrieveData(urls[0]);
+            String data = null;
+           try {
+               NetworkUtil.ResponseData responseData = DataProviderManager.retrieveData(urls[0]);
+               if (responseData != null)
+                   data = responseData.getData();
+           }
+           catch (Exception ex){
+
+           }
+
+            return data;
         }
 
         @Override

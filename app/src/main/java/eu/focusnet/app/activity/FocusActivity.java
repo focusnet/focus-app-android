@@ -3,6 +3,7 @@ package eu.focusnet.app.activity;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Network;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
@@ -22,17 +23,20 @@ import java.util.Date;
 
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.FocusFragment;
 import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
+import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.NetworkUtil;
 
 /**
  * Created by admin on 15.06.2015.
@@ -304,6 +308,10 @@ public class FocusActivity extends AppCompatActivity  {
                 fragment = new BookmarkFragment();
                 break;
             case Constant.SYNCHRONIZE_FRAGMENT:
+            // Log.d(TAG, DataProviderManager.retrieveData("http://focus.yatt.ch/resources-server/services/check-freshness")); //POST + in content [
+//             "failing-test",
+//                        "http://data.example.org/data/aaaaaaaa/v12"
+//                ]
                 fragment = new SynchronizeFragment();
                 break;
             case Constant.SETTING_FRAGMENT:

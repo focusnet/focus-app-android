@@ -61,119 +61,120 @@ public class LoginActivity extends Activity {
     }
 
 
-    private class DataReaderTask extends AsyncTask<String, String, Void> {
+    private class DataReaderTask extends AsyncTask<String, String, User> {
 
         private ProgressDialog progressDialog;
-        private Gson gson;
         private Context context;
-        private DatabaseAdapter databaseAdapter;
-        private User user;
 
         public DataReaderTask(Context context){
             this.context = context;
-            gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-            progressDialog = GuiUtil.createProgressDialog(context, "Authentication process running", "Please wait...");
-            databaseAdapter = new DatabaseAdapter(context);
         }
 
         @Override
         protected void onPreExecute() {
+            progressDialog = GuiUtil.createProgressDialog(context, "Authentication process running", "Please wait...");
             progressDialog.show();
         }
 
         @Override
-        protected Void doInBackground(String... urls) {
+        protected User doInBackground(String... urls) {
             Log.d(TAG, "Number of path to retrieve the resources: " + urls.length);
 
-            databaseAdapter.openWritableDatabase();
-            SQLiteDatabase database = databaseAdapter.getDb();
-            for(int i = 0; i < urls.length; i++) {
-                Log.d(TAG, "Url: " + urls[i]);
-                Log.d(TAG, "Counter: " + (i));
-                try {
-                    ResponseData responseData = DataProviderManager.retrieveData(urls[i]);
-                    if (responseData != null) {
-                        String data = responseData.getData();
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter(context);
+            User user = null;
 
-                        if (i == 0) {
-                            Log.d(TAG, "Creating User");
-                            user = gson.fromJson(data, User.class);
+            try {
+                Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+                databaseAdapter.openWritableDatabase();
+                SQLiteDatabase database = databaseAdapter.getDb();
+                for (int i = 0; i < urls.length; i++) {
+                    Log.d(TAG, "Url: " + urls[i]);
+                    Log.d(TAG, "Counter: " + (i));
+                    try {
+                        ResponseData responseData = DataProviderManager.retrieveData(urls[i]);
+                        if (responseData != null) {
+                            String data = responseData.getData();
 
-                            UserDao userDao = new UserDao(database);
-                            user.setId(new Long(userId));
-                            userDao.createUser(user);
-                        } else if (i == 1) {
-                            Log.d(TAG, "Creating Preferences");
+                            if (i == 0) {
+                                Log.d(TAG, "Creating User");
+                                user = gson.fromJson(data, User.class);
 
-                            Preference preference = gson.fromJson(data, Preference.class);
-                            preference.setId(new Long(userId));
-                            PreferenceDao preferenceDAO = new PreferenceDao(database);
-                            preferenceDAO.createPreference(preference);
-                        } else {
-                            Log.d(TAG, "Creating App Content");
+                                UserDao userDao = new UserDao(database);
+                                user.setId(new Long(userId));
+                                userDao.createUser(user);
+                            } else if (i == 1) {
+                                Log.d(TAG, "Creating Preferences");
 
-                            AppContent appContent = gson.fromJson(data, AppContent.class);
-                            appContent.setId(new Long(userId));
-                            AppContentDao appContentDao = new AppContentDao(database);
-                            appContentDao.createAppContent(appContent);
+                                Preference preference = gson.fromJson(data, Preference.class);
+                                preference.setId(new Long(userId));
+                                PreferenceDao preferenceDAO = new PreferenceDao(database);
+                                preferenceDAO.createPreference(preference);
+                            } else {
+                                Log.d(TAG, "Creating App Content");
 
-                            ProjectDao projectDao = new ProjectDao(database);
-                            ArrayList<Project> projects = appContent.getProjects();
-                            if (projects != null) {
-                                for (Project project : projects) {
-                                    projectDao.createProject(project, appContent.getId());
-                                    String projectId = project.getGuid();
+                                AppContent appContent = gson.fromJson(data, AppContent.class);
+                                appContent.setId(new Long(userId));
+                                AppContentDao appContentDao = new AppContentDao(database);
+                                appContentDao.createAppContent(appContent);
 
-                                    ArrayList<Widget> widgets = project.getWidgets();
-                                    if (widgets != null) {
-                                        WidgetDao widgetDao = new WidgetDao(database);
-                                        for (Widget w : widgets)
-                                            widgetDao.createWidget(w, projectId);
-                                    }
+                                ProjectDao projectDao = new ProjectDao(database);
+                                ArrayList<Project> projects = appContent.getProjects();
+                                if (projects != null) {
+                                    for (Project project : projects) {
+                                        projectDao.createProject(project, appContent.getId());
+                                        String projectId = project.getGuid();
 
-                                    ArrayList<Page> pages = project.getPages();
-                                    if (pages != null) {
-                                        PageDao pageDao = new PageDao(database);
-                                        for (Page p : pages) {
-                                            pageDao.createPage(p, projectId);
+                                        ArrayList<Widget> widgets = project.getWidgets();
+                                        if (widgets != null) {
+                                            WidgetDao widgetDao = new WidgetDao(database);
+                                            for (Widget w : widgets)
+                                                widgetDao.createWidget(w, projectId);
+                                        }
 
-                                            WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
-                                            ArrayList<WidgetLinker> widgetLinkers = p.getWidgets();
-                                            if (widgetLinkers != null) {
-                                                for (WidgetLinker wl : widgetLinkers)
-                                                    widgetLinkerDao.createWidgetLinker(wl, p.getGuid());
+                                        ArrayList<Page> pages = project.getPages();
+                                        if (pages != null) {
+                                            PageDao pageDao = new PageDao(database);
+                                            for (Page p : pages) {
+                                                pageDao.createPage(p, projectId);
+
+                                                WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
+                                                ArrayList<WidgetLinker> widgetLinkers = p.getWidgets();
+                                                if (widgetLinkers != null) {
+                                                    for (WidgetLinker wl : widgetLinkers)
+                                                        widgetLinkerDao.createWidgetLinker(wl, p.getGuid());
+                                                }
                                             }
                                         }
-                                    }
 
-                                    LinkerDao linkerDao = new LinkerDao(database);
-                                    ArrayList<Linker> dashboards = project.getDashboards();
-                                    if (dashboards != null) {
-                                        for (Linker l : dashboards)
-                                            linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
-                                    }
+                                        LinkerDao linkerDao = new LinkerDao(database);
+                                        ArrayList<Linker> dashboards = project.getDashboards();
+                                        if (dashboards != null) {
+                                            for (Linker l : dashboards)
+                                                linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
+                                        }
 
-                                    ArrayList<Linker> tools = project.getTools();
-                                    if (tools != null) {
-                                        for (Linker l : tools)
-                                            linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.TOOL);
+                                        ArrayList<Linker> tools = project.getTools();
+                                        if (tools != null) {
+                                            for (Linker l : tools)
+                                                linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.TOOL);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        publishProgress(data); //TODO remove this, when the app is finished
+                            publishProgress(data); //TODO remove this, when the app is finished
+                        }
+                    } catch (Exception ex) {
+                        //TODO
+                        ex.printStackTrace();
                     }
                 }
-                catch (Exception ex){
-                    //TODO
-                    ex.printStackTrace();
-                }
+            }
+            finally {
+                databaseAdapter.close();
             }
 
-            databaseAdapter.close();
-
-            return null;
+            return user;
         }
 
         //TODO remove this, when the app is finished
@@ -183,7 +184,7 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Void unused) {
+        protected void onPostExecute(User user) {
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
             Intent i = new Intent("eu.focusnet.app.activity.MainActivity");

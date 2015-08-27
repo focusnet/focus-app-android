@@ -9,7 +9,7 @@ import eu.focusnet.app.common.AbstractListItem;
  */
 public class StandardListItem extends AbstractListItem {
 
-    private String id;
+    private String path;
     private String info;
     private Bitmap rightIcon;
     private boolean isRightIconActive;
@@ -18,14 +18,14 @@ public class StandardListItem extends AbstractListItem {
 
     public static final int TYPE_STANDARD = 1;
 
-    public StandardListItem(String id, Bitmap icon, String title, String info){
+    public StandardListItem(String absolutePath, Bitmap icon, String title, String info){
         super(icon, title);
         this.info = info;
-        this.id = id;
+        this.path = absolutePath;
     }
 
-    public StandardListItem(String id, Bitmap icon, String title, String info, int order, Bitmap rightIcon, boolean isRightIconActive, String typeOfBookmark) {
-        this(id, icon, title, info);
+    public StandardListItem(String absolutePath, Bitmap icon, String title, String info, int order, Bitmap rightIcon, boolean isRightIconActive, String typeOfBookmark) {
+        this(absolutePath, icon, title, info);
         this.order = order;
         this.rightIcon = rightIcon;
         this.isRightIconActive = isRightIconActive;
@@ -47,14 +47,6 @@ public class StandardListItem extends AbstractListItem {
 
     public void setInfo(String info) {
         this.info = info;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public int getOrder() {
@@ -79,6 +71,14 @@ public class StandardListItem extends AbstractListItem {
 
     public void setTypeOfBookmark(String typeOfBookmark) {
         this.typeOfBookmark = typeOfBookmark;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override

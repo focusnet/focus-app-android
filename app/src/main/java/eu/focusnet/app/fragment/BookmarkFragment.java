@@ -1,11 +1,15 @@
 package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -18,14 +22,21 @@ import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.GuiUtil;
 import eu.focusnet.app.activity.R;
+import eu.focusnet.app.util.NavigationUtil;
+
+import static eu.focusnet.app.util.NavigationUtil.PathType.PROJECTID;
+import static eu.focusnet.app.util.NavigationUtil.PathType.PROJECTID_BRACKETS_PAGEID;
 
 
 /**
  * Created by admin on 15.06.2015.
  */
 public class BookmarkFragment extends ListFragment {
+
+    private ArrayList<AbstractListItem> abstractItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,54 +46,87 @@ public class BookmarkFragment extends ListFragment {
         return viewRoot;
     }
 
-    private class BookmarkBuilderTask extends AsyncTask<Void, Void, Void> {
-        private StandardListAdapter adapter;
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+
+            Intent intent = null;
+            StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+
+            String path = selectedItem.getPath();
+            switch(NavigationUtil.checkPathType(path)){
+                case PROJECTID:
+                    intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
+                    break;
+                case PROJECTID_PAGEID:
+                    intent = new Intent("eu.focusnet.app.activity.PageActivity");
+                    break;
+                case PROJECTID_BRACKETS:
+                    //TODO
+                    break;
+                default:
+                //TODO PROJECTID_BRACKETS_PAGEID
+            }
+
+            intent.putExtra(Constant.PATH, selectedItem.getPath());
+            intent.putExtra(Constant.TITLE, selectedItem.getTitle());
+            startActivity(intent);
+        }
+    }
+
+    private class BookmarkBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected StandardListAdapter doInBackground(Void... voids) {
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-            databaseAdapter.openWritableDatabase();
-            PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
-            //TODO get the preference's ID
-            Preference preference = preferenceDAO.findPreference(new Long(123));
-            databaseAdapter.close();
+            StandardListAdapter adapter = null;
+            try {
 
-            Bookmark bookmark = preference.getBookmarks();
-            ArrayList<BookmarkLink> pages = bookmark.getPages();
-            ArrayList<BookmarkLink> tools = bookmark.getTools();
+                databaseAdapter.openWritableDatabase();
+                PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
+                //TODO get the preference's ID
+                Preference preference = preferenceDAO.findPreference(new Long(123));
 
-            ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
-                                                                         getResources().getString(R.string.bookmark_header_dashboard), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerProjectsListItem);
+                Bookmark bookmark = preference.getBookmarks();
+                ArrayList<BookmarkLink> pages = bookmark.getPages();
+                ArrayList<BookmarkLink> tools = bookmark.getTools();
 
-            for(BookmarkLink bl : pages){
-                //TODO set correct id (for now the name is set as id)
-                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-                                                                     bl.getName(), bl.getPath());
-                abstractItems.add(drawListItem);
+                abstractItems = new ArrayList<AbstractListItem>();
+                AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                        getResources().getString(R.string.bookmark_header_dashboard), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerProjectsListItem);
+
+                for (BookmarkLink bl : pages) {
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+                            bl.getName(), bl.getPath());
+                    abstractItems.add(drawListItem);
+                }
+
+                AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
+                        getString(R.string.bookmark_header_tool), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerToolListItem);
+
+
+                for (BookmarkLink bl : tools) {
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
+                            bl.getName(), bl.getPath());
+                    abstractItems.add(drawListItem);
+                }
+
+                adapter = new StandardListAdapter(getActivity(), abstractItems);
+
+            } finally {
+                databaseAdapter.close();
             }
 
-            AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
-                    getString(R.string.bookmark_header_tool), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerToolListItem);
-
-
-            for(BookmarkLink bl : tools ){
-                //TODO set correct id (for now the name is set as id)
-                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
-                                                                     bl.getName(), bl.getPath());
-                abstractItems.add(drawListItem);
-            }
-
-            adapter = new StandardListAdapter(getActivity(), abstractItems);
-
-            return null;
+            return adapter;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(StandardListAdapter adapter) {
             setListAdapter(adapter);
         }
     }
+
 }
+

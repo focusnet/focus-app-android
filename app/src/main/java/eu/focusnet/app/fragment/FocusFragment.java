@@ -3,6 +3,7 @@ package eu.focusnet.app.fragment;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,8 +59,8 @@ public class FocusFragment extends ListFragment {
                 Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
                 //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-                intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
-                intent.putExtra(Constant.PROJECT_NAME, selectedItem.getTitle());
+                intent.putExtra(Constant.PATH, selectedItem.getPath());
+                intent.putExtra(Constant.TITLE, selectedItem.getTitle());
                 startActivity(intent);
             }
         }
@@ -81,48 +82,56 @@ public class FocusFragment extends ListFragment {
             abstractItems.add(headerProjectsListItem);
 
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-            databaseAdapter.openWritableDatabase();
-            ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
-            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
-            ArrayList<Project> projects = projectDao.findAllProjects();
-            for(Project p : projects){
-                String projectId = p.getGuid();
-                String projectTitle = p.getTitle();
-                int projectOrder = p.getOrder();
-                String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
-                boolean isRightIconActive = true;
-                if(bookmarkLinkDao.findBookmarkLink(projectId, bookmarkLinkType) == null){
-                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-                    isRightIconActive = false;
+
+            try {
+                databaseAdapter.openWritableDatabase();
+                SQLiteDatabase db = databaseAdapter.getDb();
+                ProjectDao projectDao = new ProjectDao(db);
+                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(db);
+                ArrayList<Project> projects = projectDao.findAllProjects();
+                for (Project p : projects) {
+                    String projectId = p.getGuid();
+                    String projectTitle = p.getTitle();
+                    int projectOrder = p.getOrder();
+                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
+                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    boolean isRightIconActive = true;
+                    if (bookmarkLinkDao.findBookmarkLink(projectId, bookmarkLinkType) == null) {
+                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        isRightIconActive = false;
+                    }
+                    //The project Id is the same as the path
+                    StandardListItem drawListItem = new StandardListItem(projectId, GuiUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
+                            projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
+                    abstractItems.add(drawListItem);
                 }
-                StandardListItem drawListItem = new StandardListItem(projectId, GuiUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
-                                                                     projectOrder, rightIcon , isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-                abstractItems.add(drawListItem);
+
+                AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+                        getString(R.string.focus_header_notification),
+                        GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerNotificationListItem);
+
+                notifHeaderPosition = abstractItems.size() - 1;
+
+                notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
+                // load icons
+                notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
+
+                for (int i = 0; i < notificationTitels.length; i++) {
+                    String notifTitle = notificationTitels[i];
+                    //TODO set correct path (for now the title is set as the path)
+                    StandardListItem drawListItem = new StandardListItem(notifTitle, GuiUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
+                    abstractItems.add(drawListItem);
+                }
+
+                // Recycle the typed array
+                projectIcons.recycle();
+                notificationIcons.recycle();
+
             }
-            databaseAdapter.close();
-
-            AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
-                    getString(R.string.focus_header_notification),
-                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerNotificationListItem);
-
-            notifHeaderPosition = abstractItems.size() - 1;
-
-            notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
-            // load icons
-            notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
-
-            for(int i = 0; i < notificationTitels.length; i++){
-                String notifTitle = notificationTitels[i];
-                //TODO set correct id (for now the title is set as id)
-                StandardListItem drawListItem = new StandardListItem(notifTitle, GuiUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
-                abstractItems.add(drawListItem);
+            finally {
+                databaseAdapter.close();
             }
-
-            // Recycle the typed array
-            projectIcons.recycle();
-            notificationIcons.recycle();
 
             return new StandardListAdapter(getActivity(), abstractItems);
         }

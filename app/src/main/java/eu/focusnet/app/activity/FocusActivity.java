@@ -31,6 +31,7 @@ import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.User;
+import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.manager.FragmentManager;
@@ -99,7 +100,7 @@ public class FocusActivity extends AppCompatActivity  {
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            StandardListItem drawListItem = new StandardListItem(null, GuiUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for id and info
+            DrawerListItem drawListItem = new DrawerListItem(GuiUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info

@@ -119,7 +119,7 @@ public class StandardListAdapter extends BaseAdapter {
 
                             final Intent intent = new Intent(context, BookmarkService.class);
                             intent.putExtra(Constant.NAME, standardListItem.getTitle());
-                            intent.putExtra(Constant.PATH, standardListItem.getId());
+                            intent.putExtra(Constant.PATH, standardListItem.getPath());
                             intent.putExtra(Constant.ORDER, standardListItem.getOrder());
                             intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
 

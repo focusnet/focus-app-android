@@ -29,7 +29,7 @@ public class DataProviderManager {
         List<String> resourcesToRefresh  = new ArrayList<>();
         Gson gson = new Gson();
         String requestDataJson = gson.toJson(requestData);
-        Log.d(TAG, "The resources to check for freshness: "+requestDataJson);
+        Log.d(TAG, "The resources to check for freshness: " + requestDataJson);
         ResponseData responseData = makeHttpRequest(path, NetworkUtil.HTTP_METHOD_POST, requestDataJson);
 
         if(responseData != null) {
@@ -53,25 +53,34 @@ public class DataProviderManager {
         ResponseData responseData = null;
         HttpURLConnection connection = NetworkUtil.getHTTPConnection(path, httpMethod);
         connection.setDoOutput(true);
-        connection.connect();
-        OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-        wr.write(jsonData);
-        wr.flush();
-        wr.close();
-        if(connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-            responseData = NetworkUtil.getResponseData(connection.getHeaderFields(), connection.getInputStream());
-
+        try {
+            connection.connect();
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+            wr.write(jsonData);
+            wr.flush();
+            wr.close();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+                responseData = NetworkUtil.getResponseData(connection.getHeaderFields(), connection.getInputStream());
+        }
+        finally {
+            connection.disconnect();
+        }
         return  responseData;
     }
 
     private static ResponseData makeHttpRequest(String path) throws IOException {
         ResponseData responseData = null;
 
-        HttpURLConnection connection = NetworkUtil.getHTTPConnection(path, NetworkUtil.HTTP_METHOD_GET);
-        connection.connect();
-        if(connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-            responseData = NetworkUtil.getResponseData(connection.getHeaderFields(), connection.getInputStream());
 
+        HttpURLConnection connection = NetworkUtil.getHTTPConnection(path, NetworkUtil.HTTP_METHOD_GET);
+        try {
+            connection.connect();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+                responseData = NetworkUtil.getResponseData(connection.getHeaderFields(), connection.getInputStream());
+        }
+        finally {
+            connection.disconnect();
+        }
         return  responseData;
     }
 

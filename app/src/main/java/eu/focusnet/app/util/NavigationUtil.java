@@ -5,20 +5,20 @@ package eu.focusnet.app.util;
  */
 public class NavigationUtil {
 
-    public static String retrievePath(String path){
+    public enum PathType {PROJECTID, PROJECTID_PAGEID, PROJECTID_BRACKETS, PROJECTID_BRACKETS_PAGEID};
+
+    public static PathType checkPathType(String path){
         if(path.contains("[") && path.contains("]") && path.contains("/")){
-            //TODO
-            return "[]/";
+            return PathType.PROJECTID_BRACKETS_PAGEID;
         }
         else if(path.contains("[") && path.contains("]")){
-            //TODO
-            return "[]";
+            return PathType.PROJECTID_BRACKETS;
         }
         else if(path.contains("/")){
-            //TODO
-            return "/";
+            return PathType.PROJECTID_PAGEID;
         }
-
-        return path;
+        return PathType.PROJECTID;
     }
+
+
 }

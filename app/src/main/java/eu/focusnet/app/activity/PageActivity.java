@@ -1,12 +1,15 @@
 package eu.focusnet.app.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import eu.focusnet.app.activity.R;
+import eu.focusnet.app.fragment.PageFragment;
+import eu.focusnet.app.manager.FragmentManager;
+import eu.focusnet.app.util.Constant;
 
 public class PageActivity extends AppCompatActivity {
 
@@ -14,6 +17,16 @@ public class PageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page);
+
+        String pageTitle = getIntent().getStringExtra(Constant.TITLE);
+        String pageId = getIntent().getStringExtra(Constant.PATH);
+        setTitle(pageTitle);
+
+        Fragment fragment = new PageFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.PATH, pageId);
+        fragment.setArguments(bundle);
+        FragmentManager.replaceFragment(R.id.page_container, fragment, getFragmentManager());
     }
 
     @Override

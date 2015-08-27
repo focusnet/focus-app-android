@@ -53,8 +53,12 @@ public class WidgetLinkerDao {
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.FK_PAGE_ID+"=?", params, null, null, null);
         if(cursor != null){
-            cursor.moveToFirst();
-            widgetLinkers.add(widgetLinker = getLinker(cursor));
+            if(cursor.moveToFirst()) {
+                do {
+                    widgetLinkers.add(widgetLinker = getLinker(cursor));
+                }
+                while (cursor.moveToNext());
+            }
             cursor.close();
         }
 

@@ -12,26 +12,28 @@ import eu.focusnet.app.util.Constant;
 
 public class ProjectActivity extends AppCompatActivity {
 
-    private String projectName, projectId;
+    private String projectTitle, projectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
 
-        if(projectName == null && projectId == null) {
-            projectName = getIntent().getStringExtra(Constant.PROJECT_NAME);
-            projectId = getIntent().getStringExtra(Constant.PROJECT_ID);
+        if(projectTitle == null && projectId == null) {
+            projectTitle = getIntent().getStringExtra(Constant.TITLE);
+            //Path is the same as projectId
+            projectId = getIntent().getStringExtra(Constant.PATH);
         }
         else{
-            projectName = savedInstanceState.getString(Constant.PROJECT_NAME);
-            projectId = savedInstanceState.getString(Constant.PROJECT_ID);
+            projectTitle = savedInstanceState.getString(Constant.TITLE);
+            //Path is the same as projectId
+            projectId = savedInstanceState.getString(Constant.PATH);
         }
 
-        setTitle(projectName);
+        setTitle(projectTitle);
         Fragment fragment = new ProjectFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.PROJECT_ID, projectId);
+        bundle.putString(Constant.PATH, projectId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
     }
@@ -39,8 +41,8 @@ public class ProjectActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
-        saveInstanceState.putString(Constant.PROJECT_NAME, projectName);
-        saveInstanceState.putString(Constant.PROJECT_ID, projectId);
+        saveInstanceState.putString(Constant.TITLE, projectTitle);
+        saveInstanceState.putString(Constant.PATH, projectId);
     }
 
     @Override

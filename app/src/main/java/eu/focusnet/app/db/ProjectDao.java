@@ -57,6 +57,10 @@ public class ProjectDao {
             project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
             project.setTools(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
 
+            //TODO NotificationDao
+          //  project.setNotifications(notificationDao.findNotification(projectId)) ;
+
+
             cursor.close();
         }
 
@@ -83,8 +87,14 @@ public class ProjectDao {
 
                 LinkerDao linkerDao = new LinkerDao(database);
                 project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
-                project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+                project.setTools(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+
+                //TODO NotificationDao
+                //  project.setNotifications(notificationDao.findNotification(projectId)) ;
+
                 projects.add(project);
+
+
             }
             while (cursor.moveToNext());
 

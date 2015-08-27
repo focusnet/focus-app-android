@@ -64,14 +64,11 @@ public class SettingFragment extends Fragment {
 
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
 
-        private final ProgressDialog progressDialog;
-
-        public PreferenceDataReaderTask(){
-            progressDialog = GuiUtil.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
-        }
+        private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
+            progressDialog = GuiUtil.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
             progressDialog.show();
         }
 

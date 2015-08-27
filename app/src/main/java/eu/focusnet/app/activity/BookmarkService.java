@@ -38,26 +38,30 @@ public class BookmarkService extends IntentService {
         Log.d(TAG, "bookmark type:" + bookmarkType);
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
-        databaseAdapter.openWritableDatabase();
-        PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
-        //TODO need the preference ID
-        Preference foundPref = preferenceDao.findPreference(new Long(123));
-        if (foundPref != null) {
-            Bookmark bookmarks = foundPref.getBookmarks();
-            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
-            if (bookmarks != null) {
-                Long bookmarkId = bookmarks.getId();
-                if(isToSave) {
-                    BookmarkLink bookmarkLink = new BookmarkLink(title, path, order);
-                    bookmarkLinkDao.createBookmarkLing(bookmarkLink, bookmarkType, bookmarkId);
-                }
-                else{
-                    Log.d(TAG, "It is to delete");
-                    bookmarkLinkDao.deleteBookmarkLing(path, bookmarkType, bookmarkId);
+        try {
+            databaseAdapter.openWritableDatabase();
+            PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
+            //TODO need the preference ID
+            Preference foundPref = preferenceDao.findPreference(new Long(123));
+            if (foundPref != null) {
+                Bookmark bookmarks = foundPref.getBookmarks();
+                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
+                if (bookmarks != null) {
+                    Long bookmarkId = bookmarks.getId();
+                    if (isToSave) {
+                        BookmarkLink bookmarkLink = new BookmarkLink(title, path, order);
+                        bookmarkLinkDao.createBookmarkLing(bookmarkLink, bookmarkType, bookmarkId);
+                    } else {
+                        Log.d(TAG, "It is to delete");
+                        bookmarkLinkDao.deleteBookmarkLing(path, bookmarkType, bookmarkId);
+                    }
                 }
             }
         }
-        databaseAdapter.close();
+        finally {
+            databaseAdapter.close();
+        }
+
         //TODO push the context to the webservice
     }
 }

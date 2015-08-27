@@ -4,6 +4,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.LinkerDao;
 import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Linker;
@@ -49,8 +51,9 @@ public class ProjectFragment extends ListFragment {
 
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
         Bundle bundle = getArguments();
-        String projectId = (String)bundle.get(Constant.PROJECT_ID);
-        new ProjectBuilderTask(getActivity(), projectId).execute();
+        //Path is the same as projectId
+        String projectId = (String)bundle.get(Constant.PATH);
+        new ProjectBuilderTask().execute(projectId);
 
         return viewRoot;
     }
@@ -61,123 +64,120 @@ public class ProjectFragment extends ListFragment {
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
             if(position > notificationsHeaderPosition){
                 GuiUtil.displayToast(getActivity(), "Notification selected");
-
             }
-            else if(position > toolsHeaderPosition){
-                GuiUtil.displayToast(getActivity(), "Tools selected");
-            }
+//            else if(position > toolsHeaderPosition){
+//                GuiUtil.displayToast(getActivity(), "Tools selected");
+//            }
+            //User has selected either Tools or Dashboard
             else{
-                GuiUtil.displayToast(getActivity(), "Dashboard selected");
+                // GuiUtil.displayToast(getActivity(), "Dashboard selected");
                 Intent intent = new Intent("eu.focusnet.app.activity.PageActivity");
-//                StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-//                intent.putExtra(Constant.PROJECT_ID, selectedItem.getId());
-//                intent.putExtra(Constant.PROJECT_NAME, selectedItem.getTitle());
+                StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+                intent.putExtra(Constant.PATH, selectedItem.getPath());
+                intent.putExtra(Constant.TITLE, selectedItem.getTitle());
                 startActivity(intent);
             }
         }
     }
 
-    private class ProjectBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
-
-        private DatabaseAdapter databaseAdapter;
-        private String projectId;
-
-        public ProjectBuilderTask(Context context, String projectId){
-            databaseAdapter = new DatabaseAdapter(context);
-            this.projectId = projectId;
-        }
+    private class ProjectBuilderTask extends AsyncTask<String, Void, StandardListAdapter> {
 
         @Override
-        protected StandardListAdapter doInBackground(Void... params) {
+        protected StandardListAdapter doInBackground(String... params) {
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
+            String projectId = params[0];
 
-            databaseAdapter.openWritableDatabase();
-            BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
-           // PageDao pageDao = new PageDao(databaseAdapter.getDb());
-            ProjectDao projectDao = new ProjectDao(databaseAdapter.getDb());
-            Project project = projectDao.findProject(projectId);
+            try {
+                databaseAdapter.openWritableDatabase();
+                SQLiteDatabase db = databaseAdapter.getDb();
 
-            ArrayList<Linker> dashboards = project.getDashboards();
+                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(db);
+                PageDao pageDao = new PageDao(db);
+                LinkerDao linkerDao = new LinkerDao(db);
 
-            // load icons
-            dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
+                // load icons
+                dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
 
-            abstractItems = new ArrayList<AbstractListItem>();
+                abstractItems = new ArrayList<AbstractListItem>();
 
-            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
-                    getString(R.string.cutting_header_dashboard),
-                    null);
+                AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                        getString(R.string.cutting_header_dashboard),
+                        null);
 
-            abstractItems.add(headerProjectsListItem);
+                abstractItems.add(headerProjectsListItem);
 
-            for(Linker dashboard : dashboards){
-                String pageId = dashboard.getPageid();
-                //Page page = pageDao.findPage(pageId);
-                int dashboardOrder = dashboard.getOrder();
-                String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
-                boolean isRightIconActive = true;
-                String path = projectId+"/"+pageId;
-                if(bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null){
-                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-                    isRightIconActive = false;
+                ArrayList<Linker> dashboards = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
+                for (Linker dashboard : dashboards) {
+                    String pageId = dashboard.getPageid();
+                    int dashboardOrder = dashboard.getOrder();
+                    Page page = pageDao.findPage(pageId);
+                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
+                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    boolean isRightIconActive = true;
+                    String path = projectId + "/" + pageId;
+                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
+                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        isRightIconActive = false;
+                    }
+                    StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
+                            page.getTitle(), page.getDescription(), dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
+                    abstractItems.add(drawListItem);
                 }
-                StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
-                                                                     pageId, null, dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-                abstractItems.add(drawListItem);
-            }
 
-            AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
-                    getString(R.string.cutting_header_tool),
-                    null);
+                AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
+                        getString(R.string.cutting_header_tool),
+                        null);
 
-            abstractItems.add(headerToolListItem);
-            toolsHeaderPosition = abstractItems.size() -1;
+                abstractItems.add(headerToolListItem);
+               // toolsHeaderPosition = abstractItems.size() - 1;
 
-            // load icons
-            toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
-            ArrayList<Linker> tools = project.getTools();
+                // load icons
+                toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
 
-            for(Linker tool : tools){
-                String pageId = tool.getPageid();
-                int toolOrder = tool.getOrder();
-                String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
-                Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
-                boolean isRightIconActive = true;
-
-                String path = projectId+"/"+pageId;
-
-                if(bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null){
-                    rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-                    isRightIconActive = false;
+                ArrayList<Linker> tools = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL);
+                for (Linker tool : tools) {
+                    String pageId = tool.getPageid();
+                    int toolOrder = tool.getOrder();
+                    Page page = pageDao.findPage(pageId);
+                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
+                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    boolean isRightIconActive = true;
+                    String path = projectId + "/" + pageId;
+                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
+                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        isRightIconActive = false;
+                    }
+                    StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
+                            toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
+                    abstractItems.add(drawListItem);
                 }
-                StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), pageId, null,
-                                                                     toolOrder ,rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
-                abstractItems.add(drawListItem);
-            }
 
-            databaseAdapter.close();
+                AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+                        getString(R.string.cutting_header_notification),
+                        GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerNotificationListItem);
 
-            AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
-                    getString(R.string.cutting_header_notification),
-                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerNotificationListItem);
+                notificationsHeaderPosition = abstractItems.size() - 1;
 
-            notificationsHeaderPosition  = abstractItems.size() - 1;
+                // load icons
+                notificationIcons = getResources().obtainTypedArray(R.array.cutting_notification_icons);
 
-            // load icons
-            notificationIcons = getResources().obtainTypedArray(R.array.cutting_notification_icons);
+                //TODO
+                //   ArrayList<Notification> notifications = notificationDao.findNotification(projectId) ;
 
-            ArrayList<Notification> notifications = project.getNotifications();
-            //TODO
 //            for(Notification notification : notifications){
 //                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(0, -1)), notification.toString(), "Info notifications", null);
 //                abstractItems.add(drawListItem);
 //            }
 
-            // Recycle the typed array
-            dashboardsIcons.recycle();
-            toolsIcons.recycle();
-            notificationIcons.recycle();
+                // Recycle the typed array
+                dashboardsIcons.recycle();
+                toolsIcons.recycle();
+                notificationIcons.recycle();
+            }
+            finally {
+                databaseAdapter.close();
+            }
 
             return new StandardListAdapter(getActivity(), abstractItems);
         }

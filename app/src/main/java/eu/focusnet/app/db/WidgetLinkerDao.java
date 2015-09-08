@@ -32,7 +32,6 @@ public class WidgetLinkerDao {
     }
 
     public WidgetLinker findWidgetLinker(Long widgetLinkerId){
-
         String[] params = {String.valueOf(widgetLinkerId)};
         WidgetLinker widgetLinker = null;
 
@@ -66,8 +65,9 @@ public class WidgetLinkerDao {
     }
 
 
-    public boolean deleteWidgetLinker(Long widgetLinkerId){
-        return database.delete(Constant.DATABASE_TABLE_WIDGET_LINKER, Constant.ID+"="+widgetLinkerId, null) > 0;
+    public boolean deleteWidgetLinker(String fkPageId){
+        String[] params = {fkPageId};
+        return database.delete(Constant.DATABASE_TABLE_WIDGET_LINKER, Constant.FK_PAGE_ID+"=?", params) > 0;
     }
 
     //TODO update

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PageDao;
+import eu.focusnet.app.manager.PageManager;
 import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.util.Constant;
@@ -46,8 +47,8 @@ public class PageFragment extends Fragment {
             try {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
-                PageDao pageDao = new PageDao(db);
-                page = pageDao.findPage(pageId);
+                PageManager pageManager = new PageManager(db);
+                page = pageManager.findPage(pageId);
             }
             finally {
                 databaseAdapter.close();

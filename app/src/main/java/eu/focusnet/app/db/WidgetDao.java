@@ -68,8 +68,9 @@ public class WidgetDao {
         return widgets;
     }
 
-    public boolean deleteWidget(Long widgetId){
-        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.ID+"="+widgetId, null) > 0;
+    public boolean deleteWidget(String widgetId){
+        String[] params = {widgetId};
+        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.ID+"=?", params) > 0;
     }
 
     //TODO update

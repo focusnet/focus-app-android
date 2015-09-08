@@ -17,6 +17,7 @@ import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PreferenceDao;
+import eu.focusnet.app.manager.PreferenceManager;
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
@@ -83,9 +84,9 @@ public class BookmarkFragment extends ListFragment {
             try {
 
                 databaseAdapter.openWritableDatabase();
-                PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
+                PreferenceManager preferenceManager = new PreferenceManager(databaseAdapter.getDb());
                 //TODO get the preference's ID
-                Preference preference = preferenceDAO.findPreference(new Long(123));
+                Preference preference = preferenceManager.findPreference(new Long(123));
 
                 Bookmark bookmark = preference.getBookmarks();
                 ArrayList<BookmarkLink> pages = bookmark.getPages();

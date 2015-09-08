@@ -26,6 +26,9 @@ import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.db.UserDao;
 import eu.focusnet.app.db.WidgetDao;
 import eu.focusnet.app.db.WidgetLinkerDao;
+import eu.focusnet.app.manager.AppContentManager;
+import eu.focusnet.app.manager.PreferenceManager;
+import eu.focusnet.app.manager.UserManager;
 import eu.focusnet.app.model.data.AppContent;
 import eu.focusnet.app.model.data.Linker;
 import eu.focusnet.app.model.data.Page;
@@ -98,68 +101,23 @@ public class LoginActivity extends Activity {
                             if (i == 0) {
                                 Log.d(TAG, "Creating User");
                                 user = gson.fromJson(data, User.class);
-
-                                UserDao userDao = new UserDao(database);
-                                user.setId(new Long(userId));
-                                userDao.createUser(user);
-                            } else if (i == 1) {
+                                UserManager userManager = new UserManager(database);
+                                userManager.saveUser(user);
+                            }
+                            else if (i == 1) {
                                 Log.d(TAG, "Creating Preferences");
-
                                 Preference preference = gson.fromJson(data, Preference.class);
                                 preference.setId(new Long(userId));
-                                PreferenceDao preferenceDAO = new PreferenceDao(database);
-                                preferenceDAO.createPreference(preference);
-                            } else {
+                                PreferenceManager preferenceManager = new PreferenceManager(database);
+                                preferenceManager.savePreference(preference);
+                            }
+                            else {
                                 Log.d(TAG, "Creating App Content");
 
                                 AppContent appContent = gson.fromJson(data, AppContent.class);
-                                appContent.setId(new Long(userId));
-                                AppContentDao appContentDao = new AppContentDao(database);
-                                appContentDao.createAppContent(appContent);
-
-                                ProjectDao projectDao = new ProjectDao(database);
-                                ArrayList<Project> projects = appContent.getProjects();
-                                if (projects != null) {
-                                    for (Project project : projects) {
-                                        projectDao.createProject(project, appContent.getId());
-                                        String projectId = project.getGuid();
-
-                                        ArrayList<Widget> widgets = project.getWidgets();
-                                        if (widgets != null) {
-                                            WidgetDao widgetDao = new WidgetDao(database);
-                                            for (Widget w : widgets)
-                                                widgetDao.createWidget(w, projectId);
-                                        }
-
-                                        ArrayList<Page> pages = project.getPages();
-                                        if (pages != null) {
-                                            PageDao pageDao = new PageDao(database);
-                                            for (Page p : pages) {
-                                                pageDao.createPage(p, projectId);
-
-                                                WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
-                                                ArrayList<WidgetLinker> widgetLinkers = p.getWidgets();
-                                                if (widgetLinkers != null) {
-                                                    for (WidgetLinker wl : widgetLinkers)
-                                                        widgetLinkerDao.createWidgetLinker(wl, p.getGuid());
-                                                }
-                                            }
-                                        }
-
-                                        LinkerDao linkerDao = new LinkerDao(database);
-                                        ArrayList<Linker> dashboards = project.getDashboards();
-                                        if (dashboards != null) {
-                                            for (Linker l : dashboards)
-                                                linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
-                                        }
-
-                                        ArrayList<Linker> tools = project.getTools();
-                                        if (tools != null) {
-                                            for (Linker l : tools)
-                                                linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.TOOL);
-                                        }
-                                    }
-                                }
+                                appContent.setId(Long.valueOf(appContent.getOwner()));
+                                AppContentManager appContentManager = new AppContentManager(database);
+                                appContentManager.saveAppContent(appContent);
                             }
 
                             publishProgress(data); //TODO remove this, when the app is finished

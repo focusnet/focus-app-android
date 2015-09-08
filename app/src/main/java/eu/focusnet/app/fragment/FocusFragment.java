@@ -20,6 +20,8 @@ import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.ProjectDao;
+import eu.focusnet.app.manager.BookmarkLinkManager;
+import eu.focusnet.app.manager.ProjectManager;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
@@ -86,9 +88,9 @@ public class FocusFragment extends ListFragment {
             try {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
-                ProjectDao projectDao = new ProjectDao(db);
-                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(db);
-                ArrayList<Project> projects = projectDao.findAllProjects();
+                ProjectManager projectManager = new ProjectManager(db);
+                ArrayList<Project> projects = projectManager.getAllProjects();
+                BookmarkLinkManager bookmarkLinkManager = new BookmarkLinkManager(db);
                 for (Project p : projects) {
                     String projectId = p.getGuid();
                     String projectTitle = p.getTitle();
@@ -96,7 +98,7 @@ public class FocusFragment extends ListFragment {
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
                     Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
-                    if (bookmarkLinkDao.findBookmarkLink(projectId, bookmarkLinkType) == null) {
+                    if (bookmarkLinkManager.findBookmarkLink(projectId, bookmarkLinkType) == null) {
                         rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }

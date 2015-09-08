@@ -62,7 +62,8 @@ public class BookmarkDao {
     }
 
     public boolean deleteBookmark(Long bookmarkId){
-        return database.delete(Constant.DATABASE_TABLE_BOOKMARK, Constant.ID +"="+bookmarkId, null) > 0;
+        String[] params = {String.valueOf(bookmarkId)};
+        return database.delete(Constant.DATABASE_TABLE_BOOKMARK, Constant.ID +"=?", params) > 0;
     }
 
 

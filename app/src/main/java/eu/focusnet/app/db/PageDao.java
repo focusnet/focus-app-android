@@ -71,8 +71,11 @@ public class PageDao {
         return pages;
     }
 
-    public boolean deletePage(Long pageId){
-        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.ID+"="+pageId, null) > 0;
+    public boolean deletePage(String pageId){
+        String[] params = {pageId};
+        WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
+        widgetLinkerDao.deleteWidgetLinker(pageId);
+        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.ID+"=?", params) > 0;
     }
 
     //TODO update

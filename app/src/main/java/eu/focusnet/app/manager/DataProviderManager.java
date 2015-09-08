@@ -25,8 +25,8 @@ public class DataProviderManager {
         return makeHttpRequest(path);
     }
 
-    private static List<String> checkDataFreshness(String path, List<RequestData> requestData) throws IOException {
-        List<String> resourcesToRefresh  = new ArrayList<>();
+    public static ArrayList<String> checkDataFreshness(String path, List<RequestData> requestData) throws IOException {
+        ArrayList<String> resourcesToRefresh  = new ArrayList<>();
         Gson gson = new Gson();
         String requestDataJson = gson.toJson(requestData);
         Log.d(TAG, "The resources to check for freshness: " + requestDataJson);
@@ -34,7 +34,8 @@ public class DataProviderManager {
 
         if(responseData != null) {
             String jsonResponseContent = responseData.getData();
-            List<RefreshData> refreshData = gson.fromJson(jsonResponseContent, new TypeToken<List<RefreshData>>(){}.getType());
+            Log.d(TAG, "The Response for the freshness request: " + jsonResponseContent);
+            ArrayList<RefreshData> refreshData = gson.fromJson(jsonResponseContent, new TypeToken<List<RefreshData>>(){}.getType());
             for(RefreshData rd : refreshData){
                 //TODO add the code for the other status
                 if(rd.getStatus() == RefreshData.STATUS_CONTENT_DIFFERENT){
@@ -47,6 +48,10 @@ public class DataProviderManager {
         }
 
         return resourcesToRefresh;
+    }
+
+    public static ResponseData updateData(String path, String jsonData) throws IOException {
+        return makeHttpRequest(path, NetworkUtil.HTTP_METHOD_PUT, jsonData);
     }
 
     private static ResponseData makeHttpRequest(String path, String httpMethod, String jsonData)throws IOException {
@@ -84,5 +89,5 @@ public class DataProviderManager {
         return  responseData;
     }
 
-    //TODO create other methods like(save, update, delete)
+    //TODO create other methods like(save, delete)
 }

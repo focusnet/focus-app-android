@@ -137,8 +137,8 @@ public class Constant {
             ACTIVE+" BOOL, " +
             FK_BOOKMARK_ID +" INTEGER,"+
             FK_SETTINGS_ID +" INTEGER,"+
-            "FOREIGN KEY ("+ FK_BOOKMARK_ID+") REFERENCES "+ DATABASE_TABLE_BOOKMARK +"("+ ID +") ON DELETE CASCADE," +
-            "FOREIGN KEY ("+ FK_SETTINGS_ID+") REFERENCES "+ DATABASE_TABLE_SETTING +"("+ ID +") ON DELETE CASCADE)";
+            "FOREIGN KEY ("+ FK_BOOKMARK_ID+") REFERENCES "+ DATABASE_TABLE_BOOKMARK +"("+ ID +") " +
+            "FOREIGN KEY ("+ FK_SETTINGS_ID+") REFERENCES "+ DATABASE_TABLE_SETTING +"("+ ID +"))";
 
     //End table Preferences
 
@@ -215,7 +215,7 @@ public class Constant {
             LK_TYPE+" TEXT,"+
             FK_PAGE_ID+" TEXT,"+
             FK_PROJECT_ID +" TEXT,"+
-            "FOREIGN KEY ("+ FK_PAGE_ID+") REFERENCES "+ DATABASE_TABLE_PAGE +"("+ ID +")"+
+            "FOREIGN KEY ("+ FK_PAGE_ID+") REFERENCES "+ DATABASE_TABLE_PAGE +"("+ ID +") "+
             "FOREIGN KEY ("+FK_PROJECT_ID+") REFERENCES "+ DATABASE_TABLE_PROJECT +"("+ ID +"))";
 
     //End table Linker
@@ -232,7 +232,7 @@ public class Constant {
             LAYOUT+" TEXT,"+
             FK_WIDGET_ID +" TEXT,"+
             FK_PAGE_ID+ " TEXT,"+
-            "FOREIGN KEY ("+ FK_WIDGET_ID+") REFERENCES "+ DATABASE_TABLE_WIDGET +"("+ ID +")"+
+            "FOREIGN KEY ("+ FK_WIDGET_ID+") REFERENCES "+ DATABASE_TABLE_WIDGET +"("+ ID +") "+
             "FOREIGN KEY ("+ FK_PAGE_ID+") REFERENCES "+ DATABASE_TABLE_PAGE +"("+ ID +"))";
 
     //End table WidgetLinker

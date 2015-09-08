@@ -32,21 +32,6 @@ public class LinkerDao {
         return database.insert(Constant.DATABASE_TABLE_LINKER, null, contentValues);
     }
 
-    public Linker findLinker(Long linkerId){
-
-        String[] params = {String.valueOf(linkerId)};
-        Linker linker = new Linker();
-
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_LINKER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
-        if(cursor != null){
-            cursor.moveToFirst();
-            linker = getLinker(cursor);
-            cursor.close();
-        }
-
-        return linker;
-    }
-
     public ArrayList<Linker> findLinkers(String fkProjectID, LINKER_TYPE type){
         ArrayList<Linker> linkers = new ArrayList<>();
         String[] params = {fkProjectID, type.toString()};
@@ -63,8 +48,9 @@ public class LinkerDao {
         return linkers;
     }
 
-    public boolean deleteLinker(Long linkerId){
-        return database.delete(Constant.DATABASE_TABLE_LINKER, Constant.ID+"="+linkerId, null) > 0;
+    public boolean deleteLinker(String fkProjectID, LINKER_TYPE type){
+        String[] params = {fkProjectID, type.toString()};
+        return database.delete(Constant.DATABASE_TABLE_LINKER, Constant.FK_PROJECT_ID+"=? AND "+Constant.LK_TYPE+"=?", params) > 0;
     }
 
     //TODO update

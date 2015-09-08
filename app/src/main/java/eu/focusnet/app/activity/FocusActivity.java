@@ -309,10 +309,6 @@ public class FocusActivity extends AppCompatActivity  {
                 fragment = new BookmarkFragment();
                 break;
             case Constant.SYNCHRONIZE_FRAGMENT:
-            // Log.d(TAG, DataProviderManager.retrieveData("http://focus.yatt.ch/resources-server/services/check-freshness")); //POST + in content [
-//             "failing-test",
-//                        "http://data.example.org/data/aaaaaaaa/v12"
-//                ]
                 fragment = new SynchronizeFragment();
                 break;
             case Constant.SETTING_FRAGMENT:

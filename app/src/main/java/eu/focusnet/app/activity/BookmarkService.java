@@ -4,14 +4,18 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import eu.focusnet.app.db.BookmarkLinkDao;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDao;
+import eu.focusnet.app.manager.BookmarkLinkManager;
+import eu.focusnet.app.manager.DataProviderManager;
+import eu.focusnet.app.manager.PreferenceManager;
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.NavigationUtil;
 
 /**
  *
@@ -19,6 +23,8 @@ import eu.focusnet.app.util.NavigationUtil;
 public class BookmarkService extends IntentService {
 
     private static final String TAG = BookmarkService.class.getName();
+    //TODO this path should be in the user data JSON response when after the user is authenticated
+    private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
 
     public BookmarkService() {
         super("BookmarkService");
@@ -40,28 +46,35 @@ public class BookmarkService extends IntentService {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
         try {
             databaseAdapter.openWritableDatabase();
-            PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
+            PreferenceManager preferenceManager = new PreferenceManager(databaseAdapter.getDb());
             //TODO need the preference ID
-            Preference foundPref = preferenceDao.findPreference(new Long(123));
+            Preference foundPref = preferenceManager.findPreference(new Long(123));
             if (foundPref != null) {
                 Bookmark bookmarks = foundPref.getBookmarks();
-                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
+                BookmarkLinkManager bookmarkLinkManager = new BookmarkLinkManager(databaseAdapter.getDb());
                 if (bookmarks != null) {
                     Long bookmarkId = bookmarks.getId();
                     if (isToSave) {
                         BookmarkLink bookmarkLink = new BookmarkLink(title, path, order);
-                        bookmarkLinkDao.createBookmarkLing(bookmarkLink, bookmarkType, bookmarkId);
+                        bookmarkLinkManager.createBookmarkLing(bookmarkLink, bookmarkType, bookmarkId);
                     } else {
                         Log.d(TAG, "It is to delete");
-                        bookmarkLinkDao.deleteBookmarkLing(path, bookmarkType, bookmarkId);
+                        bookmarkLinkManager.deleteBookmarkLing(path, bookmarkType, bookmarkId);
                     }
                 }
             }
+            Gson gson = new Gson();
+            //TODO need the preference ID
+            foundPref = preferenceManager.findPreference(new Long(123));
+            String jsonPref = gson.toJson(foundPref);
+            DataProviderManager.updateData(PATH, jsonPref);
+        }
+        catch (IOException e) {
+            //TODO
+            e.printStackTrace();
         }
         finally {
             databaseAdapter.close();
         }
-
-        //TODO push the context to the webservice
     }
 }

@@ -3,11 +3,8 @@ package eu.focusnet.app.activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-
 import com.google.gson.Gson;
-
 import java.io.IOException;
-
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.BookmarkLinkManager;
 import eu.focusnet.app.manager.DataProviderManager;
@@ -23,7 +20,7 @@ import eu.focusnet.app.util.Constant;
 public class BookmarkService extends IntentService {
 
     private static final String TAG = BookmarkService.class.getName();
-    //TODO this path should be in the user data JSON response when after the user is authenticated
+    //TODO this path should be in the user data JSON response after the user is authenticated
     private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
 
     public BookmarkService() {

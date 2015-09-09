@@ -4,7 +4,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Map;
 
 import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.util.Constant;
@@ -25,7 +31,11 @@ public class WidgetLinkerDao {
     public Long createWidgetLinker(WidgetLinker widgetLinker, String fkPageId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.ITEM_ORDER, widgetLinker.getOrder());
-        contentValues.put(Constant.LAYOUT, widgetLinker.getLayout().toString()); //TODO
+        Gson gson = new GsonBuilder().create();
+        String layout = null;
+        if(widgetLinker.getLayout() != null)
+            layout = gson.toJson(widgetLinker.getLayout());
+        contentValues.put(Constant.LAYOUT, layout);
         contentValues.put(Constant.FK_WIDGET_ID, widgetLinker.getWidgetid());
         contentValues.put(Constant.FK_PAGE_ID, fkPageId);
         return database.insert(Constant.DATABASE_TABLE_WIDGET_LINKER, null, contentValues);
@@ -34,27 +44,24 @@ public class WidgetLinkerDao {
     public WidgetLinker findWidgetLinker(Long widgetLinkerId){
         String[] params = {String.valueOf(widgetLinkerId)};
         WidgetLinker widgetLinker = null;
-
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
             widgetLinker = getLinker(cursor);
             cursor.close();
         }
-
         return widgetLinker;
     }
 
     public ArrayList<WidgetLinker> findWidgetLinker(String fkPageId){
         ArrayList<WidgetLinker> widgetLinkers = new ArrayList<>();
         String[] params = {fkPageId};
-        WidgetLinker widgetLinker = new WidgetLinker();
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET_LINKER, columnsToRetrieve, Constant.FK_PAGE_ID+"=?", params, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()) {
                 do {
-                    widgetLinkers.add(widgetLinker = getLinker(cursor));
+                    widgetLinkers.add(getLinker(cursor));
                 }
                 while (cursor.moveToNext());
             }
@@ -74,7 +81,13 @@ public class WidgetLinkerDao {
 
     private WidgetLinker getLinker(Cursor cursor){
         WidgetLinker widgetLinker = new WidgetLinker();
-       // widgetLinker.setLayout(cursor.getString(cursor.getColumnIndex(Constant.LAYOUT))); //TODO
+        String layoutJson = cursor.getString(cursor.getColumnIndex(Constant.LAYOUT));
+        if(layoutJson != null) {
+            Gson gson = new GsonBuilder().create();
+            Type typeOfMap = new TypeToken<Map<String, String>>(){}.getType();
+            Map<String, String> layout = gson.fromJson(layoutJson, typeOfMap);
+            widgetLinker.setLayout(layout);
+        }
         widgetLinker.setWidgetid(cursor.getString(cursor.getColumnIndex(Constant.FK_WIDGET_ID)));
         widgetLinker.setOrder(cursor.getInt(cursor.getColumnIndex(Constant.ITEM_ORDER)));
         return widgetLinker;

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.AppContent;
 import eu.focusnet.app.util.GuiUtil;
 import eu.focusnet.app.util.NetworkUtil.*;
+import eu.focusnet.app.util.ViewFactory;
 
 /**
  * Created by admin on 15.06.2015.
@@ -70,15 +72,13 @@ public class SynchronizeFragment extends Fragment {
 
         @Override
         protected void onPostExecute(final ArrayList<String> resourcesToRefresh) {
+            int textSize = 15;
+            final TextView text = ViewFactory.createTextView(getActivity(), new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                    TableRow.LayoutParams.WRAP_CONTENT), textSize, "There were not resources to refresh."); //TODO internationalize
 
-            final TableRow tableRow = new TableRow(getActivity());
-            tableRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            final TextView text = new TextView(getActivity());
-            text.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-            text.setTextSize(15);
+            final TableRow tableRow = ViewFactory.createTableRow(getActivity(), new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
             if(resourcesToRefresh == null || resourcesToRefresh.isEmpty()){
-                text.setText("There were not resources to refresh."); //TODO internationalize
                 tableRow.addView(text);
                 tableLayout.addView(tableRow);
             }
@@ -88,9 +88,9 @@ public class SynchronizeFragment extends Fragment {
                     tableRow.addView(text);
                     tableLayout.addView(tableRow);
                 }
-                final Button button = new Button(getActivity());
-                button.setText("Refresh Resources");
-                button.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                final Button button = ViewFactory.createButton(getActivity(), new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT),
+                        "Refresh Resources");//TODO internationalize
+
                 button.setOnClickListener(new View.OnClickListener() {
                                               @Override
                                               public void onClick(View v) {
@@ -114,7 +114,7 @@ public class SynchronizeFragment extends Fragment {
                                                           Log.i(TAG, "The new App Content was created successfully");
                                                           GuiUtil.displayToast(getActivity(), "Resource refreshed successfully");
                                                           tableLayout.removeAllViews();
-                                                          text.setText("Resource refreshed successfully");
+                                                          text.setText("Resource refreshed successfully!"); //TODO internationalize
                                                           tableLayout.addView(tableRow);
                                                       }
                                                       catch (IOException e) {

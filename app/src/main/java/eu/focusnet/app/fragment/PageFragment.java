@@ -73,15 +73,13 @@ public class PageFragment extends Fragment {
                     WidgetDao widgetDao = new WidgetDao(databaseAdapter.getDb());
                     ArrayList<WidgetLinker> widgetLinkers = page.getWidgets();
 
-                    //TODO enhance tis code
-                    int lastWeightLeftToFill = 0;
-                    int weightLeftToFill = 4;
-                    boolean needNewLayout = false;
-                    boolean isMaxWeightReached = false;
+                    final int screenSize = 4;
+                    int sizeLeft = screenSize;
+                    int lastSizeLeft = sizeLeft;
                     LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
                             new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    for(WidgetLinker widgetLinker : widgetLinkers) {
+                    for (WidgetLinker widgetLinker : widgetLinkers) {
                         Widget widget = widgetDao.findWidget(widgetLinker.getWidgetid());
                         int weight = 0;
                         Map<String, String> layouts = widgetLinker.getLayout();
@@ -89,41 +87,44 @@ public class PageFragment extends Fragment {
                             String width = layouts.get("width"); //TODO create a constant
                             int indexOf = width.indexOf("of");
                             weight = Integer.valueOf(width.substring(0, indexOf).trim());
-                            weightLeftToFill -= weight;
+
+                            int tempLastSizeLeft = lastSizeLeft;
+                            if(lastSizeLeft == 0)
+                                lastSizeLeft = screenSize;
+
+                            if((screenSize - lastSizeLeft) + weight > screenSize){
+                                final TextView emptyText = ViewFactory.createTextView(getActivity(),
+                                        new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, tempLastSizeLeft),
+                                        15, null);
+//                                emptyText.setBackgroundColor(new Random().nextInt());
+                                linearLayoutHorizontal.addView(emptyText);
+                                lastSizeLeft = screenSize;
+                            }
+
+                            sizeLeft = (lastSizeLeft - weight) % screenSize;
                             Log.d(TAG, "The weight: " + weight);
                         }
+                        else {
+                            sizeLeft = (lastSizeLeft - screenSize) % screenSize;
+                        }
+
+                        sizeLeft = Math.abs(sizeLeft);
+
 
                         int linearLayoutWidth = LinearLayout.LayoutParams.MATCH_PARENT;
-                        if (weight != 0 && weight != 4){
-                            linearLayoutWidth = 0;
-                            if(needNewLayout || isMaxWeightReached){
-                                linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
-                                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                           //     linearLayoutPageInfo.addView(linearLayoutHorizontal);
-                                needNewLayout = false;
-                                isMaxWeightReached = false;
-                            }
+                        if (weight != 0 && weight != screenSize)
+                              linearLayoutWidth = 0;
 
-                            linearLayoutPageInfo.removeView(linearLayoutHorizontal); //TODO do this in a better way
-                            linearLayoutPageInfo.addView(linearLayoutHorizontal);
-                        }
-                        else {
-                            if(lastWeightLeftToFill != 0) {
-                                final TextView emptyText = ViewFactory.createTextView(getActivity(),
-                                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weightLeftToFill),
-                                15, null);
-                                 emptyText.setBackgroundColor(new Random().nextInt());
-                                linearLayoutHorizontal.addView(emptyText);
-                                linearLayoutPageInfo.addView(linearLayoutHorizontal);
-                            }
 
-                            weight = 0;
-                            weightLeftToFill = 0;
+                        if (lastSizeLeft == 0 || lastSizeLeft == screenSize) {
                             linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
                                     new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            linearLayoutPageInfo.addView(linearLayoutHorizontal);
-                            needNewLayout = true;
+
+
                         }
+
+                        linearLayoutPageInfo.removeView(linearLayoutHorizontal); //TODO do this in a better way
+                        linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
 
                         final TextView widgetParam = ViewFactory.createTextView(getActivity(),
@@ -131,6 +132,7 @@ public class PageFragment extends Fragment {
                                 15, null);
                         widgetParam.setBackgroundColor(new Random().nextInt());
                         Map<String, String> params = widget.getParams();
+
                         if (params != null) {
                             String text = null;
                             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -141,28 +143,22 @@ public class PageFragment extends Fragment {
 
                         linearLayoutHorizontal.addView(widgetParam);
 
-                        lastWeightLeftToFill = weightLeftToFill;
+                        lastSizeLeft = sizeLeft;
 
-                         if(weightLeftToFill == 0) {
-                             weightLeftToFill = 4;
-                             isMaxWeightReached = true;
-                         }
                     }
 
-                    if(lastWeightLeftToFill != 0) {
-                        final TextView emptyText = ViewFactory.createTextView(getActivity(),
-                                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weightLeftToFill),
-                                15, null);
-                        emptyText.setBackgroundColor(new Random().nextInt());
-                        linearLayoutHorizontal.addView(emptyText);
-                    }
+                    if (lastSizeLeft != 0) {
+                            final TextView emptyText = ViewFactory.createTextView(getActivity(),
+                                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, lastSizeLeft),
+                                    15, null);
+//                            emptyText.setBackgroundColor(new Random().nextInt());
+                            linearLayoutHorizontal.addView(emptyText);
 
+                    }
                 }
                 finally {
                     databaseAdapter.close();
                 }
-
-                //////////////END///////////////
             }
         }
     }

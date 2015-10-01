@@ -19,7 +19,7 @@ public class ProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
 
-        if(projectTitle == null && projectId == null) {
+        if(savedInstanceState == null) {
             projectTitle = getIntent().getStringExtra(Constant.TITLE);
             //Path is the same as projectId
             projectId = getIntent().getStringExtra(Constant.PATH);

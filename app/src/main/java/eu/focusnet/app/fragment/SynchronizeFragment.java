@@ -73,8 +73,10 @@ public class SynchronizeFragment extends Fragment {
         @Override
         protected void onPostExecute(final ArrayList<String> resourcesToRefresh) {
             int textSize = 15;
-            final TextView text = ViewFactory.createTextView(getActivity(), new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-                    TableRow.LayoutParams.WRAP_CONTENT), textSize, "There were not resources to refresh."); //TODO internationalize
+            final TextView text = ViewFactory.createTextView(getActivity(),
+                    R.style.Base_TextAppearance_AppCompat,
+                    new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                    TableRow.LayoutParams.WRAP_CONTENT), "There were not resources to refresh."); //TODO internationalize
 
             final TableRow tableRow = ViewFactory.createTableRow(getActivity(), new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
 

@@ -7,7 +7,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#6445783d">
+        android:background="@color/focus_app_color">
 
         <!--<ImageView-->
             <!--android:id="@+id/header_left_icon"-->
@@ -21,13 +21,11 @@
 
         <!--android:layout_toRightOf="@id/header_left_icon"-->
         <TextView
+            style="@style/HeaderAppearance"
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
-
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:textAppearance="?android:attr/textAppearanceListItem"
             android:textColor="@color/list_item_title"
             android:gravity="center_vertical"
             android:paddingRight="40dp"

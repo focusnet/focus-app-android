@@ -1,11 +1,16 @@
 package eu.focusnet.app.util;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.Objects;
+
+import de.codecrafters.tableview.TableView;
 
 /**
  * Created by admin on 09.09.2015.
@@ -31,11 +36,10 @@ public class ViewFactory {
         return tableRow;
     }
 
-    public static TextView createTextView(Context context, LinearLayout.LayoutParams layoutParams, int size, String text){
-        TextView textView = new TextView(context);
-        textView.setTextSize(size);
-        textView.setText(text);
+    public static TextView createTextView(Context context, int style, LinearLayout.LayoutParams layoutParams, String text){
+        TextView textView = new TextView(context, null, style);
         textView.setLayoutParams(layoutParams);
+        textView.setText(text);
         return textView;
     }
 
@@ -44,6 +48,13 @@ public class ViewFactory {
         button.setText(text);
         button.setLayoutParams(layoutParams);
         return button;
+    }
+
+    public static View createEmptyView(Context context, int width, int height, float weight){
+        View view = new View(context);
+        view.setLayoutParams(new LinearLayout.LayoutParams(width, height, weight));
+        view.setVisibility(View.INVISIBLE);
+        return view;
     }
 
 }

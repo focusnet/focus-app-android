@@ -65,7 +65,6 @@ public class PageFragment extends Fragment {
         @Override
         protected void onPostExecute(Page page) {
             if (page != null) {
-
                 LinearLayout linearLayoutPageInfo = (LinearLayout) getView().findViewById(R.id.pageInfo);
                 DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
                 try {
@@ -93,9 +92,9 @@ public class PageFragment extends Fragment {
                                 lastSizeLeft = screenSize;
 
                             if((screenSize - lastSizeLeft) + weight > screenSize){
-                                final TextView emptyText = ViewFactory.createTextView(getActivity(),
+                                final TextView emptyText = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
                                         new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, tempLastSizeLeft),
-                                        15, null);
+                                        null);
 //                                emptyText.setBackgroundColor(new Random().nextInt());
                                 linearLayoutHorizontal.addView(emptyText);
                                 lastSizeLeft = screenSize;
@@ -127,9 +126,9 @@ public class PageFragment extends Fragment {
                         linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
 
-                        final TextView widgetParam = ViewFactory.createTextView(getActivity(),
+                        final TextView widgetParam = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
                                 new LinearLayout.LayoutParams(linearLayoutWidth, LinearLayout.LayoutParams.WRAP_CONTENT, weight),
-                                15, null);
+                                null);
                         widgetParam.setBackgroundColor(new Random().nextInt());
                         Map<String, String> params = widget.getParams();
 
@@ -148,9 +147,9 @@ public class PageFragment extends Fragment {
                     }
 
                     if (lastSizeLeft != 0) {
-                            final TextView emptyText = ViewFactory.createTextView(getActivity(),
+                            final TextView emptyText = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
                                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, lastSizeLeft),
-                                    15, null);
+                                    null);
 //                            emptyText.setBackgroundColor(new Random().nextInt());
                             linearLayoutHorizontal.addView(emptyText);
 

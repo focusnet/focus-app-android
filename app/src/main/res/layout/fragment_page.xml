@@ -1,16 +1,13 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="eu.focusnet.app.fragment.PageFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="eu.focusnet.app.fragment.PageFragment">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/pageInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pageInfo">
-
-    </LinearLayout>
+        android:orientation="vertical"></LinearLayout>
 
 </ScrollView>

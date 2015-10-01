@@ -56,6 +56,8 @@ public class FocusFragment extends ListFragment {
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
             if(position > notifHeaderPosition){
                 //TODO navigate to notifications ...
+                Intent intent = new Intent("eu.focusnet.app.activity.TestActivity");
+                startActivity(intent);
             }
             else{
                 Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");

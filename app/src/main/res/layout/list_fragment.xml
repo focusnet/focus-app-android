@@ -7,7 +7,7 @@
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
+        android:layout_gravity="center"
         android:choiceMode="singleChoice"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_item_selector"

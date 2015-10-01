@@ -25,11 +25,6 @@ public class Constant {
 
 
 
-
-
-
-
-
     //Common for some tables
     public static final String ID = "id",
                             TYPE = "type",

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="focus_app_color">#FFA8C4A6</color>
+    <color name="view_pressed_color">#00703c</color>
+
+    <color name="table_header_text">#CCFFFFFF</color>
+    <color name="table_data_row_even">#11C5CAE9</color>
+    <color name="table_data_row_odd">#33C5CAE9</color>
+
     <color name="list_item_title">#000</color>
     <color name="list_item_background">#fff</color>
     <color name="list_item_background_pressed">#88CC88</color>

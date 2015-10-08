@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.DateTypeAdapter;
@@ -27,7 +25,7 @@ import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.AppContentManager;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.util.NetworkUtil.*;
 import eu.focusnet.app.util.ViewFactory;
 
@@ -96,7 +94,7 @@ public class SynchronizeFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                                               @Override
                                               public void onClick(View v) {
-                                                  GuiUtil.displayToast(getActivity(), "Refreshing resource");
+                                                  ViewUtil.displayToast(getActivity(), "Refreshing resource");
                                                   //database (it may be, that we also has to use the IventBus pattern)
                                                   DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
                                                   try {
@@ -114,7 +112,7 @@ public class SynchronizeFragment extends Fragment {
                                                           appContent.setId(Long.valueOf(appContent.getOwner()));
                                                           appContentManager.saveAppContent(appContent);
                                                           Log.i(TAG, "The new App Content was created successfully");
-                                                          GuiUtil.displayToast(getActivity(), "Resource refreshed successfully");
+                                                          ViewUtil.displayToast(getActivity(), "Resource refreshed successfully");
                                                           tableLayout.removeAllViews();
                                                           text.setText("Resource refreshed successfully!"); //TODO internationalize
                                                           tableLayout.addView(tableRow);

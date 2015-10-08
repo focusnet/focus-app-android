@@ -3,7 +3,6 @@ package eu.focusnet.app.util;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,9 +14,9 @@ import android.widget.Toast;
 /**
  * Created by admin on 15.06.2015.
  */
-public class GuiUtil {
+public class ViewUtil {
 
-    private static final String TAG = GuiUtil.class.getName();
+    private static final String TAG = ViewUtil.class.getName();
 
     public static void displayToast(Context context, CharSequence msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
@@ -39,27 +38,20 @@ public class GuiUtil {
         intent.putExtra(Constant.NOTIFICATION_ID, notificationId);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Notification.Builder mBuilder = new Notification.Builder(context);
-        mBuilder.setSmallIcon(icon);
-        mBuilder.setContentTitle(title);
-        mBuilder.setContentText(content);
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setWhen(System.currentTimeMillis());
-     //   mBuilder.setVibrate(new long[]{100, 250, 100, 500});
+        //   mBuilder.setVibrate(new long[]{100, 250, 100, 500});
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        mBuilder.setSound(notificationSound);
+        Notification.Builder mBuilder = new Notification.Builder(context)
+        .setSmallIcon(icon)
+        .setContentTitle(title)
+        .setContentText(content)
+        .setContentIntent(pendingIntent)
+        .setWhen(System.currentTimeMillis())
+        .setSound(notificationSound);
         Notification notif = mBuilder.build();
         // hide the notification after its selected
         notif.flags |= Notification.FLAG_AUTO_CANCEL;
         NotificationManager notifMng = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         notifMng.notify(notificationId, notif);
-    }
-
-    public static ProgressDialog createProgressDialog(Context context, CharSequence title, CharSequence message){
-        final ProgressDialog progDialog = new ProgressDialog(context);
-        progDialog.setTitle(title);
-        progDialog.setMessage(message);
-        return progDialog;
     }
 
     public static Bitmap getBitmap(Context context, int image) {

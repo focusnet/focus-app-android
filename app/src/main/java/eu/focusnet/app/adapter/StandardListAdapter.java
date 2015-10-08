@@ -21,7 +21,7 @@ import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewUtil;
 
 /**
  * Created by admin on 24.06.2015.
@@ -95,7 +95,7 @@ public class StandardListAdapter extends BaseAdapter {
                             final ImageView imageView = (ImageView) v;
 
                             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            View dialogView =  inflater.inflate(R.layout.alert_dialog_layout, null);
+                            View dialogView =  inflater.inflate(R.layout.custom_alert_dialog_layout, null);
                             builder.setView(dialogView);
                             final Dialog dialog = builder.create();
 
@@ -129,7 +129,7 @@ public class StandardListAdapter extends BaseAdapter {
                                     @Override
                                     public void onClick(View v) {
                                         standardListItem.setIsRightIconActive(false);
-                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star_o));
+                                        imageView.setImageBitmap(ViewUtil.getBitmap(context, R.drawable.ic_star_o));
                                         intent.putExtra(Constant.IS_TO_SAVE, false);
                                         context.startService(intent);
                                         Log.d(TAG, "OK clicked");
@@ -142,7 +142,7 @@ public class StandardListAdapter extends BaseAdapter {
                                     @Override
                                     public void onClick(View v) {
                                         standardListItem.setIsRightIconActive(true);
-                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star));
+                                        imageView.setImageBitmap(ViewUtil.getBitmap(context, R.drawable.ic_star));
                                         intent.putExtra(Constant.IS_TO_SAVE, true);
                                         context.startService(intent);
                                         Log.d(TAG, "OK clicked");

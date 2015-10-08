@@ -7,7 +7,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/focus_app_color">
+        android:background="@color/app_color">
 
         <!--<ImageView-->
             <!--android:id="@+id/header_left_icon"-->

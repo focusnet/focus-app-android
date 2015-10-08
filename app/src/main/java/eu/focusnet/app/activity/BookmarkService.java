@@ -24,12 +24,11 @@ public class BookmarkService extends IntentService {
     private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
 
     public BookmarkService() {
-        super("BookmarkService");
+        super(BookmarkService.class.getName());
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         boolean isToSave = intent.getExtras().getBoolean(Constant.IS_TO_SAVE);
         String path = intent.getStringExtra(Constant.PATH);
         String title = intent.getStringExtra(Constant.NAME);

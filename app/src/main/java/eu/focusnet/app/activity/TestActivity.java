@@ -1,14 +1,29 @@
 package eu.focusnet.app.activity;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -35,37 +50,44 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.util.ViewUtil;
 
 //This activity is only for testing
 public class TestActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String[][] DATA_TO_SHOW = {
-            { "This", "is", "a", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" },
-            { "and", "a", "second", "test" }
+            {"This", "is", "a", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"},
+            {"and", "a", "second", "test"}
 
     };
 
-    private static final String[] HEADER = {"Text 1", "Text 2", "Text 3", "Text 4" };
+    private static final String[] HEADER = {"Text 1", "Text 2", "Text 3", "Text 4"};
+
+    private final int PICTURE_REQUEST = 1;
+    private Uri imageUri;
+    private ImageView imageView;
 
     private GoogleApiClient googleApiClient;
     private TextView longitude, latitude, altitude, accuracy;
@@ -82,11 +104,11 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView title = ViewFactory.createTextView(this, R.style.TitleAppearance,
-                               new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is Title");
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is Title");
         linearLayoutVertical.addView(title);
 
         title = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-              new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is info");
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is info");
         linearLayoutVertical.addView(title);
 
         linearLayoutPageInfo.addView(linearLayoutVertical);
@@ -97,11 +119,9 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
 //
-        TableView<String[]> tableView = new TableView<String[]>(this);
-        tableView.setLayoutParams( new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f));
-        tableView.setColumnCount(4);
-        tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
+        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f), 4);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, HEADER));
+        tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
         int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
         int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
         tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
@@ -136,7 +156,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         //    data.setValueTypeface(tf);
 
-        PieData data = createPieData(3, 100);
+        PieData data = createPieData(4, 100);
         pieChart.setData(data);
         // undo all highlights
         pieChart.highlightValues(null);
@@ -318,8 +338,6 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
 
-
-
         LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
@@ -327,7 +345,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "GPS");
         linearLayoutVertical2.addView(gps);
 
-        longitude = ViewFactory.createTextView(this, R.style.TitleAppearance,
+        longitude = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Longitude: No value yet");
         linearLayoutVertical2.addView(longitude);
 
@@ -344,7 +362,6 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         linearLayoutVertical2.addView(accuracy);
 
 
-
         Button gpsPositionButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Get current position");
         gpsPositionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,25 +373,197 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutVertical2);
 
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        googleApiClient.connect();
+        LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300));
+
+        imageView = ViewFactory.createImageView(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        imageView.setImageBitmap(ViewUtil.getBitmap(this, R.drawable.focus_logo_small));
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        linearLayoutVertical3.addView(imageView);
+
+        linearLayoutPageInfo.addView(linearLayoutVertical3);
+
+        Button pictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Take Picture");
+        pictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, PICTURE_REQUEST);
+            }
+        });
+
+        linearLayoutPageInfo.addView(pictureButton);
+
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+
+
+        LinearLayout linearLayoutVerticalForm = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout linearLayoutHorizontal3 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelA = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label A");
+
+        EditText editTextA = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        linearLayoutHorizontal3.addView(labelA);
+        linearLayoutHorizontal3.addView(editTextA);
+        linearLayoutHorizontal3.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal3);
+
+        LinearLayout linearLayoutHorizontal4 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelB = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label B");
+
+        EditText editTextB =  ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        editTextB.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editTextB.setLines(8);
+        editTextB.setMaxLines(10);
+        editTextB.setMinLines(6);
+        editTextB.setGravity(Gravity.TOP | Gravity.LEFT);
+
+        linearLayoutHorizontal4.addView(labelB);
+        linearLayoutHorizontal4.addView(editTextB);
+        linearLayoutHorizontal4.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal4);
+
+
+        LinearLayout linearLayoutHorizontal5 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelC = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label C");
+
+
+        RadioGroup radioGroup = ViewFactory.createRadioGroup(this,new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        RadioButton radioButton1 = ViewFactory.createRadioButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        radioButton1.setText("Radio Button 1");
+        RadioButton radioButton2 = ViewFactory.createRadioButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        radioButton2.setText("Radio Button 2");
+        radioGroup.addView(radioButton1);
+        radioGroup.addView(radioButton2);
+
+        linearLayoutHorizontal5.addView(labelC);
+        linearLayoutHorizontal5.addView(radioGroup);
+        linearLayoutHorizontal5.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal5);
+
+
+        LinearLayout linearLayoutHorizontal6 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelD = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label D");
+
+        CheckBox checkBox1 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        checkBox1.setText("Check box 1");
+        CheckBox checkBox2 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        checkBox2.setText("Check box 2");
+
+        linearLayoutHorizontal6.addView(labelD);
+        linearLayoutHorizontal6.addView(checkBox1);
+        linearLayoutHorizontal6.addView(checkBox2);
+        linearLayoutHorizontal6.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal6);
+
+
+        LinearLayout linearLayoutHorizontal7 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelE = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label E");
+
+        Spinner spinner = ViewFactory.createSpinner(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        List<String> list = new ArrayList<String>();
+        list.add("Value 1");
+        list.add("Value 2");
+        list.add("Value 3");
+        list.add("Value 4");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        linearLayoutHorizontal7.addView(labelE);
+        linearLayoutHorizontal7.addView(spinner);
+        linearLayoutHorizontal7.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal7);
+
+        Button submitButton = ViewFactory.createButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Submit");
+        linearLayoutVerticalForm.addView(submitButton);
+
+
+        linearLayoutPageInfo.addView(linearLayoutVerticalForm);
+
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PICTURE_REQUEST){
+            if(resultCode == RESULT_OK){
+                //    Bitmap tookPicture = (Bitmap) data.getExtras().get("data");
+
+                Bitmap thumbnail = null;
+                try {
+                    thumbnail = MediaStore.Images.Media.getBitmap(
+                            getContentResolver(), imageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+              //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                // imageView.setImageBitmap(tookPicture);
+
+
+                imageView.setImageBitmap(thumbnail);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+
+    }
 
     @Override
     protected void onPause() {
-        super.onPause();
         stopLocationUpdates();
+        super.onPause();
     }
 
-    protected void stopLocationUpdates() {
+    private void startLocationUpdates(){
+        if(googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+        googleApiClient.connect();
+    }
+
+    private void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 googleApiClient, this);
+        googleApiClient.disconnect();
     }
 
     private LineData createLineData(int count, float range) {
@@ -425,7 +614,6 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
 
     /**
-     *
      * @param count
      * @param range
      */
@@ -433,7 +621,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
-            xVals.add(""+i % 12); //x-axis
+            xVals.add("" + i % 12); //x-axis
         }
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>(); //y-axis values
@@ -454,27 +642,28 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         // data.setValueFormatter(new MyValueFormatter());
         data.setValueTextSize(10f);
         //data.setValueTypeface(mTf);
-      return data;
+        return data;
     }
 
 
+    //TODO set parameter (List<?> data)
     private PieData createPieData(int count, float range) {
 
         float mult = range;
 
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>(); // reached votes by participant y-axis
+        ArrayList<Entry> yVals1 = new ArrayList<>(); // reached votes by participant y-axis
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
-        for (int i = 0; i < 4 + 1; i++) {
-            yVals1.add(new Entry((float) (Math.random() * mult) + mult / 5, i));
+        for (int i = 1; i < count + 1; i++) {
+            yVals1.add(new Entry((float) (Math.random() * mult) + mult / count + 1, i));
         }
 
         ArrayList<String> xVals = new ArrayList<String>(); // number of different participants x-axis
 
-        for (int i = 0; i < 4 + 1; i++)
-            xVals.add(""+i);
+        for (int i = 0; i < count + 1; i++)
+            xVals.add("" + (i + 1));
 
 
         PieDataSet dataSet = new PieDataSet(yVals1, "Election Results");
@@ -510,8 +699,6 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         data.setValueTextColor(Color.WHITE);
         return data;
     }
-
-
 
 
     @Override
@@ -553,10 +740,10 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onLocationChanged(Location location) {
-        if(positionAsked) {
+        if (positionAsked) {
             longitude.setText("Longitude: " + location.getLongitude());
             latitude.setText("Latitude: " + location.getLatitude());
-            latitude.setText("Altitude: " + location.getAltitude());
+            altitude.setText("Altitude: " + location.getAltitude());
             accuracy.setText("Accuracy: " + location.getAccuracy());
             positionAsked = false;
         }

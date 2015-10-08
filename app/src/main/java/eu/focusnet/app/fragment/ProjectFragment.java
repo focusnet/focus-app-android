@@ -1,7 +1,6 @@
 package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,24 +17,18 @@ import java.util.ArrayList;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.LinkerDao;
-import eu.focusnet.app.db.PageDao;
-import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.manager.BookmarkLinkManager;
 import eu.focusnet.app.manager.LinkerManager;
 import eu.focusnet.app.manager.PageManager;
 import eu.focusnet.app.model.data.Linker;
-import eu.focusnet.app.model.data.Notification;
 import eu.focusnet.app.model.data.Page;
-import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
-import eu.focusnet.app.util.NavigationUtil;
+import eu.focusnet.app.util.ViewUtil;
 
 /**
  * Created by admin on 29.06.2015.
@@ -66,7 +59,7 @@ public class ProjectFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
             if(position > notificationsHeaderPosition){
-                GuiUtil.displayToast(getActivity(), "Notification selected");
+                ViewUtil.displayToast(getActivity(), "Notification selected");
             }
 //            else if(position > toolsHeaderPosition){
 //                GuiUtil.displayToast(getActivity(), "Tools selected");
@@ -103,7 +96,7 @@ public class ProjectFragment extends ListFragment {
 
                 abstractItems = new ArrayList<AbstractListItem>();
 
-                AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
                         getString(R.string.cutting_header_dashboard),
                         null);
 
@@ -115,19 +108,19 @@ public class ProjectFragment extends ListFragment {
                     int dashboardOrder = dashboard.getOrder();
                     Page page = pageManager.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
                     String path = projectId + "/" + pageId;
                     if (bookmarkLinkManager.findBookmarkLink(path, bookmarkLinkType) == null) {
-                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }
-                    StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
+                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
                             page.getTitle(), page.getDescription(), dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
                     abstractItems.add(drawListItem);
                 }
 
-                AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
+                AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
                         getString(R.string.cutting_header_tool),
                         null);
 
@@ -143,21 +136,21 @@ public class ProjectFragment extends ListFragment {
                     int toolOrder = tool.getOrder();
                     Page page = pageManager.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
-                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
                     String path = projectId + "/" + pageId;
                     if (bookmarkLinkManager.findBookmarkLink(path, bookmarkLinkType) == null) {
-                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }
-                    StandardListItem drawListItem = new StandardListItem(path, GuiUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
+                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
                             toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
                     abstractItems.add(drawListItem);
                 }
 
-                AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+                AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
                         getString(R.string.cutting_header_notification),
-                        GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                        ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
                 abstractItems.add(headerNotificationListItem);
 
                 notificationsHeaderPosition = abstractItems.size() - 1;

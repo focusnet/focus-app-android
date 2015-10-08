@@ -16,17 +16,15 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.manager.BookmarkLinkManager;
 import eu.focusnet.app.manager.ProjectManager;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.activity.R;
 
 
@@ -79,9 +77,9 @@ public class FocusFragment extends ListFragment {
             projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
 
             abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
+            AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
                     getString(R.string.focus_header_project),
-                    GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                    ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
 
             abstractItems.add(headerProjectsListItem);
 
@@ -98,21 +96,21 @@ public class FocusFragment extends ListFragment {
                     String projectTitle = p.getTitle();
                     int projectOrder = p.getOrder();
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-                    Bitmap rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star);
+                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
                     if (bookmarkLinkManager.findBookmarkLink(projectId, bookmarkLinkType) == null) {
-                        rightIcon = GuiUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }
                     //The project Id is the same as the path
-                    StandardListItem drawListItem = new StandardListItem(projectId, GuiUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
+                    StandardListItem drawListItem = new StandardListItem(projectId, ViewUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
                             projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
                     abstractItems.add(drawListItem);
                 }
 
-                AbstractListItem headerNotificationListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+                AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
                         getString(R.string.focus_header_notification),
-                        GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                        ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
                 abstractItems.add(headerNotificationListItem);
 
                 notifHeaderPosition = abstractItems.size() - 1;
@@ -124,7 +122,7 @@ public class FocusFragment extends ListFragment {
                 for (int i = 0; i < notificationTitels.length; i++) {
                     String notifTitle = notificationTitels[i];
                     //TODO set correct path (for now the title is set as the path)
-                    StandardListItem drawListItem = new StandardListItem(notifTitle, GuiUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
+                    StandardListItem drawListItem = new StandardListItem(notifTitle, ViewUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
                     abstractItems.add(drawListItem);
                 }
 

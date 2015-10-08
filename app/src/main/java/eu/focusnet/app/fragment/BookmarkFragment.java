@@ -4,8 +4,6 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDao;
 import eu.focusnet.app.manager.PreferenceManager;
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
@@ -24,12 +21,9 @@ import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.util.NavigationUtil;
-
-import static eu.focusnet.app.util.NavigationUtil.PathType.PROJECTID;
-import static eu.focusnet.app.util.NavigationUtil.PathType.PROJECTID_BRACKETS_PAGEID;
 
 
 /**
@@ -93,23 +87,23 @@ public class BookmarkFragment extends ListFragment {
                 ArrayList<BookmarkLink> tools = bookmark.getTools();
 
                 abstractItems = new ArrayList<AbstractListItem>();
-                AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
-                        getResources().getString(R.string.bookmark_header_dashboard), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                        getResources().getString(R.string.bookmark_header_dashboard), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
                 abstractItems.add(headerProjectsListItem);
 
                 for (BookmarkLink bl : pages) {
-                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
                             bl.getName(), bl.getPath());
                     abstractItems.add(drawListItem);
                 }
 
-                AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
-                        getString(R.string.bookmark_header_tool), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
+                        getString(R.string.bookmark_header_tool), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
                 abstractItems.add(headerToolListItem);
 
 
                 for (BookmarkLink bl : tools) {
-                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
                             bl.getName(), bl.getPath());
                     abstractItems.add(drawListItem);
                 }

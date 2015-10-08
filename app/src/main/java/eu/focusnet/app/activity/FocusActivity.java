@@ -1,9 +1,7 @@
 package eu.focusnet.app.activity;
-
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Network;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
@@ -16,28 +14,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import eu.focusnet.app.adapter.DrawerListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.fragment.FocusFragment;
 import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
-import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
-import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
-import eu.focusnet.app.util.NetworkUtil;
+import eu.focusnet.app.util.ViewUtil;
 
 /**
  * Created by admin on 15.06.2015.
@@ -57,7 +51,6 @@ public class FocusActivity extends AppCompatActivity  {
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
     private ArrayList<AbstractListItem> drawerItems;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +88,12 @@ public class FocusActivity extends AppCompatActivity  {
         Bundle extras = getIntent().getExtras();
         User user = (User) extras.getSerializable(Constant.USER_DATA);
 
-        drawerItems.add(new HeaderDrawerListItem(GuiUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-        GuiUtil.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
+        drawerItems.add(new HeaderDrawerListItem(ViewUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+        ViewUtil.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
 
         for(int i = 0; i < navMenuTitles.length; i++){
             String menuTitle = navMenuTitles[i];
-            DrawerListItem drawListItem = new DrawerListItem(GuiUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
+            DrawerListItem drawListItem = new DrawerListItem(ViewUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
             //find out the synchronize menu
             if(menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
                 //TODO set the synchronized info
@@ -121,10 +114,8 @@ public class FocusActivity extends AppCompatActivity  {
 
         drawerListMenu.setAdapter(adapter);
 
-        toolbar = (Toolbar)findViewById(R.layout.toolbar);
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         drawerToggle = new ActionBarDrawerToggle(
                 this,               /* host Activity */
@@ -352,6 +343,7 @@ public class FocusActivity extends AppCompatActivity  {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //display view for selected nav drawer item
+          //  ((TextView)view.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.app_color));
             showView(position);
         }
     }

@@ -13,33 +13,20 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
-import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.LinkerDao;
-import eu.focusnet.app.db.PageDao;
-import eu.focusnet.app.db.PreferenceDao;
-import eu.focusnet.app.db.ProjectDao;
-import eu.focusnet.app.db.UserDao;
-import eu.focusnet.app.db.WidgetDao;
-import eu.focusnet.app.db.WidgetLinkerDao;
 import eu.focusnet.app.manager.AppContentManager;
 import eu.focusnet.app.manager.PreferenceManager;
 import eu.focusnet.app.manager.UserManager;
 import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.model.data.Linker;
-import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Preference;
-import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.data.User;
-import eu.focusnet.app.model.data.Widget;
-import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.util.NetworkUtil.*;
 
 /**
@@ -75,7 +62,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            progressDialog = GuiUtil.createProgressDialog(context, "Authentication process running", "Please wait...");
+            progressDialog = ViewFactory.createProgressDialog(context, "Authentication process running", "Please wait...");
             progressDialog.show();
         }
 
@@ -138,7 +125,7 @@ public class LoginActivity extends Activity {
         //TODO remove this, when the app is finished
         @Override
         protected void onProgressUpdate(String... values) {
-            GuiUtil.displayToast(context, values[0]);
+            ViewUtil.displayToast(context, values[0]);
         }
 
         @Override

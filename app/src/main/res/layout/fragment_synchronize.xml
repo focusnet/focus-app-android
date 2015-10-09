@@ -21,7 +21,7 @@
 
         <!--android:layout_toRightOf="@id/header_left_icon"-->
         <TextView
-            style="@style/HeaderAppearance"
+            style="@style/HeaderTextAppearance"
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

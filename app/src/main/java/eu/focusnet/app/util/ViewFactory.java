@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import de.codecrafters.tableview.TableView;
 import eu.focusnet.app.activity.R;
+import eu.focusnet.app.db.DatabaseAdapter;
 
 import static eu.focusnet.app.activity.R.drawable.custom_progress_dialog_animation;
 
@@ -124,4 +126,10 @@ public class ViewFactory {
         spinner.setLayoutParams(layoutParams);
         return spinner;
     }
+
+//    public static DatePicker createDatePicker(Context context, LinearLayout.LayoutParams layoutParams){
+//        DatePicker datePicker = new DatePicker(context);
+//        datePicker.setLayoutParams(layoutParams);
+//        return datePicker;
+//    }
 }

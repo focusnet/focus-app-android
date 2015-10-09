@@ -5,8 +5,8 @@
     <color name="view_pressed_color">#00703c</color>
 
     <color name="table_header_text">@android:color/white</color>
-    <color name="table_data_row_even">#11C5CAE9</color>
-    <color name="table_data_row_odd">#33C5CAE9</color>
+    <color name="table_data_row_even">@android:color/white</color>
+    <color name="table_data_row_odd">#FFB7E3B5</color>
 
     <color name="list_item_title">#000</color>
     <color name="list_item_background">@android:color/white</color>

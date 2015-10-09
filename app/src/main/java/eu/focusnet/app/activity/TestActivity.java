@@ -1,15 +1,17 @@
 package eu.focusnet.app.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +53,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +69,7 @@ import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
 //This activity is only for testing
-public class TestActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class TestActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String[][] DATA_TO_SHOW = {
             {"This", "is", "a", "test"},
@@ -98,7 +105,17 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        setTitle("This is a test");
+
+        final int horizontalSpace = 50;
+        final int takeAllRow = 1;
+
         LinearLayout linearLayoutPageInfo = (LinearLayout) findViewById(R.id.test_layout);
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace / 2, takeAllRow));
 
         LinearLayout linearLayoutVertical = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -113,23 +130,32 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutVertical);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
 
 
         LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
 //
-        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f), 4);
-        tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(this, HEADER));
+        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f), 4);
+        SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(this, HEADER);
+        adapter.setPaddingTop(25);
+        adapter.setPaddingBottom(25);
+        adapter.setTextColor(getResources().getColor(R.color.table_header_text));
+        adapter.setTextSize(18);
+        tableView.setHeaderAdapter(adapter);
+        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.app_color));
         tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
         int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
         int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
         tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
 
+
         linearLayoutHorizontal.addView(tableView);
 
+        linearLayoutHorizontal.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
+
         PieChart pieChart = new PieChart(this);
-        pieChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f));
+        pieChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
 
 
         pieChart.setUsePercentValues(true);
@@ -175,7 +201,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
 
 
         LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
@@ -183,7 +209,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
 
         BarChart barChart = new BarChart(this);
-        barChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f));
+        barChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
 
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
@@ -242,9 +268,10 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         barChart.setData(createBarData(12, 50));
 
         linearLayoutHorizontal2.addView(barChart);
+        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, horizontalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
         LineChart line_chart = new LineChart(this);
-        line_chart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.5f));
+        line_chart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
         line_chart.setDrawGridBackground(false);
 
         // no description text
@@ -328,7 +355,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         Legend legend1 = line_chart.getLegend();
 
         // modify the legend ...
-        legend1.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        legend1.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         legend1.setForm(Legend.LegendForm.LINE);
 
 
@@ -336,7 +363,7 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutHorizontal2);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -373,72 +400,146 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutVertical2);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300));
 
         imageView = ViewFactory.createImageView(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        imageView.setImageBitmap(ViewUtil.getBitmap(this, R.drawable.focus_logo_small));
+        imageView.setImageBitmap(ViewUtil.getBitmap(this, R.drawable.focus_logo));
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
+//                Bitmap bitmap = bitmapDrawable.getBitmap();
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] bytes = stream.toByteArray();
+                if(imageUri != null) {
+                    Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
+                    intent.putExtra("imageUri", imageUri);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
         linearLayoutVertical3.addView(imageView);
 
         linearLayoutPageInfo.addView(linearLayoutVertical3);
 
-        Button pictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Take Picture");
-        pictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, PICTURE_REQUEST);
-            }
-        });
+        Button pictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Replace Picture");
+        pictureButton.setOnClickListener(new View.OnClickListener()
+
+                                         {
+                                             @Override
+                                             public void onClick(View v) {
+                                                 ContentValues values = new ContentValues();
+                                                 values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                                                 values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                                                 imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                                 startActivityForResult(intent, PICTURE_REQUEST);
+                                             }
+                                         }
+
+        );
 
         linearLayoutPageInfo.addView(pictureButton);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, 10, 1));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
 
 
         LinearLayout linearLayoutVerticalForm = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        LinearLayout linearLayoutHorizontal3 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+
+        TextView form = ViewFactory.createTextView(this, R.style.TitleAppearance,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Form");
+
+        linearLayoutVerticalForm.addView(form);
+
+        LinearLayout linearLayoutHorizontalName = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        TextView labelA = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label A");
+        TextView labelName = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Name");
 
-        EditText editTextA = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
-        linearLayoutHorizontal3.addView(labelA);
-        linearLayoutHorizontal3.addView(editTextA);
-        linearLayoutHorizontal3.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        EditText editTextName = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        linearLayoutHorizontalName.addView(labelName);
+        linearLayoutHorizontalName.addView(editTextName);
+        linearLayoutHorizontalName.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
 
-        linearLayoutVerticalForm.addView(linearLayoutHorizontal3);
+        linearLayoutVerticalForm.addView(linearLayoutHorizontalName);
 
-        LinearLayout linearLayoutHorizontal4 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+
+        LinearLayout linearLayoutHorizontalEmail = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        TextView labelB = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label B");
+        TextView labelEmail = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Email");
 
-        EditText editTextB =  ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
-        editTextB.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        editTextB.setLines(8);
-        editTextB.setMaxLines(10);
-        editTextB.setMinLines(6);
-        editTextB.setGravity(Gravity.TOP | Gravity.LEFT);
+        EditText editTextEmail = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        editTextEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        linearLayoutHorizontalEmail.addView(labelEmail);
+        linearLayoutHorizontalEmail.addView(editTextEmail);
+        linearLayoutHorizontalEmail.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
 
-        linearLayoutHorizontal4.addView(labelB);
-        linearLayoutHorizontal4.addView(editTextB);
-        linearLayoutHorizontal4.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutVerticalForm.addView(linearLayoutHorizontalEmail);
 
-        linearLayoutVerticalForm.addView(linearLayoutHorizontal4);
+
+        LinearLayout linearLayoutHorizontalNumber = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelNumber = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Number");
+
+        EditText editTextNumber = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        editTextNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
+        linearLayoutHorizontalNumber.addView(labelNumber);
+        linearLayoutHorizontalNumber.addView(editTextNumber);
+        linearLayoutHorizontalNumber.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontalNumber);
+
+
+        LinearLayout linearLayoutHorizontalDescription = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView labelDescription = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Description");
+
+        EditText editTextDescription = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        editTextDescription.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editTextDescription.setLines(8);
+        editTextDescription.setMaxLines(10);
+        editTextDescription.setMinLines(6);
+        editTextDescription.setGravity(Gravity.TOP | Gravity.LEFT);
+
+        linearLayoutHorizontalDescription.addView(labelDescription);
+        linearLayoutHorizontalDescription.addView(editTextDescription);
+        linearLayoutHorizontalDescription.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontalDescription);
+
+
+//        LinearLayout linearLayoutHorizontalDatePicker = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+//
+//        TextView labelDatePicker = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Pick date");
+//        linearLayoutHorizontalDatePicker.addView(labelDatePicker);
+
+  //      DatePicker datePicker = ViewFactory.createDatePicker(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 5));
+
+  //      linearLayoutHorizontalDescription.addView(datePicker);
+//        linearLayoutHorizontalDescription.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+//
+     //   linearLayoutVerticalForm.addView(linearLayoutHorizontalDatePicker);
 
 
         LinearLayout linearLayoutHorizontal5 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
@@ -448,10 +549,10 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label C");
 
 
-        RadioGroup radioGroup = ViewFactory.createRadioGroup(this,new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
-        RadioButton radioButton1 = ViewFactory.createRadioButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        RadioGroup radioGroup = ViewFactory.createRadioGroup(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        RadioButton radioButton1 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         radioButton1.setText("Radio Button 1");
-        RadioButton radioButton2 = ViewFactory.createRadioButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        RadioButton radioButton2 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         radioButton2.setText("Radio Button 2");
         radioGroup.addView(radioButton1);
         radioGroup.addView(radioButton2);
@@ -504,9 +605,16 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         linearLayoutHorizontal7.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
         linearLayoutVerticalForm.addView(linearLayoutHorizontal7);
 
-        Button submitButton = ViewFactory.createButton(this,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Submit");
-        linearLayoutVerticalForm.addView(submitButton);
+        LinearLayout linearLayoutHorizontal8 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        Button submitButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Submit");
+        linearLayoutHorizontal8.addView(submitButton);
+
+        Button resetButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Reset");
+        linearLayoutHorizontal8.addView(resetButton);
+
+        linearLayoutVerticalForm.addView(linearLayoutHorizontal8);
 
         linearLayoutPageInfo.addView(linearLayoutVerticalForm);
 
@@ -515,23 +623,23 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == PICTURE_REQUEST){
-            if(resultCode == RESULT_OK){
+        if (requestCode == PICTURE_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 //    Bitmap tookPicture = (Bitmap) data.getExtras().get("data");
 
-                Bitmap thumbnail = null;
-                try {
-                    thumbnail = MediaStore.Images.Media.getBitmap(
-                            getContentResolver(), imageUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                Bitmap thumbnail = null;
+//                try {
+//                    thumbnail = MediaStore.Images.Media.getBitmap(
+//                            getContentResolver(), imageUri);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
-              //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 // imageView.setImageBitmap(tookPicture);
 
 
-                imageView.setImageBitmap(thumbnail);
+                imageView.setImageURI(imageUri);
             }
         }
     }
@@ -549,8 +657,8 @@ public class TestActivity extends ActionBarActivity implements GoogleApiClient.C
         super.onPause();
     }
 
-    private void startLocationUpdates(){
-        if(googleApiClient == null) {
+    private void startLocationUpdates() {
+        if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)

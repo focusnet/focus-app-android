@@ -21,6 +21,7 @@ import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.EventBus;
 import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.util.NavigationUtil;
@@ -29,7 +30,7 @@ import eu.focusnet.app.util.NavigationUtil;
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends ListFragment {
+public class BookmarkFragment extends ListFragment implements EventBus.IEventListener {
 
     private ArrayList<AbstractListItem> abstractItems;
 
@@ -37,8 +38,25 @@ public class BookmarkFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-        new BookmarkBuilderTask().execute();
         return viewRoot;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.registerIEventListener(this);
+        onBookmarksUpdated();
+    }
+
+    @Override
+    public void onStop(){
+        EventBus.unregisterIEventListener(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onBookmarksUpdated() {
+        new BookmarkBuilderTask().execute();
     }
 
     @Override

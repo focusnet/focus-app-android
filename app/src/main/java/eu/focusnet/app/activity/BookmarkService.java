@@ -13,6 +13,7 @@ import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.EventBus;
 
 /**
  *
@@ -26,6 +27,7 @@ public class BookmarkService extends IntentService {
     public BookmarkService() {
         super(BookmarkService.class.getName());
     }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -64,6 +66,7 @@ public class BookmarkService extends IntentService {
             foundPref = preferenceManager.findPreference(new Long(123));
             String jsonPref = gson.toJson(foundPref);
             DataProviderManager.updateData(PATH, jsonPref);
+            EventBus.fireBookmarksUpdate();
         }
         catch (IOException e) {
             //TODO

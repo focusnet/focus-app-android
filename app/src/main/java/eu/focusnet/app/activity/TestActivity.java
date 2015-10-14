@@ -1,11 +1,8 @@
 package eu.focusnet.app.activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,18 +49,21 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import junit.framework.Test;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
+import eu.focusnet.app.common.FocusType;
+import eu.focusnet.app.model.data.FocusSample;
+import eu.focusnet.app.model.data.ImplicitString;
+import eu.focusnet.app.model.data.Numeric;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
@@ -99,6 +98,18 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     private GoogleApiClient googleApiClient;
     private TextView longitude, latitude, altitude, accuracy;
     private volatile boolean positionAsked;
+
+    private static final String RESPONSE = "Response",
+            KEY_NAME = "Name",
+            KEY_EMAIL = "Email",
+            KEY_NUMBER = "Number",
+            KEY_DESCRIPTION = "Description";
+
+
+    private static final String EXAMPLE_APP_ACTION = "com.example.exampleapp.SHOW_FOCUS_DATA";
+    private static final String FOCUS_SAMPLE = "FocusSample";
+    private final int EXAMPLE_APP_REQUEST = 2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,7 +480,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         TextView labelName = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Name");
 
-        EditText editTextName = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextName = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
         linearLayoutHorizontalName.addView(labelName);
         linearLayoutHorizontalName.addView(editTextName);
         linearLayoutHorizontalName.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
@@ -483,7 +494,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         TextView labelEmail = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Email");
 
-        EditText editTextEmail = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextEmail = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
         editTextEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         linearLayoutHorizontalEmail.addView(labelEmail);
         linearLayoutHorizontalEmail.addView(editTextEmail);
@@ -498,7 +509,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         TextView labelNumber = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Number");
 
-        EditText editTextNumber = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextNumber = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
         editTextNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         linearLayoutHorizontalNumber.addView(labelNumber);
         linearLayoutHorizontalNumber.addView(editTextNumber);
@@ -513,7 +524,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         TextView labelDescription = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Description");
 
-        EditText editTextDescription = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextDescription = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
         editTextDescription.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         editTextDescription.setLines(8);
         editTextDescription.setMaxLines(10);
@@ -609,6 +620,36 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         Button submitButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Submit");
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editTextName.getText().toString();
+                String email = editTextEmail.getText().toString();
+                Long number = new Long(-1);
+                try {
+                    number = Long.valueOf(editTextNumber.getText().toString());
+                }
+                catch (NumberFormatException ex){}
+                String description = editTextDescription.getText().toString();
+
+                Map<String, FocusType> data = new HashMap<>();
+                FocusType focusTypeName = new ImplicitString(name);
+                data.put(KEY_NAME, focusTypeName);
+                FocusType focusTypeEmail = new ImplicitString(email);
+                data.put(KEY_EMAIL, focusTypeEmail);
+                FocusType focusTypeNumber = new Numeric(number);
+                data.put(KEY_NUMBER, focusTypeNumber);
+                FocusType focusTypeDescription = new ImplicitString(description);
+                data.put(KEY_DESCRIPTION, focusTypeDescription);
+
+                FocusSample focusSample = new FocusSample(data);
+                Intent intent = new Intent(EXAMPLE_APP_ACTION);
+                intent.putExtra(FOCUS_SAMPLE, focusSample);
+                startActivityForResult(intent, EXAMPLE_APP_REQUEST);
+            }
+        });
+
         linearLayoutHorizontal8.addView(submitButton);
 
         Button resetButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Reset");
@@ -642,6 +683,13 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 imageView.setImageURI(imageUri);
             }
         }
+        else if(requestCode == EXAMPLE_APP_REQUEST){
+            if(resultCode == RESULT_OK){
+                String response = data.getStringExtra(RESPONSE);
+                ViewUtil.displayToast(this, "The response obtained from EXAMPLE_APP was: "+response);
+            }
+        }
+
     }
 
     @Override

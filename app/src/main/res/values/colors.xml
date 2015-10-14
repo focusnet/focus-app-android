@@ -6,11 +6,11 @@
 
     <color name="table_header_text">@android:color/white</color>
     <color name="table_data_row_even">@android:color/white</color>
-    <color name="table_data_row_odd">#FFB7E3B5</color>
+    <color name="table_data_row_odd">#daf1d9</color>
 
     <color name="list_item_title">#000</color>
     <color name="list_item_background">@android:color/white</color>
-    <color name="list_item_background_pressed">#88CC88</color>
+    <color name="list_item_background_pressed">#daf1d9</color>
     <!--<color name="list_divider">#FFCC00</color>-->
 
     <color name="actionbar_text">@android:color/white</color>

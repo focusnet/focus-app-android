@@ -7,7 +7,7 @@ import eu.focusnet.app.common.FocusType;
  */
 public class ImplicitString implements FocusType {
 
-    private Type type = Type.sting;
+    private Type type = Type.string;
     private String value;
 
     public ImplicitString(String value) {

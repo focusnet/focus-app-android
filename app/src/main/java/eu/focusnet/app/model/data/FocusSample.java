@@ -1,10 +1,11 @@
 package eu.focusnet.app.model.data;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import eu.focusnet.app.common.FocusType;
 
-public class FocusSample extends FocusObject {
+public class FocusSample implements Serializable {// extends FocusObject {
 
 	private Map<String, FocusType> data;
 

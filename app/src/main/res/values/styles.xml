@@ -1,19 +1,14 @@
 <resources>
 
-    <style name="NoActionBarTheme" parent="@style/Theme.AppCompat.Light.NoActionBar" />
-
-    <!-- Base application theme. -->
+   <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <!--<item name="android:textAppearance">@style/HeaderAppearance</item>-->
-
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="colorControlNormal">@android:color/white</item>
-
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
 
 
     <style name="ToolBarTextHeaderAppearance" parent="@android:style/TextAppearance">

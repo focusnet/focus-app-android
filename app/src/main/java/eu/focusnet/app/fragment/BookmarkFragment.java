@@ -140,6 +140,5 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
             setListAdapter(adapter);
         }
     }
-
 }
 

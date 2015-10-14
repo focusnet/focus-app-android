@@ -17,8 +17,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/NoActionBarTheme" >
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,8 +26,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/NoActionBarTheme" >
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="eu.focusnet.app.activity.LoginActivity" />
 
@@ -79,7 +77,6 @@
         <activity
             android:name=".ImageActivity"
             android:label="@string/title_activity_image"
-            android:theme="@style/NoActionBarTheme"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="eu.focusnet.app.activity.ImageActivity" />

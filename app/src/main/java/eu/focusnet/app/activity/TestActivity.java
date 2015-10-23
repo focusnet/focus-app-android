@@ -1,7 +1,9 @@
 package eu.focusnet.app.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -48,6 +50,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import junit.framework.Test;
 
@@ -95,6 +98,8 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     private Uri imageUri;
     private ImageView imageView;
 
+    private Button deleteButton, viewButton, takePictureButton;
+
     private GoogleApiClient googleApiClient;
     private TextView longitude, latitude, altitude, accuracy;
     private volatile boolean positionAsked;
@@ -122,11 +127,16 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         getSupportActionBar().setHomeButtonEnabled(true);
         setTitle("This is a test");
 
-        final int horizontalSpace = 50;
+        final int verticalSpace = 50;
         final int takeAllRow = 1;
 
+        float quarter = 0.25f;
+        float half = 0.50f;
+        float treeQuarters = 0.75f;
+        float hole = 1.0f;
+
         LinearLayout linearLayoutPageInfo = (LinearLayout) findViewById(R.id.test_layout);
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace / 2, takeAllRow));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace / 2, takeAllRow));
 
         LinearLayout linearLayoutVertical = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -141,37 +151,33 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutVertical);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
+
+
+        LinearLayout linearLayoutHorizontalPieChartTitle = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        TextView pieChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "PieChart Title");
+        linearLayoutHorizontalPieChartTitle.addView(pieChartTitle);
+
+        linearLayoutHorizontalPieChartTitle.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, treeQuarters));
+
+        linearLayoutPageInfo.addView(linearLayoutHorizontalPieChartTitle);
 
 
         LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
-//
-        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f), 4);
-        SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(this, HEADER);
-        adapter.setPaddingTop(25);
-        adapter.setPaddingBottom(25);
-        adapter.setTextColor(getResources().getColor(R.color.table_header_text));
-        adapter.setTextSize(18);
-        tableView.setHeaderAdapter(adapter);
-        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.app_color));
-        tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
-        int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
-        int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
-        tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
 
-
-        linearLayoutHorizontal.addView(tableView);
-
-        linearLayoutHorizontal.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
+//        linearLayoutHorizontal.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
         PieChart pieChart = new PieChart(this);
-        pieChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
+        pieChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
 
 
         pieChart.setUsePercentValues(true);
 
-        pieChart.setDescription("Description");
+        pieChart.setDescription("");
 
 
         pieChart.setDragDecelerationFrictionCoef(0.95f);
@@ -210,9 +216,41 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutHorizontal.addView(pieChart);
 
+
+        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half), 4);
+        SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(this, HEADER);
+        adapter.setPaddingTop(25);
+        adapter.setPaddingBottom(25);
+        adapter.setTextColor(getResources().getColor(R.color.table_header_text));
+        adapter.setTextSize(18);
+        tableView.setHeaderAdapter(adapter);
+        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.app_color));
+        tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
+        int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
+        int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
+        tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
+
+        linearLayoutHorizontal.addView(tableView);
+
+
         linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
+
+
+        LinearLayout linearLayoutHorizontalChartTitle = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+
+        TextView BarChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "BarChart Title");
+        linearLayoutHorizontalChartTitle.addView(BarChartTitle);
+
+        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "LineChart Title");
+        linearLayoutHorizontalChartTitle.addView(LineChartTitle);
+
+        linearLayoutPageInfo.addView(linearLayoutHorizontalChartTitle);
 
 
         LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
@@ -220,12 +258,12 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         BarChart barChart = new BarChart(this);
-        barChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
+        barChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
 
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
 
-        barChart.setDescription("Description");
+        barChart.setDescription("");
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
@@ -279,15 +317,15 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         barChart.setData(createBarData(12, 50));
 
         linearLayoutHorizontal2.addView(barChart);
-        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, horizontalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
+//        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
         LineChart line_chart = new LineChart(this);
-        line_chart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2.8f));
+        line_chart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
         line_chart.setDrawGridBackground(false);
 
         // no description text
-        line_chart.setDescription("Description");
-        line_chart.setNoDataTextDescription("You need to provide data for the chart.");
+        line_chart.setDescription("");
+        //line_chart.setNoDataTextDescription("You need to provide data for the chart.");
 
         // enable value highlighting
         line_chart.setHighlightEnabled(true);
@@ -374,7 +412,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutHorizontal2);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -411,7 +449,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutPageInfo.addView(linearLayoutVertical2);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300));
@@ -421,48 +459,95 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
-//                Bitmap bitmap = bitmapDrawable.getBitmap();
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                byte[] bytes = stream.toByteArray();
-                if(imageUri != null) {
-                    Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
-                    intent.putExtra("imageUri", imageUri);
-                    startActivity(intent);
-                }
-            }
-        });
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
+////                Bitmap bitmap = bitmapDrawable.getBitmap();
+////                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+////                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+////                byte[] bytes = stream.toByteArray();
+//                if (imageUri != null) {
+//                    Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
+//                    intent.putExtra("imageUri", imageUri);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
 
         linearLayoutVertical3.addView(imageView);
 
         linearLayoutPageInfo.addView(linearLayoutVertical3);
 
-        Button pictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Replace Picture");
-        pictureButton.setOnClickListener(new View.OnClickListener()
 
-                                         {
-                                             @Override
-                                             public void onClick(View v) {
-                                                 ContentValues values = new ContentValues();
-                                                 values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                                                 values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-                                                 imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                                 startActivityForResult(intent, PICTURE_REQUEST);
+        LinearLayout linearLayoutHorizontalPictureButtons = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+        viewButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "View");
+        if(imageUri == null)
+            viewButton.setEnabled(false);
+        viewButton.setOnClickListener(new View.OnClickListener()
+
+                                      {
+                                          @Override
+                                          public void onClick(View v) {
+                                              Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
+                                              intent.putExtra("imageUri", imageUri);
+                                              startActivity(intent);
+                                          }
+                                      }
+        );
+
+        deleteButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Delete");
+        if(imageUri == null)
+            deleteButton.setEnabled(false);
+        deleteButton.setOnClickListener(new View.OnClickListener()
+
+                                        {
+                                            @Override
+                                            public void onClick(View v) {
+                                                imageView.setImageBitmap(ViewUtil.getBitmap(TestActivity.this, R.drawable.focus_logo));
+                                                deleteButton.setEnabled(false);
+                                                viewButton.setEnabled(false);
+                                                takePictureButton.setText("Take a Picture");
+                                                imageUri = null;
+                                            }
+                                        }
+        );
+
+
+
+        takePictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Take a Picture");
+        takePictureButton.setOnClickListener(new View.OnClickListener()
+
+                                             {
+                                                 @Override
+                                                 public void onClick(View v) {
+                                                     ContentValues values = new ContentValues();
+                                                     values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                                                     values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                                                     imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                                     startActivityForResult(intent, PICTURE_REQUEST);
+
+                                                 }
                                              }
-                                         }
 
         );
 
-        linearLayoutPageInfo.addView(pictureButton);
 
-        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, horizontalSpace, takeAllRow));
+        linearLayoutHorizontalPictureButtons.addView(takePictureButton);
+        linearLayoutHorizontalPictureButtons.addView(viewButton);
+        linearLayoutHorizontalPictureButtons.addView(deleteButton);
+        linearLayoutHorizontalPictureButtons.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
+
+
+        linearLayoutPageInfo.addView(linearLayoutHorizontalPictureButtons);
+
+        linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
 
         LinearLayout linearLayoutVerticalForm = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
@@ -478,12 +563,12 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelName = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Name");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Name");
 
-        final EditText editTextName = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextName = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
         linearLayoutHorizontalName.addView(labelName);
         linearLayoutHorizontalName.addView(editTextName);
-        linearLayoutHorizontalName.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontalName.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontalName);
 
@@ -492,13 +577,13 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelEmail = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Email");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Email");
 
-        final EditText editTextEmail = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextEmail = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
         editTextEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         linearLayoutHorizontalEmail.addView(labelEmail);
         linearLayoutHorizontalEmail.addView(editTextEmail);
-        linearLayoutHorizontalEmail.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontalEmail.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontalEmail);
 
@@ -507,13 +592,13 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelNumber = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Number");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Number");
 
-        final EditText editTextNumber = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextNumber = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
         editTextNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         linearLayoutHorizontalNumber.addView(labelNumber);
         linearLayoutHorizontalNumber.addView(editTextNumber);
-        linearLayoutHorizontalNumber.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontalNumber.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontalNumber);
 
@@ -522,9 +607,9 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelDescription = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Description");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Description");
 
-        final EditText editTextDescription = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        final EditText editTextDescription = ViewFactory.createEditText(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
         editTextDescription.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         editTextDescription.setLines(8);
         editTextDescription.setMaxLines(10);
@@ -533,7 +618,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutHorizontalDescription.addView(labelDescription);
         linearLayoutHorizontalDescription.addView(editTextDescription);
-        linearLayoutHorizontalDescription.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontalDescription.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontalDescription);
 
@@ -557,10 +642,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelC = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label C");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Label C");
 
 
-        RadioGroup radioGroup = ViewFactory.createRadioGroup(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        RadioGroup radioGroup = ViewFactory.createRadioGroup(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
+        radioGroup.setOrientation(LinearLayout.HORIZONTAL);
         RadioButton radioButton1 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         radioButton1.setText("Radio Button 1");
         RadioButton radioButton2 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -570,7 +656,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutHorizontal5.addView(labelC);
         linearLayoutHorizontal5.addView(radioGroup);
-        linearLayoutHorizontal5.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontal5.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontal5);
 
@@ -579,17 +665,18 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelD = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label D");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Label D");
 
-        CheckBox checkBox1 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        CheckBox checkBox1 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
         checkBox1.setText("Check box 1");
-        CheckBox checkBox2 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        CheckBox checkBox2 = ViewFactory.createCheckBox(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
         checkBox2.setText("Check box 2");
 
         linearLayoutHorizontal6.addView(labelD);
         linearLayoutHorizontal6.addView(checkBox1);
         linearLayoutHorizontal6.addView(checkBox2);
-        linearLayoutHorizontal6.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        linearLayoutHorizontal6.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
+
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontal6);
 
@@ -598,9 +685,9 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView labelE = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Label E");
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Label E");
 
-        Spinner spinner = ViewFactory.createSpinner(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+        Spinner spinner = ViewFactory.createSpinner(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
         List<String> list = new ArrayList<String>();
         list.add("Value 1");
         list.add("Value 2");
@@ -613,13 +700,13 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
         linearLayoutHorizontal7.addView(labelE);
         linearLayoutHorizontal7.addView(spinner);
-        linearLayoutHorizontal7.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        linearLayoutHorizontal7.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
         linearLayoutVerticalForm.addView(linearLayoutHorizontal7);
 
         LinearLayout linearLayoutHorizontal8 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        Button submitButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Submit");
+        Button submitButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "Submit");
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -644,15 +731,22 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 data.put(KEY_DESCRIPTION, focusTypeDescription);
 
                 FocusSample focusSample = new FocusSample(data);
+//                Gson gson = new Gson();
+//                String focusSampleJson = gson.toJson(focusSample);
                 Intent intent = new Intent(EXAMPLE_APP_ACTION);
-                intent.putExtra(FOCUS_SAMPLE, focusSample);
-                startActivityForResult(intent, EXAMPLE_APP_REQUEST);
+                if(isActivityAvailable(intent)) {
+                    intent.putExtra(FOCUS_SAMPLE, focusSample);
+                    startActivityForResult(intent, EXAMPLE_APP_REQUEST);
+                }
+                else {
+                    ViewUtil.displayToast(TestActivity.this, "The is no available activity for the following action: "+EXAMPLE_APP_ACTION);
+                }
             }
         });
 
         linearLayoutHorizontal8.addView(submitButton);
 
-        Button resetButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1), "Reset");
+        Button resetButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "Reset");
         linearLayoutHorizontal8.addView(resetButton);
 
         linearLayoutVerticalForm.addView(linearLayoutHorizontal8);
@@ -661,6 +755,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     }
+
+    public boolean isActivityAvailable(Intent intent) {
+        return getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -681,6 +780,9 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
                 imageView.setImageURI(imageUri);
+                deleteButton.setEnabled(true);
+                viewButton.setEnabled(true);
+                takePictureButton.setText("Replace Picture");
             }
         }
         else if(requestCode == EXAMPLE_APP_REQUEST){

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>My Heading</h1>
+
+<p>This is a paragraph.</p>
+
+<p id="data"></p>
+
+<p>Pass some text to Android:</p>
+<input type="text" id="text"><br>
+<input type="button" value="Send" onClick="sentDataToAndroid()"/>
+
+<div id="div"></div>
+
+
+</body>
+<script type="text/javascript">
+
+   function load(val){
+       document.getElementById("data").innerHTML = val;
+   }
+
+   function lifeData(value){
+    if(document.createTextNode){
+        var text = document.createTextNode(value)
+        document.getElementById("div").appendChild(text)
+    }
+   }
+
+   function sentDataToAndroid() {
+       var value = document.getElementById("text").value
+        Android.showToast(value);
+   }
+
+</script>
+</html>

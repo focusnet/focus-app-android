@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.WebViewTestActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
@@ -51,10 +52,14 @@ public class FocusFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+        if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER){
             if(position > notifHeaderPosition){
-                //TODO navigate to notifications ...
-                Intent intent = new Intent("eu.focusnet.app.activity.TestActivity");
+            //TODO navigate to notifications ...
+
+                Intent intent = new Intent(getActivity(), WebViewTestActivity.class);
+                if(position - 1 == notifHeaderPosition) {
+                     intent = new Intent("eu.focusnet.app.activity.TestActivity");
+                }
                 startActivity(intent);
             }
             else{

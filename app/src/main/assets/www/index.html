@@ -4,21 +4,60 @@
 <h1>My Heading</h1>
 
 <p>This is a paragraph.</p>
-
-<p id="data"></p>
+<p id="data">Text received from Android on page load:</p>
+<hr>
 
 <p>Pass some text to Android:</p>
 <input type="text" id="text"><br>
 <input type="button" value="Send" onClick="sentDataToAndroid()"/>
 
-<div id="div"></div>
+<br>
+<hr>
+<br>
+<div id="div">Text received from Android (life):</div>
+
+<br>
+<hr>
+<p>Click the button to see the counter increase.</p>
+<input type="button" onclick="clickCounter()" value="Increment counter"/>
+<div id="result"></div>
+<p>Close the App, and try again, and the counter will continue to count (is not reset).</p>
+
+<hr>
+<p>This image was loaded from the internet</p>
+<img id="internetImage" crossorigin="anonymous" src="http://www.gravatar.com/avatar/0e39d18b89822d1d9871e0d1bc839d06?s=128&d=identicon&r=PG%22"/>
+<br>
+<input type="button" onclick="saveImage()" value="Save image in local storage"/>
+
+<br><hr>
+<img id="img"/><br>
+<input type="button" onclick="loadImage()" value="Load image from local storage"/>
+
+<br><hr>
+<input type="button" onclick="removeImage()" value="Remove image from local storage"/>
 
 
 </body>
 <script type="text/javascript">
 
+    function clickCounter() {
+        if(typeof(Storage) !== "undefined") {
+            if(localStorage.clickcount) {
+                localStorage.clickcount = Number(localStorage.clickcount)+1;
+            }
+            else {
+                localStorage.clickcount = 1;
+            }
+            document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " time(s).";
+        }
+        else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+        }
+    }
+
    function load(val){
-       document.getElementById("data").innerHTML = val;
+       var data = document.getElementById("data");
+       data.innerHTML = data.innerHTML + val;
    }
 
    function lifeData(value){
@@ -31,6 +70,49 @@
    function sentDataToAndroid() {
        var value = document.getElementById("text").value
         Android.showToast(value);
+   }
+
+   function saveImage(){
+       if(typeof(Storage) !== "undefined") {
+           internetImg = document.getElementById("internetImage");
+
+            var imgCanvas = document.createElement("canvas"),
+            imgContext = imgCanvas.getContext("2d");
+
+            // Make sure canvas is as big as the picture
+            imgCanvas.width = internetImg.width;
+            imgCanvas.height = internetImg.height;
+
+            // Draw image into canvas element
+            imgContext.drawImage(internetImg, 0, 0);
+
+            // Get canvas contents as a data URL
+            var dataURL = imgCanvas.toDataURL("image/png");
+
+           imgAsDataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+
+           localStorage.setItem("imgData", imgAsDataURL);
+           alert("Image saved in local storage");
+       }
+   }
+
+   function loadImage(){
+    if(typeof(Storage) !== "undefined") {
+       var dataImage = localStorage.getItem("imgData");
+       if(dataImage != null){
+           image = document.getElementById("img");
+           image.src = "data:image/png;base64," + dataImage;
+       }
+      }
+   }
+
+   function removeImage(){
+    if(typeof(Storage) !== "undefined" && localStorage.imgData) {
+       localStorage.removeItem("imgData");
+       image = document.getElementById("img");
+       image.src = "";
+       alert("Image removed from local storage");
+      }
    }
 
 </script>

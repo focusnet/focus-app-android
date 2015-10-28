@@ -1,7 +1,6 @@
 package eu.focusnet.app.activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -52,26 +51,22 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
-import junit.framework.Test;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
-import eu.focusnet.app.common.FocusType;
 import eu.focusnet.app.model.data.FocusSample;
-import eu.focusnet.app.model.data.ImplicitString;
-import eu.focusnet.app.model.data.Numeric;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
 //This activity is only for testing
 public class TestActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+
+    private static final String TAG = TestActivity.class.getName();
 
     private static final String[][] DATA_TO_SHOW = {
             {"This", "is", "a", "test"},
@@ -224,12 +219,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         adapter.setTextColor(getResources().getColor(R.color.table_header_text));
         adapter.setTextSize(18);
         tableView.setHeaderAdapter(adapter);
-        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.app_color));
+        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
         tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
         int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
         int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
         tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
-
         linearLayoutHorizontal.addView(tableView);
 
 
@@ -417,7 +411,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        TextView gps = ViewFactory.createTextView(this, R.style.TitleAppearance,
+        final TextView gps = ViewFactory.createTextView(this, R.style.TitleAppearance,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "GPS");
         linearLayoutVertical2.addView(gps);
 
@@ -720,22 +714,23 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                 catch (NumberFormatException ex){}
                 String description = editTextDescription.getText().toString();
 
-                Map<String, FocusType> data = new HashMap<>();
-                FocusType focusTypeName = new ImplicitString(name);
-                data.put(KEY_NAME, focusTypeName);
-                FocusType focusTypeEmail = new ImplicitString(email);
-                data.put(KEY_EMAIL, focusTypeEmail);
-                FocusType focusTypeNumber = new Numeric(number);
-                data.put(KEY_NUMBER, focusTypeNumber);
-                FocusType focusTypeDescription = new ImplicitString(description);
-                data.put(KEY_DESCRIPTION, focusTypeDescription);
+                List<FocusSample> fs = new ArrayList<>();
+                FocusSample focusSample = new FocusSample(KEY_NAME, FocusSample.Type.string, name);
+                fs.add(focusSample);
+                focusSample = new FocusSample(KEY_EMAIL, FocusSample.Type.string, name);
+                fs.add(focusSample);
+                focusSample = new FocusSample(KEY_NUMBER, FocusSample.Type.numeric, number);
+                fs.add(focusSample);
+                focusSample = new FocusSample(KEY_DESCRIPTION, FocusSample.Type.string, description);
+                fs.add(focusSample);
 
-                FocusSample focusSample = new FocusSample(data);
-//                Gson gson = new Gson();
-//                String focusSampleJson = gson.toJson(focusSample);
+                Gson gson = new Gson();
+                String focusSamplesJson = gson.toJson(fs);
+                ViewUtil.displayToast(TestActivity.this, focusSamplesJson);
+
                 Intent intent = new Intent(EXAMPLE_APP_ACTION);
                 if(isActivityAvailable(intent)) {
-                    intent.putExtra(FOCUS_SAMPLE, focusSample);
+                    intent.putExtra(FOCUS_SAMPLE, focusSamplesJson);
                     startActivityForResult(intent, EXAMPLE_APP_REQUEST);
                 }
                 else {

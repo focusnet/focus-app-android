@@ -8,12 +8,12 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/app_color"
-        android:elevation="4dp"
+        android:background="@color/colorPrimary"
+        android:elevation="8dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:titleTextAppearance="@style/ToolBarTextHeaderAppearance"
-        app:titleTextAppearance="@style/ToolBarTextHeaderAppearance">
-    </android.support.v7.widget.Toolbar>
-
+        app:titleTextAppearance="@style/ToolBarTextHeaderAppearance"/>
 
     <!--<View-->
         <!--android:layout_width="match_parent"-->

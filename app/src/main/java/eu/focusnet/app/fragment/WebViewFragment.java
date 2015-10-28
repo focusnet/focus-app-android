@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -28,9 +32,16 @@ public class WebViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
         myWebView = (WebView) viewRoot.findViewById(R.id.webview);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), "Android");
         myWebView.setWebViewClient(new MyAppWebViewClient());
+        WebSettings settings = myWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setDomStorageEnabled(true);
+
+        myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), "Android");
+
+        myWebView.setWebChromeClient(new WebChromeClient());
+
         return viewRoot;
     }
 
@@ -40,16 +51,15 @@ public class WebViewFragment extends Fragment {
     }
 
 
-    public void setData(String data){
-        myWebView.loadUrl("javascript:lifeData('" +data+ "')");
+    public void setData(String data) {
+        myWebView.loadUrl("javascript:lifeData('" + data + "')");
     }
-
 
 
     private class MyAppWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(Uri.parse(url).getHost().length() == 0) {
+            if (Uri.parse(url).getHost().length() == 0) {
                 return false;
             }
 
@@ -60,14 +70,16 @@ public class WebViewFragment extends Fragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            view.loadUrl("javascript:load('" +data+ "')");
+            view.loadUrl("javascript:load('" + data + "')");
         }
     }
 
     private class WebAppInterface {
         Context mContext;
 
-        /** Instantiate the interface and set the context */
+        /**
+         * Instantiate the interface and set the context
+         */
         WebAppInterface(Context c) {
             mContext = c;
         }

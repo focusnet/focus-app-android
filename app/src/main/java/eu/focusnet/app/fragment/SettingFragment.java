@@ -16,13 +16,16 @@ import android.widget.TextView;
 
 import eu.focusnet.app.activity.FocusActivity;
 import eu.focusnet.app.activity.R;
+import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
-import eu.focusnet.app.util.NetworkUtil;
 
 
+/**
+ * Fragment used to displays the setting of the application
+ */
 public class SettingFragment extends Fragment {
 
     private String[] httpMethods;
@@ -63,6 +66,7 @@ public class SettingFragment extends Fragment {
         return viewRoot;
     }
 
+    //This is only for test purpose
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
 
         private ProgressDialog progressDialog;
@@ -77,7 +81,7 @@ public class SettingFragment extends Fragment {
         protected String doInBackground(String... urls) {
             String data = null;
            try {
-               NetworkUtil.ResponseData responseData = DataProviderManager.retrieveData(urls[0]);
+               ResponseData responseData = DataProviderManager.retrieveData(urls[0]);
                if (responseData != null)
                    data = responseData.getData();
            }

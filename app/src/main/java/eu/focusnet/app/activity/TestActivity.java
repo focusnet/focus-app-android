@@ -487,7 +487,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
                                       {
                                           @Override
                                           public void onClick(View v) {
-                                              Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
+                                              Intent intent = new Intent(TestActivity.this, ImageActivity.class);
                                               intent.putExtra("imageUri", imageUri);
                                               startActivity(intent);
                                           }

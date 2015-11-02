@@ -12,26 +12,31 @@ import android.net.Uri;
 import android.widget.Toast;
 
 /**
- * Created by admin on 15.06.2015.
+ * Util class for displaying android specific messages
  */
 public class ViewUtil {
 
     private static final String TAG = ViewUtil.class.getName();
 
+    /**
+     * Displays a toast
+     * @param context the context
+     * @param msg the message in the toast
+     */
     public static void displayToast(Context context, CharSequence msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
-     *
-     * @param context
-     * @param cls
-     * @param icon
-     * @param title
-     * @param content
+     * Displays a notification
+     * @param context the context
+     * @param cls the class (Activity which will be started when user click in the notification)
+     * @param icon the icon
+     * @param title the title
+     * @param content the content
      * @param notificationId Represent the notification id and the navigation id to display the appropriate fragment
      */
-    public static void displayNotification(Context context, Class<?> cls, int icon, CharSequence title, CharSequence content ,int notificationId) {
+    public static void displayNotification(Context context, Class<?> cls, int icon, CharSequence title, CharSequence content, int notificationId) {
 
         // Intent to be triggered when the notification is selected
         Intent intent = new Intent(context, cls);
@@ -54,6 +59,7 @@ public class ViewUtil {
         notifMng.notify(notificationId, notif);
     }
 
+    //TODO find a good place for this method
     public static Bitmap getBitmap(Context context, int image) {
         return BitmapFactory.decodeResource(context.getResources(), image);
     }

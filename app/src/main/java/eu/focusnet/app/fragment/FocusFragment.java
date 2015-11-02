@@ -14,13 +14,15 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.ProjectActivity;
+import eu.focusnet.app.activity.TestActivity;
 import eu.focusnet.app.activity.WebViewTestActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.manager.BookmarkLinkManager;
-import eu.focusnet.app.manager.ProjectManager;
+import eu.focusnet.app.db.ProjectDao;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
@@ -30,7 +32,8 @@ import eu.focusnet.app.activity.R;
 
 
 /**
- * Created by admin on 15.06.2015.
+ * This fragment is the start point of the application
+ * after the user logged in.
  */
 public class FocusFragment extends ListFragment {
 
@@ -50,20 +53,21 @@ public class FocusFragment extends ListFragment {
         return viewRoot;
     }
 
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        //Test where the user has clicked and navigate to this project or notifications
         if(l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER){
             if(position > notifHeaderPosition){
             //TODO navigate to notifications ...
-
                 Intent intent = new Intent(getActivity(), WebViewTestActivity.class);
                 if(position - 1 == notifHeaderPosition) {
-                     intent = new Intent("eu.focusnet.app.activity.TestActivity");
+                     intent = new Intent(getActivity(), TestActivity.class);
                 }
                 startActivity(intent);
             }
             else{
-                Intent intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
+                Intent intent = new Intent(getActivity(), ProjectActivity.class);
                 //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
                 intent.putExtra(Constant.PATH, selectedItem.getPath());
@@ -74,6 +78,10 @@ public class FocusFragment extends ListFragment {
     }
 
 
+    /**
+     * This class loads all projects from the database belonging to the logged user and displays
+     * the project title and a small description of the project
+     */
     private class FocusBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
         @Override
@@ -93,9 +101,9 @@ public class FocusFragment extends ListFragment {
             try {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
-                ProjectManager projectManager = new ProjectManager(db);
-                ArrayList<Project> projects = projectManager.getAllProjects();
-                BookmarkLinkManager bookmarkLinkManager = new BookmarkLinkManager(db);
+                ProjectDao projectDao = new ProjectDao(db);
+                ArrayList<Project> projects = projectDao.findAllProjects();
+                BookmarkLinkDao bookmarkLinkManager = new BookmarkLinkDao(db);
                 for (Project p : projects) {
                     String projectId = p.getGuid();
                     String projectTitle = p.getTitle();

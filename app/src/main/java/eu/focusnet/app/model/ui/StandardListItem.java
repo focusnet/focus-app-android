@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 import eu.focusnet.app.common.AbstractListItem;
 
 /**
- * Created by admin on 15.06.2015.
+ * Standard list item which contains
+ * This is the standard item from a list
  */
 public class StandardListItem extends AbstractListItem {
 

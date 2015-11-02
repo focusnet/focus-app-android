@@ -7,17 +7,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.manager.LinkerManager;
-import eu.focusnet.app.manager.PageManager;
-import eu.focusnet.app.manager.ProjectManager;
-import eu.focusnet.app.manager.WidgetLinkerManager;
-import eu.focusnet.app.manager.WidgetManager;
 import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.model.data.Linker;
-import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Project;
-import eu.focusnet.app.model.data.Widget;
-import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 
 /**

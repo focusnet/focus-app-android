@@ -12,6 +12,11 @@ import eu.focusnet.app.fragment.PageFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 
+
+/**
+ * This class displays (loading the PageFragment) the characteristics of a page after
+ * the it was selected in the ProjectActivity
+ */
 public class PageActivity extends AppCompatActivity {
 
     @Override

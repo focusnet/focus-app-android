@@ -34,7 +34,8 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
- * Created by admin on 15.06.2015.
+ * This class is the start point of the application
+ * after the user logged in.
  */
 public class FocusActivity extends AppCompatActivity  {
 
@@ -56,6 +57,7 @@ public class FocusActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //TODO remove this when the application is finished
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectAll()   // or .detectAll() for all detectable problems
                 .penaltyLog()
@@ -85,10 +87,12 @@ public class FocusActivity extends AppCompatActivity  {
 
         drawerItems = new ArrayList<AbstractListItem>();
 
+        //Get the user data from the bundle
         Bundle extras = getIntent().getExtras();
         User user = (User) extras.getSerializable(Constant.USER_DATA);
 
         drawerItems.add(new HeaderDrawerListItem(ViewUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+
         ViewUtil.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
 
         for(int i = 0; i < navMenuTitles.length; i++){
@@ -114,7 +118,9 @@ public class FocusActivity extends AppCompatActivity  {
 
         drawerListMenu.setAdapter(adapter);
 
+        //Get the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //set the toolbar
         setSupportActionBar(toolbar);
 
         drawerToggle = new ActionBarDrawerToggle(
@@ -289,6 +295,11 @@ public class FocusActivity extends AppCompatActivity  {
 //        super.onDestroy();
 //    }
 
+
+    /**
+     * Show the selected fragment when the user click on the drawer layout
+     * @param position position click in the drawer layout
+     */
     private void showView(int position) {
         Fragment fragment = null;
 
@@ -321,7 +332,7 @@ public class FocusActivity extends AppCompatActivity  {
             fragment.setArguments(bundle);
             FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
             // Highlight the selected item
-            highlightSelectedMenuItem(effectivePosition);
+            highlightSelectedMenuItem(position);
             //set title
             setTitle(title);
             drawerLayout.closeDrawer(drawerListMenu);
@@ -330,7 +341,7 @@ public class FocusActivity extends AppCompatActivity  {
 
     private void highlightSelectedMenuItem(int position){
         // Highlight the selected item
-        drawerListMenu.setItemChecked(position + 1, true);
+        drawerListMenu.setItemChecked(position, true);
         drawerListMenu.setSelection(position);
 
 

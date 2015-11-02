@@ -17,14 +17,18 @@ import java.util.Random;
 
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.db.DatabaseAdapter;
+import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.WidgetDao;
-import eu.focusnet.app.manager.PageManager;
 import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Widget;
 import eu.focusnet.app.model.data.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
 
+/**
+ * This fragment will be loaded from the PageActivity and displays
+ * the characteristics of a page
+ */
 public class PageFragment extends Fragment {
 
     private static final String TAG  = PageFragment.class.getName();
@@ -41,6 +45,9 @@ public class PageFragment extends Fragment {
     }
 
 
+    /**
+     * This class loads the page characteristics from the database
+     */
     private class PageBuilderTask extends AsyncTask<String, Void, Page> {
 
         @Override
@@ -52,8 +59,8 @@ public class PageFragment extends Fragment {
             try {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
-                PageManager pageManager = new PageManager(db);
-                page = pageManager.findPage(pageId);
+                PageDao pageDao = new PageDao(db);
+                page = pageDao.findPage(pageId);
             }
             finally {
                 databaseAdapter.close();

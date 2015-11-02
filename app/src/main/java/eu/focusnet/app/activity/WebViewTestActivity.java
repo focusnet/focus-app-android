@@ -7,6 +7,10 @@ import android.support.v7.widget.Toolbar;
 import eu.focusnet.app.fragment.WebViewDataFragment;
 import eu.focusnet.app.fragment.WebViewFragment;
 
+/**
+ * This activity is only for testing the iteration between android and the webview {@link eu.focusnet.app.fragment.WebViewDataFragment}
+ * {@link eu.focusnet.app.fragment.WebViewFragment}
+ */
 public class WebViewTestActivity extends AppCompatActivity implements WebViewDataFragment.DataSenderCallback {
 
     private WebViewFragment webViewFragment;

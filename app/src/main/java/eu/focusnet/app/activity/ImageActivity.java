@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 /**
+ * Activity use to display an image
  */
 public class ImageActivity extends Activity {
 

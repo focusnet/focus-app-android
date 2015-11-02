@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 import eu.focusnet.app.common.AbstractListItem;
 
 /**
- * Created by admin on 27.08.2015.
+ * Drawer list item which contains an icon, a title and an info
+ * This is the standard list drawer list item
  */
 public class DrawerListItem extends AbstractListItem {
 

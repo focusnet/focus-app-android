@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import eu.focusnet.app.activity.R;
 
 /**
- * Created by admin on 06.10.2015.
+ * This is only for test purpose
  */
 public class CustomProgressDialog extends ProgressDialog {
 

@@ -21,16 +21,17 @@ import java.util.Date;
 
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.manager.AppContentManager;
+import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.model.data.AppContent;
 import eu.focusnet.app.util.ViewUtil;
-import eu.focusnet.app.util.NetworkUtil.*;
 import eu.focusnet.app.util.ViewFactory;
 
 /**
- * Created by admin on 15.06.2015.
+ * The synchronized fragment is used to refresh the data
+ * getting the new data from the webservice
  */
 public class SynchronizeFragment extends Fragment {
 
@@ -99,18 +100,18 @@ public class SynchronizeFragment extends Fragment {
                                                   DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
                                                   try {
                                                       databaseAdapter.openWritableDatabase();
-                                                      AppContentManager appContentManager = new AppContentManager(databaseAdapter.getDb());
+                                                      AppContentDao appContentDao = new AppContentDao(databaseAdapter.getDb());
                                                       //TODO set the appContent id dynamic
-                                                      appContentManager.deleteAppContent(new Long(123));
+                                                      appContentDao.deleteAppContent(new Long(123));
                                                       String resource = resourcesToRefresh.get(0);
                                                       //TODO what is there are more resorces of different types?
                                                       try {
                                                           Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-                                                          ResponseData responseData = DataProviderManager.retrieveData(resource);
+                                                          DataProviderManager.ResponseData responseData = DataProviderManager.retrieveData(resource);
                                                           Log.d(TAG, "Creating the new App Content");
                                                           AppContent appContent = gson.fromJson(responseData.getData(), AppContent.class);
                                                           appContent.setId(Long.valueOf(appContent.getOwner()));
-                                                          appContentManager.saveAppContent(appContent);
+                                                          appContentDao.createAppContent(appContent);
                                                           Log.i(TAG, "The new App Content was created successfully");
                                                           ViewUtil.displayToast(getActivity(), "Resource refreshed successfully");
                                                           tableLayout.removeAllViews();

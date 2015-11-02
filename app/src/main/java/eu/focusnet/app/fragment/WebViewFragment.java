@@ -51,18 +51,27 @@ public class WebViewFragment extends Fragment {
     }
 
 
+    /**
+     * Send data to the html page using a javascript function defined on it
+     * @param data
+     */
     public void setData(String data) {
         myWebView.loadUrl("javascript:lifeData('" + data + "')");
     }
 
-
+    /**
+     * Create a web client, which loads internal html pages with the Webview(pages saved in the app, the url has not a host)
+     * other pages will be loaded for instance with the chrome browser
+     */
     private class MyAppWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            //for internal pages
             if (Uri.parse(url).getHost().length() == 0) {
                 return false;
             }
 
+            //For other pages
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             view.getContext().startActivity(intent);
             return true;
@@ -70,13 +79,14 @@ public class WebViewFragment extends Fragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            //On page loaded call this javascript function to pass
+            // data to the loaded page
             view.loadUrl("javascript:load('" + data + "')");
         }
     }
 
     private class WebAppInterface {
         Context mContext;
-
         /**
          * Instantiate the interface and set the context
          */
@@ -84,6 +94,9 @@ public class WebViewFragment extends Fragment {
             mContext = c;
         }
 
+        /*
+          This method can be called in the html page
+         */
         @JavascriptInterface
         public void showToast(String toast) {
             ViewUtil.displayToast(mContext, toast);

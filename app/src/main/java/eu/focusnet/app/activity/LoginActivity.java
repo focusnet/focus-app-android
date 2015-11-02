@@ -16,21 +16,22 @@ import com.google.gson.GsonBuilder;
 import java.util.Date;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.manager.AppContentManager;
-import eu.focusnet.app.manager.PreferenceManager;
-import eu.focusnet.app.manager.UserManager;
+import eu.focusnet.app.db.PreferenceDao;
+import eu.focusnet.app.db.UserDao;
 import eu.focusnet.app.model.data.AppContent;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.data.User;
 import eu.focusnet.app.manager.DataProviderManager;
+import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
-import eu.focusnet.app.util.NetworkUtil.*;
 
 /**
- * Created by admin on 16.06.2015.
+ * Login Activity, this activity displays the login screen
+ * and log the user in the application
  */
 public class LoginActivity extends Activity {
 
@@ -43,14 +44,20 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login);
     }
 
+    /**
+     * This method will be called when the user click
+     * in the login button
+     */
     public void onClick(View view){
-
         new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/user/"+userId+"/user-information",
                 "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-user-preferences",
                 "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-content-definition");
     }
 
 
+    /**
+     * Class used to connect to the webservice and retrieve the user and projects data
+     */
     private class DataReaderTask extends AsyncTask<String, String, User> {
 
         private ProgressDialog progressDialog;
@@ -84,27 +91,26 @@ public class LoginActivity extends Activity {
                         ResponseData responseData = DataProviderManager.retrieveData(urls[i]);
                         if (responseData != null) {
                             String data = responseData.getData();
-
                             if (i == 0) {
                                 Log.d(TAG, "Creating User");
                                 user = gson.fromJson(data, User.class);
-                                UserManager userManager = new UserManager(database);
-                                userManager.saveUser(user);
+                                UserDao userDao = new UserDao(database);
+                                userDao.createUser(user);
                             }
                             else if (i == 1) {
                                 Log.d(TAG, "Creating Preferences");
                                 Preference preference = gson.fromJson(data, Preference.class);
                                 preference.setId(new Long(userId));
-                                PreferenceManager preferenceManager = new PreferenceManager(database);
-                                preferenceManager.savePreference(preference);
+                                PreferenceDao preferenceDao = new PreferenceDao(database);
+                                preferenceDao.createPreference(preference);
                             }
                             else {
                                 Log.d(TAG, "Creating App Content");
 
                                 AppContent appContent = gson.fromJson(data, AppContent.class);
                                 appContent.setId(Long.valueOf(appContent.getOwner()));
-                                AppContentManager appContentManager = new AppContentManager(database);
-                                appContentManager.saveAppContent(appContent);
+                                AppContentDao appContentManager = new AppContentDao(database);
+                                appContentManager.createAppContent(appContent);
                             }
 
                             publishProgress(data); //TODO remove this, when the app is finished
@@ -132,7 +138,7 @@ public class LoginActivity extends Activity {
         protected void onPostExecute(User user) {
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
-            Intent i = new Intent("eu.focusnet.app.activity.MainActivity");
+            Intent i = new Intent(LoginActivity.this, FocusActivity.class);
             i.putExtra(Constant.USER_DATA, user);
             startActivity(i);
             finish();

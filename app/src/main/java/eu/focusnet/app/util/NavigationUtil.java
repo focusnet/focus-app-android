@@ -1,7 +1,7 @@
 package eu.focusnet.app.util;
 
 /**
- * Created by admin on 24.08.2015.
+ *
  */
 public class NavigationUtil {
 

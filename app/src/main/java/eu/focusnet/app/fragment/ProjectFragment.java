@@ -14,15 +14,15 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.PageActivity;
 import eu.focusnet.app.activity.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.LinkerDao;
-import eu.focusnet.app.manager.BookmarkLinkManager;
-import eu.focusnet.app.manager.LinkerManager;
-import eu.focusnet.app.manager.PageManager;
+import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.model.data.Linker;
 import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.ui.HeaderListItem;
@@ -31,7 +31,8 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
- * Created by admin on 29.06.2015.
+ * This fragment will be loaded from the ProjectActivity and displays
+ * the characteristics of a project
  */
 public class ProjectFragment extends ListFragment {
 
@@ -67,7 +68,7 @@ public class ProjectFragment extends ListFragment {
             //User has selected either Tools or Dashboard
             else{
                 // GuiUtil.displayToast(getActivity(), "Dashboard selected");
-                Intent intent = new Intent("eu.focusnet.app.activity.PageActivity");
+                Intent intent = new Intent(getActivity(), PageActivity.class);
                 StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
                 intent.putExtra(Constant.PATH, selectedItem.getPath());
                 intent.putExtra(Constant.TITLE, selectedItem.getTitle());
@@ -76,6 +77,9 @@ public class ProjectFragment extends ListFragment {
         }
     }
 
+    /**
+     * This class loads the project characteristics from the database
+     */
     private class ProjectBuilderTask extends AsyncTask<String, Void, StandardListAdapter> {
 
         @Override
@@ -87,14 +91,14 @@ public class ProjectFragment extends ListFragment {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
 
-                BookmarkLinkManager bookmarkLinkManager = new BookmarkLinkManager(db);
-                PageManager pageManager = new PageManager(db);
-                LinkerManager linkerManager = new LinkerManager(db);
+                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(db);
+                PageDao pageDao = new PageDao(db);
+                LinkerDao linkerDao = new LinkerDao(db);
 
                 // load icons
                 dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
 
-                abstractItems = new ArrayList<AbstractListItem>();
+                abstractItems = new ArrayList<>();
 
                 AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
                         getString(R.string.cutting_header_dashboard),
@@ -102,16 +106,16 @@ public class ProjectFragment extends ListFragment {
 
                 abstractItems.add(headerProjectsListItem);
 
-                ArrayList<Linker> dashboards = linkerManager.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
+                ArrayList<Linker> dashboards = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
                 for (Linker dashboard : dashboards) {
                     String pageId = dashboard.getPageid();
                     int dashboardOrder = dashboard.getOrder();
-                    Page page = pageManager.findPage(pageId);
+                    Page page = pageDao.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
                     Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
                     String path = projectId + "/" + pageId;
-                    if (bookmarkLinkManager.findBookmarkLink(path, bookmarkLinkType) == null) {
+                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
                         rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }
@@ -130,16 +134,16 @@ public class ProjectFragment extends ListFragment {
                 // load icons
                 toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
 
-                ArrayList<Linker> tools = linkerManager.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL);
+                ArrayList<Linker> tools = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL);
                 for (Linker tool : tools) {
                     String pageId = tool.getPageid();
                     int toolOrder = tool.getOrder();
-                    Page page = pageManager.findPage(pageId);
+                    Page page = pageDao.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
                     Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
                     String path = projectId + "/" + pageId;
-                    if (bookmarkLinkManager.findBookmarkLink(path, bookmarkLinkType) == null) {
+                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
                         rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
                         isRightIconActive = false;
                     }

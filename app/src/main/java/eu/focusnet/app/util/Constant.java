@@ -1,8 +1,10 @@
 package eu.focusnet.app.util;
 
 /**
- * Created by admin on 24.06.2015.
+ * Constant of the application
  */
+
+//TODO some constant might be changed to other classes on the future
 public class Constant {
 
     public static final int FOCUS_FRAGMENT = 1,

@@ -1,6 +1,5 @@
 package eu.focusnet.app.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,10 @@ import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 
+/**
+ * This class displays (loading the ProjectFragment) the characteristics of a project after
+ * the it was selected in the FocusActivity
+ */
 public class ProjectActivity extends AppCompatActivity {
 
     private String projectTitle, projectId;
@@ -21,12 +24,14 @@ public class ProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
 
+        //Set the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
+        //Get the project title and project id either from the
+        //saved instance or from the received intent
         if(savedInstanceState == null) {
             projectTitle = getIntent().getStringExtra(Constant.TITLE);
             //Path is the same as projectId

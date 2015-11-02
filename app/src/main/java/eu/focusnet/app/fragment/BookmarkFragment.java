@@ -11,10 +11,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.PageActivity;
+import eu.focusnet.app.activity.ProjectActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.manager.PreferenceManager;
+import eu.focusnet.app.db.PreferenceDao;
 import eu.focusnet.app.model.data.Bookmark;
 import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
@@ -69,10 +71,10 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
             String path = selectedItem.getPath();
             switch(NavigationUtil.checkPathType(path)){
                 case PROJECTID:
-                    intent = new Intent("eu.focusnet.app.activity.ProjectActivity");
+                    intent = new Intent(getActivity(), ProjectActivity.class);
                     break;
                 case PROJECTID_PAGEID:
-                    intent = new Intent("eu.focusnet.app.activity.PageActivity");
+                    intent = new Intent(getActivity(), PageActivity.class);
                     break;
                 case PROJECTID_BRACKETS:
                     //TODO
@@ -96,9 +98,9 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
             try {
 
                 databaseAdapter.openWritableDatabase();
-                PreferenceManager preferenceManager = new PreferenceManager(databaseAdapter.getDb());
+                PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
                 //TODO get the preference's ID
-                Preference preference = preferenceManager.findPreference(new Long(123));
+                Preference preference = preferenceDao.findPreference(new Long(123));
 
                 Bookmark bookmark = preference.getBookmarks();
                 ArrayList<BookmarkLink> pages = bookmark.getPages();

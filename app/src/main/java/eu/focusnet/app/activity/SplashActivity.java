@@ -9,7 +9,7 @@ import eu.focusnet.app.activity.R;
 
 
 /**
- * Created by admin on 09.06.2015.
+ * Splash screen activity
  */
 public class SplashActivity extends Activity {
 
@@ -20,11 +20,11 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-            Thread SplashScreen = new Thread() {
+            final Thread SplashScreen = new Thread() {
             public void run() {
                 try {
                     sleep(3000);
-                       startActivity(new Intent("eu.focusnet.app.activity.LoginActivity"));
+                       startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

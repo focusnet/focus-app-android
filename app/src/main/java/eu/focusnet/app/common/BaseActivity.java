@@ -1,7 +1,6 @@
 package eu.focusnet.app.common;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -28,8 +27,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int getContentView();
 
-    protected abstract boolean isDisplayHomeAsUpEnabled();
+    protected boolean isDisplayHomeAsUpEnabled(){
+        return true;
+    }
 
-    protected abstract boolean isHomeButtonEnabled();
+    protected boolean isHomeButtonEnabled(){
+        return true;
+    }
 
 }

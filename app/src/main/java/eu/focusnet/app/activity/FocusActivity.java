@@ -88,16 +88,6 @@ public class FocusActivity extends BaseDrawerActivity {
     }
 
     @Override
-    protected boolean isDisplayHomeAsUpEnabled() {
-        return false;
-    }
-
-    @Override
-    protected boolean isHomeButtonEnabled() {
-        return false;
-    }
-
-    @Override
     protected ArrayList<AbstractListItem> getDrawerItems() {
         // load menu items
         navMenuTitles = getResources().getStringArray(R.array.drawer_items);

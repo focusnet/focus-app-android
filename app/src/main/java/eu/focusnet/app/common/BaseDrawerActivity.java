@@ -124,11 +124,16 @@ public abstract class BaseDrawerActivity extends BaseActivity {
     @Override
     protected abstract int getContentView();
 
-    @Override
-    protected abstract boolean isDisplayHomeAsUpEnabled();
 
     @Override
-    protected abstract boolean isHomeButtonEnabled();
+    protected boolean isDisplayHomeAsUpEnabled(){
+        return false;
+    }
+
+    @Override
+    protected boolean isHomeButtonEnabled(){
+        return false;
+    }
 
     protected abstract ArrayList<AbstractListItem> getDrawerItems();
 

@@ -58,12 +58,13 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
+import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.model.data.FocusSample;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
 //This activity is only for testing
-public class TestActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class TestActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
 
     private static final String TAG = TestActivity.class.getName();
@@ -114,12 +115,7 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
         setTitle("This is a test");
 
         final int verticalSpace = 50;
@@ -749,6 +745,11 @@ public class TestActivity extends AppCompatActivity implements GoogleApiClient.C
         linearLayoutPageInfo.addView(linearLayoutVerticalForm);
 
 
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_test;
     }
 
     public boolean isActivityAvailable(Intent intent) {

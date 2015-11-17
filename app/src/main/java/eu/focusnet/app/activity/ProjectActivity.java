@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.ProjectFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
@@ -15,20 +16,13 @@ import eu.focusnet.app.util.Constant;
  * This class displays (loading the ProjectFragment) the characteristics of a project after
  * the it was selected in the FocusActivity
  */
-public class ProjectActivity extends AppCompatActivity {
+public class ProjectActivity extends BaseActivity {
 
     private String projectTitle, projectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project);
-
-        //Set the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         //Get the project title and project id either from the
         //saved instance or from the received intent
@@ -49,6 +43,11 @@ public class ProjectActivity extends AppCompatActivity {
         bundle.putString(Constant.PATH, projectId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_project;
     }
 
     @Override

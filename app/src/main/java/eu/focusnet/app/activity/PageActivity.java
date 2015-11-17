@@ -2,12 +2,10 @@ package eu.focusnet.app.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.PageFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
@@ -17,18 +15,11 @@ import eu.focusnet.app.util.Constant;
  * This class displays (loading the PageFragment) the characteristics of a page after
  * the it was selected in the ProjectActivity
  */
-public class PageActivity extends AppCompatActivity {
+public class PageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_page);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
 
         String pageTitle = getIntent().getStringExtra(Constant.TITLE);
         String pageId = getIntent().getStringExtra(Constant.PATH);
@@ -39,6 +30,21 @@ public class PageActivity extends AppCompatActivity {
         bundle.putString(Constant.PATH, pageId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.page_container, fragment, getFragmentManager());
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_page;
+    }
+
+    @Override
+    protected boolean isDisplayHomeAsUpEnabled() {
+        return true;
+    }
+
+    @Override
+    protected boolean isHomeButtonEnabled() {
+        return true;
     }
 
     @Override

@@ -1,9 +1,14 @@
 package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +37,9 @@ import eu.focusnet.app.util.NavigationUtil;
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends ListFragment implements EventBus.IEventListener {
+public class BookmarkFragment extends ListFragment implements EventBus.IEventListener{
 
+    private static final String TAG = BookmarkFragment.class.getName();
     private ArrayList<AbstractListItem> abstractItems;
 
     @Override
@@ -56,10 +62,7 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
         super.onStop();
     }
 
-    @Override
-    public void onBookmarksUpdated() {
-        new BookmarkBuilderTask().execute();
-    }
+
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -87,6 +90,11 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
             intent.putExtra(Constant.TITLE, selectedItem.getTitle());
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onBookmarksUpdated() {
+        new BookmarkBuilderTask().execute();
     }
 
     private class BookmarkBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {

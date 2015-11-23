@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -60,6 +61,8 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.model.data.FocusSample;
+import eu.focusnet.app.model.ui.ChartData;
+import eu.focusnet.app.util.DataFactory;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
@@ -162,49 +165,18 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
 //        linearLayoutHorizontal.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
-        PieChart pieChart = new PieChart(this);
-        pieChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
+        ArrayList<ChartData> chartDatas = new ArrayList<>(4);
+        ChartData d = new ChartData("Green", 15, Color.GREEN);
+        chartDatas.add(d);
+        d = new ChartData("Red", 40, Color.RED);
+        chartDatas.add(d);
+        d = new ChartData("Blue", 15, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("Yellow", 30, Color.YELLOW);
+        chartDatas.add(d);
 
-
-        pieChart.setUsePercentValues(true);
-
-        pieChart.setDescription("");
-
-
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleColorTransparent(true);
-        pieChart.setHoleRadius(58f);
-
-        pieChart.setTransparentCircleColor(Color.WHITE);
-        pieChart.setTransparentCircleAlpha(110);
-        pieChart.setTransparentCircleRadius(61f);
-
-        pieChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        pieChart.setRotationEnabled(true);
-
-        pieChart.setDrawCenterText(true);
-        pieChart.setCenterText("This is a text");
-
-        //    data.setValueTypeface(tf);
-
-        PieData data = createPieData(4, 100);
-        pieChart.setData(data);
-        // undo all highlights
-        pieChart.highlightValues(null);
-        pieChart.invalidate();
-
-        pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
-        // mChart.spin(2000, 0, 360);
-
-        Legend l = pieChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
-
+        PieData pieData = DataFactory.createPieData(chartDatas, "Colors");
+        PieChart pieChart = ViewFactory.createPieChart(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half), "This is the center text", pieData);
         linearLayoutHorizontal.addView(pieChart);
 
 
@@ -222,183 +194,60 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
         linearLayoutHorizontal.addView(tableView);
 
-
         linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
-
-        LinearLayout linearLayoutHorizontalChartTitle = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-
+        LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1100));
 
         TextView BarChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "BarChart Title");
-        linearLayoutHorizontalChartTitle.addView(BarChartTitle);
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "BarChart Title");
 
-        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "LineChart Title");
-        linearLayoutHorizontalChartTitle.addView(LineChartTitle);
+        linearLayoutHorizontal2.addView(BarChartTitle);
 
-        linearLayoutPageInfo.addView(linearLayoutHorizontalChartTitle);
+        chartDatas = new ArrayList<>(8);
+        d = new ChartData("January", -10, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("February", -13,Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("March", 10,Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("April", 16, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("May", 20, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("June", 22, Color.RED);
+        chartDatas.add(d);
+        d = new ChartData("July", 28, Color.RED);
+        chartDatas.add(d);
+        d = new ChartData("August", 29, Color.RED);
+        chartDatas.add(d);
+        d = new ChartData("September", 25, Color.RED);
+        chartDatas.add(d);
+        d = new ChartData("October", 20, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("November", 10, Color.BLUE);
+        chartDatas.add(d);
+        d = new ChartData("December", 2, Color.BLUE);
+        chartDatas.add(d);
 
-
-        LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
-
-
-        BarChart barChart = new BarChart(this);
-        barChart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
-
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawValueAboveBar(true);
-
-        barChart.setDescription("");
-
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        barChart.setMaxVisibleValueCount(60);
-
-        // scaling can now only be done on x- and y-axis separately
-        barChart.setPinchZoom(false);
-
-        // draw shadows for each bar that show the maximum value
-        barChart.setDrawBarShadow(true);
-
-        // mChart.setDrawXLabels(false);
-
-        barChart.setDrawGridBackground(false);
-        // mChart.setDrawYLabels(false);
-
-
-        //  mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setSpaceBetweenLabels(2);
-
-
-        YAxis leftAxis = barChart.getAxisLeft();
-        //leftAxis.setTypeface(mTf);
-        leftAxis.setLabelCount(8, false);
-        //leftAxis.setValueFormatter(custom);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
-
-        barChart.animateY(2500);
-
-        barChart.getAxisRight().setEnabled(false);
-//        YAxis rightAxis = mChart.getAxisRight();
-//        rightAxis.setDrawGridLines(false);
-//       // rightAxis.setTypeface(mTf);
-//        rightAxis.setLabelCount(8, false);
-//        //rightAxis.setValueFormatter(custom);
-//        rightAxis.setSpaceTop(15f);
-
-        Legend legend = barChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-        legend.setForm(Legend.LegendForm.SQUARE);
-        legend.setFormSize(9f);
-        legend.setTextSize(11f);
-        legend.setXEntrySpace(4f);
-
-        barChart.setData(createBarData(12, 50));
-
+        BarChart barChart = ViewFactory.createBarChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500), -15f, DataFactory.createBarData(chartDatas, "Heat"));
         linearLayoutHorizontal2.addView(barChart);
 //        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
-        LineChart line_chart = new LineChart(this);
-        line_chart.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
-        line_chart.setDrawGridBackground(false);
+        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "LineChart Title");
+        linearLayoutHorizontal2.addView(LineChartTitle);
 
-        // no description text
-        line_chart.setDescription("");
-        //line_chart.setNoDataTextDescription("You need to provide data for the chart.");
-
-        // enable value highlighting
-        line_chart.setHighlightEnabled(true);
-
-        // enable touch gestures
-        line_chart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        line_chart.setDragEnabled(true);
-        line_chart.setScaleEnabled(true);
-//        mChart.setScaleXEnabled(true);
-//         mChart.setScaleYEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        line_chart.setPinchZoom(true);
-
-        // set an alternative background color
-        // mChart.setBackgroundColor(Color.GRAY);
-
-//        // create a custom MarkerView (extend MarkerView) and specify the layout
-//        // to use for it
-//        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-//
-//        // set the marker to the chart
-//        mChart.setMarkerView(mv);
-
-        // x-axis limit line
-        LimitLine limitLineXAxis = new LimitLine(3f, "Index 10");
-        limitLineXAxis.setLineWidth(4f);
-        limitLineXAxis.enableDashedLine(10f, 10f, 0f);
-        // llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-        limitLineXAxis.setTextSize(10f);
+        LineChart lineChart = ViewFactory.createLineChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500),
+                -35, 50,
+                -27f, "Lower Limit",
+                37f, "Upper Limit",
+                DataFactory.createLineData("Heat", chartDatas));
 
 
-        XAxis xAxis1 = line_chart.getXAxis();
-        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xAxis.setXValueFormatter(new MyCustomXValueFormatter());
-        xAxis1.setSpaceBetweenLabels(1);
-        xAxis1.addLimitLine(limitLineXAxis); // add x-axis limit line
-
-        LimitLine limitLineUpperYAxis = new LimitLine(60f, "Upper Limit");
-        limitLineUpperYAxis.setLineWidth(4f);
-        limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
-        //   ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        limitLineUpperYAxis.setTextSize(10f);
-
-        LimitLine limitLineLowerYAxis = new LimitLine(10f, "Lower Limit");
-        limitLineLowerYAxis.setLineWidth(4f);
-        limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
-        //   ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-        limitLineLowerYAxis.setTextSize(10f);
-
-        YAxis leftAxis1 = line_chart.getAxisLeft();
-        leftAxis1.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        leftAxis1.addLimitLine(limitLineUpperYAxis);
-        leftAxis1.addLimitLine(limitLineLowerYAxis);
-        leftAxis1.setAxisMaxValue(75);
-        leftAxis1.setYOffset(10);
-        leftAxis1.setStartAtZero(true);
-        leftAxis1.enableGridDashedLine(10f, 10f, 0f);
-
-        // limit lines are drawn behind data (and not on top)
-        leftAxis1.setDrawLimitLinesBehindData(true);
-
-        line_chart.getAxisRight().setEnabled(false);
-
-//        mChart.getViewPortHandler().setMaximumScaleY(2f);
-//        mChart.getViewPortHandler().setMaximumScaleX(2f);
-
-        line_chart.setData(createLineData(18, 100));
-
-        line_chart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-//        mChart.invalidate();
-
-        // get the legend (only possible after setting data)
-        Legend legend1 = line_chart.getLegend();
-
-        // modify the legend ...
-        legend1.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-        legend1.setForm(Legend.LegendForm.LINE);
-
-
-        linearLayoutHorizontal2.addView(line_chart);
+        linearLayoutHorizontal2.addView(lineChart);
 
         linearLayoutPageInfo.addView(linearLayoutHorizontal2);
 
@@ -819,141 +668,6 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
                 googleApiClient, this);
         googleApiClient.disconnect();
     }
-
-    private LineData createLineData(int count, float range) {
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 6; i <= count; i++) {
-            xVals.add((i) + "");
-        }
-
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-        for (int i = 6; i <= count; i++) {
-
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 3;// + (float)
-            // ((mult *
-            // 0.1) / 10);
-            yVals.add(new Entry(val, i)); // i position in the x-axis
-        }
-
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        // set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
-
-        // set the line to be drawn like this "- - - - - -"
-        set1.enableDashedLine(10f, 5f, 0f);
-        //  set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
-        set1.setLineWidth(1f);
-        set1.setCircleSize(3f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(9f);
-        set1.setFillAlpha(65);
-        set1.setFillColor(Color.BLACK);
-//        set1.setDrawFilled(true);
-        // set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
-        // Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
-
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(set1); // add the datasets
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
-        return data;
-    }
-
-
-    /**
-     * @param count
-     * @param range
-     */
-    private BarData createBarData(int count, float range) {
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("" + i % 12); //x-axis
-        }
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>(); //y-axis values
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(val, i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
-        set1.setBarSpacePercent(35f);
-
-        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        // data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextSize(10f);
-        //data.setValueTypeface(mTf);
-        return data;
-    }
-
-
-    //TODO set parameter (List<?> data)
-    private PieData createPieData(int count, float range) {
-
-        float mult = range;
-
-        ArrayList<Entry> yVals1 = new ArrayList<>(); // reached votes by participant y-axis
-
-        // IMPORTANT: In a PieChart, no values (Entry) should have the same
-        // xIndex (even if from different DataSets), since no values can be
-        // drawn above each other.
-        for (int i = 1; i < count + 1; i++) {
-            yVals1.add(new Entry((float) (Math.random() * mult) + mult / count + 1, i));
-        }
-
-        ArrayList<String> xVals = new ArrayList<String>(); // number of different participants x-axis
-
-        for (int i = 0; i < count + 1; i++)
-            xVals.add("" + (i + 1));
-
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "Election Results");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-
-        // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        return data;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

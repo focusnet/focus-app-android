@@ -65,6 +65,7 @@ import eu.focusnet.app.model.ui.ChartData;
 import eu.focusnet.app.util.DataFactory;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
+import eu.focusnet.app.R;
 
 //This activity is only for testing
 public class TestActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -185,7 +186,6 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         adapter.setPaddingTop(25);
         adapter.setPaddingBottom(25);
         adapter.setTextColor(getResources().getColor(R.color.table_header_text));
-        adapter.setTextSize(18);
         tableView.setHeaderAdapter(adapter);
         tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
         tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));

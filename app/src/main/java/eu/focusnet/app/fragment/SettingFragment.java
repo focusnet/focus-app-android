@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import eu.focusnet.app.activity.FocusActivity;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;

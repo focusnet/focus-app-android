@@ -14,7 +14,7 @@ import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 
 /**
  * Created by admin on 15.06.2015.

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.adapter.DateTypeAdapter;
 import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;

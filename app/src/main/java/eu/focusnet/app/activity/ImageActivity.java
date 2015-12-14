@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
+import eu.focusnet.app.R;
 
 /**
  * Activity use to display an image

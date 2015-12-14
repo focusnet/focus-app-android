@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import eu.focusnet.app.R;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.PageFragment;
 import eu.focusnet.app.manager.FragmentManager;

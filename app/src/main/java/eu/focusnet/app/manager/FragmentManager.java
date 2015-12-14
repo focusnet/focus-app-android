@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.util.Log;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 
 /**
  * Created by admin on 17.08.2015.

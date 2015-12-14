@@ -15,7 +15,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import eu.focusnet.app.activity.PageActivity;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao;

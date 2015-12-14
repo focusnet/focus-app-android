@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import eu.focusnet.app.R;
 
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.ProjectFragment;

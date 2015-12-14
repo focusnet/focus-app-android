@@ -16,7 +16,7 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
@@ -49,7 +49,6 @@ public class WebViewFragment extends Fragment {
         this.data = data;
         myWebView.loadUrl("file:///android_asset/www/" + url + ".html");
     }
-
 
     /**
      * Send data to the html page using a javascript function defined on it

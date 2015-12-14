@@ -3,7 +3,7 @@ package eu.focusnet.app.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
+import eu.focusnet.app.R;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.WebViewDataFragment;
 import eu.focusnet.app.fragment.WebViewFragment;

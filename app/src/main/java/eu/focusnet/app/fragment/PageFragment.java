@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.WidgetDao;
@@ -82,6 +82,8 @@ public class PageFragment extends Fragment {
                     final int screenSize = 4;
                     int sizeLeft = screenSize;
                     int lastSizeLeft = sizeLeft;
+
+
                     LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
                             new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
@@ -89,6 +91,7 @@ public class PageFragment extends Fragment {
                         Widget widget = widgetDao.findWidget(widgetLinker.getWidgetid());
                         int weight = 0;
                         Map<String, String> layouts = widgetLinker.getLayout();
+
                         if (widgetLinker.getLayout() != null) {
                             String width = layouts.get("width"); //TODO create a constant
                             int indexOf = width.indexOf("of");

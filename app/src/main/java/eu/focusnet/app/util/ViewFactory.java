@@ -32,11 +32,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.PieData;
 
 import de.codecrafters.tableview.TableView;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.model.ui.ChartData;
 
-import static eu.focusnet.app.activity.R.drawable.custom_progress_dialog_animation;
+import static eu.focusnet.app.R.drawable.custom_progress_dialog_animation;
 
 /**
  * Factory for creating different android views
@@ -424,10 +424,4 @@ public class ViewFactory {
 
         return lineChart;
     }
-
-//    public static DatePicker createDatePicker(Context context, LinearLayout.LayoutParams layoutParams){
-//        DatePicker datePicker = new DatePicker(context);
-//        datePicker.setLayoutParams(layoutParams);
-//        return datePicker;
-//    }
 }

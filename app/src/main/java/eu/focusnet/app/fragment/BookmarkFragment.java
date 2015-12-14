@@ -1,14 +1,9 @@
 package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +25,7 @@ import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.EventBus;
 import eu.focusnet.app.util.ViewUtil;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.util.NavigationUtil;
 
 
@@ -73,17 +68,17 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
             String path = selectedItem.getPath();
             switch(NavigationUtil.checkPathType(path)){
-                case PROJECTID:
+                case PROJECT_ID:
                     intent = new Intent(getActivity(), ProjectActivity.class);
                     break;
-                case PROJECTID_PAGEID:
+                case PROJECT_ID_PAGE_ID:
                     intent = new Intent(getActivity(), PageActivity.class);
                     break;
-                case PROJECTID_BRACKETS:
+                case PROJECT_ID_BRACKETS:
                     //TODO
                     break;
                 default:
-                //TODO PROJECTID_BRACKETS_PAGEID
+                //TODO PROJECT_ID_BRACKETS_PAGE_ID
             }
 
             intent.putExtra(Constant.PATH, selectedItem.getPath());

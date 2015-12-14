@@ -6,7 +6,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 
 /**
  * This is only for test purpose

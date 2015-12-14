@@ -27,6 +27,7 @@ import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.R;
 import eu.focusnet.app.util.ViewUtil;
 
 /**

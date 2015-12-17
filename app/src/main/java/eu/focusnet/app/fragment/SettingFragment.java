@@ -15,12 +15,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import eu.focusnet.app.activity.FocusActivity;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
+import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.manager.DataProviderManager;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.util.ViewUtil;
 
 
+/**
+ * Fragment used to displays the setting of the application
+ */
 public class SettingFragment extends Fragment {
 
     private String[] httpMethods;
@@ -61,22 +66,30 @@ public class SettingFragment extends Fragment {
         return viewRoot;
     }
 
+    //This is only for test purpose
     private class PreferenceDataReaderTask extends AsyncTask<String, Void, String> {
 
-        private final ProgressDialog progressDialog;
-
-        public PreferenceDataReaderTask(){
-            progressDialog = GuiUtil.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
-        }
+        private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
+            progressDialog = ViewFactory.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
             progressDialog.show();
         }
 
         @Override
         protected String doInBackground(String... urls) {
-            return DataProviderManager.retrieveData(urls[0]);
+            String data = null;
+           try {
+               ResponseData responseData = DataProviderManager.retrieveData(urls[0]);
+               if (responseData != null)
+                   data = responseData.getData();
+           }
+           catch (Exception ex){
+
+           }
+
+            return data;
         }
 
         @Override
@@ -84,7 +97,7 @@ public class SettingFragment extends Fragment {
             int id = Constant.SYNCHRONIZE_FRAGMENT; //The id of the notification and the navigation id to display the appropriate fragment ()
             TextView prefTextView = (TextView)getView().findViewById(R.id.settings);
             prefTextView.setText(result);
-            GuiUtil.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
+            ViewUtil.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
         }

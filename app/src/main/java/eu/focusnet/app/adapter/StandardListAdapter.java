@@ -3,6 +3,7 @@ package eu.focusnet.app.adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,18 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.activity.BookmarkService;
+import eu.focusnet.app.service.BookmarkService;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.GuiUtil;
+import eu.focusnet.app.util.ViewUtil;
 
 /**
  * Created by admin on 24.06.2015.
@@ -94,14 +96,25 @@ public class StandardListAdapter extends BaseAdapter {
                         if (standardListItem.getRightIcon() != null) {
                             final ImageView imageView = (ImageView) v;
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            View dialogView =  inflater.inflate(R.layout.alert_dialog_layout, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View dialogView =  inflater.inflate(R.layout.custom_alert_dialog_layout, null);
                             builder.setView(dialogView);
                             final Dialog dialog = builder.create();
 
                             TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-                            TextView selectedContext = (TextView) dialogView.findViewById(R.id.selectedContext);
+                            final EditText selectedContext = (EditText) dialogView.findViewById(R.id.edit_text_name);
                             selectedContext.setText(standardListItem.getTitle());
+
+                            final boolean isRightIconActive = standardListItem.isRightIconActive();
+                            Log.d(TAG, "Is right icon active: " + isRightIconActive);
+
+                            if (isRightIconActive) {
+                                dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
+                            }
+                            else{
+                                dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
+                            }
+
 
                             Button ok = (Button) dialogView.findViewById(R.id.ok);
                             Button cancel = (Button) dialogView.findViewById(R.id.cancel);
@@ -114,43 +127,34 @@ public class StandardListAdapter extends BaseAdapter {
                                 }
                             });
 
-                            boolean isRightIconActive = standardListItem.isRightIconActive();
-                            Log.d(TAG, "Is right icon active: " + isRightIconActive);
+                            ok.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    final Intent intent = new Intent(context, BookmarkService.class);
+                                    intent.putExtra(Constant.PATH, standardListItem.getPath());
+                                    intent.putExtra(Constant.ORDER, standardListItem.getOrder());
+                                    intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
 
-                            final Intent intent = new Intent(context, BookmarkService.class);
-                            intent.putExtra(Constant.NAME, standardListItem.getTitle());
-                            intent.putExtra(Constant.PATH, standardListItem.getId());
-                            intent.putExtra(Constant.ORDER, standardListItem.getOrder());
-                            intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
-
-                            if (isRightIconActive) {
-                                dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
-                                ok.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+                                    if (isRightIconActive) {
+                                     //   dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
                                         standardListItem.setIsRightIconActive(false);
-                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star_o));
+                                        Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star_o);
+                                        standardListItem.setRightIcon(rightIcon);
+                                        imageView.setImageBitmap(rightIcon);
                                         intent.putExtra(Constant.IS_TO_SAVE, false);
-                                        context.startService(intent);
-                                        Log.d(TAG, "OK clicked");
-                                        dialog.dismiss();
-                                    }
-                                });
-                            } else {
-                                dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
-                                    ok.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+                                    } else {
+                                   //     dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
                                         standardListItem.setIsRightIconActive(true);
-                                        imageView.setImageBitmap(GuiUtil.getBitmap(context, R.drawable.ic_star));
+                                        Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star);
+                                        standardListItem.setRightIcon(rightIcon);
+                                        imageView.setImageBitmap(rightIcon);
                                         intent.putExtra(Constant.IS_TO_SAVE, true);
-                                        context.startService(intent);
-                                        Log.d(TAG, "OK clicked");
-                                        dialog.dismiss();
                                     }
-                                });
-                            }
-
+                                    intent.putExtra(Constant.NAME, selectedContext.getText().toString());
+                                    context.startService(intent);
+                                    dialog.dismiss();
+                                }
+                            });
                             dialog.show();
                         }
                     }

@@ -31,11 +31,44 @@ public class ProjectDao {
         contentValues.put(Constant.ITERATOR, project.getIterator());
         contentValues.put(Constant.TITLE, project.getTitle());
         contentValues.put(Constant.DESCRIPTION, project.getDescription());
-
         contentValues.put(Constant.ORDER, project.getOrder());
         contentValues.put(Constant.FK_APP_CONTENT_ID, fkAppContentID);
 
-        return database.insert(Constant.DATABASE_TABLE_PROJECT, null, contentValues);
+        Long rawId = database.insert(Constant.DATABASE_TABLE_PROJECT, null, contentValues);
+
+        if(rawId != -1) {
+            String projectId = project.getGuid();
+
+            ArrayList<Widget> widgets = project.getWidgets();
+            if (widgets != null) {
+                WidgetDao widgetDao = new WidgetDao(database);
+                for (Widget w : widgets)
+                    widgetDao.createWidget(w, projectId);
+            }
+
+            ArrayList<Page> pages = project.getPages();
+            if (pages != null) {
+                PageDao pageDao = new PageDao(database);
+                for (Page p : pages) {
+                    pageDao.createPage(p, projectId);
+                }
+            }
+
+            LinkerDao linkerDao = new LinkerDao(database);
+            ArrayList<Linker> dashboards = project.getDashboards();
+            if (dashboards != null) {
+                for (Linker l : dashboards)
+                    linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
+            }
+
+            ArrayList<Linker> tools = project.getTools();
+            if (tools != null) {
+                for (Linker l : tools)
+                    linkerDao.createLinker(l, projectId, LinkerDao.LINKER_TYPE.TOOL);
+            }
+        }
+
+        return rawId;
     }
 
     public Project findProject(String projectId){
@@ -48,7 +81,7 @@ public class ProjectDao {
             project = getProject(cursor);
 
             WidgetDao widgetDao = new WidgetDao(database);
-            project.setWidgets(widgetDao.findWidget(projectId));
+            project.setWidgets(widgetDao.findWidgetByProjectId(projectId));
 
             PageDao pageDao = new PageDao(database);
             project.setPages(pageDao.findPages(projectId));
@@ -57,46 +90,99 @@ public class ProjectDao {
             project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
             project.setTools(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
 
+            //TODO NotificationDao
+            //  project.setNotifications(notificationDao.findNotification(projectId)) ;
+
             cursor.close();
         }
 
         return project;
     }
 
+    public ArrayList<Project> findAllProjects(String appContentId){
+        String[] params = {appContentId};
+        ArrayList<Project> projects = new ArrayList<>();
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_PROJECT, columnsToRetrieve, Constant.FK_APP_CONTENT_ID + "=?", params, null, null, null);
+        if(cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Project project = getProject(cursor);
+                    String projectId = project.getGuid();
+
+                    WidgetDao widgetDao = new WidgetDao(database);
+                    project.setWidgets(widgetDao.findWidgetByProjectId(projectId));
+
+                    PageDao pageDao = new PageDao(database);
+                    project.setPages(pageDao.findPages(projectId));
+
+                    LinkerDao linkerDao = new LinkerDao(database);
+                    project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
+                    project.setTools(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+                    projects.add(project);
+                    //TODO NotificationDao
+                    //  project.setNotifications(notificationDao.findNotification(projectId)) ;
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+        }
+
+        return projects;
+    }
+
 
     public ArrayList<Project> findAllProjects(){
-
         ArrayList<Project> projects = new ArrayList<>();
-
         String selectAllProjectsQuery = "SELECT * FROM " + Constant.DATABASE_TABLE_PROJECT;
-
         Cursor cursor = database.rawQuery(selectAllProjectsQuery, null);
         if(cursor.moveToFirst()){
             do {
                 Project project = getProject(cursor);
                 String projectId = project.getGuid();
                 WidgetDao widgetDao = new WidgetDao(database);
-                project.setWidgets(widgetDao.findWidget(projectId));
+                project.setWidgets(widgetDao.findWidgetByProjectId(projectId));
 
                 PageDao pageDao = new PageDao(database);
                 project.setPages(pageDao.findPages(projectId));
 
                 LinkerDao linkerDao = new LinkerDao(database);
                 project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD));
-                project.setDashboards(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+                project.setTools(linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL));
+
+                //TODO NotificationDao
+                //  project.setNotifications(notificationDao.findNotification(projectId)) ;
                 projects.add(project);
             }
             while (cursor.moveToNext());
-
             cursor.close();
         }
 
         return projects;
     }
 
-    public boolean deleteProject(Long projectId){
-        return database.delete(Constant.DATABASE_TABLE_PROJECT, Constant.ID+"="+projectId, null) > 0;
+
+    public boolean deleteProject(String projectId){
+
+        LinkerDao linkerDao = new LinkerDao(database);
+        linkerDao.deleteLinker(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
+        linkerDao.deleteLinker(projectId, LinkerDao.LINKER_TYPE.TOOL);
+
+        PageDao pageDao = new PageDao(database);
+        for(Page page : pageDao.findPages(projectId)) {
+            pageDao.deletePage(page.getGuid());
+        }
+
+        WidgetDao widgetDao = new WidgetDao(database);
+        for(Widget widget : widgetDao.findWidgetByProjectId(projectId))
+            widgetDao.deleteWidget(widget.getGuid());
+
+        //TODO NotificationDao
+        //  project.setNotifications(notificationDao.findNotification(projectId)) ;
+
+        String[] params = {projectId};
+        return database.delete(Constant.DATABASE_TABLE_PROJECT, Constant.ID+"=?", params) > 0;
     }
+
 
     //TODO update
 

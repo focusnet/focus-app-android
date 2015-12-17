@@ -1,14 +1,18 @@
 package eu.focusnet.app.fragment;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.activity.PageActivity;
+import eu.focusnet.app.activity.ProjectActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.DatabaseAdapter;
@@ -18,71 +22,128 @@ import eu.focusnet.app.model.data.BookmarkLink;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
-import eu.focusnet.app.util.GuiUtil;
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.EventBus;
+import eu.focusnet.app.util.ViewUtil;
+import eu.focusnet.app.R;
+import eu.focusnet.app.util.NavigationUtil;
 
 
 /**
  * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends ListFragment {
+public class BookmarkFragment extends ListFragment implements EventBus.IEventListener{
+
+    private static final String TAG = BookmarkFragment.class.getName();
+    private ArrayList<AbstractListItem> abstractItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-        new BookmarkBuilderTask().execute();
         return viewRoot;
     }
 
-    private class BookmarkBuilderTask extends AsyncTask<Void, Void, Void> {
-        private StandardListAdapter adapter;
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.registerIEventListener(this);
+        onBookmarksUpdated();
+    }
+
+    @Override
+    public void onStop(){
+        EventBus.unregisterIEventListener(this);
+        super.onStop();
+    }
+
+
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+
+            Intent intent = null;
+            StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+
+            String path = selectedItem.getPath();
+            switch(NavigationUtil.checkPathType(path)){
+                case PROJECT_ID:
+                    intent = new Intent(getActivity(), ProjectActivity.class);
+                    break;
+                case PROJECT_ID_PAGE_ID:
+                    intent = new Intent(getActivity(), PageActivity.class);
+                    break;
+                case PROJECT_ID_BRACKETS:
+                    //TODO
+                    break;
+                default:
+                //TODO PROJECT_ID_BRACKETS_PAGE_ID
+            }
+
+            intent.putExtra(Constant.PATH, selectedItem.getPath());
+            intent.putExtra(Constant.TITLE, selectedItem.getTitle());
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onBookmarksUpdated() {
+        new BookmarkBuilderTask().execute();
+    }
+
+    private class BookmarkBuilderTask extends AsyncTask<Void, Void, StandardListAdapter> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected StandardListAdapter doInBackground(Void... voids) {
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-            databaseAdapter.openWritableDatabase();
-            PreferenceDao preferenceDAO = new PreferenceDao(databaseAdapter.getDb());
-            //TODO get the preference's ID
-            Preference preference = preferenceDAO.findPreference(new Long(123));
-            databaseAdapter.close();
+            StandardListAdapter adapter = null;
+            try {
 
-            Bookmark bookmark = preference.getBookmarks();
-            ArrayList<BookmarkLink> pages = bookmark.getPages();
-            ArrayList<BookmarkLink> tools = bookmark.getTools();
+                databaseAdapter.openWritableDatabase();
+                PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
+                //TODO get the preference's ID
+                Preference preference = preferenceDao.findPreference(new Long(123));
 
-            ArrayList<AbstractListItem> abstractItems = new ArrayList<AbstractListItem>();
-            AbstractListItem headerProjectsListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_file),
-                                                                         getResources().getString(R.string.bookmark_header_dashboard), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerProjectsListItem);
+                Bookmark bookmark = preference.getBookmarks();
+                ArrayList<BookmarkLink> pages = bookmark.getPages();
+                ArrayList<BookmarkLink> tools = bookmark.getTools();
 
-            for(BookmarkLink bl : pages){
-                //TODO set correct id (for now the name is set as id)
-                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-                                                                     bl.getName(), bl.getPath());
-                abstractItems.add(drawListItem);
+                abstractItems = new ArrayList<AbstractListItem>();
+                AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
+                        getResources().getString(R.string.bookmark_header_dashboard), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerProjectsListItem);
+
+                for (BookmarkLink bl : pages) {
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+                            bl.getName(), bl.getPath());
+                    abstractItems.add(drawListItem);
+                }
+
+                AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
+                        getString(R.string.bookmark_header_tool), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+                abstractItems.add(headerToolListItem);
+
+
+                for (BookmarkLink bl : tools) {
+                    StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
+                            bl.getName(), bl.getPath());
+                    abstractItems.add(drawListItem);
+                }
+
+                adapter = new StandardListAdapter(getActivity(), abstractItems);
+
+            } finally {
+                databaseAdapter.close();
             }
 
-            AbstractListItem headerToolListItem = new HeaderListItem(GuiUtil.getBitmap(getActivity(), R.drawable.ic_settings),
-                    getString(R.string.bookmark_header_tool), GuiUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-            abstractItems.add(headerToolListItem);
-
-
-            for(BookmarkLink bl : tools ){
-                //TODO set correct id (for now the name is set as id)
-                StandardListItem drawListItem = new StandardListItem(bl.getName(), GuiUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
-                                                                     bl.getName(), bl.getPath());
-                abstractItems.add(drawListItem);
-            }
-
-            adapter = new StandardListAdapter(getActivity(), abstractItems);
-
-            return null;
+            return adapter;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(StandardListAdapter adapter) {
             setListAdapter(adapter);
         }
     }
 }
+

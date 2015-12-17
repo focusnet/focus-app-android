@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 import eu.focusnet.app.common.AbstractListItem;
 
 /**
- * Created by admin on 17.06.2015.
+ * Drawer header item which contains an icon, the username, email and the company, the user belongs to
+ * This is the header drawer item
  */
 public class HeaderDrawerListItem extends AbstractListItem {
 

@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.util.Log;
 
+import eu.focusnet.app.R;
+
 /**
  * Created by admin on 17.08.2015.
  */
@@ -19,8 +21,9 @@ public class FragmentManager {
 
         if(!isFragementPoped) {
             FragmentTransaction fragTrans = fragmentManager.beginTransaction();
+            fragTrans.setCustomAnimations(R.anim.in_from_down, R.anim.out_to_down);
             fragTrans.replace(containerViewId, fragment, fragementName);
-            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragTrans.addToBackStack(fragementName);
             fragTrans.commit();
         }

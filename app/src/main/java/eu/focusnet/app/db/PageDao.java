@@ -29,12 +29,21 @@ public class PageDao {
         contentValues.put(Constant.TITLE, page.getTitle());
         contentValues.put(Constant.DESCRIPTION, page.getDescription());
         contentValues.put(Constant.FK_PROJECT_ID, fkProjectId);
+        Long rawId = database.insert(Constant.DATABASE_TABLE_PAGE, null, contentValues);
 
-        return database.insert(Constant.DATABASE_TABLE_PAGE, null, contentValues);
+        if(rawId !=-1) {
+            WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
+            ArrayList<WidgetLinker> widgetLinkers = page.getWidgets();
+            if (widgetLinkers != null) {
+                for (WidgetLinker wl : widgetLinkers)
+                    widgetLinkerDao.createWidgetLinker(wl, page.getGuid());
+            }
+        }
+
+        return rawId;
     }
 
     public Page findPage(String pageId){
-
         String[] params = {String.valueOf(pageId)};
         Page page = null;
 
@@ -44,7 +53,6 @@ public class PageDao {
             page = getPage(cursor);
             WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
             page.setWidgets(widgetLinkerDao.findWidgetLinker(page.getGuid()));
-
             cursor.close();
         }
 
@@ -71,8 +79,11 @@ public class PageDao {
         return pages;
     }
 
-    public boolean deletePage(Long pageId){
-        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.ID+"="+pageId, null) > 0;
+    public boolean deletePage(String pageId){
+        String[] params = {pageId};
+        WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
+        widgetLinkerDao.deleteWidgetLinker(pageId);
+        return database.delete(Constant.DATABASE_TABLE_PAGE, Constant.ID+"=?", params) > 0;
     }
 
     //TODO update

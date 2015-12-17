@@ -26,7 +26,7 @@ public class DatabaseAdapter {
     public DatabaseAdapter openWritableDatabase(){
         if(db == null || !db.isOpen())
            db = dataBaseHelper.getWritableDatabase();
-        return  this;
+        return this;
     }
 
     public void close(){

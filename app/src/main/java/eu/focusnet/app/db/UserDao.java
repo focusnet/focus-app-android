@@ -59,7 +59,8 @@ public class UserDao {
     }
 
     public boolean deleteUser(Long userId){
-        return database.delete(Constant.DATABASE_TABLE_USER, Constant.ID+"="+userId, null) > 0;
+        String[] params = {String.valueOf(userId)};
+        return database.delete(Constant.DATABASE_TABLE_USER, Constant.ID+"=?", params) > 0;
      }
 
     //TODO update

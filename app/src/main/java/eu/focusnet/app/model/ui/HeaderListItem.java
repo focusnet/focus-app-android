@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 import eu.focusnet.app.common.AbstractListItem;
 
 /**
- * Created by admin on 24.06.2015.
+ * Header list item which contains a left icon, a title and a right icon
+ * This is the header item from a list
  */
 public class HeaderListItem extends AbstractListItem {
 

@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.R;
 
 
 /**
- * Created by admin on 15.06.2015.
+ * The user manual fragment
  */
 public class UserManualFragment extends Fragment {
 

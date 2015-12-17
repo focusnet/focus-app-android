@@ -80,7 +80,8 @@ public class PreferenceDao {
     }
 
     public boolean deletePreference(Long preferenceId){
-        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.ID+"="+preferenceId, null) > 0;
+        String[] params = {String.valueOf(preferenceId)};
+        return database.delete(Constant.DATABASE_TABLE_PREFERENCE, Constant.ID+"=?", params) > 0;
     }
 
     //TODO update

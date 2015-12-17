@@ -1,24 +1,45 @@
 package eu.focusnet.app.model.data;
 
-import java.util.Map;
+/**
+ * Created by yandypiedra on 27.10.15.
+ */
+public class FocusSample {
 
-import eu.focusnet.app.common.FocusType;
+    public enum Type {numeric, string, array_string, array_numeric }
 
-public class FocusSample extends FocusObject {
+    private String property;
+    private Type type;
+    public Object value;
 
-	private Map<String, FocusType> data;
+    public FocusSample() {}
 
-	public FocusSample() {}
+    public FocusSample(String property, Type type, Object value) {
+        this.property = property;
+        this.type = type;
+        this.value = value;
+    }
 
-	public FocusSample(Map<String, FocusType> data) {
-		this.data = data;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public Map<String, FocusType> getData() {
-		return data;
-	}
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public void setData(Map<String, FocusType> data) {
-		this.data = data;
-	}
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
 }

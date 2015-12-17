@@ -1,19 +1,40 @@
 package eu.focusnet.app.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import eu.focusnet.app.R;
+import eu.focusnet.app.common.BaseActivity;
+import eu.focusnet.app.fragment.PageFragment;
+import eu.focusnet.app.manager.FragmentManager;
+import eu.focusnet.app.util.Constant;
 
-import eu.focusnet.app.activity.R;
 
-public class PageActivity extends AppCompatActivity {
+/**
+ * This class displays (loading the PageFragment) the characteristics of a page after
+ * the it was selected in the ProjectActivity
+ */
+public class PageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_page);
+
+        String pageTitle = getIntent().getStringExtra(Constant.TITLE);
+        String pageId = getIntent().getStringExtra(Constant.PATH);
+        setTitle(pageTitle);
+
+        Fragment fragment = new PageFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.PATH, pageId);
+        fragment.setArguments(bundle);
+        FragmentManager.replaceFragment(R.id.page_container, fragment, getFragmentManager());
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_page;
     }
 
     @Override

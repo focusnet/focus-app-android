@@ -17,152 +17,73 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+/**
+ * Sample activity enabling external app calling by the FOCUS App
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    private TextView nameType, nameValue,
-            emailType, emailValue,
-            numberType, numberValue,
-            descriptionType, descriptionValue;
+    /**
+     * Convention for extras names
+     *
+     * All applications being used as FOCUS Mobile external apps follow this convention
+     */
+    private static final String
+            FOCUS_INPUT_EXTRA = "FOCUS_INPUT",
+            FOCUS_OUTPUT_EXTRA = "FOCUS_OUTPUT";
 
-    private static final String RESPONSE = "Response",
-            KEY_NAME = "Name",
-            KEY_EMAIL = "Email",
-            KEY_NUMBER = "Number",
-            KEY_DESCRIPTION = "Description";
-
-
+    /**
+     * Instantiate the activity.
+     *
+     * We acquire the input extra (input parameter) and update the UI accordingly.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String focusSampleJson = getIntent().getStringExtra("FocusSample");
-        Gson gson = new Gson();
-        List<FocusSample> focusSampleList = gson.fromJson(focusSampleJson, new TypeToken<List<FocusSample>>() {
-        }.getType());
-
-        if (focusSampleList != null) {
-            nameValue = (TextView) findViewById(R.id.nameValue);
-            nameType = (TextView) findViewById(R.id.nameType);
-
-            emailValue = (TextView) findViewById(R.id.emailValue);
-            emailType = (TextView) findViewById(R.id.emailType);
-
-            numberValue = (TextView) findViewById(R.id.numberValue);
-            numberType = (TextView) findViewById(R.id.numberType);
-
-            descriptionValue = (TextView) findViewById(R.id.descriptionValue);
-            descriptionType = (TextView) findViewById(R.id.descriptionType);
-
-            for (FocusSample fs : focusSampleList) {
-                String property = fs.getProperty();
-
-                TextView valueType, value;
-
-                switch (property) {
-                    case KEY_NAME:
-                        value = nameValue;
-                        valueType = nameType;
-                        break;
-                    case KEY_EMAIL:
-                        value = emailValue;
-                        valueType = emailType;
-                        break;
-                    case KEY_NUMBER:
-                        value = numberValue;
-                        valueType = numberType;
-                        break;
-                    default:
-                        value = descriptionValue;
-                        valueType = descriptionType;
-                        break;
-                }
-
-                FocusSample.Type type = fs.getType();
-                valueType.setText("Type: " + type.toString());
-                switch (type) {
-                    case numeric:
-                        Double valueNumeric = (Double) fs.getValue();
-                        value.setText(String.valueOf(valueNumeric));
-                        break;
-                    case string:
-                        String valueString = (String) fs.getValue();
-                        value.setText(valueString);
-                        break;
-                    case array_numeric:
-                        Double[] valuesArrayNumeric = (Double[]) fs.getValue();
-                        StringBuilder stBuild = new StringBuilder();
-                        for (double n : valuesArrayNumeric) {
-                            stBuild.append(n + ", ");
-                        }
-                        String v = stBuild.toString();
-                        v.substring(v.length() - 2, v.length());
-                        value.setText(v);
-                        break;
-                    default:
-                        String[] valuesArrayString = (String[]) fs.getValue();
-                        StringBuilder stBuild2 = new StringBuilder();
-                        for (String n : valuesArrayString) {
-                            stBuild2.append(n + ", ");
-                        }
-                        value.setText(stBuild2.toString());
-                        break;
-                }
-
-            }
-
-        } else {
-            LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-            mainLayout.removeView(findViewById(R.id.send_response));
-            mainLayout.removeView(findViewById(R.id.response_layout));
-            mainLayout.removeView(findViewById(R.id.send_button));
+        // acquire the input extra
+        // this is a JSON string, that can be converted using GSON FIXME TODO Add example
+        String inputExtraValue = getIntent().getStringExtra(FOCUS_INPUT_EXTRA);
+        if (inputExtraValue == null) {
+            inputExtraValue = "";
         }
 
+        // set the acquire value into the UI
+        TextView inputValue = (TextView) findViewById(R.id.my_input_field_value);
+        inputValue.setText(inputExtraValue);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
+        return;
     }
 
+    /**
+     * Do return the result of the activity.
+     *
+     * Set the result in the output extra.
+     *
+     * @param view
+     */
     public void onClick(View view) {
+        // get the response that has been provided by the user
         EditText responseEditText = (EditText) findViewById(R.id.response);
         String response = responseEditText.getText().toString();
         Log.d(TAG, response);
+
+        // save it as an extra
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(RESPONSE, response);
-        setResult(RESULT_OK, returnIntent);
+        // this is a JSON string, that can be constructed using GSON FIXME TODO Add example
+        returnIntent.putExtra(FOCUS_OUTPUT_EXTRA, response);
+
+        // and terminate the activity
+        setResult(RESULT_OK, returnIntent); // important, the return code must be RESULT_OK
         finish();
+        return;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

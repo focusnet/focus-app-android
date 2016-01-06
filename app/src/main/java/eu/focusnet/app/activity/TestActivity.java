@@ -1,5 +1,6 @@
 package eu.focusnet.app.activity;
 
+import android.util.Log;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -73,6 +74,10 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
     private static final String TAG = TestActivity.class.getName();
 
+
+
+
+
     private static final String[][] DATA_TO_SHOW = {
             {"This", "is", "a", "test"},
             {"and", "a", "second", "test"},
@@ -111,8 +116,16 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
             KEY_DESCRIPTION = "Description";
 
 
-    private static final String EXAMPLE_APP_ACTION = "com.example.exampleapp.SHOW_FOCUS_DATA";
-    private static final String FOCUS_SAMPLE = "FocusSample";
+    private static final String EXAMPLE_APP_ACTION = "com.example.exampleapp.focus_external_dummy_app";
+    /**
+     * Convention for extras names
+     *
+     * All applications being used as FOCUS Mobile external apps follow this convention
+     */
+    private static final String
+            FOCUS_INPUT_EXTRA = "FOCUS_INPUT",
+            FOCUS_OUTPUT_EXTRA = "FOCUS_OUTPUT";
+    // private static final String FOCUS_SAMPLE = "FocusSample";
     private final int EXAMPLE_APP_REQUEST = 2;
 
 
@@ -575,7 +588,7 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
                 Intent intent = new Intent(EXAMPLE_APP_ACTION);
                 if(isActivityAvailable(intent)) {
-                    intent.putExtra(FOCUS_SAMPLE, focusSamplesJson);
+                    intent.putExtra(FOCUS_INPUT_EXTRA, focusSamplesJson);
                     startActivityForResult(intent, EXAMPLE_APP_REQUEST);
                 }
                 else {
@@ -632,7 +645,7 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         }
         else if(requestCode == EXAMPLE_APP_REQUEST){
             if(resultCode == RESULT_OK){
-                String response = data.getStringExtra(RESPONSE);
+                String response = data.getStringExtra(FOCUS_OUTPUT_EXTRA);
                 ViewUtil.displayToast(this, "The response obtained from EXAMPLE_APP was: "+response);
             }
         }
@@ -664,8 +677,11 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
     }
 
     private void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                googleApiClient, this);
+        if (googleApiClient.isConnected()) { // !!!! important to check for service connection
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    googleApiClient, this);
+        }
+
         googleApiClient.disconnect();
     }
 

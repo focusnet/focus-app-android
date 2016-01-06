@@ -10,14 +10,13 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.example.exampleapp.SHOW_FOCUS_DATA" />
+                <action android:name="com.example.exampleapp.focus_external_dummy_app" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

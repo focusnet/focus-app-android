@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.PageActivity"/>
+      <point      
+        x = "2144"      
+        y = "292"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.LoginActivity"/>
+      <point      
+        x = "656"      
+        y = "2024"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.FocusActivity"/>
+      <point      
+        x = "2508"      
+        y = "1888"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.ProjectActivity"/>
+      <point      
+        x = "3408"      
+        y = "260"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.WebViewTestActivity"/>
+      <point      
+        x = "3604"      
+        y = "1864"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.SplashActivity"/>
+      <point      
+        x = "1548"      
+        y = "1852"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.TestActivity"/>
+      <point      
+        x = "52"      
+        y = "120"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "eu.focusnet.app.activity.ImageActivity"/>
+      <point      
+        x = "1148"      
+        y = "264"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

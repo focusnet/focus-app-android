@@ -46,7 +46,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.activity.SplashActivity"/>
+        className = "eu.focusnet.app.activity.EntryPointActivity"/>
       <point      
         x = "1548"      
         y = "1852"/>

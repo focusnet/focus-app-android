@@ -1,148 +1,86 @@
 package eu.focusnet.app.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.Date;
-
-import eu.focusnet.app.adapter.DateTypeAdapter;
-import eu.focusnet.app.db.AppContentDao;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PreferenceDao;
-import eu.focusnet.app.db.UserDao;
-import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.model.data.Preference;
-import eu.focusnet.app.model.data.User;
-import eu.focusnet.app.manager.DataProviderManager;
-import eu.focusnet.app.manager.DataProviderManager.*;
-import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.ViewUtil;
 
 /**
- * Login Activity, this activity displays the login screen
+ * Login Activity: this activity displays the login screen
  * and log the user in the application
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity
+{
 
-    private static final String TAG  = LoginActivity.class.getName();
-    private int userId = 123;
+	private static final String TAG = LoginActivity.class.getName();
+	private Context context = null;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-    }
+	/**
+	 * Instantiate the activity UI
+	 *
+	 * @param savedInstanceState
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.login);
 
-    /**
-     * This method will be called when the user click
-     * in the login button
-     */
-    public void onClick(View view){
-        new DataReaderTask(this).execute("http://focus.yatt.ch/resources-server/data/user/"+userId+"/user-information",
-                "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-user-preferences",
-                "http://focus.yatt.ch/resources-server/data/user/"+userId+"/app-content-definition");
-    }
+		this.context = this.getApplicationContext();
+
+		// FIXME TODO: if no network then disable SUBMIT button and mention the problem
+		// to the end user. adapt Activity such that it changes depending on connectivity:
+		// http://developer.android.com/training/basics/network-ops/managing.html
+	}
+
+	/**
+	 * When the user clicks the login button, the provided username, password and server name
+	 * are used to authenticate.
+	 *
+	 * This logic requires a network connection.
+	 */
+	public void onClick(View view)
+	{
+		// network calls -> run in another Thread
+		Thread loginThread = new Thread()
+		{
+			public void run()
+			{
+
+				// FIXME TODO progress indicator? disable all controls?
+
+				DataManager dm = DataManager.getInstance(context);
+				try {
+
+					String username = ((EditText) findViewById(R.id.login_username_textView)).getText().toString();
+					String password = ((EditText) findViewById(R.id.login_password_textView)).getText().toString();
+					// server TODO
+
+					if (dm.login(username, password, "server")) {
+						Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
+						startActivity(i);
+						finish();
+					}
+					else {
+						// TODO
+						// adapt current activity to highlight the fact that the login failed.
+						// e.g. "try again" message
+					}
+				}
+				catch (RuntimeException e) {
+					e.printStackTrace();
+				}
 
 
-    /**
-     * Class used to connect to the webservice and retrieve the user and projects data
-     */
-    private class DataReaderTask extends AsyncTask<String, String, User> {
-
-        private ProgressDialog progressDialog;
-        private Context context;
-
-        public DataReaderTask(Context context){
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = ViewFactory.createProgressDialog(context, "Authentication process running", "Please wait...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected User doInBackground(String... urls) {
-            Log.d(TAG, "Number of path to retrieve the resources: " + urls.length);
-
-            DatabaseAdapter databaseAdapter = new DatabaseAdapter(context);
-            User user = null;
-
-            try {
-                Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-                databaseAdapter.openWritableDatabase();
-                SQLiteDatabase database = databaseAdapter.getDb();
-                for (int i = 0; i < urls.length; i++) {
-                    Log.d(TAG, "Url: " + urls[i]);
-                    Log.d(TAG, "Counter: " + (i));
-                    try {
-                        ResponseData responseData = DataProviderManager.retrieveData(urls[i]);
-                        if (responseData != null) {
-                            String data = responseData.getData();
-                            if (i == 0) {
-                                Log.d(TAG, "Creating User");
-                                user = gson.fromJson(data, User.class);
-                                UserDao userDao = new UserDao(database);
-                                userDao.createUser(user);
-                            }
-                            else if (i == 1) {
-                                Log.d(TAG, "Creating Preferences");
-                                Preference preference = gson.fromJson(data, Preference.class);
-                                preference.setId(new Long(userId));
-                                PreferenceDao preferenceDao = new PreferenceDao(database);
-                                preferenceDao.createPreference(preference);
-                            }
-                            else {
-                                Log.d(TAG, "Creating App Content");
-
-                                AppContent appContent = gson.fromJson(data, AppContent.class);
-                                appContent.setId(Long.valueOf(appContent.getOwner()));
-                                AppContentDao appContentManager = new AppContentDao(database);
-                                appContentManager.createAppContent(appContent);
-                            }
-
-                            publishProgress(data); //TODO remove this, when the app is finished
-                        }
-                    } catch (Exception ex) {
-                        //TODO
-                        ex.printStackTrace();
-                    }
-                }
-            }
-            finally {
-                databaseAdapter.close();
-            }
-
-            return user;
-        }
-
-        //TODO remove this, when the app is finished
-        @Override
-        protected void onProgressUpdate(String... values) {
-            ViewUtil.displayToast(context, values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(User user) {
-            if(progressDialog.isShowing())
-                progressDialog.dismiss();
-            Intent i = new Intent(LoginActivity.this, FocusActivity.class);
-            i.putExtra(Constant.USER_DATA, user);
-            startActivity(i);
-            finish();
-        }
-    }
+			}
+		};
+		loginThread.start();
+	}
 }

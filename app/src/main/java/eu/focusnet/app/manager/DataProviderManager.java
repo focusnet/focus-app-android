@@ -19,208 +19,240 @@ import java.util.Map;
 /**
  * Created by admin on 22.06.2015.
  */
-public class DataProviderManager {
+public class DataProviderManager
+{
 
-    private static final String TAG = DataProviderManager.class.getName();
-
-    public static final String HTTP_METHOD_DELETE = "DELETE";
-    public static final String HTTP_METHOD_GET = "GET";
-    public static final String HTTP_METHOD_POST = "POST";
-    public static final String HTTP_METHOD_PUT = "PUT";
-
-    public static ResponseData retrieveData(String path) throws IOException {
-        return makeHttpRequest(path);
-    }
-
-    public static ArrayList<String> checkDataFreshness(String path, List<RequestData> requestData) throws IOException {
-        ArrayList<String> resourcesToRefresh = new ArrayList<>();
-        Gson gson = new Gson();
-        String requestDataJson = gson.toJson(requestData);
-        Log.d(TAG, "The resources to check for freshness: " + requestDataJson);
-        ResponseData responseData = makeHttpRequest(path, HTTP_METHOD_POST, requestDataJson);
-
-        if (responseData != null) {
-            String jsonResponseContent = responseData.getData();
-            Log.d(TAG, "The Response for the freshness request: " + jsonResponseContent);
-            ArrayList<RefreshData> refreshData = gson.fromJson(jsonResponseContent, new TypeToken<List<RefreshData>>() {
-            }.getType());
-            for (RefreshData rd : refreshData) {
-                //TODO add the code for the other status
-                if (rd.getStatus() == RefreshData.STATUS_CONTENT_DIFFERENT) {
-                    String resource = rd.getResource();
-                    int lastIndex = resource.lastIndexOf("/");
-                    resource = resource.substring(0, lastIndex);
-                    resourcesToRefresh.add(resource);
-                }
-            }
-        }
-
-        return resourcesToRefresh;
-    }
+	private static final String TAG = DataProviderManager.class.getName();
 
 
-    public static ResponseData updateData(String path, String jsonData) throws IOException {
-        return makeHttpRequest(path, HTTP_METHOD_PUT, jsonData);
-    }
+	public static final String HTTP_METHOD_GET = "GET";
+	public static final String HTTP_METHOD_POST = "POST";
+	public static final String HTTP_METHOD_PUT = "PUT";
+	public static final String HTTP_METHOD_DELETE = "DELETE";
+
+	public static ResponseData retrieveData(String path) throws IOException
+	{
+		return makeHttpRequest(path);
+	}
+
+	public static ArrayList<String> checkDataFreshness(String path, List<RequestData> requestData) throws IOException
+	{
+		ArrayList<String> resourcesToRefresh = new ArrayList<>();
+		Gson gson = new Gson();
+		String requestDataJson = gson.toJson(requestData);
+		Log.d(TAG, "The resources to check for freshness: " + requestDataJson);
+		ResponseData responseData = makeHttpRequest(path, HTTP_METHOD_POST, requestDataJson);
+
+		if (responseData != null) {
+			String jsonResponseContent = responseData.getData();
+			Log.d(TAG, "The Response for the freshness request: " + jsonResponseContent);
+			ArrayList<RefreshData> refreshData = gson.fromJson(jsonResponseContent, new TypeToken<List<RefreshData>>()
+			{
+			}.getType());
+			for (RefreshData rd : refreshData) {
+				//TODO add the code for the other status
+				if (rd.getStatus() == RefreshData.STATUS_CONTENT_DIFFERENT) {
+					String resource = rd.getResource();
+					int lastIndex = resource.lastIndexOf("/");
+					resource = resource.substring(0, lastIndex);
+					resourcesToRefresh.add(resource);
+				}
+			}
+		}
+
+		return resourcesToRefresh;
+	}
 
 
-    private static ResponseData makeHttpRequest(String path, String httpMethod, String jsonData) throws IOException {
-        ResponseData responseData = null;
-        HttpURLConnection connection = getHTTPConnection(path, httpMethod);
-        connection.setDoOutput(true);
-        try {
-            connection.connect();
-            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(jsonData);
-            wr.flush();
-            wr.close();
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-                responseData = getResponseData(connection.getHeaderFields(), connection.getInputStream());
-        } finally {
-            connection.disconnect();
-        }
-        return responseData;
-    }
+	public static ResponseData updateData(String path, String jsonData) throws IOException
+	{
+		return makeHttpRequest(path, HTTP_METHOD_PUT, jsonData);
+	}
 
 
-    private static ResponseData makeHttpRequest(String path) throws IOException {
-        ResponseData responseData = null;
-        HttpURLConnection connection = getHTTPConnection(path, HTTP_METHOD_GET);
-        try {
-            connection.connect();
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-                responseData = getResponseData(connection.getHeaderFields(), connection.getInputStream());
-        } finally {
-            connection.disconnect();
-        }
-        return responseData;
-    }
+	private static ResponseData makeHttpRequest(String path, String httpMethod, String jsonData) throws IOException
+	{
+		ResponseData responseData = null;
+		HttpURLConnection connection = getHTTPConnection(path, httpMethod);
+		connection.setDoOutput(true);
+		try {
+			connection.connect();
+			OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+			wr.write(jsonData);
+			wr.flush();
+			wr.close();
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				responseData = getResponseData(connection.getHeaderFields(), connection.getInputStream());
+			}
+		}
+		finally {
+			connection.disconnect();
+		}
+		return responseData;
+	}
 
 
-    private static HttpURLConnection getHTTPConnection(String path, String httpMethod) throws IOException {
-        URL url = new URL(path);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setInstanceFollowRedirects(true);
-        connection.setRequestMethod(httpMethod);
-        return connection;
-    }
+	private static ResponseData makeHttpRequest(String path) throws IOException
+	{
+		ResponseData responseData = null;
+		HttpURLConnection connection = getHTTPConnection(path, HTTP_METHOD_GET);
+		try {
+			connection.connect();
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) { // FIXME we may be interested in keep the result if not HTTP_OK!!!
+				responseData = getResponseData(connection.getHeaderFields(), connection.getInputStream());
+			}
+		}
+		finally {
+			connection.disconnect();
+		}
+		return responseData;
+	}
 
 
-    private static ResponseData getResponseData(Map<String, List<String>> headers, InputStream inputStream) throws IOException {
-        ResponseData responseData = null;
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuffer buffer = new StringBuffer();
-        String line = "";
-        while ((line = bufferedReader.readLine()) != null) {
-            buffer.append(line);
-        }
-        bufferedReader.close();
-        responseData = new ResponseData(headers, buffer.toString());
-
-        return responseData;
-    }
+	private static HttpURLConnection getHTTPConnection(String path, String httpMethod) throws IOException
+	{
+		URL url = new URL(path);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setRequestProperty("Accept", "application/json");
+		connection.setInstanceFollowRedirects(true);
+		connection.setRequestMethod(httpMethod);
+		return connection;
+	}
 
 
-    //TODO create other methods like(save, delete)
+	private static ResponseData getResponseData(Map<String, List<String>> headers, InputStream inputStream) throws IOException
+	{
+		ResponseData responseData = null;
+
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuffer buffer = new StringBuffer();
+		String line = "";
+		while ((line = bufferedReader.readLine()) != null) {
+			buffer.append(line);
+		}
+		bufferedReader.close();
+		responseData = new ResponseData(headers, buffer.toString());
+
+		return responseData;
+	}
 
 
-
-    //TODO should the below classes be defined in another place?
-
-    /**
-     * Representation of the RequestData
-     * send to the webservice
-     */
-    public static class RequestData {
-
-        private String resource;
-
-        public RequestData() {}
-
-        public RequestData(String resource) {
-            this.resource = resource;
-        }
-
-        public String getResource() {
-            return resource;
-        }
-
-        public void setResource(String resource) {
-            this.resource = resource;
-        }
-    }
+	//TODO create other methods like(save, delete)
 
 
-    /**
-     * Representation of the RefreshData
-     * received from the webservice
-     */
-    public static class RefreshData {
-        //TODO add the other status
-        public static final int STATUS_CONTENT_DIFFERENT = 210;
+	//TODO should the below classes be defined in another place?
 
-        private String resource;
-        private int status;
+	/**
+	 * Representation of the RequestData
+	 * send to the webservice
+	 */
+	public static class RequestData
+	{
 
-        public RefreshData() {
-        }
+		private String resource;
 
-        public RefreshData(String resource, int status) {
-            this.resource = resource;
-            this.status = status;
-        }
+		public RequestData()
+		{
+		}
 
-        public String getResource() {
-            return resource;
-        }
+		public RequestData(String resource)
+		{
+			this.resource = resource;
+		}
 
-        public void setResource(String resource) {
-            this.resource = resource;
-        }
+		public String getResource()
+		{
+			return resource;
+		}
 
-        public int getStatus() {
-            return status;
-        }
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
+		public void setResource(String resource)
+		{
+			this.resource = resource;
+		}
+	}
 
 
-    }
+	/**
+	 * Representation of the RefreshData
+	 * received from the webservice
+	 */
+	public static class RefreshData
+	{
+		//TODO add the other status
+		public static final int STATUS_CONTENT_DIFFERENT = 210;
 
-    /**
-     * Representation of the response data
-     * received from the webservice
-     */
-    public static class ResponseData {
+		private String resource;
+		private int status;
 
-        private Map<String, List<String>> headers;
-        private String data;
+		public RefreshData()
+		{
+		}
 
-        public ResponseData(Map<String, List<String>> headers, String data) {
-            this.headers = headers;
-            this.data = data;
-        }
+		public RefreshData(String resource, int status)
+		{
+			this.resource = resource;
+			this.status = status;
+		}
 
-        public Map<String, List<String>> getHeaders() {
-            return headers;
-        }
+		public String getResource()
+		{
+			return resource;
+		}
 
-        public void setHeaders(Map<String, List<String>> headers) {
-            this.headers = headers;
-        }
+		public void setResource(String resource)
+		{
+			this.resource = resource;
+		}
 
-        public String getData() {
-            return data;
-        }
+		public int getStatus()
+		{
+			return status;
+		}
 
-        public void setData(String data) {
-            this.data = data;
-        }
-    }
+		public void setStatus(int status)
+		{
+			this.status = status;
+		}
+
+
+	}
+
+	/**
+	 * Representation of the response data
+	 * received from the webservice
+	 */
+	public static class ResponseData
+	{
+
+		private Map<String, List<String>> headers;
+		private String data;
+
+		public ResponseData(Map<String, List<String>> headers, String data)
+		{
+			this.headers = headers;
+			this.data = data;
+		}
+
+		public Map<String, List<String>> getHeaders()
+		{
+			return headers;
+		}
+
+		public void setHeaders(Map<String, List<String>> headers)
+		{
+			this.headers = headers;
+		}
+
+		public String getData()
+		{
+			return data;
+		}
+
+		public void setData(String data)
+		{
+			this.data = data;
+		}
+	}
 
 }

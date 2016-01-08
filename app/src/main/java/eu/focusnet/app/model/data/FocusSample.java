@@ -1,45 +1,37 @@
 package eu.focusnet.app.model.data;
 
 /**
- * Created by yandypiedra on 27.10.15.
+ * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
+ *
  */
-public class FocusSample {
+public class FocusSample extends FocusObject
+{
+    FocusSampleDataMap data;
+    // more complex deserializers like URL or BigInteger cannot work because this object Object is too generic.
 
-    public enum Type {numeric, string, array_string, array_numeric }
-
-    private String property;
-    private Type type;
-    public Object value;
-
-    public FocusSample() {}
-
-    public FocusSample(String property, Type type, Object value) {
-        this.property = property;
-        this.type = type;
-        this.value = value;
+    /**
+     * C'tor
+     */
+    public FocusSample()
+    {
+        this.data = new FocusSampleDataMap();
     }
 
-    public String getProperty() {
-        return property;
+    /**
+     * Add a key-value pair to the data HashMap
+     *
+     * @param s Key
+     * @param o Value
+     */
+    public void add(String s, Object o)
+    {
+        this.data.put(s, o);
     }
 
-    public void setProperty(String property) {
-        this.property = property;
-    }
+    /*
+    FIXME TODO
+    public Object get(key) { return data.get(key); }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
+    getInteger() , getString(), getDouble, getArrayDouble() ... ?
+     */
 }

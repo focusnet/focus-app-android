@@ -3,6 +3,7 @@ package eu.focusnet.app.network;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -12,16 +13,15 @@ public class HttpRequest
 {
 
 	String method = null;
-	String url = null;
+	URL url = null;
 	String payload = "";
 	HttpResponse response = null;
-	boolean goodConfiguration = true;
+	int errors = 0; // we count number of errors.
 
 	public static final String HTTP_METHOD_GET = "GET";
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_PUT = "PUT";
 	public static final String HTTP_METHOD_DELETE = "DELETE";
-
 
 	/**
 	 * A simple Request without payload (GET or DELETE)
@@ -32,17 +32,14 @@ public class HttpRequest
 	public HttpRequest(String method, String url)
 	{
 		// check validity of url and method
-		this.method = method;
-		this.url = url;
-		this.payload = "";
-
-		// input saniztation FIXME TODO
-		// do not mark as good if was false
-
-/*		if ( ... ) {
-			this.goodConfiguration = false;
+		this.method = method; // TODO check that is valid method -> ++this.errors;
+		try {
+			this.url = new URL(url);
 		}
-		*/
+		catch (MalformedURLException e) {
+			++this.errors;
+		}
+		this.payload = "";
 	}
 
 	/**
@@ -56,7 +53,7 @@ public class HttpRequest
 	{
 		// do check that object is valid JSON output FIXME TODO
 		/*		if ( ... ) {
-			this.goodConfiguration = false;
+			++this.errors;
 		}
 		*/
 
@@ -87,10 +84,11 @@ public class HttpRequest
 	 */
 	public HttpResponse execute() throws RuntimeException, IOException
 	{
-		// input validation. url must be valid.
-		if (!this.goodConfiguration) {
+		if (this.errors != 0) {
 			throw new RuntimeException("Bad configuration for HTTP Request");
 		}
+
+
 
 		// object a new connection
 		HttpURLConnection connection = HttpRequest.getHTTPConnection(this.url, this.method);
@@ -131,16 +129,19 @@ public class HttpRequest
 	/**
 	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
 	 * <p/>
-	 * FIXME HttpsURLConnection ?
+	 * FIXME HttpsURLConnection ??
 	 *
-	 * @param path
+	 * FIXME keepalive / persistent connections? -> apparently handled automatically by Android. Nothing to do here.
+	 *
+	 *
+	 *
+	 * @param url
 	 * @param httpMethod
 	 * @return
 	 * @throws IOException
 	 */
-	private static HttpURLConnection getHTTPConnection(String path, String httpMethod) throws IOException
+	private static HttpURLConnection getHTTPConnection(URL url, String httpMethod) throws IOException
 	{
-		URL url = new URL(path);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setRequestProperty("Accept", "application/json");

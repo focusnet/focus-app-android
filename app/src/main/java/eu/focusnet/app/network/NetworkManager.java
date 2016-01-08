@@ -69,6 +69,9 @@ public class NetworkManager
 	/**
 	 * Get a specific version of an existing resource
 	 *
+	 *
+	 * FIXME any use?
+	 *
 	 * @param url
 	 * @param version
 	 * @return

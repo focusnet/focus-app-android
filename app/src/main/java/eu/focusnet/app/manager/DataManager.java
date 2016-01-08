@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
 import eu.focusnet.app.model.data.AppContent;
+import eu.focusnet.app.model.data.FocusObject;
 import eu.focusnet.app.model.data.FocusSample;
 import eu.focusnet.app.model.data.Preference;
 import eu.focusnet.app.model.data.User;
@@ -170,10 +171,10 @@ public class DataManager
 		}
 
 		if (this.user != null) {
+			Log.d(TAG, "User cached!!!!");
 			return this.user;
 		}
-		String json = this.get(this.userUrl);
-		this.user = this.gson.fromJson(json, User.class);
+		this.user = (User)(this.get(this.userUrl, User.class));
 		return this.user;
 	}
 
@@ -191,8 +192,8 @@ public class DataManager
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		String json = this.get(this.prefUrl);
-		this.userPreferences = this.gson.fromJson(json, Preference.class);
+		this.userPreferences = (Preference)(this.get(this.prefUrl, Preference.class));
+
 		return this.userPreferences;
 	}
 
@@ -210,8 +211,7 @@ public class DataManager
 		if (this.appContent != null) {
 			return this.appContent;
 		}
-		String json = this.get(this.appContentUrl);
-		this.appContent = this.gson.fromJson(json, AppContent.class);
+		this.appContent = (AppContent)(this.get(this.appContentUrl, AppContent.class));
 		return this.appContent;
 	}
 
@@ -222,7 +222,13 @@ public class DataManager
 	{
 		this.getUser();
 		this.getUserPreferences();
-		this.getAppContent();
+		AppContent a = this.getAppContent();
+
+
+		FocusSample out = this.getSample("http://focus.yatt.ch/resources-server/data/yarr"); // FIXME DEBUG
+		FocusSample out2 = (FocusSample)null;
+
+		return;
 	}
 
 
@@ -237,38 +243,60 @@ public class DataManager
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
 		}
-		//	return (FocusSample)(this.get(url));
-		return null;
+		FocusSample sample = (FocusSample)(this.get(url, FocusSample.class));
+		return sample;
 	}
 
 
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
 	 */
-	private String get(String url) throws RuntimeException
+	private FocusObject get(String url, Class targetClass) throws RuntimeException
 	{
 
-		// for now everything comes from network.
+		// 2 cases: with or without network
+		/*
+		 * NETWORK:
+		 * 		download if not available in local store
+		 * 			on failure return null
+		 * 		put in local stores
+		 *
+		 * 		will be automatically reloaded by sync service -> no need to check for freshness at this point!
+		 *
+		 * NO NETWORK:
+		 * 		get it if in local store if available
+		 * 		otherwise return null
+		 *
+		 *
+		 *
+		 *
+		 * GARBAGE COLLECTION:
+		 * 		everytime a sample is used (.get()), we update the lastUsage field
+		 * 		on garbage collection (=when max num of elements is reached) -> delete up to N based on that info
+		 	* 	e.g. max usage == 100MB -> if needed, free 20MB   or   the ones that are >2 days old
+		 */
+
+
+		// for now everything comes from the network.
 
 		HttpResponse response = null;
 
 		try {
-			Log.d(TAG, "before HTTP get in dm");
 			response = this.net.get(url);
-			Log.d(TAG, "after HTTP get in dm");
 		}
 		catch (IOException e) {
 			Log.d(TAG, "IOEXecption HTTP get in dm");
+			e.printStackTrace();
 		}
 
 		if (response.isSuccessful()) {
-
+			String json = response.getData();
+			return (FocusObject)this.gson.fromJson(json, targetClass);
+			// FIXME TODO check that type corresponds to what we expected with targetClass ?
 		}
-		else {
 
-		}
-
-		return "";
+// FIXME cache the result.
+		return null;
 		/*
 		 * 1. local cache
 		 * 2. local store -> push to local cache

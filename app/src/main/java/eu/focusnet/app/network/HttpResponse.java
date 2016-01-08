@@ -28,6 +28,7 @@ public class HttpResponse
 	 */
 	public HttpResponse(HttpURLConnection connection) throws IOException
 	{
+		this.method = connection.getRequestMethod();
 		this.returnCode = connection.getResponseCode();
 		this.headers = connection.getHeaderFields();
 		InputStream inputStream = connection.getInputStream();
@@ -50,6 +51,16 @@ public class HttpResponse
 	public boolean isSuccessful()
 	{
 		return (this.returnCode == HttpURLConnection.HTTP_OK);
+	}
+
+	/**
+	 * Return the body of the response
+	 *
+	 * @return
+	 */
+	public String getData()
+	{
+		return this.data;
 	}
 
 }

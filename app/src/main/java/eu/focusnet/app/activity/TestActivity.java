@@ -573,7 +573,8 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
                 String description = editTextDescription.getText().toString();
 
                 List<FocusSample> fs = new ArrayList<>();
-                FocusSample focusSample = new FocusSample(KEY_NAME, FocusSample.Type.string, name);
+                // FIXME FIXME FIXME FocusSample has chan
+             /*   FocusSample focusSample = new FocusSample(KEY_NAME, FocusSample.Type.string, name);
                 fs.add(focusSample);
                 focusSample = new FocusSample(KEY_EMAIL, FocusSample.Type.string, name);
                 fs.add(focusSample);
@@ -581,7 +582,7 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
                 fs.add(focusSample);
                 focusSample = new FocusSample(KEY_DESCRIPTION, FocusSample.Type.string, description);
                 fs.add(focusSample);
-
+*/
                 Gson gson = new Gson();
                 String focusSamplesJson = gson.toJson(fs);
                 ViewUtil.displayToast(TestActivity.this, focusSamplesJson);

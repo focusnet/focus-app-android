@@ -46,7 +46,7 @@
     <string name="focus_header_project">My Projects</string>
     <string name="focus_header_notification">New notifications</string>
 
-    <!-- Project Items -->
+    <!-- ProjectTemplate Items -->
     <string-array name="focus_project_items">
         <item >Cutting of stand #412</item>
         <item >Company machines overview</item>
@@ -55,7 +55,7 @@
         <item >Stand #455</item>
     </string-array>
 
-    <!-- Project Item Icons -->
+    <!-- ProjectTemplate Item Icons -->
     <string-array name="focus_project_icons">
         <item>@drawable/ic_scissors</item>
         <item>@drawable/ic_location_arrow</item>

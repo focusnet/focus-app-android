@@ -12,11 +12,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
-import eu.focusnet.app.model.data.AppContent;
-import eu.focusnet.app.model.data.FocusObject;
-import eu.focusnet.app.model.data.FocusSample;
-import eu.focusnet.app.model.data.Preference;
-import eu.focusnet.app.model.data.User;
+import eu.focusnet.app.model.focus.AppContentTemplate;
+import eu.focusnet.app.model.focus.FocusObject;
+import eu.focusnet.app.model.focus.FocusSample;
+import eu.focusnet.app.model.focus.Preference;
+import eu.focusnet.app.model.focus.User;
+import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 
@@ -25,10 +26,9 @@ import eu.focusnet.app.network.NetworkManager;
  * <p/>
  * Created by julien on 07.01.16.
  */
-public class DataManager
+public class DataManager // FIXME a service?
 {
 	private static DataManager ourInstance = new DataManager();
-	private static Context context = null;
 
 	private static final String TAG = DataManager.class.getName();
 
@@ -43,7 +43,8 @@ public class DataManager
 	// java objects
 	private User user = null;
 	private Preference userPreferences = null;
-	private AppContent appContent = null;
+	private AppContentTemplate appContentTemplate = null;
+	private AppContentInstance appContentInstance = null;
 
 
 	// for samples
@@ -53,9 +54,8 @@ public class DataManager
 	private NetworkManager net = null;
 
 
-	public static DataManager getInstance(Context c)
+	public static DataManager getInstance()
 	{
-		context = c;
 		return ourInstance;
 	}
 
@@ -65,8 +65,7 @@ public class DataManager
 	private DataManager()
 	{
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-		this.net = NetworkManager.getInstance(context);
-
+		this.net = NetworkManager.getInstance();
 
 		// get login infos from local store, and use it as the default FIXME TODO
 
@@ -76,11 +75,19 @@ public class DataManager
 		this.loginPassword = "dummy-password";
 		this.loginServer = "dummy-server";
 		// get the different application configuration objects
-		// FIXME that may be in acquirePrimitiveAppData();
+		// FIXME that may be in retrieveApplicationData();
 		int userId = 123; // FIXME hard-coded. should be obtained from network.
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
+	}
+
+	/**
+	 * Set the context of this manager
+	 */
+	public void setContext(Context c)
+	{
+		this.net.setContext(c);
 	}
 
 	/**
@@ -95,8 +102,8 @@ public class DataManager
 	public boolean login(String user, String password, String server)
 	{
 
-//		// FIXME no network call when just saving this. the login is done in the EntryPointActivity.
 //		// if no network, then return RuntimeException
+
 //		if (!this.net.isNetworkAvailable()) {
 //			throw new RuntimeException("No network");
 //		}
@@ -112,7 +119,7 @@ public class DataManager
 		this.loginServer = server;
 
 		// get the different application configuration objects
-		// FIXME that may be in acquirePrimitiveAppData();
+		// FIXME that may be in retrieveApplicationData();
 		int userId = 123; // FIXME hard-coded. should be obtained from network.
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
@@ -138,7 +145,7 @@ public class DataManager
 		this.appContentUrl = "";
 		this.user = null;
 		this.userPreferences = null;
-		this.appContent = null;
+		this.appContentTemplate = null;
 		this.cache = new HashMap<URL, Object>();
 
 		// delete SQL db
@@ -202,28 +209,33 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public AppContent getAppContent() throws RuntimeException
+	public AppContentTemplate getAppContentTemplate() throws RuntimeException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
 		}
 
-		if (this.appContent != null) {
-			return this.appContent;
+		if (this.appContentTemplate != null) {
+			return this.appContentTemplate;
 		}
-		this.appContent = (AppContent)(this.get(this.appContentUrl, AppContent.class));
-		return this.appContent;
+		this.appContentTemplate = (AppContentTemplate)(this.get(this.appContentUrl, AppContentTemplate.class));
+		return this.appContentTemplate;
+	}
+
+	public AppContentInstance getAppContentInstance() throws RuntimeException
+	{
+		return this.appContentInstance;
 	}
 
 	/**
 	 * Get the three basic informations that are required to build the application UI
 	 */
-	public void acquirePrimitiveAppData() throws RuntimeException
+	public void retrieveApplicationData() throws RuntimeException
 	{
 		this.getUser();
 		this.getUserPreferences();
-		AppContent a = this.getAppContent();
-
+		AppContentTemplate template = this.getAppContentTemplate();
+		this.appContentInstance = new AppContentInstance(template);
 
 		FocusSample out = this.getSample("http://focus.yatt.ch/resources-server/data/yarr"); // FIXME DEBUG
 		FocusSample out2 = (FocusSample)null;
@@ -296,6 +308,7 @@ public class DataManager
 		}
 
 // FIXME cache the result.
+
 		return null;
 		/*
 		 * 1. local cache

@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 import java.util.ArrayList;
 

@@ -141,7 +141,7 @@ public class Constant {
 
 
 
-    // Table AppContent
+    // Table AppContentInstance
     public static final String DATABASE_TABLE_APP_CONTENT = "app_contents";
 
     public static final String CREATE_TABLE_APP_CONTENT_QUERY = "CREATE TABLE "+ DATABASE_TABLE_APP_CONTENT +""+
@@ -154,7 +154,7 @@ public class Constant {
             EDITION_DATE_TIME+" TEXT, " +
             VERSION+" INTEGER, "+
             ACTIVE+" BOOL)";
-    //End table AppContent
+    //End table AppContentInstance
 
 
     // Table Projects

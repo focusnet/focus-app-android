@@ -23,8 +23,8 @@ import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.LinkerDao;
 import eu.focusnet.app.db.PageDao;
-import eu.focusnet.app.model.data.Linker;
-import eu.focusnet.app.model.data.Page;
+import eu.focusnet.app.model.focus.Linker;
+import eu.focusnet.app.model.focus.PageTemplate;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
@@ -110,7 +110,7 @@ public class ProjectFragment extends ListFragment {
                 for (Linker dashboard : dashboards) {
                     String pageId = dashboard.getPageid();
                     int dashboardOrder = dashboard.getOrder();
-                    Page page = pageDao.findPage(pageId);
+                    PageTemplate page = pageDao.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
                     Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;
@@ -138,7 +138,7 @@ public class ProjectFragment extends ListFragment {
                 for (Linker tool : tools) {
                     String pageId = tool.getPageid();
                     int toolOrder = tool.getOrder();
-                    Page page = pageDao.findPage(pageId);
+                    PageTemplate page = pageDao.findPage(pageId);
                     String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
                     Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
                     boolean isRightIconActive = true;

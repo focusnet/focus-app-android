@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import eu.focusnet.app.model.data.Bookmark;
-import eu.focusnet.app.model.data.Preference;
-import eu.focusnet.app.model.data.Setting;
+import eu.focusnet.app.model.focus.Bookmark;
+import eu.focusnet.app.model.focus.Preference;
+import eu.focusnet.app.model.focus.Setting;
 import eu.focusnet.app.util.Constant;
 
 /**

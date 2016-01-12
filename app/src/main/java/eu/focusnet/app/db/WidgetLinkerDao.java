@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
-import eu.focusnet.app.model.data.WidgetLinker;
+import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 
 /**

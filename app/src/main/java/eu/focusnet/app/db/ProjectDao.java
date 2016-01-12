@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.data.Linker;
-import eu.focusnet.app.model.data.Page;
-import eu.focusnet.app.model.data.Project;
-import eu.focusnet.app.model.data.Widget;
+import eu.focusnet.app.model.focus.Linker;
+import eu.focusnet.app.model.focus.PageTemplate;
+import eu.focusnet.app.model.focus.ProjectTemplate;
+import eu.focusnet.app.model.focus.Widget;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -25,7 +25,7 @@ public class ProjectDao {
         this.database = database;
     }
 
-    public Long createProject(Project project, Long fkAppContentID){
+    public Long createProject(ProjectTemplate project, Long fkAppContentID){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.ID, project.getGuid());
         contentValues.put(Constant.ITERATOR, project.getIterator());
@@ -46,10 +46,10 @@ public class ProjectDao {
                     widgetDao.createWidget(w, projectId);
             }
 
-            ArrayList<Page> pages = project.getPages();
+            ArrayList<PageTemplate> pages = project.getPages();
             if (pages != null) {
                 PageDao pageDao = new PageDao(database);
-                for (Page p : pages) {
+                for (PageTemplate p : pages) {
                     pageDao.createPage(p, projectId);
                 }
             }
@@ -71,9 +71,9 @@ public class ProjectDao {
         return rawId;
     }
 
-    public Project findProject(String projectId){
+    public ProjectTemplate findProject(String projectId){
         String[] params = {projectId};
-        Project project = null;
+        ProjectTemplate project = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PROJECT, columnsToRetrieve, Constant.ID+"=?", params, null, null, null);
         if(cursor != null){
@@ -99,14 +99,14 @@ public class ProjectDao {
         return project;
     }
 
-    public ArrayList<Project> findAllProjects(String appContentId){
+    public ArrayList<ProjectTemplate> findAllProjects(String appContentId){
         String[] params = {appContentId};
-        ArrayList<Project> projects = new ArrayList<>();
+        ArrayList<ProjectTemplate> projects = new ArrayList<>();
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PROJECT, columnsToRetrieve, Constant.FK_APP_CONTENT_ID + "=?", params, null, null, null);
         if(cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    Project project = getProject(cursor);
+                    ProjectTemplate project = getProject(cursor);
                     String projectId = project.getGuid();
 
                     WidgetDao widgetDao = new WidgetDao(database);
@@ -131,13 +131,13 @@ public class ProjectDao {
     }
 
 
-    public ArrayList<Project> findAllProjects(){
-        ArrayList<Project> projects = new ArrayList<>();
+    public ArrayList<ProjectTemplate> findAllProjects(){
+        ArrayList<ProjectTemplate> projects = new ArrayList<>();
         String selectAllProjectsQuery = "SELECT * FROM " + Constant.DATABASE_TABLE_PROJECT;
         Cursor cursor = database.rawQuery(selectAllProjectsQuery, null);
         if(cursor.moveToFirst()){
             do {
-                Project project = getProject(cursor);
+                ProjectTemplate project = getProject(cursor);
                 String projectId = project.getGuid();
                 WidgetDao widgetDao = new WidgetDao(database);
                 project.setWidgets(widgetDao.findWidgetByProjectId(projectId));
@@ -168,7 +168,7 @@ public class ProjectDao {
         linkerDao.deleteLinker(projectId, LinkerDao.LINKER_TYPE.TOOL);
 
         PageDao pageDao = new PageDao(database);
-        for(Page page : pageDao.findPages(projectId)) {
+        for(PageTemplate page : pageDao.findPages(projectId)) {
             pageDao.deletePage(page.getGuid());
         }
 
@@ -187,8 +187,8 @@ public class ProjectDao {
     //TODO update
 
 
-    private Project getProject(Cursor cursor){
-        Project project = new Project();
+    private ProjectTemplate getProject(Cursor cursor){
+        ProjectTemplate project = new ProjectTemplate();
         project.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         project.setIterator(cursor.getString(cursor.getColumnIndex(Constant.ITERATOR)));
         project.setOrder(cursor.getInt(cursor.getColumnIndex(Constant.ORDER)));

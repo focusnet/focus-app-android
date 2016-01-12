@@ -19,9 +19,9 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.WidgetDao;
-import eu.focusnet.app.model.data.Page;
-import eu.focusnet.app.model.data.Widget;
-import eu.focusnet.app.model.data.WidgetLinker;
+import eu.focusnet.app.model.focus.PageTemplate;
+import eu.focusnet.app.model.focus.Widget;
+import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
 
@@ -48,14 +48,14 @@ public class PageFragment extends Fragment {
     /**
      * This class loads the page characteristics from the database
      */
-    private class PageBuilderTask extends AsyncTask<String, Void, Page> {
+    private class PageBuilderTask extends AsyncTask<String, Void, PageTemplate> {
 
         @Override
-        protected Page doInBackground(String... params) {
+        protected PageTemplate doInBackground(String... params) {
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
             String path = params[0];
             String pageId = path.substring(path.indexOf("/") + 1, path.length());
-            Page page = null;
+            PageTemplate page = null;
             try {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
@@ -70,7 +70,7 @@ public class PageFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Page page) {
+        protected void onPostExecute(PageTemplate page) {
             if (page != null) {
                 LinearLayout linearLayoutPageInfo = (LinearLayout) getView().findViewById(R.id.pageInfo);
                 DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());

@@ -1,6 +1,4 @@
-package eu.focusnet.app.model.data;
-
-import android.view.MenuItem;
+package eu.focusnet.app.model.focus;
 
 public class User extends FocusObject {
 

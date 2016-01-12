@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 /**
  * Created by admin on 03.08.2015.

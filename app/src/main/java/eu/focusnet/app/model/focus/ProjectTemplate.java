@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by admin on 03.08.2015.
  */
-public class Project implements Serializable {
+public class ProjectTemplate implements Serializable {
 
     private String guid;
     private String iterator; //TODO define this object
@@ -16,7 +16,7 @@ public class Project implements Serializable {
     private int order;
 
     private ArrayList<Widget> widgets;
-    private ArrayList<Page> pages;
+    private ArrayList<PageTemplate> pages;
 
     private ArrayList<Linker> dashboards;
     private ArrayList<Linker> tools;
@@ -71,11 +71,11 @@ public class Project implements Serializable {
         this.widgets = widgets;
     }
 
-    public ArrayList<Page> getPages() {
+    public ArrayList<PageTemplate> getPages() {
         return pages;
     }
 
-    public void setPages(ArrayList<Page> pages) {
+    public void setPages(ArrayList<PageTemplate> pages) {
         this.pages = pages;
     }
 

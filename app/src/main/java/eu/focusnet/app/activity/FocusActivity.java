@@ -25,7 +25,7 @@ import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.model.data.User;
+import eu.focusnet.app.model.focus.User;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.manager.FragmentManager;
@@ -33,8 +33,7 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
- * This class is the start point of the application
- * after the user logged in.
+ * This Activity contains the list of available projects.
  */
 public class FocusActivity extends BaseDrawerActivity
 {
@@ -103,7 +102,7 @@ public class FocusActivity extends BaseDrawerActivity
 		//	Bundle extras = getIntent().getExtras();
 		//User user = (User) extras.getSerializable(Constant.USER_DATA);
 
-		DataManager dm = DataManager.getInstance(this.getApplicationContext());
+		DataManager dm = DataManager.getInstance();
 		User user = dm.getUser();
 
 

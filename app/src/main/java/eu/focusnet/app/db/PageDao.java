@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.data.Page;
-import eu.focusnet.app.model.data.WidgetLinker;
+import eu.focusnet.app.model.focus.PageTemplate;
+import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -23,7 +23,7 @@ public class PageDao {
         this.database = database;
     }
 
-    public Long createPage(Page page, String fkProjectId){
+    public Long createPage(PageTemplate page, String fkProjectId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.ID, page.getGuid());
         contentValues.put(Constant.TITLE, page.getTitle());
@@ -43,9 +43,9 @@ public class PageDao {
         return rawId;
     }
 
-    public Page findPage(String pageId){
+    public PageTemplate findPage(String pageId){
         String[] params = {String.valueOf(pageId)};
-        Page page = null;
+        PageTemplate page = null;
 
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PAGE, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null) {
@@ -59,14 +59,14 @@ public class PageDao {
         return page;
     }
 
-    public ArrayList<Page> findPages(String fkProjectId){
-        ArrayList<Page> pages = new ArrayList<>();
+    public ArrayList<PageTemplate> findPages(String fkProjectId){
+        ArrayList<PageTemplate> pages = new ArrayList<>();
         String[] params = {fkProjectId};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_PAGE, columnsToRetrieve, Constant.FK_PROJECT_ID+"=?", params, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()){
                 do {
-                    Page page = getPage(cursor);
+                    PageTemplate page = getPage(cursor);
                     WidgetLinkerDao widgetLinkerDao = new WidgetLinkerDao(database);
                     page.setWidgets(widgetLinkerDao.findWidgetLinker(page.getGuid()));
                     pages.add(page);
@@ -88,8 +88,8 @@ public class PageDao {
 
     //TODO update
 
-    private Page getPage(Cursor cursor){
-        Page page = new Page();
+    private PageTemplate getPage(Cursor cursor){
+        PageTemplate page = new PageTemplate();
         page.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         page.setTitle(cursor.getString(cursor.getColumnIndex(Constant.TITLE)));
         page.setDescription(cursor.getString(cursor.getColumnIndex(Constant.DESCRIPTION)));

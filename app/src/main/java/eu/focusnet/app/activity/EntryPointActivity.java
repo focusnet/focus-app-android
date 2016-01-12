@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.manager.DataManager;
@@ -38,8 +38,12 @@ public class EntryPointActivity extends Activity
 		/*
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
 		 * Otherwise, load the basic application configuration and redirect to FocusActivity
+		 *
+		 * The Context must be set once.
 		 */
-		DataManager dm = DataManager.getInstance(this.context);
+		DataManager dm = DataManager.getInstance();
+		dm.setContext(this.getApplicationContext());
+
 		if (dm.hasLoginInformation()) {
 			/*
 			 * Do everything in a different Thread
@@ -50,12 +54,12 @@ public class EntryPointActivity extends Activity
 				{
 					try {
 
-						sleep(2000); // FIXME TODO sleep for at least 2seconds, even below tasks are already done
+						sleep(2000); // FIXME TODO sleep for at least 2seconds, even if below tasks are already done
 
 						// FIXME TODO  display a progress wheel when we are executing this
 
-						DataManager dm = DataManager.getInstance(context);
-						dm.acquirePrimitiveAppData();
+						DataManager dm = DataManager.getInstance();
+						dm.retrieveApplicationData();
 						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
 					}
 					catch (InterruptedException e) {

@@ -1,11 +1,10 @@
 package eu.focusnet.app.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import eu.focusnet.app.model.data.Setting;
+import eu.focusnet.app.model.focus.Setting;
 import eu.focusnet.app.util.Constant;
 
 /**

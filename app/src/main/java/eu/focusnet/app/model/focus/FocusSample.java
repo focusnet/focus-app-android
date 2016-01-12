@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 /**
  * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)

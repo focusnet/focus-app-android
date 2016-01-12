@@ -56,14 +56,15 @@ public class LoginActivity extends Activity
 
 				// FIXME TODO progress indicator? disable all controls?
 
-				DataManager dm = DataManager.getInstance(context);
+				DataManager dm = DataManager.getInstance();
 				try {
 
 					String username = ((EditText) findViewById(R.id.login_username_textView)).getText().toString();
 					String password = ((EditText) findViewById(R.id.login_password_textView)).getText().toString();
-					// server TODO
+					// TODO also a field for server name
+					String server = "server";
 
-					if (dm.login(username, password, "server")) {
+					if (dm.login(username, password, server)) {
 						Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
 						startActivity(i);
 						finish();

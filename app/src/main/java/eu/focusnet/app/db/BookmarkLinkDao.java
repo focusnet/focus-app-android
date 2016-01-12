@@ -1,14 +1,12 @@
 package eu.focusnet.app.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.data.BookmarkLink;
+import eu.focusnet.app.model.focus.BookmarkLink;
 import eu.focusnet.app.util.Constant;
 
 /**

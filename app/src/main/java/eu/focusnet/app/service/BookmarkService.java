@@ -2,7 +2,6 @@ package eu.focusnet.app.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -10,11 +9,10 @@ import java.io.IOException;
 import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PreferenceDao;
-import eu.focusnet.app.fragment.BookmarkFragment;
 import eu.focusnet.app.manager.DataProviderManager;
-import eu.focusnet.app.model.data.Bookmark;
-import eu.focusnet.app.model.data.BookmarkLink;
-import eu.focusnet.app.model.data.Preference;
+import eu.focusnet.app.model.focus.Bookmark;
+import eu.focusnet.app.model.focus.BookmarkLink;
+import eu.focusnet.app.model.focus.Preference;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.EventBus;
 

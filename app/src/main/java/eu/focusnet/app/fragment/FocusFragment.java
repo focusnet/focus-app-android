@@ -23,7 +23,7 @@ import eu.focusnet.app.db.BookmarkLinkDao;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.ProjectDao;
-import eu.focusnet.app.model.data.Project;
+import eu.focusnet.app.model.focus.ProjectTemplate;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;
 import eu.focusnet.app.util.Constant;
@@ -102,9 +102,9 @@ public class FocusFragment extends ListFragment {
                 databaseAdapter.openWritableDatabase();
                 SQLiteDatabase db = databaseAdapter.getDb();
                 ProjectDao projectDao = new ProjectDao(db);
-                ArrayList<Project> projects = projectDao.findAllProjects();
+                ArrayList<ProjectTemplate> projects = projectDao.findAllProjects();
                 BookmarkLinkDao bookmarkLinkManager = new BookmarkLinkDao(db);
-                for (Project p : projects) {
+                for (ProjectTemplate p : projects) {
                     String projectId = p.getGuid();
                     String projectTitle = p.getTitle();
                     int projectOrder = p.getOrder();

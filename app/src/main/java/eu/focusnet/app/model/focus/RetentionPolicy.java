@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 public class RetentionPolicy {
     //eventual use an enum for this

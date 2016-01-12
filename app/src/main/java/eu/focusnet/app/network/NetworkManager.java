@@ -17,15 +17,15 @@ public class NetworkManager
 	private static NetworkManager ourInstance = new NetworkManager();
 	private static Context context = null;
 
+	// FIXME get the root of REST server on first request (such that we have the root of services)
+
 	/**
 	 * Singleton acquisition method.
 	 *
-	 * @param c
 	 * @return
 	 */
-	public static NetworkManager getInstance(Context c)
+	public static NetworkManager getInstance()
 	{
-		context = c;
 		return ourInstance;
 	}
 
@@ -36,6 +36,14 @@ public class NetworkManager
 	{
 	}
 
+	/**
+	 * Set the context of this manager
+	 */
+	public void setContext(Context c)
+	{
+		context = c;
+	}
+
 
 	// FIXME TODO copy RefreshData service
 
@@ -43,10 +51,15 @@ public class NetworkManager
 	/**
 	 * Is the network currently available?
 	 *
+	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
+	 *
 	 * @return true if network is available, false otherwise.
 	 */
-	public boolean isNetworkAvailable()
+	public boolean isNetworkAvailable() throws RuntimeException
 	{
+		if (context == null) {
+			throw new RuntimeException("You must define a context!");
+		}
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		return netInfo != null && netInfo.isConnectedOrConnecting();

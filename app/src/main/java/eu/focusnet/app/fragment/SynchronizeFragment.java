@@ -25,7 +25,7 @@ import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.DataProviderManager.*;
 import eu.focusnet.app.manager.DataProviderManager;
-import eu.focusnet.app.model.data.AppContent;
+import eu.focusnet.app.model.focus.AppContentTemplate;
 import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.util.ViewFactory;
 
@@ -109,9 +109,9 @@ public class SynchronizeFragment extends Fragment {
                                                           Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
                                                           DataProviderManager.ResponseData responseData = DataProviderManager.retrieveData(resource);
                                                           Log.d(TAG, "Creating the new App Content");
-                                                          AppContent appContent = gson.fromJson(responseData.getData(), AppContent.class);
-                                                          appContent.setId(Long.valueOf(appContent.getOwner()));
-                                                          appContentDao.createAppContent(appContent);
+                                                          AppContentTemplate appContentTemplate = gson.fromJson(responseData.getData(), AppContentTemplate.class);
+                                                          appContentTemplate.setId(Long.valueOf(appContentTemplate.getOwner()));
+                                                          appContentDao.createAppContent(appContentTemplate);
                                                           Log.i(TAG, "The new App Content was created successfully");
                                                           ViewUtil.displayToast(getActivity(), "Resource refreshed successfully");
                                                           tableLayout.removeAllViews();

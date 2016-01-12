@@ -1,11 +1,12 @@
-package eu.focusnet.app.model.data;
+package eu.focusnet.app.model.focus;
 
 import java.util.ArrayList;
 
 /**
  * Created by admin on 03.08.2015.
  */
-public class Page {
+public class PageTemplate
+{
 
     private String guid,
                     title,
@@ -13,14 +14,14 @@ public class Page {
 
     private ArrayList<WidgetLinker> widgets;
 
-    public Page(String guid, String title, String description, ArrayList<WidgetLinker> widgets) {
+    public PageTemplate(String guid, String title, String description, ArrayList<WidgetLinker> widgets) {
         this.guid = guid;
         this.title = title;
         this.description = description;
         this.widgets = widgets;
     }
 
-    public Page() {}
+    public PageTemplate() {}
 
     public String getGuid() {
         return guid;

@@ -11,8 +11,6 @@ import eu.focusnet.app.R;
  */
 public abstract class BaseActivity extends AppCompatActivity
 {
-
-
 	//Set the toolbar
 	protected Toolbar toolbar;
 

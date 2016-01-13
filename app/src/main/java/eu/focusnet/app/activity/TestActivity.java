@@ -1,5 +1,7 @@
 package eu.focusnet.app.activity;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,6 +45,11 @@ import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.common.BaseActivity;
+import eu.focusnet.app.fragment.BarChartWidgetFragment;
+import eu.focusnet.app.fragment.LineChartWidgetFragment;
+import eu.focusnet.app.fragment.PieChartWidgetFragment;
+import eu.focusnet.app.fragment.TableWidgetFragment;
+import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.model.focus.FocusSample;
 import eu.focusnet.app.model.ui.ChartData;
 import eu.focusnet.app.util.DataFactory;
@@ -55,10 +62,6 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
 
     private static final String TAG = TestActivity.class.getName();
-
-
-
-
 
     private static final String[][] DATA_TO_SHOW = {
             {"This", "is", "a", "test"},
@@ -196,53 +199,62 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1100));
 
-        TextView BarChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "BarChart Title");
 
-        linearLayoutHorizontal2.addView(BarChartTitle);
+//        TextView BarChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "BarChart Title");
 
-        chartDatas = new ArrayList<>(8);
-        d = new ChartData("January", -10, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("February", -13,Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("March", 10,Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("April", 16, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("May", 20, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("June", 22, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("July", 28, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("August", 29, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("September", 25, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("October", 20, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("November", 10, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("December", 2, Color.BLUE);
-        chartDatas.add(d);
+//        linearLayoutHorizontal2.addView(BarChartTitle);
 
-        BarChart barChart = ViewFactory.createBarChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500), -15f, DataFactory.createBarData(chartDatas, "Heat"));
-        linearLayoutHorizontal2.addView(barChart);
+//        chartDatas = new ArrayList<>(8);
+//        d = new ChartData("January", -10, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("February", -13,Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("March", 10,Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("April", 16, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("May", 20, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("June", 22, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("July", 28, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("August", 29, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("September", 25, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("October", 20, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("November", 10, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("December", 2, Color.BLUE);
+//        chartDatas.add(d);
+
+//        BarChart barChart = ViewFactory.createBarChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500), -15f, DataFactory.createBarData(chartDatas, "Heat"));
+//        linearLayoutHorizontal2.addView(barChart);
+
+
+        linearLayoutHorizontal2.setId(111567811);
+        FragmentManager.addFragment(linearLayoutHorizontal2.getId(), new BarChartWidgetFragment(), getFragmentManager());
+
 //        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
 
-        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "LineChart Title");
-        linearLayoutHorizontal2.addView(LineChartTitle);
+//        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "LineChart Title");
+//        linearLayoutHorizontal2.addView(LineChartTitle);
 
-        LineChart lineChart = ViewFactory.createLineChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500),
-                -35, 50,
-                -27f, "Lower Limit",
-                37f, "Upper Limit",
-                DataFactory.createLineData("Heat", chartDatas));
+//        LineChart lineChart = ViewFactory.createLineChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500),
+//                -35, 50,
+//                -27f, "Lower Limit",
+//                37f, "Upper Limit",
+//                DataFactory.createLineData("Heat", chartDatas));
 
 
-        linearLayoutHorizontal2.addView(lineChart);
+        FragmentManager.addFragment(linearLayoutHorizontal2.getId(), new LineChartWidgetFragment(), getFragmentManager());
+//        linearLayoutHorizontal2.addView(lineChart);
+
+
 
         linearLayoutPageInfo.addView(linearLayoutHorizontal2);
 

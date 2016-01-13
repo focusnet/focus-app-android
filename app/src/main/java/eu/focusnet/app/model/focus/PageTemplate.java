@@ -1,6 +1,8 @@
 package eu.focusnet.app.model.focus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by admin on 03.08.2015.
@@ -13,6 +15,8 @@ public class PageTemplate
 			description;
 
 	private String iterator; //TODO define this object
+
+	private LinkedHashMap<String, String> data = null;
 
 	private ArrayList<WidgetLinker> widgets;
 
@@ -71,5 +75,10 @@ public class PageTemplate
 	public String getIterator()
 	{
 		return iterator;
+	}
+
+	public LinkedHashMap<String, String> getData()
+	{
+		return data;
 	}
 }

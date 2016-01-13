@@ -1,7 +1,6 @@
 package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import eu.focusnet.app.model.focus.PageTemplate;
 
@@ -16,7 +15,7 @@ public class PageInstance
 	private String guid = "";
 	private boolean isValid = false; // <=> all widgets are valid
 	ArrayList<WidgetInstance> widgets = null; // layout + widgetdefinition, with dataContext.
-	HashMap<String, Object> dataContext = null;
+	DataContext dataContext = null;
 
 
 	/**
@@ -26,7 +25,7 @@ public class PageInstance
 	 * @param widgets
 	 * @param dataCtx
 	 */
-	public PageInstance(PageTemplate pageTpl, ArrayList<WidgetInstance> widgets, HashMap<String, Object> dataCtx)
+	public PageInstance(PageTemplate pageTpl, ArrayList<WidgetInstance> widgets, DataContext dataCtx)
 	{
 		this.guid = pageTpl.getGuid();
 		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
@@ -36,6 +35,8 @@ public class PageInstance
 		this.dataContext = dataCtx;
 
 		// set validity depending on widgets validity and dataContext resolution?
+
+		// This.build() this.dataContext.provideData(this.template.getData());
 	}
 
 	/**

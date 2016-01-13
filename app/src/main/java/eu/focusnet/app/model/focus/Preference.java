@@ -8,8 +8,8 @@ public class Preference extends FocusObject {
 	private Setting settings;
 	private Bookmark bookmarks;
 
-	public Preference(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks) {
-		super(type, url, owner, editor, version, creationDateTime, editionDateTime, active);
+	public Preference(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks) {
+		super(type, url, context, owner, editor, version, creationDateTime, editionDateTime, active);
 		this.settings = settings;
 		this.bookmarks = bookmarks;
 	}

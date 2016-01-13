@@ -27,7 +27,7 @@ public class ProjectInstance
 	private LinkedHashMap<String, PageInstance> tools = new LinkedHashMap<String, PageInstance>();
 
 	private ProjectTemplate template = null;
-	private HashMap<String, Object> dataContext = null;
+	private DataContext dataContext = null;
 
 	private boolean isValid = false;
 
@@ -37,7 +37,7 @@ public class ProjectInstance
 	 * @param tpl
 	 * @param dataContext
 	 */
-	public ProjectInstance(ProjectTemplate tpl, HashMap<String, Object> dataContext)
+	public ProjectInstance(ProjectTemplate tpl, DataContext dataContext)
 	{
 		this.template = tpl;
 		this.dataContext = dataContext;
@@ -62,8 +62,8 @@ public class ProjectInstance
 	 */
 	private void build()
 	{
-		this.retrieveData();
-
+		// add the project-specific data to our data context
+		this.dataContext.provideData(this.template.getData());
 
 		// FIXME TODO special case: guid == __welcome__
 
@@ -110,7 +110,7 @@ public class ProjectInstance
 			}
 			else {
 				// no iterator, render a simple PageInstance
-				HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
+				DataContext new_ctx = new DataContext(this.dataContext);
 				//	ArrayList<WidgetInstance> widgets = new ArrayList<WidgetInstance>();
 				for (WidgetLinker wl : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());

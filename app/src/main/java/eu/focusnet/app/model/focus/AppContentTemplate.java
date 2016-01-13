@@ -3,6 +3,7 @@ package eu.focusnet.app.model.focus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by admin on 03.08.2015.
@@ -11,18 +12,21 @@ public class AppContentTemplate extends FocusObject
 {
 
 	private Long id;
+	private LinkedHashMap<String, String> data;
 	private ArrayList<ProjectTemplate> projects;
 
-	public AppContentTemplate(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, ArrayList<ProjectTemplate> projects)
+	public AppContentTemplate(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, ArrayList<ProjectTemplate> projects, LinkedHashMap<String, String> data)
 	{
-		super(type, url, owner, editor, version, creationDateTime, editionDateTime, active);
+		super(type, url, context, owner, editor, version, creationDateTime, editionDateTime, active);
 		this.projects = projects;
+		this.data = data;
 	}
 
-	public AppContentTemplate(Long id, ArrayList<ProjectTemplate> projects)
+	public AppContentTemplate(Long id, ArrayList<ProjectTemplate> projects, LinkedHashMap<String, String> data)
 	{
 		this.id = id;
 		this.projects = projects;
+		this.data = data;
 	}
 
 	public AppContentTemplate()
@@ -49,6 +53,9 @@ public class AppContentTemplate extends FocusObject
 		this.projects = projects;
 	}
 
-
+	public HashMap<String, String> getData()
+	{
+		return this.data;
+	}
 
 }

@@ -48,7 +48,7 @@ public class DataManager // FIXME a service?
 
 
 	// for samples
-	private HashMap<URL, Object> cache = new HashMap<URL, Object>();
+	private HashMap<String, FocusObject> cache = new HashMap<String, FocusObject>();
 
 	private Gson gson = null;
 	private NetworkManager net = null;
@@ -80,6 +80,7 @@ public class DataManager // FIXME a service?
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-1.json";
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class DataManager // FIXME a service?
 		this.user = null;
 		this.userPreferences = null;
 		this.appContentTemplate = null;
-		this.cache = new HashMap<URL, Object>();
+		this.cache = new HashMap<String, FocusObject>();
 
 		// delete SQL db
 	}
@@ -272,6 +273,10 @@ public class DataManager // FIXME a service?
 	private FocusObject get(String url, Class targetClass) throws RuntimeException
 	{
 
+
+		if (this.cache.get(url) != null) {
+			return this.cache.get(url);
+		}
 		// 2 cases: with or without network
 		/*
 		 * NETWORK:
@@ -307,15 +312,20 @@ public class DataManager // FIXME a service?
 			e.printStackTrace();
 		}
 
+		FocusObject f = null;
 		if (response.isSuccessful()) {
 			String json = response.getData();
-			return (FocusObject)this.gson.fromJson(json, targetClass);
-			// FIXME TODO check that type corresponds to what we expected with targetClass ?
+			 f =(FocusObject)this.gson.fromJson(json, targetClass);
+			// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
+		}
+		else {
+			return null;
 		}
 
+		this.cache.put(url, f);
+return f;
 // FIXME cache the result.
 
-		return null;
 		/*
 		 * 1. local cache
 		 * 2. local store -> push to local cache
@@ -379,4 +389,27 @@ public class DataManager // FIXME a service?
 		 */
 	}
 
+	/**
+	 * Get the history for a url, according to provided parameters. This will call a remote service.
+	 *
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public FocusSample getHistorySample(String url, String params)
+	{
+		return null; // FIXME TODO
+	}
+
+	/**
+	 * Look for objects that are of the specified type and context. This will call a remote service.
+	 *
+	 * @param context
+	 * @param type
+	 * @return
+	 */
+	public FocusSample getLookupSample(String context, String type)
+	{
+		return null; // FIXME TODO
+	}
 }

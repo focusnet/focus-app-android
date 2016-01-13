@@ -1,12 +1,14 @@
 package eu.focusnet.app.model.internal;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
+import eu.focusnet.app.exception.NotImplementedException;
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.AppContentTemplate;
+import eu.focusnet.app.model.focus.FocusSample;
 import eu.focusnet.app.model.focus.ProjectTemplate;
 
 /**
@@ -17,7 +19,7 @@ public class AppContentInstance
 	private DataManager dataManager = null;
 	private AppContentTemplate appTemplate = null;
 	private LinkedHashMap<String, ProjectInstance> projects = new LinkedHashMap<String, ProjectInstance>();
-	private HashMap<String, Object> dataContext = null;
+	private DataContext dataContext = null;
 
 	/**
 	 * C'tor
@@ -28,6 +30,7 @@ public class AppContentInstance
 	{
 		this.appTemplate = tpl;
 		this.dataManager = DataManager.getInstance();
+		this.dataContext = new DataContext();
 		this.build();
 	}
 
@@ -38,9 +41,8 @@ public class AppContentInstance
 	 */
 	private void build()
 	{
-		// if some data are defined in the global level, retrieve them
-		// FIXME TODO
-		this.retrieveData();
+		// retrieve application-wide data
+		this.dataContext.provideData(this.appTemplate.getData());
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
@@ -48,6 +50,7 @@ public class AppContentInstance
 
 			if (projTpl.getIterator() != null) {
 				// FIXME TODO
+				// the iterator uses some of the data that is accessible at application-level (current data-context).
 			/*	ArrayList<URL> urls = dataManager.getListOfUrls(pTpl.getIterator().toString(this.dataContext)); // more or less
 				for (URL url : urls) {
 					FocusSample s = dataManager.get(url);
@@ -59,30 +62,11 @@ public class AppContentInstance
 			*/
 			}
 			else {
-				HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
+				DataContext new_ctx = new DataContext(this.dataContext);
 				ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
 				this.projects.put(p.getGuid(), p);
 			}
 		}
-	}
-
-	/**
-	 * Retrieve the data that may have been defined.
-	 *
-	 * @return
-	 */
-	private void retrieveData()
-	{
-		/**
-		 * this.templateApp.getData()
-		 * foreach data ->
-		 * v = dm.getData();
-		 * key = data-identifer e.g <data:list-of-machines>
-		 * value = returned value (FocusObject)
-		 *
-		 * FIXME TODO
-		 */
-		this.dataContext = new HashMap<String, Object>(); // put them in the dataContext
 	}
 
 	/**
@@ -93,6 +77,31 @@ public class AppContentInstance
 	public HashMap<String, ProjectInstance> getProjects()
 	{
 		return this.projects;
+	}
+
+
+	/**
+	 * Get the project identified by the specified path
+	 *
+	 * @param path
+	 * @return
+	 */
+	public ProjectInstance getProjectFromPath(String path)
+	{
+		return this.projects.get(path);
+	}
+
+	/**
+	 * Get the page identified by the specified path.
+	 *
+	 * @param path
+	 * @return
+	 */
+	public PageInstance getPageFromPath(String path)
+	{
+		// disect path
+		// project[uri]|dashboard|page[uri]
+		throw new NotImplementedException("AppContentInstance.getPageFromPath()");
 	}
 
 

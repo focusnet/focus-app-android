@@ -13,7 +13,7 @@ public class WidgetInstance
 
 	private WidgetTemplate template = null;
 	private Map<String, String> layoutConfig = null;
-	private HashMap<String, Object> dataContext = null;
+	private DataContext dataContext = null;
 
 	/**
 	 * C'tor
@@ -22,10 +22,11 @@ public class WidgetInstance
 	 * @param layoutConfig
 	 * @param dataCtx
 	 */
-	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, HashMap<String, Object> dataCtx)
+	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		this.template = wTpl;
 		this.layoutConfig = layoutConfig;
 		this.dataContext = dataCtx;
 	}
+
 }

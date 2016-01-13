@@ -222,6 +222,12 @@ public class DataManager // FIXME a service?
 		return this.appContentTemplate;
 	}
 
+	/**
+	 * Get the application content instance, i.e. with data context and iterator having beeen resolved.
+	 *
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public AppContentInstance getAppContentInstance() throws RuntimeException
 	{
 		return this.appContentInstance;

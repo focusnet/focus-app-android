@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
-import eu.focusnet.app.model.focus.Widget;
+import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -28,7 +28,7 @@ public class WidgetDao {
         this.database = database;
     }
 
-    public Long createWidget(Widget widget, String fkProjectId){
+    public Long createWidget(WidgetTemplate widget, String fkProjectId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constant.ID, widget.getGuid());
         contentValues.put(Constant.TYPE, widget.getType());
@@ -41,9 +41,9 @@ public class WidgetDao {
         return database.insert(Constant.DATABASE_TABLE_WIDGET, null, contentValues);
     }
 
-    public Widget findWidget(String widgetId){
+    public WidgetTemplate findWidget(String widgetId){
         String[] params = {widgetId};
-        Widget widget = null;
+        WidgetTemplate widget = null;
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.ID + "=?", params, null, null, null);
         if(cursor != null){
             cursor.moveToFirst();
@@ -53,8 +53,8 @@ public class WidgetDao {
         return widget;
     }
 
-    public ArrayList<Widget> findWidgetByProjectId(String fkProjectId){
-        ArrayList<Widget> widgets = new ArrayList<>();
+    public ArrayList<WidgetTemplate> findWidgetByProjectId(String fkProjectId){
+        ArrayList<WidgetTemplate> widgets = new ArrayList<>();
         String[] params = {fkProjectId};
         Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.FK_PROJECT_ID+"=?", params, null, null, null);
         if(cursor != null){
@@ -76,8 +76,8 @@ public class WidgetDao {
 
     //TODO update
 
-    private Widget getWidget(Cursor cursor){
-        Widget widget = new Widget();
+    private WidgetTemplate getWidget(Cursor cursor){
+        WidgetTemplate widget = new WidgetTemplate();
         widget.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         widget.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
         String paramsJson = cursor.getString(cursor.getColumnIndex(Constant.PARAMS));

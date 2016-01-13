@@ -15,7 +15,7 @@ public class ProjectTemplate implements Serializable {
 
     private int order;
 
-    private ArrayList<Widget> widgets;
+    private ArrayList<WidgetTemplate> widgets;
     private ArrayList<PageTemplate> pages;
 
     private ArrayList<Linker> dashboards;
@@ -63,11 +63,11 @@ public class ProjectTemplate implements Serializable {
         this.order = order;
     }
 
-    public ArrayList<Widget> getWidgets() {
+    public ArrayList<WidgetTemplate> getWidgets() {
         return widgets;
     }
 
-    public void setWidgets(ArrayList<Widget> widgets) {
+    public void setWidgets(ArrayList<WidgetTemplate> widgets) {
         this.widgets = widgets;
     }
 
@@ -101,5 +101,37 @@ public class ProjectTemplate implements Serializable {
 
     public void setNotifications(ArrayList<Notification> notifications) {
         this.notifications = notifications;
+    }
+
+    /**
+     * Find the PageTemplate that is contained within this ProjectTemplate and that
+     * is identified by page_id.
+     *
+     * @param page_id
+     * @return
+     */
+    public PageTemplate findPage(String page_id)
+    {
+        for(PageTemplate p : this.pages) {
+            if (p.getGuid().equals(page_id)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find the WidgetTemplate identified by the specified widgetid
+     * @param widgetid
+     * @return
+     */
+    public WidgetTemplate findWidget(String widgetid)
+    {
+        for(WidgetTemplate w : this.widgets) {
+            if (w.getGuid().equals(widgetid)) {
+                return w;
+            }
+        }
+        return null;
     }
 }

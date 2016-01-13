@@ -8,50 +8,68 @@ import java.util.ArrayList;
 public class PageTemplate
 {
 
-    private String guid,
-                    title,
-                    description;
+	private String guid,
+			title,
+			description;
 
-    private ArrayList<WidgetLinker> widgets;
+	private String iterator; //TODO define this object
 
-    public PageTemplate(String guid, String title, String description, ArrayList<WidgetLinker> widgets) {
-        this.guid = guid;
-        this.title = title;
-        this.description = description;
-        this.widgets = widgets;
-    }
+	private ArrayList<WidgetLinker> widgets;
 
-    public PageTemplate() {}
+	public PageTemplate(String guid, String title, String description, ArrayList<WidgetLinker> widgets)
+	{
+		this.guid = guid;
+		this.title = title;
+		this.description = description;
+		this.widgets = widgets;
+	}
 
-    public String getGuid() {
-        return guid;
-    }
+	public PageTemplate()
+	{
+	}
 
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
+	public String getGuid()
+	{
+		return guid;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setGuid(String guid)
+	{
+		this.guid = guid;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getTitle()
+	{
+		return title;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription()
+	{
+		return description;
+	}
 
-    public ArrayList<WidgetLinker> getWidgets() {
-        return widgets;
-    }
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
 
-    public void setWidgets(ArrayList<WidgetLinker> widgets) {
-        this.widgets = widgets;
-    }
+	public ArrayList<WidgetLinker> getWidgets()
+	{
+		return widgets;
+	}
+
+	public void setWidgets(ArrayList<WidgetLinker> widgets)
+	{
+		this.widgets = widgets;
+	}
+
+	public String getIterator()
+	{
+		return iterator;
+	}
 }

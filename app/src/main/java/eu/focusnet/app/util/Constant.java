@@ -184,7 +184,7 @@ public class Constant {
     //End table Pages
 
 
-    // Table Widget
+    // Table WidgetTemplate
     public static final String DATABASE_TABLE_WIDGET = "widgets";
 
     public static final String PARAMS = "params";
@@ -196,7 +196,7 @@ public class Constant {
             PARAMS+" TEXT, " +
             FK_PROJECT_ID +" TEXT,"+
             "FOREIGN KEY ("+FK_PROJECT_ID+") REFERENCES "+ DATABASE_TABLE_PROJECT +"("+ ID +"))";
-    //End table Widget
+    //End table WidgetTemplate
 
 
     // Table Linker

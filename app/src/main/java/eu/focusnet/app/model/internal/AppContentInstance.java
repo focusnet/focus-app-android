@@ -3,6 +3,7 @@ package eu.focusnet.app.model.internal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.AppContentTemplate;
@@ -15,7 +16,7 @@ public class AppContentInstance
 {
 	private DataManager dataManager = null;
 	private AppContentTemplate appTemplate = null;
-	private HashMap<String, ProjectInstance> projects = new HashMap<String, ProjectInstance>();
+	private LinkedHashMap<String, ProjectInstance> projects = new LinkedHashMap<String, ProjectInstance>();
 	private HashMap<String, Object> dataContext = null;
 
 	/**
@@ -39,15 +40,15 @@ public class AppContentInstance
 	{
 		// if some data are defined in the global level, retrieve them
 		// FIXME TODO
-		this.dataContext = this.retrieveData();
+		this.retrieveData();
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
-		for (ProjectTemplate pTpl : projectTemplates) {
+		for (ProjectTemplate projTpl : projectTemplates) {
 
-			if (pTpl.getIterator() != null) {
+			if (projTpl.getIterator() != null) {
 				// FIXME TODO
-			/*	ArrayList<URL> urls = dataManager.getListOfURIs(pTpl.getIterator());
+			/*	ArrayList<URL> urls = dataManager.getListOfUrls(pTpl.getIterator().toString(this.dataContext)); // more or less
 				for (URL url : urls) {
 					FocusSample s = dataManager.get(url);
 					HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
@@ -59,7 +60,7 @@ public class AppContentInstance
 			}
 			else {
 				HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
-				ProjectInstance p = new ProjectInstance(pTpl, new_ctx);
+				ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
 				this.projects.put(p.getGuid(), p);
 			}
 		}
@@ -70,7 +71,7 @@ public class AppContentInstance
 	 *
 	 * @return
 	 */
-	public HashMap<String, Object> retrieveData()
+	private void retrieveData()
 	{
 		/**
 		 * this.templateApp.getData()
@@ -81,7 +82,7 @@ public class AppContentInstance
 		 *
 		 * FIXME TODO
 		 */
-		return new HashMap<String, Object>(); // put them in the dataContext
+		this.dataContext = new HashMap<String, Object>(); // put them in the dataContext
 	}
 
 	/**

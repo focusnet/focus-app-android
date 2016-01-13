@@ -5,19 +5,20 @@ import java.util.Map;
 /**
  * Created by admin on 03.08.2015.
  */
-public class Widget {
+public class WidgetTemplate
+{
 
     private String guid,
                    type;
     private Map<String, String> params;
 
-    public Widget(String guid, String type, Map<String, String> params) {
+    public WidgetTemplate(String guid, String type, Map<String, String> params) {
         this.guid = guid;
         this.type = type;
         this.params = params;
     }
 
-    public Widget() {}
+    public WidgetTemplate() {}
 
     public String getGuid() {
         return guid;

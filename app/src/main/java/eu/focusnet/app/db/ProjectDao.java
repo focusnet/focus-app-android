@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.model.focus.Linker;
 import eu.focusnet.app.model.focus.PageTemplate;
 import eu.focusnet.app.model.focus.ProjectTemplate;
-import eu.focusnet.app.model.focus.Widget;
+import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -39,10 +39,10 @@ public class ProjectDao {
         if(rawId != -1) {
             String projectId = project.getGuid();
 
-            ArrayList<Widget> widgets = project.getWidgets();
+            ArrayList<WidgetTemplate> widgets = project.getWidgets();
             if (widgets != null) {
                 WidgetDao widgetDao = new WidgetDao(database);
-                for (Widget w : widgets)
+                for (WidgetTemplate w : widgets)
                     widgetDao.createWidget(w, projectId);
             }
 
@@ -173,7 +173,7 @@ public class ProjectDao {
         }
 
         WidgetDao widgetDao = new WidgetDao(database);
-        for(Widget widget : widgetDao.findWidgetByProjectId(projectId))
+        for(WidgetTemplate widget : widgetDao.findWidgetByProjectId(projectId))
             widgetDao.deleteWidget(widget.getGuid());
 
         //TODO NotificationDao

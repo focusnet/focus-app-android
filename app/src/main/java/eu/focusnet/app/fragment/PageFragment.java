@@ -20,7 +20,7 @@ import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.WidgetDao;
 import eu.focusnet.app.model.focus.PageTemplate;
-import eu.focusnet.app.model.focus.Widget;
+import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewFactory;
@@ -88,7 +88,7 @@ public class PageFragment extends Fragment {
                             new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
                     for (WidgetLinker widgetLinker : widgetLinkers) {
-                        Widget widget = widgetDao.findWidget(widgetLinker.getWidgetid());
+                        WidgetTemplate widget = widgetDao.findWidget(widgetLinker.getWidgetid());
                         int weight = 0;
                         Map<String, String> layouts = widgetLinker.getLayout();
 

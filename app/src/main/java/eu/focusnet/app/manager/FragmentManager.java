@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.util.Log;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.fragment.BarChartWidgetFragment;
 
 /**
  * Created by admin on 17.08.2015.
@@ -27,6 +28,12 @@ public class FragmentManager {
             fragTrans.addToBackStack(fragementName);
             fragTrans.commit();
         }
+    }
+
+    public static void addFragment(int containerViewId, Fragment fragment, android.app.FragmentManager fragmentManager){
+        FragmentTransaction fragTrans = fragmentManager.beginTransaction();
+        fragTrans.add(containerViewId, fragment, null);
+        fragTrans.commit();
     }
 
     public static Fragment getCurrentFragment(android.app.FragmentManager fragmentManager){

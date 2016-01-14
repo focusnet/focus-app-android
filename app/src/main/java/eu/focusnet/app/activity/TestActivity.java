@@ -1,7 +1,5 @@
 package eu.focusnet.app.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +13,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -46,6 +45,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.BarChartWidgetFragment;
+import eu.focusnet.app.fragment.CameraWidgetFragment;
 import eu.focusnet.app.fragment.LineChartWidgetFragment;
 import eu.focusnet.app.fragment.PieChartWidgetFragment;
 import eu.focusnet.app.fragment.TableWidgetFragment;
@@ -300,6 +300,11 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300));
 
+
+        //linearLayoutVertical3.setId(123423547);
+
+       // FragmentManager.addFragment(linearLayoutVertical3.getId(),  new CameraWidgetFragment(), getFragmentManager());
+
         imageView = ViewFactory.createImageView(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         imageView.setImageBitmap(ViewUtil.getBitmap(this, R.drawable.focus_logo));
         imageView.setAdjustViewBounds(true);
@@ -323,6 +328,8 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
 
         linearLayoutVertical3.addView(imageView);
+
+
 
         linearLayoutPageInfo.addView(linearLayoutVertical3);
 

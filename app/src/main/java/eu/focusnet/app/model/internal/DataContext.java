@@ -9,6 +9,15 @@ import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 13.01.16.
+ *
+ * TODO doc:
+ * we always store FocusSamples, not actual scalar/leaf data
+ * -> put() will retrieve a sample only
+ * -> get() retrieves samples
+ * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
+ *
+ * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
+ *
  */
 public class DataContext extends HashMap<String, FocusSample>
 {

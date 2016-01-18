@@ -31,7 +31,16 @@ public class WidgetInstance
 		this.dataContext = dataCtx;
 
 		// FIXME params? title, description, etc.
-
+		// type
+		// titl
+		/*
+		guid
+		type
+		title
+		params (string->value) (FocusSampleDataMap)
+		layout -> width
+		 */
+sadf
 		this.build();
 	}
 

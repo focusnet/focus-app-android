@@ -48,6 +48,12 @@ public class PageInstance
 		// add page-specific data to our current data context
 		this.dataContext.provideData(this.template.getData());
 
+		/*
+		guid
+		title
+		description
+		widgets[]
+		 */df
 		// also title and other values that may have to be resolved?
 
 		// set validity depending on widgets validity and dataContext resolution?

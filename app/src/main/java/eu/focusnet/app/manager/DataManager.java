@@ -392,6 +392,8 @@ return f;
 	/**
 	 * Get the history for a url, according to provided parameters. This will call a remote service.
 	 *
+	 * HistorySample = { data: field1: [], field2: []}
+	 *
 	 * @param url
 	 * @param params
 	 * @return
@@ -403,6 +405,8 @@ return f;
 
 	/**
 	 * Look for objects that are of the specified type and context. This will call a remote service.
+	 *
+	 * LookupSample = { data: urls: []}
 	 *
 	 * @param context
 	 * @param type

@@ -5,11 +5,11 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:id="@+id/picture"
         android:src="@drawable/focus_logo"
-        android:adjustViewBounds="true"
-        android:layout_gravity="center_horizontal" />
+        android:scaleType="fitXY"
+        />
 
     <LinearLayout
         android:orientation="horizontal"

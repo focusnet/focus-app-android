@@ -1,5 +1,6 @@
 package eu.focusnet.app.fragment;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -84,4 +85,29 @@ public class CameraWidgetFragment extends WidgetFragment {
 
         return viewRoot;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICTURE_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                //    Bitmap tookPicture = (Bitmap) data.getExtras().get("data");
+//                Bitmap thumbnail = null;
+//                try {
+//                    thumbnail = MediaStore.Images.Media.getBitmap(
+//                            getContentResolver(), imageUri);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+                //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                // imageView.setImageBitmap(tookPicture);
+
+                imageView.setImageURI(imageUri);
+                deleteButton.setEnabled(true);
+                viewButton.setEnabled(true);
+                takePictureButton.setText("Replace Picture");
+            }
+        }
+    }
+
 }

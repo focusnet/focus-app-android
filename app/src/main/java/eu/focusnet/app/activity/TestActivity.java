@@ -46,9 +46,11 @@ import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.BarChartWidgetFragment;
 import eu.focusnet.app.fragment.CameraWidgetFragment;
+import eu.focusnet.app.fragment.GPSWidgetFragment;
 import eu.focusnet.app.fragment.LineChartWidgetFragment;
 import eu.focusnet.app.fragment.PieChartWidgetFragment;
 import eu.focusnet.app.fragment.TableWidgetFragment;
+import eu.focusnet.app.fragment.TextWidgetFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.model.focus.FocusSample;
 import eu.focusnet.app.model.ui.ChartData;
@@ -58,48 +60,9 @@ import eu.focusnet.app.util.ViewUtil;
 import eu.focusnet.app.R;
 
 //This activity is only for testing
-public class TestActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
+public class TestActivity extends BaseActivity {
 
     private static final String TAG = TestActivity.class.getName();
-
-    private static final String[][] DATA_TO_SHOW = {
-            {"This", "is", "a", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"},
-            {"and", "a", "second", "test"}
-
-    };
-
-    private static final String[] HEADER = {"Text 1", "Text 2", "Text 3", "Text 4"};
-
-    private final int PICTURE_REQUEST = 1;
-    private Uri imageUri;
-    private ImageView imageView;
-
-    private Button deleteButton, viewButton, takePictureButton;
-
-    private GoogleApiClient googleApiClient;
-    private TextView longitude, latitude, altitude, accuracy;
-    private volatile boolean positionAsked;
-
-    private static final String RESPONSE = "Response",
-            KEY_NAME = "Name",
-            KEY_EMAIL = "Email",
-            KEY_NUMBER = "Number",
-            KEY_DESCRIPTION = "Description";
-
 
     private static final String EXAMPLE_APP_ACTION = "com.example.exampleapp.focus_external_dummy_app";
     /**
@@ -110,7 +73,6 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
     private static final String
             FOCUS_INPUT_EXTRA = "FOCUS_INPUT",
             FOCUS_OUTPUT_EXTRA = "FOCUS_OUTPUT";
-    // private static final String FOCUS_SAMPLE = "FocusSample";
     private final int EXAMPLE_APP_REQUEST = 2;
 
 
@@ -131,17 +93,21 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         LinearLayout linearLayoutPageInfo = (LinearLayout) findViewById(R.id.test_layout);
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace / 2, takeAllRow));
 
+
+
         LinearLayout linearLayoutVertical = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        TextView title = ViewFactory.createTextView(this, R.style.TitleAppearance,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is Title");
-        linearLayoutVertical.addView(title);
+//        TextView title = ViewFactory.createTextView(this, R.style.TitleAppearance,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is Title");
+//        linearLayoutVertical.addView(title);
+//
+//        title = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is info");
+//        linearLayoutVertical.addView(title);
 
-        title = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "This is info");
-        linearLayoutVertical.addView(title);
-
+        linearLayoutVertical.setId(65329222);
+        FragmentManager.addFragment(linearLayoutVertical.getId(), new TextWidgetFragment(), getFragmentManager());
         linearLayoutPageInfo.addView(linearLayoutVertical);
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
@@ -150,258 +116,43 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         LinearLayout linearLayoutHorizontalPieChartTitle = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
-        TextView pieChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "PieChart Title");
-        linearLayoutHorizontalPieChartTitle.addView(pieChartTitle);
-
         linearLayoutHorizontalPieChartTitle.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, treeQuarters));
 
         linearLayoutPageInfo.addView(linearLayoutHorizontalPieChartTitle);
 
-
         LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
-
-//        linearLayoutHorizontal.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
-
-        ArrayList<ChartData> chartDatas = new ArrayList<>(4);
-        ChartData d = new ChartData("Green", 15, Color.GREEN);
-        chartDatas.add(d);
-        d = new ChartData("Red", 40, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("Blue", 15, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("Yellow", 30, Color.YELLOW);
-        chartDatas.add(d);
-
-        PieData pieData = DataFactory.createPieData(chartDatas, "Colors");
-        PieChart pieChart = ViewFactory.createPieChart(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half), "This is the center text", pieData);
-        linearLayoutHorizontal.addView(pieChart);
-
-
-        TableView<String[]> tableView = (TableView<String[]>) ViewFactory.createTableView(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half), 4);
-        SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(this, HEADER);
-        adapter.setPaddingTop(25);
-        adapter.setPaddingBottom(25);
-        adapter.setTextColor(getResources().getColor(R.color.table_header_text));
-        tableView.setHeaderAdapter(adapter);
-        tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        tableView.setDataAdapter(new SimpleTableDataAdapter(this, DATA_TO_SHOW));
-        int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
-        int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
-        tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
-        linearLayoutHorizontal.addView(tableView);
-
+        linearLayoutHorizontal.setId(9381651);
+        FragmentManager.addFragment(linearLayoutHorizontal.getId(), new PieChartWidgetFragment(), getFragmentManager());
+        FragmentManager.addFragment(linearLayoutHorizontal.getId(), new TableWidgetFragment(), getFragmentManager());
         linearLayoutPageInfo.addView(linearLayoutHorizontal);
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
         LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1100));
-
-
-//        TextView BarChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "BarChart Title");
-
-//        linearLayoutHorizontal2.addView(BarChartTitle);
-
-//        chartDatas = new ArrayList<>(8);
-//        d = new ChartData("January", -10, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("February", -13,Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("March", 10,Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("April", 16, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("May", 20, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("June", 22, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("July", 28, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("August", 29, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("September", 25, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("October", 20, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("November", 10, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("December", 2, Color.BLUE);
-//        chartDatas.add(d);
-
-//        BarChart barChart = ViewFactory.createBarChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500), -15f, DataFactory.createBarData(chartDatas, "Heat"));
-//        linearLayoutHorizontal2.addView(barChart);
-
-
         linearLayoutHorizontal2.setId(111567811);
         FragmentManager.addFragment(linearLayoutHorizontal2.getId(), new BarChartWidgetFragment(), getFragmentManager());
-
-//        linearLayoutHorizontal2.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, 0.4f));
-
-//        TextView LineChartTitle = ViewFactory.createTextView(this, R.style.ChartTitleAppearance,
-//                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "LineChart Title");
-//        linearLayoutHorizontal2.addView(LineChartTitle);
-
-//        LineChart lineChart = ViewFactory.createLineChart(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500),
-//                -35, 50,
-//                -27f, "Lower Limit",
-//                37f, "Upper Limit",
-//                DataFactory.createLineData("Heat", chartDatas));
-
-
         FragmentManager.addFragment(linearLayoutHorizontal2.getId(), new LineChartWidgetFragment(), getFragmentManager());
-//        linearLayoutHorizontal2.addView(lineChart);
-
-
-
         linearLayoutPageInfo.addView(linearLayoutHorizontal2);
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        final TextView gps = ViewFactory.createTextView(this, R.style.TitleAppearance,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "GPS");
-        linearLayoutVertical2.addView(gps);
-
-        longitude = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Longitude: No value yet");
-        linearLayoutVertical2.addView(longitude);
-
-        latitude = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Latitude:  No value yet");
-        linearLayoutVertical2.addView(latitude);
-
-        altitude = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Altitude:  No value yet");
-        linearLayoutVertical2.addView(altitude);
-
-        accuracy = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Accuracy:  No value yet");
-        linearLayoutVertical2.addView(accuracy);
-
-
-        Button gpsPositionButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT), "Get current position");
-        gpsPositionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                positionAsked = true;
-            }
-        });
-        linearLayoutVertical2.addView(gpsPositionButton);
-
+        linearLayoutVertical2.setId(111529861);
+        FragmentManager.addFragment(linearLayoutVertical2.getId(), new GPSWidgetFragment(), getFragmentManager());
         linearLayoutPageInfo.addView(linearLayoutVertical2);
 
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
         LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300));
-
-
-        //linearLayoutVertical3.setId(123423547);
-
-       // FragmentManager.addFragment(linearLayoutVertical3.getId(),  new CameraWidgetFragment(), getFragmentManager());
-
-        imageView = ViewFactory.createImageView(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        imageView.setImageBitmap(ViewUtil.getBitmap(this, R.drawable.focus_logo));
-        imageView.setAdjustViewBounds(true);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
-////                Bitmap bitmap = bitmapDrawable.getBitmap();
-////                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-////                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-////                byte[] bytes = stream.toByteArray();
-//                if (imageUri != null) {
-//                    Intent intent = new Intent("eu.focusnet.app.activity.ImageActivity");
-//                    intent.putExtra("imageUri", imageUri);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-
-
-        linearLayoutVertical3.addView(imageView);
-
-
-
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        linearLayoutVertical3.setId(123423547);
+        FragmentManager.addFragment(linearLayoutVertical3.getId(), new CameraWidgetFragment(), getFragmentManager());
         linearLayoutPageInfo.addView(linearLayoutVertical3);
 
-
-        LinearLayout linearLayoutHorizontalPictureButtons = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-
-        viewButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "View");
-        if(imageUri == null)
-            viewButton.setEnabled(false);
-        viewButton.setOnClickListener(new View.OnClickListener()
-
-                                      {
-                                          @Override
-                                          public void onClick(View v) {
-                                              Intent intent = new Intent(TestActivity.this, ImageActivity.class);
-                                              intent.putExtra("imageUri", imageUri);
-                                              startActivity(intent);
-                                          }
-                                      }
-        );
-
-        deleteButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Delete");
-        if(imageUri == null)
-            deleteButton.setEnabled(false);
-        deleteButton.setOnClickListener(new View.OnClickListener()
-
-                                        {
-                                            @Override
-                                            public void onClick(View v) {
-                                                imageView.setImageBitmap(ViewUtil.getBitmap(TestActivity.this, R.drawable.focus_logo));
-                                                deleteButton.setEnabled(false);
-                                                viewButton.setEnabled(false);
-                                                takePictureButton.setText("Take a Picture");
-                                                imageUri = null;
-                                            }
-                                        }
-        );
-
-
-
-        takePictureButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Take a Picture");
-        takePictureButton.setOnClickListener(new View.OnClickListener()
-
-                                             {
-                                                 @Override
-                                                 public void onClick(View v) {
-                                                     ContentValues values = new ContentValues();
-                                                     values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                                                     values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-                                                     imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                                     startActivityForResult(intent, PICTURE_REQUEST);
-
-                                                 }
-                                             }
-
-        );
-
-
-        linearLayoutHorizontalPictureButtons.addView(takePictureButton);
-        linearLayoutHorizontalPictureButtons.addView(viewButton);
-        linearLayoutHorizontalPictureButtons.addView(deleteButton);
-        linearLayoutHorizontalPictureButtons.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
-
-
-        linearLayoutPageInfo.addView(linearLayoutHorizontalPictureButtons);
-
         linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
-
 
         LinearLayout linearLayoutVerticalForm = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -623,68 +374,13 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICTURE_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                //    Bitmap tookPicture = (Bitmap) data.getExtras().get("data");
-
-//                Bitmap thumbnail = null;
-//                try {
-//                    thumbnail = MediaStore.Images.Media.getBitmap(
-//                            getContentResolver(), imageUri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-                //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                // imageView.setImageBitmap(tookPicture);
-
-
-                imageView.setImageURI(imageUri);
-                deleteButton.setEnabled(true);
-                viewButton.setEnabled(true);
-                takePictureButton.setText("Replace Picture");
-            }
-        }
-        else if(requestCode == EXAMPLE_APP_REQUEST){
+        if(requestCode == EXAMPLE_APP_REQUEST){
             if(resultCode == RESULT_OK){
                 String response = data.getStringExtra(FOCUS_OUTPUT_EXTRA);
                 ViewUtil.displayToast(this, "The response obtained from EXAMPLE_APP was: "+response);
             }
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startLocationUpdates();
-
-    }
-
-    @Override
-    protected void onPause() {
-        stopLocationUpdates();
-        super.onPause();
-    }
-
-    private void startLocationUpdates() {
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-        }
-        googleApiClient.connect();
-    }
-
-    private void stopLocationUpdates() {
-        if (googleApiClient.isConnected()) { // !!!! important to check for service connection
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    googleApiClient, this);
-        }
-
-        googleApiClient.disconnect();
     }
 
     @Override
@@ -707,35 +403,5 @@ public class TestActivity extends BaseActivity implements GoogleApiClient.Connec
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(3000);
-        locationRequest.setFastestInterval(1500);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (positionAsked) {
-            longitude.setText("Longitude: " + location.getLongitude());
-            latitude.setText("Latitude: " + location.getLatitude());
-            altitude.setText("Altitude: " + location.getAltitude());
-            accuracy.setText("Accuracy: " + location.getAccuracy());
-            positionAsked = false;
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 }

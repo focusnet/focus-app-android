@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,6 +27,9 @@ public class PieChartWidgetFragment extends WidgetFragment {
         View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
 
         //TODO values hard coded
+        float half = 0.50f;
+        viewRoot.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
+
         ArrayList<ChartData> chartDatas = new ArrayList<>(4);
         ChartData d = new ChartData("Green", 15, Color.GREEN);
         chartDatas.add(d);
@@ -34,6 +39,7 @@ public class PieChartWidgetFragment extends WidgetFragment {
         chartDatas.add(d);
         d = new ChartData("Yellow", 30, Color.YELLOW);
         chartDatas.add(d);
+
 
         PieData pieData = DataFactory.createPieData(chartDatas, "Colors");
 

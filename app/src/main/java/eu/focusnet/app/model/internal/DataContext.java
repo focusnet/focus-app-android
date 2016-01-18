@@ -5,6 +5,7 @@ import java.util.Map;
 
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.FocusSample;
+import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 13.01.16.
@@ -35,6 +36,8 @@ public class DataContext extends HashMap<String, FocusSample>
 	}
 
 	/**
+	 *
+	 *
 	 * Add a new FocusSample entry in our current data context, based on a description of the
 	 * new data to be included. These descriptions are the ones we can find in the 'data'
 	 * properties of the Application Content template JSON representation.
@@ -155,5 +158,38 @@ public class DataContext extends HashMap<String, FocusSample>
 		for (Map.Entry<String, String> entry : data.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
 		}
+	}
+
+	/**
+	 * Resolve the provided request considering the present data context. e.g.
+	 * <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
+	 * data being stored under the simple-example entry.
+	 *
+	 * If the request format is not recognized, return it as-is.
+	 *
+	 * If the request does not succeed, return FIXME exception or null?
+	 *
+	 * @return
+	 */
+	public Object resolve(String request)
+	{
+		if (!request.startsWith("<ctx/") || !request.endsWith(">")) {
+			return request;
+		}
+		request = request.replace("<", "").replace(">", "");
+
+		String[] parts = request.split("/");
+		if (parts.length < 2) {
+			return null;
+		}
+
+		FocusSample fs = this.get(parts[1]);
+		if (parts.length > 2) {
+			if (fs == null) {
+				return null;
+			}
+			return fs.get(parts[2]);
+		}
+		return fs;
 	}
 }

@@ -1,25 +1,26 @@
 package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.Linker;
 import eu.focusnet.app.model.focus.PageTemplate;
 import eu.focusnet.app.model.focus.ProjectTemplate;
 import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.model.focus.WidgetTemplate;
+import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 12.01.16.
  */
 public class ProjectInstance
 {
-
 	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
+	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
 
 	private String guid = "";
-	private String iterator;
 	private String title; // should be SmartString -> resolved on toString() call
 	private String description;
 
@@ -43,7 +44,7 @@ public class ProjectInstance
 		this.dataContext = dataContext;
 		this.guid = tpl.getGuid();
 		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
-			this.guid = this.guid + "[" + dataContext.get(LABEL_PROJECT_ITERATOR) +"]";
+			this.guid = this.guid + "[" + dataContext.get(LABEL_PROJECT_ITERATOR).getUrl() + "]";
 		}
 
 		this.build();
@@ -65,26 +66,33 @@ public class ProjectInstance
 		// add the project-specific data to our data context
 		this.dataContext.provideData(this.template.getData());
 
-		// FIXME TODO special case: guid == __welcome__
+		// FIXME TODO special case ?: guid == __welcome__ == WELCOME_PROJECT_IDENTIFIER
+		if (this.getGuid().equals(WELCOME_PROJECT_IDENTIFIER)) {
+			this.title = ""; // FIXME i18n string
+			this.description = ""; // FIXME i18n string.
+			this.isValid = true;
+			return;
+		}
 
 		if (this.template.getDashboards() != null) {
-			this.dashboards = this.createPageInstances(this.template.getDashboards());
+			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
 		}
 		if (this.template.getTools() != null) {
-			this.tools = this.createPageInstances(this.template.getTools());
+			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
 		}
+		// FIXME should we add a 'hidden' category?
 
-		this.isValid = true;
+		this.isValid = true; // FIXME may not be true inthe end
 		return;
 	}
 
 	/**
-	 * Create a HashMap of PageInstance based on the provided source definition.
+	 * Create a LinkedHashMap of PageInstance based on the provided source definition.
 	 *
 	 * @param source
 	 * @return
 	 */
-	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<Linker> source)
+	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<Linker> source, PageInstance.PageType type)
 	{
 		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<String, PageInstance>();
 
@@ -92,36 +100,71 @@ public class ProjectInstance
 			String page_id = s.getPageid();
 			PageTemplate pageTpl = this.template.findPage(page_id);
 
-			ArrayList<WidgetInstance> widgets = new ArrayList<WidgetInstance>();
-
+			// if we have an iterator, this means that we must construct multiple times the same page,
+			// but with a different data context each time
 			if (pageTpl.getIterator() != null) {
-				// iterator
-				// FIXME TODO something like this:
-			/*	ArrayList<URL> urls = dataManager.getListOfUrls(pTpl.getIterator().toString(this.dataContext)); // more or less
-				for (URL url : urls) {
-					FocusSample s = dataManager.get(url);
-					HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
-					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
-					ProjectInstance p = new ProjectInstance(pTpl, new_ctx);
-					this.projects.put(p.getGuid(), p);
+				ArrayList<String> urls = null;
+				try {
+					urls = TypesHelper.asArrayOfUrls(
+							this.dataContext.resolve(pageTpl.getIterator())
+					);
 				}
-			*/
-
+				catch (BadTypeException e) {
+					// invalid iterator. ignore but log?
+					// FIXME
+					continue;
+				}
+				for (String url : urls) {
+					DataManager.getInstance().getSample(url);
+					DataContext new_ctx = new DataContext(this.dataContext);
+					new_ctx.put(PageInstance.LABEL_PAGE_ITERATOR, url);
+					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
+					for (WidgetLinker wl : pageTpl.getWidgets()) {
+						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+						WidgetInstance wi = new WidgetInstance(wTpl, wl.getLayout(), new_ctx);
+						widgets.put(wi.getGuid(), wi);
+					}
+					// the guid is adapted in the PageInstance constructor
+					PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
+					ret.put(p.getGuid(), p);
+				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
 				DataContext new_ctx = new DataContext(this.dataContext);
-				//	ArrayList<WidgetInstance> widgets = new ArrayList<WidgetInstance>();
+				LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 				for (WidgetLinker wl : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-					widgets.add(new WidgetInstance(wTpl, wl.getLayout(), new_ctx));
+					WidgetInstance wi = new WidgetInstance(wTpl, wl.getLayout(), new_ctx);
+					widgets.put(wi.getGuid(), wi);
 				}
-				PageInstance p = new PageInstance(pageTpl, widgets, new_ctx);
+				PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
 				ret.put(p.getGuid(), p);
 			}
 
 		}
 		return ret;
+	}
+
+	/**
+	 * Get the page identified by the specified guid, which may contain an iterator specifier
+	 * e.g.
+	 * - my-project
+	 * - my-project[http://www.example.org/data/123]
+	 *
+	 * @param expanded_guid
+	 * @param type Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
+	 * @return
+	 */
+	public PageInstance getPageFromGuid(String expanded_guid, String type)
+	{
+		if (type.equals(PageInstance.PageType.DASHBOARD)) {
+			return this.dashboards.get(expanded_guid);
+		}
+		if (type.equals(PageInstance.PageType.TOOL)) {
+			return this.tools.get(expanded_guid);
+		}
+		return null;
 	}
 
 	/**
@@ -141,5 +184,8 @@ public class ProjectInstance
 	private void retrieveData()
 	{
 		//this.dataContext.put(); // .. augment existing data context.
+
+		// if cannot retrieve, then set the current object to invalid. this will prevent from creating new objects.
+
 	}
 }

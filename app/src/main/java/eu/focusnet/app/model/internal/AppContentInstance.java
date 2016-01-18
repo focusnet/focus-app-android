@@ -3,13 +3,12 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-import eu.focusnet.app.exception.NotImplementedException;
+import eu.focusnet.app.exception.BadTypeException;
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.AppContentTemplate;
-import eu.focusnet.app.model.focus.FocusSample;
 import eu.focusnet.app.model.focus.ProjectTemplate;
+import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 12.01.16.
@@ -32,6 +31,31 @@ public class AppContentInstance
 		this.dataManager = DataManager.getInstance();
 		this.dataContext = new DataContext();
 		this.build();
+		return;
+	}
+
+	/**
+	 * Build a string used as a path identifier, using the specified instance objects.
+	 */
+	public static String buildPath(ProjectInstance project)
+	{
+		return project.getGuid();
+	}
+
+	/**
+	 * Build a string used as a path identifier, using the specified instance objects.
+	 */
+	public static String buildPath(ProjectInstance project, PageInstance page)
+	{
+		return buildPath(project) + "/" + page.getType() + "/" + page.getGuid();
+	}
+
+	/**
+	 * Build a string used as a path identifier, using the specified instance objects.
+	 */
+	public static String buildPath(ProjectInstance project, PageInstance page, WidgetInstance w)
+	{
+		return buildPath(project, page) + w.getGuid();
 	}
 
 	/**
@@ -48,18 +72,26 @@ public class AppContentInstance
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 		for (ProjectTemplate projTpl : projectTemplates) {
 
+			// Iterators use application-level data context list of urls
 			if (projTpl.getIterator() != null) {
-				// FIXME TODO
-				// the iterator uses some of the data that is accessible at application-level (current data-context).
-			/*	ArrayList<URL> urls = dataManager.getListOfUrls(pTpl.getIterator().toString(this.dataContext)); // more or less
-				for (URL url : urls) {
-					FocusSample s = dataManager.get(url);
-					HashMap<String, Object> new_ctx = new HashMap<String, Object>(this.dataContext);
+				ArrayList<String> urls = null;
+				try {
+					urls = TypesHelper.asArrayOfUrls(this.dataContext.resolve(projTpl.getIterator()));
+				}
+				catch (BadTypeException e) {
+					// invalid iterator. ignore and log?
+					// FIXME
+					continue;
+				}
+
+				for (String url : urls) {
+					this.dataManager.getSample(url);
+					DataContext new_ctx = new DataContext(this.dataContext);
 					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
-					ProjectInstance p = new ProjectInstance(pTpl, new_ctx);
+					// the guid is adapted in the ProjectInstance constructor
+					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
 					this.projects.put(p.getGuid(), p);
 				}
-			*/
 			}
 			else {
 				DataContext new_ctx = new DataContext(this.dataContext);
@@ -79,29 +111,70 @@ public class AppContentInstance
 		return this.projects;
 	}
 
-
 	/**
-	 * Get the project identified by the specified path
+	 * Get the project identified by the specified path, which may contain an iterator specifier
+	 * e.g.
+	 * - my-project
+	 * - my-project[http://www.example.org/data/123]
 	 *
 	 * @param path
 	 * @return
 	 */
 	public ProjectInstance getProjectFromPath(String path)
 	{
-		return this.projects.get(path);
+		String[] parts = path.split("\\|");
+		if (parts.length >= 1) {
+			return this.projects.get(parts[0]);
+		}
+		return null;// exception instead ?
 	}
 
 	/**
-	 * Get the page identified by the specified path.
+	 * Get the page identified by the specified path, which may contain iterators specifiers, e.g.
+	 * - my-project|dashboards|my-page
+	 * - my-project[http://www.example.org/data/123]|dashboards|my-page
+	 * - my-project|tools|my-page[http://www.example.org/data/456]
+	 * - my-project[http://www.example.org/data/123]|tools|my-page[http://www.example.org/data/456]
 	 *
 	 * @param path
 	 * @return
 	 */
 	public PageInstance getPageFromPath(String path)
 	{
-		// disect path
-		// project[uri]|dashboard|page[uri]
-		throw new NotImplementedException("AppContentInstance.getPageFromPath()");
+		ProjectInstance pr = this.getProjectFromPath(path);
+		if (pr == null) {
+			return null;
+		}
+		String[] parts = path.split("\\|");
+		if (parts.length >= 3) {
+			return pr.getPageFromGuid(parts[1], parts[2]);
+		}
+		return null;// exception instead ?
+	}
+
+
+	/**
+	 * Get the widget object identified by the specified path. It may contain iterators specifiers
+	 * for the project and page parts, e.g.
+	 * - my-project|dashboards|my-page|widget-id
+	 * - my-project[http://www.example.org/data/123]|dashboards|my-page|widget-id
+	 * - my-project|tools|my-page[http://www.example.org/data/456]|widget-id
+	 * - my-project[http://www.example.org/data/123]|tools|my-page[http://www.example.org/data/456]|widget-id
+	 *
+	 * @param path
+	 * @return
+	 */
+	public WidgetInstance getWidgetFromPath(String path)
+	{
+		PageInstance p = this.getPageFromPath(path);
+		if (p == null) {
+			return null;
+		}
+		String[] parts = path.split("\\|");
+		if (parts.length >= 4) {
+			return p.widgets.get(parts[3]);
+		}
+		return null; // exception instead ?
 	}
 
 

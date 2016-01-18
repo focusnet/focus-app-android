@@ -5,7 +5,7 @@ package eu.focusnet.app.model.focus;
  */
 public class FocusSample extends FocusObject
 {
-	FocusSampleDataMap data;
+	FocusSampleDataMap data = null;
 	// more complex deserializers like URL or BigInteger cannot work because this object Object is too generic.
 
 	/**
@@ -14,7 +14,7 @@ public class FocusSample extends FocusObject
 	public FocusSample()
 	{
 		this.data = new FocusSampleDataMap();
-	} // FIXME are other FocusObject attributes set as well ?
+	} // FIXME are other FocusObject attributes set as well ? no. can only access to content of this.data.
 
 	/**
 	 * Add a key-value pair to the data HashMap
@@ -27,7 +27,19 @@ public class FocusSample extends FocusObject
 		this.data.put(s, o);
 	}
 
-    /*
+	/**
+	 * Generic get() method for the content of the data map
+	 *
+	 * @param identifier
+	 * @return
+	 */
+	public Object get(String identifier)
+	{
+		return this.data.get(identifier);
+	}
+
+
+	/*
 	FIXME TODO
     public Object get(key) { return data.get(key); }
 

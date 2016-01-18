@@ -149,6 +149,9 @@ public class DataContext extends HashMap<String, FocusSample>
 	 */
 	public void provideData(HashMap<String, String> data)
 	{
+		if (data == null) {
+			return;
+		}
 		for (Map.Entry<String, String> entry : data.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
 		}

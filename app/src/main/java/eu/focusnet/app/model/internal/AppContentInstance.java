@@ -47,7 +47,7 @@ public class AppContentInstance
 	 */
 	public static String buildPath(ProjectInstance project, PageInstance page)
 	{
-		return buildPath(project) + "/" + page.getType() + "/" + page.getGuid();
+		return buildPath(project) + "|" + page.getType() + "|" + page.getGuid();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class AppContentInstance
 	 */
 	public static String buildPath(ProjectInstance project, PageInstance page, WidgetInstance w)
 	{
-		return buildPath(project, page) + w.getGuid();
+		return buildPath(project, page) + "|" + w.getGuid();
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class AppContentInstance
 		}
 		String[] parts = path.split("\\|");
 		if (parts.length >= 3) {
-			return pr.getPageFromGuid(parts[1], parts[2]);
+			return pr.getPageFromGuid(parts[2], parts[1]);
 		}
 		return null;// exception instead ?
 	}

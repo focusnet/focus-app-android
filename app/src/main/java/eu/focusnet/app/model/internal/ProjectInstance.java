@@ -158,10 +158,14 @@ public class ProjectInstance
 	 */
 	public PageInstance getPageFromGuid(String expanded_guid, String type)
 	{
-		if (type.equals(PageInstance.PageType.DASHBOARD)) {
-			return this.dashboards.get(expanded_guid);
+		PageInstance.PageType p1 = PageInstance.PageType.DASHBOARD;
+		String t = type;
+		String t2 = p1.toString();
+		if (type.equals(PageInstance.PageType.DASHBOARD.toString())) {
+			PageInstance p = this.dashboards.get(expanded_guid);
+			return p;
 		}
-		if (type.equals(PageInstance.PageType.TOOL)) {
+		if (type.equals(PageInstance.PageType.TOOL.toString())) {
 			return this.tools.get(expanded_guid);
 		}
 		return null;

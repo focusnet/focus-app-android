@@ -68,7 +68,7 @@ public class BookmarkLinkDao {
         //TODO may this method return more than one bookmarklink?
         String[] params = {path, bl_type};
         BookmarkLink bookmarkLink = null;
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.PATH+"=? AND "+Constant.BL_TYPE+"=?", params, null, null, null);
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.PATH +"=? AND "+Constant.BL_TYPE+"=?", params, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()) {
                 bookmarkLink = getBookmarkLink(cursor);
@@ -102,7 +102,7 @@ public class BookmarkLinkDao {
     public boolean deleteBookmarkLing(String path, String bl_type, Long fk_bookmarks_id){
         String[] params = {path, bl_type, String.valueOf(fk_bookmarks_id)};
         return database.delete(Constant.DATABASE_TABLE_BOOKMARK_LINK,
-                Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.FK_BOOKMARK_ID+"=?", params) > 0;
+                Constant.PATH +"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.FK_BOOKMARK_ID+"=?", params) > 0;
     }
 
     //TODO update

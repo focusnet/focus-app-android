@@ -22,12 +22,14 @@ public class PageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         String pageTitle = getIntent().getStringExtra(Constant.TITLE);
-        String pageId = getIntent().getStringExtra(Constant.PATH);
+        String pageId = getIntent().getStringExtra(Constant.PAGE_PATH);
+        String projectId = getIntent().getStringExtra(Constant.PROJECT_PATH);
         setTitle(pageTitle);
 
         Fragment fragment = new PageFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.PATH, pageId);
+        bundle.putString(Constant.PAGE_PATH, pageId);
+        bundle.putString(Constant.PROJECT_PATH, projectId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.page_container, fragment, getFragmentManager());
     }

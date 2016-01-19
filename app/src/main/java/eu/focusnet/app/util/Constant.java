@@ -25,6 +25,9 @@ public class Constant {
                                BOOKMARK_TYPE = "BookmarkType",
                                IS_TO_SAVE = "isToSave";
 
+    public static final String PAGE_PATH = "PagePath",
+                               PROJECT_PATH = "ProjectPath";
+
 
 
     //Common for some tables
@@ -110,7 +113,7 @@ public class Constant {
     public static final String CREATE_TABLE_BOOKMARK_LINK_QUERY = "CREATE TABLE "+ DATABASE_TABLE_BOOKMARK_LINK +""+
                                 "("+ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
                                 NAME+" TEXT, " +
-                                PATH+" TEXT, " +
+            PATH +" TEXT, " +
                                 ORDER+" INTEGER, " +
                                 BL_TYPE+" TEXT, "+
                                 FK_BOOKMARK_ID +" INTEGER,"+
@@ -231,6 +234,7 @@ public class Constant {
             FK_PAGE_ID+ " TEXT,"+
             "FOREIGN KEY ("+ FK_WIDGET_ID+") REFERENCES "+ DATABASE_TABLE_WIDGET +"("+ ID +") "+
             "FOREIGN KEY ("+ FK_PAGE_ID+") REFERENCES "+ DATABASE_TABLE_PAGE +"("+ ID +"))";
+
 
     //End table WidgetLinker
 

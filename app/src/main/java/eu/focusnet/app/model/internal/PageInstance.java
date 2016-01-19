@@ -74,8 +74,13 @@ public class PageInstance
 		return this.type;
 	}
 
+	public LinkedHashMap<String, WidgetInstance> getWidgets() {
+		return widgets;
+	}
+
 	/**
 	 * Get the page title (resolved within the current data context)
+
 	 *
 	 * @return
 	 */

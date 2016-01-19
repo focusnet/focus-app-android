@@ -15,4 +15,11 @@ public abstract class WidgetFragment extends Fragment{
 
     @Override
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+
+    //TODO
+    // 1 - get Constant PATH
+    // 2 - getWidgetfromPath
+
+
 }

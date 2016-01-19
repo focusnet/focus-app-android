@@ -2,8 +2,6 @@ package eu.focusnet.app.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import eu.focusnet.app.R;
@@ -30,18 +28,18 @@ public class ProjectActivity extends BaseActivity {
         if(savedInstanceState == null) {
             projectTitle = getIntent().getStringExtra(Constant.TITLE);
             //Path is the same as projectId
-            projectId = getIntent().getStringExtra(Constant.PATH);
+            projectId = getIntent().getStringExtra(Constant.PROJECT_PATH);
         }
         else{
             projectTitle = savedInstanceState.getString(Constant.TITLE);
             //Path is the same as projectId
-            projectId = savedInstanceState.getString(Constant.PATH);
+            projectId = savedInstanceState.getString(Constant.PROJECT_PATH);
         }
 
         setTitle(projectTitle);
         Fragment fragment = new ProjectFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.PATH, projectId);
+        bundle.putString(Constant.PROJECT_PATH, projectId);
         fragment.setArguments(bundle);
         FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
     }
@@ -55,7 +53,7 @@ public class ProjectActivity extends BaseActivity {
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
         saveInstanceState.putString(Constant.TITLE, projectTitle);
-        saveInstanceState.putString(Constant.PATH, projectId);
+        saveInstanceState.putString(Constant.PROJECT_PATH, projectId);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package eu.focusnet.app.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import eu.focusnet.app.common.WidgetFragment;
  */
 public class FormWidgetFragment extends WidgetFragment {
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,4 +24,5 @@ public class FormWidgetFragment extends WidgetFragment {
 
         return viewRoot;
     }
+
 }

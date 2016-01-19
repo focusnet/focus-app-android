@@ -106,7 +106,7 @@ public class AppContentInstance
 	 *
 	 * @return
 	 */
-	public HashMap<String, ProjectInstance> getProjects()
+	public LinkedHashMap<String, ProjectInstance> getProjects()
 	{
 		return this.projects;
 	}

@@ -188,4 +188,20 @@ public class ProjectInstance
 		// if cannot retrieve, then set the current object to invalid. this will prevent from creating new objects.
 
 	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public LinkedHashMap<String, PageInstance> getDashboards() {
+		return dashboards;
+	}
+
+	public LinkedHashMap<String, PageInstance> getTools() {
+		return tools;
+	}
 }

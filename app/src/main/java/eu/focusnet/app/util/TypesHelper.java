@@ -31,8 +31,40 @@ public class TypesHelper
 	 */
 	public static String asString(Object obj) throws BadTypeException
 	{
+		if (obj instanceof ArrayList) {
+			throw new BadTypeException("Array cannot be converted to string.");
+		}
+		if (obj instanceof String || obj instanceof Double || obj instanceof Integer) {
+			return obj.toString();
+		}
+		throw new BadTypeException("Unsupported type");
+	}
+
+	public static Double asDouble(Object obj) throws BadTypeException
+	{
 		return null;
 	}
+
+	public static Integer asInteger(Object obj) throws BadTypeException
+	{
+		return null;
+	}
+
+	public static String[] asArrayOfStrings(Object obj) throws BadTypeException
+	{
+		return null;
+	}
+
+	public static Integer[] asArrayOfIntegers(Object obj) throws BadTypeException
+	{
+		return null;
+	}
+
+	public static Double[] asArrayOfDoubles(Object obj) throws BadTypeException
+	{
+		return null;
+	}
+
 
 	/**
 	 * Make sure that the provided object in an ArrayList of URLs (as Strings), or throw an exception.
@@ -49,7 +81,7 @@ public class TypesHelper
 		if (!(o instanceof ArrayList)) {
 			throw new BadTypeException("Not an ArrayList");
 		}
-		for (Object o2 : (ArrayList)o) {
+		for (Object o2 : (ArrayList) o) {
 			if (!(o2 instanceof String)) {
 				throw new BadTypeException("Entry of ArrayList is not a String.");
 			}
@@ -60,7 +92,7 @@ public class TypesHelper
 				throw new BadTypeException("Entry of ArrayList is not a URL.");
 			}
 		}
-		return (ArrayList<String>)o;
+		return (ArrayList<String>) o;
 	}
 
 

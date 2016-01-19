@@ -19,6 +19,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PageDao;
 import eu.focusnet.app.db.WidgetDao;
+import eu.focusnet.app.model.focus.FocusSampleDataMap;
 import eu.focusnet.app.model.focus.PageTemplate;
 import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.model.focus.WidgetLinker;
@@ -140,12 +141,12 @@ public class PageFragment extends Fragment {
                                 new LinearLayout.LayoutParams(linearLayoutWidth, LinearLayout.LayoutParams.WRAP_CONTENT, weight),
                                 null);
                         widgetParam.setBackgroundColor(new Random().nextInt());
-                        Map<String, String> params = widget.getParams();
+                        FocusSampleDataMap params = widget.getParams();
 
                         if (params != null) {
                             String text = null;
-                            for (Map.Entry<String, String> entry : params.entrySet()) {
-                                text = entry.getValue();
+                            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                                text = entry.getValue().toString();
                             }
                             widgetParam.setText(text);
                         }

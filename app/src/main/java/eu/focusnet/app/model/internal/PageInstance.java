@@ -22,6 +22,8 @@ public class PageInstance
 	private PageTemplate template = null;
 	private String guid = "";
 	private PageType type = null;
+	private String title = null;
+	private String description = null;
 	private boolean isValid = false; // <=> all widgets are valid
 	LinkedHashMap<String, WidgetInstance> widgets = null; // layout + widgetdefinition, with dataContext.
 	DataContext dataContext = null;
@@ -48,17 +50,8 @@ public class PageInstance
 		// add page-specific data to our current data context
 		this.dataContext.provideData(this.template.getData());
 
-		/*
-		guid
-		title
-		description
-		widgets[]
-		 */df
-		// also title and other values that may have to be resolved?
-
-		// set validity depending on widgets validity and dataContext resolution?
-
-		// This.build()?
+		this.title = pageTpl.getTitle(); // FIXME resolve?
+		this.description = pageTpl.getDescription(); // FIXME resolve?
 	}
 
 	/**
@@ -79,6 +72,26 @@ public class PageInstance
 	public PageType getType()
 	{
 		return this.type;
+	}
+
+	/**
+	 * Get the page title (resolved within the current data context)
+	 *
+	 * @return
+	 */
+	public String getTitle()
+	{
+		return title;
+	}
+
+	/**
+	 * Get the description (resolved within the current data context)
+	 *
+	 * @return
+	 */
+	public String getDescription()
+	{
+		return description;
 	}
 
 	/**

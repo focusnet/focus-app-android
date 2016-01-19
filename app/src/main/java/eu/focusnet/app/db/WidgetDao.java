@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
+import eu.focusnet.app.model.focus.FocusSampleDataMap;
 import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.util.Constant;
 
@@ -83,8 +84,8 @@ public class WidgetDao {
         String paramsJson = cursor.getString(cursor.getColumnIndex(Constant.PARAMS));
         if(paramsJson != null) {
             Gson gson = new GsonBuilder().create();
-            Type typeOfMap = new TypeToken<Map<String, String>>(){}.getType();
-            Map<String, String> params = gson.fromJson(paramsJson, typeOfMap);
+            Type typeOfMap = new TypeToken<FocusSampleDataMap>(){}.getType();
+            FocusSampleDataMap params = gson.fromJson(paramsJson, typeOfMap);
            widget.setParams(params);
         }
         return widget;

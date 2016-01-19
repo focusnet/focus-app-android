@@ -14,7 +14,7 @@ public class FocusSample extends FocusObject
 	public FocusSample()
 	{
 		this.data = new FocusSampleDataMap();
-	} // FIXME are other FocusObject attributes set as well ? no. can only access to content of this.data.
+	}
 
 	/**
 	 * Add a key-value pair to the data HashMap

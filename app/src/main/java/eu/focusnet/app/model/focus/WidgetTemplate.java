@@ -10,9 +10,9 @@ public class WidgetTemplate
 
     private String guid,
                    type;
-    private Map<String, String> params;
+    private FocusSampleDataMap params;
 
-    public WidgetTemplate(String guid, String type, Map<String, String> params) {
+    public WidgetTemplate(String guid, String type, FocusSampleDataMap params) {
         this.guid = guid;
         this.type = type;
         this.params = params;
@@ -36,11 +36,11 @@ public class WidgetTemplate
         this.type = type;
     }
 
-    public Map<String, String> getParams() {
+    public FocusSampleDataMap getParams() {
         return params;
     }
 
-    public void setParams(Map<String, String> params) {
+    public void setParams(FocusSampleDataMap params) {
         this.params = params;
     }
 }

@@ -1,9 +1,18 @@
 package eu.focusnet.app.model.internal;
 
+import android.graphics.Color;
+
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.PercentFormatter;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 import eu.focusnet.app.model.focus.WidgetTemplate;
+import eu.focusnet.app.model.ui.ChartData;
+import eu.focusnet.app.util.DataFactory;
 import eu.focusnet.app.util.TypesHelper;
 
 /**
@@ -37,21 +46,18 @@ public class PieChartWidgetInstance extends WidgetInstance
 	@Override
 	void processConfig()
 	{
-		if (1==1) {
-			return;
-		}
-
 		this.caption = "";
 		this.numberOfParts = 0;
+		this.labels = new ArrayList<String>();
+		this.values = new ArrayList<Double>();
 
 		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
 		ArrayList a = (ArrayList) this.config.get(CONFIG_LABEL_PARTS);
 		for (Map m : (ArrayList<Map>)a) {
-			String l = TypesHelper.asString(m.get(CONFIG_LABEL_LABEL));
 			Double d = 1.0; // FIXME TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE));
 
 			this.labels.add(TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)));
-			this.values.add(TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE)));
+			this.values.add(1.0 /*TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE))*/);
 			++this.numberOfParts;
 		}
 		return;
@@ -74,6 +80,16 @@ public class PieChartWidgetInstance extends WidgetInstance
 	public int getNumberOfParts()
 	{
 		return this.numberOfParts;
+	}
+
+	public ArrayList<String> getLabels()
+	{
+		return this.labels;
+	}
+
+	public ArrayList<Double> getValues()
+	{
+		return this.values;
 	}
 
 }

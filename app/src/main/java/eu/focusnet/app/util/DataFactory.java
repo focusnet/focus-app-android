@@ -20,6 +20,7 @@ import eu.focusnet.app.model.ui.ChartData;
  */
 public class DataFactory {
 
+    /* moved to piechartwidgetinstance
     public static PieData createPieData(ArrayList<ChartData> chartDatas, String description) {
 
         //number of different participants x-axis
@@ -49,7 +50,7 @@ public class DataFactory {
         data.setValueTextColor(Color.WHITE);
         return data;
     }
-
+*/
 
     public static BarData createBarData(ArrayList<ChartData> chartDatas, String description) {
 

@@ -80,7 +80,7 @@ public class DataManager // FIXME a service?
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-2.json";
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-1.json";
 	}
 
 	/**

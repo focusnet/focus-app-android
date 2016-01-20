@@ -20,17 +20,17 @@ public class ProjectInstance
 	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
 	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
 
-	private String guid = "";
+	private String guid;
 	private String title; // should be SmartString -> resolved on toString() call
 	private String description;
 
-	private LinkedHashMap<String, PageInstance> dashboards = new LinkedHashMap<String, PageInstance>();
-	private LinkedHashMap<String, PageInstance> tools = new LinkedHashMap<String, PageInstance>();
+	private LinkedHashMap<String, PageInstance> dashboards;
+	private LinkedHashMap<String, PageInstance> tools;
 
-	private ProjectTemplate template = null;
-	private DataContext dataContext = null;
+	private ProjectTemplate template;
+	private DataContext dataContext;
 
-	private boolean isValid = false;
+	private boolean isValid;
 
 	/**
 	 * C'tor
@@ -43,6 +43,9 @@ public class ProjectInstance
 		this.template = tpl;
 		this.dataContext = dataContext;
 		this.guid = tpl.getGuid();
+		this.dashboards = new LinkedHashMap<String, PageInstance>();
+		this.tools = new LinkedHashMap<String, PageInstance>();
+		this.isValid = false;
 		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
 			this.guid = this.guid + "[" + dataContext.get(LABEL_PROJECT_ITERATOR).getUrl() + "]";
 		}
@@ -121,8 +124,8 @@ public class ProjectInstance
 					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 					for (WidgetLinker wl : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-						WidgetInstance wi = new WidgetInstance(wTpl, wl.getLayout(), new_ctx);
-						widgets.put(wi.getGuid(), wi);
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_ctx);
+						widgets.put(wi.getGuid(), wi); // FIXME if widget-id is same as a previous widget, we won't have 2x the widget.
 					}
 					// the guid is adapted in the PageInstance constructor
 					PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
@@ -135,7 +138,7 @@ public class ProjectInstance
 				LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 				for (WidgetLinker wl : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-					WidgetInstance wi = new WidgetInstance(wTpl, wl.getLayout(), new_ctx);
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_ctx);
 					widgets.put(wi.getGuid(), wi);
 				}
 				PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);

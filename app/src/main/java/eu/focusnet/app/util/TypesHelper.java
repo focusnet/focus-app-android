@@ -1,5 +1,6 @@
 package eu.focusnet.app.util;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class TypesHelper
 	 */
 	public static String asString(Object obj) throws BadTypeException
 	{
+		if (obj == null) {
+			return "";
+		}
 		if (obj instanceof ArrayList) {
 			throw new BadTypeException("Array cannot be converted to string.");
 		}
@@ -50,17 +54,32 @@ public class TypesHelper
 		return null;
 	}
 
-	public static String[] asArrayOfStrings(Object obj) throws BadTypeException
+	public static ArrayList<String> asArrayOfStrings(Object obj) throws BadTypeException
+	{
+		// obj should be an array list,
+		// each element should be a scalar -> toSTring() it.
+		// if any error, ClassCastException | BadTypeException
+		if (!(obj instanceof ArrayList)) {
+			throw new BadTypeException("Provided values are not an ArrayList");
+		}
+		ArrayList<String> ret = new ArrayList<String>();
+		for(Object o2 : (ArrayList)obj) {
+			if (o2 instanceof String || o2 instanceof Double || o2 instanceof Integer) {
+				ret.add(o2.toString());
+			}
+			else {
+				throw new BadTypeException("Invalid value in array");
+			}
+		}
+		return ret;
+	}
+
+	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws BadTypeException
 	{
 		return null;
 	}
 
-	public static Integer[] asArrayOfIntegers(Object obj) throws BadTypeException
-	{
-		return null;
-	}
-
-	public static Double[] asArrayOfDoubles(Object obj) throws BadTypeException
+	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws BadTypeException
 	{
 		return null;
 	}

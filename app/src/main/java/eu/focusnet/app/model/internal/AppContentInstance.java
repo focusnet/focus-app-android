@@ -15,10 +15,10 @@ import eu.focusnet.app.util.TypesHelper;
  */
 public class AppContentInstance
 {
-	private DataManager dataManager = null;
-	private AppContentTemplate appTemplate = null;
-	private LinkedHashMap<String, ProjectInstance> projects = new LinkedHashMap<String, ProjectInstance>();
-	private DataContext dataContext = null;
+	private DataManager dataManager;
+	private AppContentTemplate appTemplate;
+	private LinkedHashMap<String, ProjectInstance> projects;
+	private DataContext dataContext;
 
 	/**
 	 * C'tor
@@ -28,6 +28,7 @@ public class AppContentInstance
 	public AppContentInstance(AppContentTemplate tpl)
 	{
 		this.appTemplate = tpl;
+		this.projects = new LinkedHashMap<String, ProjectInstance>();
 		this.dataManager = DataManager.getInstance();
 		this.dataContext = new DataContext();
 		this.build();
@@ -73,6 +74,8 @@ public class AppContentInstance
 		for (ProjectTemplate projTpl : projectTemplates) {
 
 			// Iterators use application-level data context list of urls
+			String x = projTpl.getIterator();
+
 			if (projTpl.getIterator() != null) {
 				ArrayList<String> urls = null;
 				try {

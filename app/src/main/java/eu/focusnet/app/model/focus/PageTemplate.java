@@ -14,7 +14,7 @@ public class PageTemplate
 			title,
 			description;
 
-	private String iterator; //TODO define this object
+	private String iterator;
 
 	private LinkedHashMap<String, String> data = null;
 

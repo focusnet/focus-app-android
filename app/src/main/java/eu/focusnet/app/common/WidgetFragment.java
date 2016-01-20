@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import eu.focusnet.app.manager.DataManager;
+import eu.focusnet.app.model.internal.TableWidgetInstance;
+import eu.focusnet.app.model.internal.WidgetInstance;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
@@ -26,6 +30,12 @@ public abstract class WidgetFragment extends Fragment{
         int linearLayoutHeight = arguments.getInt(ViewUtil.LAYOUT_HEIGHT);
         int linearLayoutWeight  = arguments.getInt(ViewUtil.LAYOUT_WEIGHT);
         viewRoot.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));
+    }
+
+    public WidgetInstance getWidgetInstance(){
+        Bundle bundles = getArguments();
+        String path = bundles.getString(Constant.PATH);
+        return  DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
     }
 
 }

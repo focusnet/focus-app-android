@@ -28,9 +28,7 @@ public class TableWidgetFragment extends WidgetFragment {
 
         setWidgetLayout(viewRoot);
 
-        Bundle bundles = getArguments();
-        String path = bundles.getString(Constant.PATH);
-        TableWidgetInstance tableInstance = (TableWidgetInstance) DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
+        TableWidgetInstance tableInstance = (TableWidgetInstance) getWidgetInstance();
 
         TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
         SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), tableInstance.getTableHeaders());

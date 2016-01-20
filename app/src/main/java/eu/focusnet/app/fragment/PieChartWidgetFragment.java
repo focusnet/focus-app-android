@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -17,6 +18,7 @@ import com.github.mikephil.charting.utils.PercentFormatter;
 import java.util.ArrayList;
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
+import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.internal.PieChartWidgetInstance;
 import eu.focusnet.app.model.ui.ChartData;
 import eu.focusnet.app.util.DataFactory;
@@ -31,37 +33,14 @@ public class PieChartWidgetFragment extends WidgetFragment {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
 
-        //TODO uncomment this when the hardcode values are moved
-        //setWidgetLayout(viewRoot);
+        setWidgetLayout(viewRoot);
 
-        //TODO values hard coded
-        float half = 0.50f;
-        viewRoot.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));
+        PieChartWidgetInstance w = (PieChartWidgetInstance) getWidgetInstance();
 
-        PieChartWidgetInstance w = new PieChartWidgetInstance(); // FIXME this one should come from the path passed via the bundle
-/*
-        ArrayList<ChartData> chartDatas = new ArrayList<>(4);
-        ChartData d = new ChartData("Green", 15, Color.GREEN);
-        chartDatas.add(d);
-        d = new ChartData("Red", 40, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("Blue", 15, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("Yellow", 30, Color.YELLOW);
-        chartDatas.add(d);
-*/
-
-  //      PieData pieData = DataFactory.createPieData(chartDatas, "Colors");
-
-
-
+        TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
+        piechartTitle.setText(w.getTitle());
 
         ArrayList<Entry> yVals = new ArrayList<>();
-
-        // add colors
-        //ArrayList<Integer> colors = new ArrayList<>();
-
-
 
         for(int i = 0; i < w.getValues().size(); i++) {
             float d = w.getValues().get(i).floatValue();

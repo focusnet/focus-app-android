@@ -208,7 +208,10 @@ public class ViewUtil {
             Bundle widgetBundle = new Bundle();
             widgetBundle.putString(Constant.PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
             widgetBundle.putInt(LAYOUT_WIDTH, linearLayoutWidth);
-            widgetBundle.putInt(LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            if(widgetFragment instanceof TableWidgetFragment) // FIXME FIXME height may depend on widget type and content !
+                widgetBundle.putInt(LAYOUT_HEIGHT, 500);
+            else
+                widgetBundle.putInt(LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
             widgetBundle.putInt(LAYOUT_WEIGHT, weight);
             widgetFragment.setArguments(widgetBundle);
 

@@ -37,6 +37,10 @@ public class PieChartWidgetInstance extends WidgetInstance
 	@Override
 	void processConfig()
 	{
+		if (1==1) {
+			return;
+		}
+
 		this.caption = "";
 		this.numberOfParts = 0;
 

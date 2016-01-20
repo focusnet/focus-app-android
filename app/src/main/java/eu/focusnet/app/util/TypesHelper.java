@@ -46,7 +46,21 @@ public class TypesHelper
 
 	public static Double asDouble(Object obj) throws BadTypeException
 	{
-		return null;
+		if (obj instanceof Double) {
+			return (Double) obj;
+		}
+		if (obj instanceof Integer) {
+			return (Double) obj;
+		}
+		if (obj instanceof String) {
+			try {
+				return Double.parseDouble((String)obj);
+			}
+			catch (NumberFormatException e) {
+				throw new BadTypeException("not a valid double string");
+			}
+		}
+		throw new BadTypeException("Not a Double");
 	}
 
 	public static Integer asInteger(Object obj) throws BadTypeException

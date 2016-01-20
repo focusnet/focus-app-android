@@ -54,13 +54,10 @@ public class PieChartWidgetInstance extends WidgetInstance
 		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
 		ArrayList a = (ArrayList) this.config.get(CONFIG_LABEL_PARTS);
 		for (Map m : (ArrayList<Map>)a) {
-			Double d = 1.0; // FIXME TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE));
-
 			this.labels.add(TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)));
-			this.values.add(1.0 /*TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE))*/);
+			this.values.add(TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE)));
 			++this.numberOfParts;
 		}
-		return;
 	}
 
 	/**

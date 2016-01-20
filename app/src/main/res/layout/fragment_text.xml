@@ -8,14 +8,14 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Text Title"
-        android:id="@+id/textTitle"
+        android:id="@+id/text_title"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="This is a very short text"
-        android:id="@+id/text"
+        android:id="@+id/text_content"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

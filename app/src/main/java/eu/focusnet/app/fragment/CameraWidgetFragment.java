@@ -32,6 +32,8 @@ public class CameraWidgetFragment extends WidgetFragment {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_camera, container, false);
 
+        setWidgetLayout(viewRoot);
+
         imageView = (ImageView) viewRoot.findViewById(R.id.picture);
 
         viewButton = (Button) viewRoot.findViewById(R.id.button_view);

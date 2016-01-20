@@ -12,6 +12,8 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
+import eu.focusnet.app.manager.DataManager;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by yandypiedra on 13.01.16.
@@ -22,6 +24,13 @@ public class TableWidgetFragment extends WidgetFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_table, container, false);
+
+        //TODO uncomment this when the hardcode values are moved
+        //setWidgetLayout(viewRoot);
+
+        Bundle bundles = getArguments();
+        String path = bundles.getString(Constant.PATH);
+        TableWidgetInstance tableInstance = DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
 
         //TODO values hard coded
         float half = 0.50f;

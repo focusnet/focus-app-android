@@ -29,6 +29,9 @@ public class BarChartWidgetFragment extends WidgetFragment {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
 
+        //TODO uncomment this when the hardcode values are moved
+        //setWidgetLayout(viewRoot);
+
         //TODO values hard coded
         viewRoot.getLayoutParams().height = 550;
 

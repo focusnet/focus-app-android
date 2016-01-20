@@ -9,18 +9,16 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
 
 /**
- * Created by admin on 18.01.2016.
+ * Created by yandypiedra on 20.01.16.
  */
-public class TextWidgetFragment extends WidgetFragment {
-
+public class EmptyWidgetFragment extends WidgetFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
+        View viewRoot= inflater.inflate(R.layout.fragment_empty, container, false);
         setWidgetLayout(viewRoot);
-
-//      viewRoot.setBackgroundColor(new Random().nextInt());
 
         return viewRoot;
     }
+
 }

@@ -29,6 +29,8 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_gps, container, false);
 
+        setWidgetLayout(viewRoot);
+
         longitudeValue = (TextView) viewRoot.findViewById(R.id.text_longitude_value);
 
         latitudeValue =  (TextView) viewRoot.findViewById(R.id.text_latitude_value);

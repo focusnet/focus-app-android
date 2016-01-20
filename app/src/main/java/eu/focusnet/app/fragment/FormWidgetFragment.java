@@ -20,6 +20,9 @@ public class FormWidgetFragment extends WidgetFragment {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_form, container, false);
 
+        //TODO uncomment this when the hardcode values are moved
+        //setWidgetLayout(viewRoot);
+
         //TODO find widgets by id and add listeners to buttons
 
         return viewRoot;

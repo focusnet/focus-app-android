@@ -31,9 +31,12 @@ public class LineChartWidgetFragment extends WidgetFragment{
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_linechart, container, false);
 
+        //TODO uncomment this when the hardcode values are moved
+        //setWidgetLayout(viewRoot);
 
         //TODO values hard coded
         viewRoot.getLayoutParams().height = 550;
+
 
 
         ArrayList<ChartData> chartDatas = new ArrayList<>(8);

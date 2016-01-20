@@ -31,6 +31,7 @@ import eu.focusnet.app.model.internal.WidgetInstance;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.NavigationUtil;
 import eu.focusnet.app.util.ViewFactory;
+import eu.focusnet.app.util.ViewUtil;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
@@ -43,6 +44,7 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View viewRoot =  inflater.inflate(R.layout.fragment_page, container, false);
         Bundle bundle = getArguments();
@@ -55,20 +57,22 @@ public class PageFragment extends Fragment {
         ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
         PageInstance pageInstance = appContentInstance.getPageFromPath(pagePath);
 
-        LinkedHashMap<String, WidgetInstance> widgetInstances = pageInstance.getWidgets();
+        LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
 
-        for(Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()){
-            WidgetInstance widgetInstance = entry.getValue();
-            WidgetFragment widgetFragment = ViewFactory.getWidgetFragmentByType(widgetInstance.getType());
-            Bundle widgetBundle = new Bundle();
-            widgetBundle.putString(Constant.PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
+        ViewUtil.buildPageView(projectInstance, pageInstance, linearLayoutPageInfo, getActivity());
 
-            //Test
-            LinearLayout linearLayoutPageInfo = (LinearLayout) getView().findViewById(R.id.pageInfo);
-            linearLayoutPageInfo.setId(97432);
-            FragmentManager.addFragment(linearLayoutPageInfo.getId(), widgetFragment, getFragmentManager());
-        }
+//        LinkedHashMap<String, WidgetInstance> widgetInstances = pageInstance.getWidgets();
 
+//        for(Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()){
+//            WidgetInstance widgetInstance = entry.getValue();
+//            WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
+//            Bundle widgetBundle = new Bundle();
+//            widgetBundle.putString(Constant.PATH, appContentInstance.buildPath(projectInstance, pageInstance, widgetInstance));
+//            widgetFragment.setArguments(widgetBundle);
+//            //Test
+//            LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
+//            FragmentManager.addFragment(linearLayoutPageInfo.getId(), widgetFragment, getFragmentManager());
+//        }
 
         return viewRoot;
     }

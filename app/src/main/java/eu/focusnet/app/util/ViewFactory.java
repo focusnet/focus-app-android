@@ -39,6 +39,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.fragment.BarChartWidgetFragment;
+import eu.focusnet.app.fragment.CameraWidgetFragment;
 import eu.focusnet.app.fragment.FormWidgetFragment;
 import eu.focusnet.app.fragment.GPSWidgetFragment;
 import eu.focusnet.app.fragment.LineChartWidgetFragment;
@@ -53,37 +54,6 @@ import static eu.focusnet.app.R.drawable.custom_progress_dialog_animation;
  * Factory for creating different android views
  */
 public class ViewFactory {
-
-    private static Map<String, WidgetFragment> widgetTypeMap;
-
-    private static final String TYPE_TEXT = "#/definitions/widget/visualize/text";
-    private static final String TYPE_TABLE = "#/definitions/widget/visualize/table";
-    private static final String TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
-    private static final String TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
-    private static final String TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-    private static final String TYPE_CAMERA = "#/definitions/widget/visualize/camera";
-    private static final String TYPE_GPS = "#/definitions/widget/visualize/gps";
-    private static final String TYPE_FORM = "#/definitions/widget/visualize/form";
-    private static final String TYPE_EXTERNAL_APP = "#/definitions/widget/visualize/external-app";
-    private static final String TYPE_SUBMIT = "#/definitions/widget/visualize/submit";
-
-    static {
-        widgetTypeMap = new HashMap<>();
-        widgetTypeMap.put(TYPE_TEXT, new TextWidgetFragment());
-        widgetTypeMap.put(TYPE_TABLE, new TableWidgetFragment());
-        widgetTypeMap.put(TYPE_PIE_CHART, new PieChartWidgetFragment());
-        widgetTypeMap.put(TYPE_BAR_CHART, new BarChartWidgetFragment());
-        widgetTypeMap.put(TYPE_LINE_CHART, new LineChartWidgetFragment());
-        widgetTypeMap.put(TYPE_CAMERA, new LineChartWidgetFragment());
-        widgetTypeMap.put(TYPE_GPS, new GPSWidgetFragment());
-        widgetTypeMap.put(TYPE_FORM, new FormWidgetFragment());
-        widgetTypeMap.put(TYPE_EXTERNAL_APP, null); //TODO
-        widgetTypeMap.put(TYPE_SUBMIT, null);//TODO
-    }
-
-    public static WidgetFragment getWidgetFragmentByType(String type){
-        return widgetTypeMap.get(type);
-    }
 
     /**
      *

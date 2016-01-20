@@ -26,6 +26,9 @@ public class PieChartWidgetFragment extends WidgetFragment {
         super.onCreate(savedInstanceState);
         View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
 
+        //TODO uncomment this when the hardcode values are moved
+        //setWidgetLayout(viewRoot);
+
         //TODO values hard coded
         float half = 0.50f;
         viewRoot.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, half));

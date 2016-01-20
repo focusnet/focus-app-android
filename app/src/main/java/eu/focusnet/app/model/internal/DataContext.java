@@ -22,7 +22,7 @@ import eu.focusnet.app.util.TypesHelper;
 public class DataContext extends HashMap<String, FocusSample>
 {
 
-	private DataManager dataManager = null;
+	private DataManager dataManager;
 
 	/**
 	 * Default c'tor

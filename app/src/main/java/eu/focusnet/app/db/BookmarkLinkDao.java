@@ -51,9 +51,9 @@ public class BookmarkLinkDao {
 
 //    public BookmarkLink findBookmarkLink(String name, String path, String bl_type, int order){
 //        //TODO may this method return more than one bookmarklink?
-//        String[] params = {name, path, bl_type, String.valueOf(order)};
+//        String[] config = {name, path, bl_type, String.valueOf(order)};
 //        BookmarkLink bookmarkLink = null;
-//        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=?", params, null, null, null);
+//        Cursor cursor = database.query(Constant.DATABASE_TABLE_BOOKMARK_LINK, columnsToRetrieve, Constant.NAME+"=? AND "+Constant.PATH+"=? AND "+Constant.BL_TYPE+"=? AND "+Constant.ORDER+"=?", config, null, null, null);
 //        if(cursor != null){
 //            if(cursor.moveToFirst()) {
 //                bookmarkLink = getBookmarkLink(cursor);

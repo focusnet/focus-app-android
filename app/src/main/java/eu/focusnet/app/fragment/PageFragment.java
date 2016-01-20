@@ -84,10 +84,10 @@ public class PageFragment extends Fragment {
 //    private class PageBuilderTask extends AsyncTask<String, Void, PageInstance> {
 //
 //        @Override
-//        protected PageInstance doInBackground(String... params) {
+//        protected PageInstance doInBackground(String... config) {
 //            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-//            String projectPath = params[0];
-//            String pagePath = params[1];
+//            String projectPath = config[0];
+//            String pagePath = config[1];
 //
 ////           String pageId = path.substring(path.indexOf("/") + 1, path.length());
 //
@@ -195,11 +195,11 @@ public class PageFragment extends Fragment {
 //                                new LinearLayout.LayoutParams(linearLayoutWidth, LinearLayout.LayoutParams.WRAP_CONTENT, weight),
 //                                null);
 //                        widgetParam.setBackgroundColor(new Random().nextInt());
-//                        FocusSampleDataMap params = widget.getParams();
+//                        FocusSampleDataMap config = widget.getConfig();
 //
-//                        if (params != null) {
+//                        if (config != null) {
 //                            String text = null;
-//                            for (Map.Entry<String, Object> entry : params.entrySet()) {
+//                            for (Map.Entry<String, Object> entry : config.entrySet()) {
 //                                text = entry.getValue().toString();
 //                            }
 //                            widgetParam.setText(text);

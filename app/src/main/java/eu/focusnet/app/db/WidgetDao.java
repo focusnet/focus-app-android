@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Map;
 
 import eu.focusnet.app.model.focus.FocusSampleDataMap;
 import eu.focusnet.app.model.focus.WidgetTemplate;
@@ -21,7 +20,7 @@ import eu.focusnet.app.util.Constant;
  */
 public class WidgetDao {
 
-    private String[] columnsToRetrieve = {Constant.ID, Constant.TYPE, Constant.PARAMS, Constant.FK_PROJECT_ID};
+    private String[] columnsToRetrieve = {Constant.ID, Constant.TYPE, Constant.CONFIG, Constant.FK_PROJECT_ID};
 
     private SQLiteDatabase database;
 
@@ -35,9 +34,9 @@ public class WidgetDao {
         contentValues.put(Constant.TYPE, widget.getType());
         Gson gson = new GsonBuilder().create();
         String params = null;
-        if(widget.getParams() != null)
-          params = gson.toJson(widget.getParams());
-        contentValues.put(Constant.PARAMS, params);
+        if(widget.getConfig() != null)
+          params = gson.toJson(widget.getConfig());
+        contentValues.put(Constant.CONFIG, params);
         contentValues.put(Constant.FK_PROJECT_ID, fkProjectId);
         return database.insert(Constant.DATABASE_TABLE_WIDGET, null, contentValues);
     }
@@ -56,8 +55,8 @@ public class WidgetDao {
 
     public ArrayList<WidgetTemplate> findWidgetByProjectId(String fkProjectId){
         ArrayList<WidgetTemplate> widgets = new ArrayList<>();
-        String[] params = {fkProjectId};
-        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.FK_PROJECT_ID+"=?", params, null, null, null);
+        String[] config = {fkProjectId};
+        Cursor cursor = database.query(Constant.DATABASE_TABLE_WIDGET, columnsToRetrieve, Constant.FK_PROJECT_ID+"=?", config, null, null, null);
         if(cursor != null){
             if(cursor.moveToFirst()){
                 do {
@@ -71,8 +70,8 @@ public class WidgetDao {
     }
 
     public boolean deleteWidget(String widgetId){
-        String[] params = {widgetId};
-        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.ID+"=?", params) > 0;
+        String[] config = {widgetId};
+        return database.delete(Constant.DATABASE_TABLE_WIDGET, Constant.ID+"=?", config) > 0;
     }
 
     //TODO update
@@ -81,12 +80,12 @@ public class WidgetDao {
         WidgetTemplate widget = new WidgetTemplate();
         widget.setGuid(cursor.getString(cursor.getColumnIndex(Constant.ID)));
         widget.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
-        String paramsJson = cursor.getString(cursor.getColumnIndex(Constant.PARAMS));
-        if(paramsJson != null) {
+        String configJson = cursor.getString(cursor.getColumnIndex(Constant.CONFIG));
+        if(configJson != null) {
             Gson gson = new GsonBuilder().create();
             Type typeOfMap = new TypeToken<FocusSampleDataMap>(){}.getType();
-            FocusSampleDataMap params = gson.fromJson(paramsJson, typeOfMap);
-           widget.setParams(params);
+            Object config = gson.fromJson(configJson, typeOfMap);
+           widget.setConfig(config);
         }
         return widget;
     }

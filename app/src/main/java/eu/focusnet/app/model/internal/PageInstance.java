@@ -19,14 +19,14 @@ public class PageInstance
 		HIDDEN
 	};
 
-	private PageTemplate template = null;
-	private String guid = "";
-	private PageType type = null;
-	private String title = null;
-	private String description = null;
-	private boolean isValid = false; // <=> all widgets are valid
-	LinkedHashMap<String, WidgetInstance> widgets = null; // layout + widgetdefinition, with dataContext.
-	DataContext dataContext = null;
+	private PageTemplate template;
+	private String guid;
+	private PageType type;
+	private String title;
+	private String description;
+	private boolean isValid; // <=> all widgets are valid
+	LinkedHashMap<String, WidgetInstance> widgets; // layout + widgetdefinition, with dataContext.
+	DataContext dataContext;
 
 
 	/**
@@ -41,6 +41,7 @@ public class PageInstance
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
 		this.type = type;
+		this.isValid = false;
 		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
 			this.guid = this.guid + "[" + dataCtx.get(LABEL_PAGE_ITERATOR).getUrl() + "]";
 		}

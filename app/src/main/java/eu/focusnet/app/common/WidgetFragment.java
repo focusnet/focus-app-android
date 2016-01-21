@@ -35,7 +35,7 @@ public abstract class WidgetFragment extends Fragment{
     public WidgetInstance getWidgetInstance(){
         Bundle bundles = getArguments();
         String path = bundles.getString(Constant.PATH);
-        return  DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
+        return DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
     }
 
 }

@@ -17,6 +17,7 @@ import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.db.PreferenceDao;
+import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.Bookmark;
 import eu.focusnet.app.model.focus.BookmarkLink;
 import eu.focusnet.app.model.focus.Preference;
@@ -74,11 +75,6 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
                 case PROJECT_ID_PAGE_ID:
                     intent = new Intent(getActivity(), PageActivity.class);
                     break;
-                case PROJECT_ID_BRACKETS:
-                    //TODO
-                    break;
-                default:
-                //TODO PROJECT_ID_BRACKETS_PAGE_ID
             }
 
             intent.putExtra(Constant.PATH, selectedItem.getPath());
@@ -96,14 +92,15 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
         @Override
         protected StandardListAdapter doInBackground(Void... voids) {
-            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
+//            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
             StandardListAdapter adapter = null;
-            try {
+//            try {
 
-                databaseAdapter.openWritableDatabase();
-                PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
-                //TODO get the preference's ID
-                Preference preference = preferenceDao.findPreference(new Long(123));
+//                databaseAdapter.openWritableDatabase();
+//                PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
+//                //TODO get the preference's ID
+//                Preference preference = preferenceDao.findPreference(new Long(123));
+                Preference preference = DataManager.getInstance().getUserPreferences();
 
                 Bookmark bookmark = preference.getBookmarks();
                 ArrayList<BookmarkLink> pages = bookmark.getPages();
@@ -133,9 +130,9 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
                 adapter = new StandardListAdapter(getActivity(), abstractItems);
 
-            } finally {
-                databaseAdapter.close();
-            }
+//            } finally {
+//                databaseAdapter.close();
+//            }
 
             return adapter;
         }

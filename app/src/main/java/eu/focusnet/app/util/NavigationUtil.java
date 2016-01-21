@@ -11,16 +11,34 @@ import eu.focusnet.app.common.WidgetFragment;
  */
 public class NavigationUtil {
 
-    public enum PathType {PROJECT_ID, PROJECT_ID_PAGE_ID, PROJECT_ID_BRACKETS, PROJECT_ID_BRACKETS_PAGE_ID}
+    public enum PathType {PROJECT_ID, PROJECT_ID_PAGE_ID}
 
     public static PathType checkPathType(String path) {
-        if (path.contains("[") && path.contains("]") && path.contains("/")) {
-            return PathType.PROJECT_ID_BRACKETS_PAGE_ID;
-        } else if (path.contains("[") && path.contains("]")) {
-            return PathType.PROJECT_ID_BRACKETS;
-        } else if (path.contains("/")) {
-            return PathType.PROJECT_ID_PAGE_ID;
+        String[] parts = path.split("\\|");
+        PathType pathType = null;
+        switch(parts.length) {
+            case 1:
+                pathType = PathType.PROJECT_ID;
+                break;
+            case 3:
+                pathType = PathType.PROJECT_ID_PAGE_ID;
+                break;
         }
-        return PathType.PROJECT_ID;
+
+        return pathType;
+
+//        if (parts.length >= 1) {
+//            return this.projects.get(parts[0]);
+//        }
+//        return null;// exception instead ?
+//
+//        if (path.contains("[") && path.contains("]") && path.contains("/")) {
+//            return PathType.PROJECT_ID_BRACKETS_PAGE_ID;
+//        } else if (path.contains("[") && path.contains("]")) {
+//            return PathType.PROJECT_ID_BRACKETS;
+//        } else if (path.contains("/")) {
+//            return PathType.PROJECT_ID_PAGE_ID;
+//        }
+//        return PathType.PROJECT_ID;
     }
 }

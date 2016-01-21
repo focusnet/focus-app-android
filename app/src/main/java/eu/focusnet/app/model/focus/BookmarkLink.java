@@ -49,5 +49,4 @@ public class BookmarkLink {
     public void setOrder(int order) {
         this.order = order;
     }
-
 }

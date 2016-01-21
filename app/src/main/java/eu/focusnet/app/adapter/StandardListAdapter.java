@@ -132,7 +132,7 @@ public class StandardListAdapter extends BaseAdapter {
                                 public void onClick(View view) {
                                     final Intent intent = new Intent(context, BookmarkService.class);
                                     intent.putExtra(Constant.PATH, standardListItem.getPath());
-                                    intent.putExtra(Constant.ORDER, standardListItem.getOrder());
+//                                    intent.putExtra(Constant.ORDER, standardListItem.getOrder());
                                     intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
 
                                     if (isRightIconActive) {

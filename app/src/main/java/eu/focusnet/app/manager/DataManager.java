@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.exception.NotImplementedException;
 import eu.focusnet.app.model.focus.AppContentTemplate;
 import eu.focusnet.app.model.focus.FocusObject;
 import eu.focusnet.app.model.focus.FocusSample;
@@ -415,5 +416,10 @@ return f;
 	public FocusSample getLookupSample(String context, String type)
 	{
 		return null; // FIXME TODO
+	}
+
+	public void saveUserPreferences() {
+
+		throw new NotImplementedException("saveuserpref");
 	}
 }

@@ -58,6 +58,8 @@ public class DatabaseAdapter {
             db.execSQL(Constant.CREATE_TABLE_LINKER_QUERY);
             db.execSQL(Constant.CREATE_TABLE_WIDGET_LINKER_QUERY);
 
+            db.execSQL(Constant.CREATE_TABLE_SAMPLES_QUERY);
+
 
         }
 
@@ -75,6 +77,8 @@ public class DatabaseAdapter {
             db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_WIDGET);
             db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_LINKER);
             db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_WIDGET_LINKER);
+
+            db.execSQL("DROP TABLE IF EXISTS" +Constant.DATABASE_TABLE_SAMPLES);
 
             onCreate(db);
         }

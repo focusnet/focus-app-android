@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.DataManager;
 
 /**
@@ -44,6 +45,8 @@ public class EntryPointActivity extends Activity
 		DataManager dm = DataManager.getInstance();
 		dm.setContext(this.getApplicationContext());
 
+
+
 		if (dm.hasLoginInformation()) {
 			/*
 			 * Do everything in a different Thread
@@ -57,6 +60,9 @@ public class EntryPointActivity extends Activity
 						sleep(2000); // FIXME TODO sleep for at least 2seconds, even if below tasks are already done
 
 						// FIXME TODO  display a progress wheel when we are executing this
+
+//						DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
+//						databaseAdapter.openWritableDatabase();
 
 						DataManager dm = DataManager.getInstance();
 						dm.retrieveApplicationData();

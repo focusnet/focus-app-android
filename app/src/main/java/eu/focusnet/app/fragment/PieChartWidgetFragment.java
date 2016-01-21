@@ -35,27 +35,27 @@ public class PieChartWidgetFragment extends WidgetFragment {
 
         setWidgetLayout(viewRoot);
 
-        PieChartWidgetInstance w = (PieChartWidgetInstance) getWidgetInstance();
+        PieChartWidgetInstance pieChartWidgetInstance = (PieChartWidgetInstance) getWidgetInstance();
 
         TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
-        piechartTitle.setText(w.getTitle());
+        piechartTitle.setText(pieChartWidgetInstance.getTitle());
 
         ArrayList<Entry> yVals = new ArrayList<>();
 
-        for(int i = 0; i < w.getValues().size(); i++) {
-            float d = w.getValues().get(i).floatValue();
+        for(int i = 0; i < pieChartWidgetInstance.getValues().size(); i++) {
+            float d = pieChartWidgetInstance.getValues().get(i).floatValue();
             yVals.add(new Entry(d, i));
             // FIXME?	colors.add(chartData.getColor());
         }
 
 
-        PieDataSet dataSet = new PieDataSet(yVals, w.getCaption());
+        PieDataSet dataSet = new PieDataSet(yVals, pieChartWidgetInstance.getCaption());
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
         // FIXME?	dataSet.setColors(colors);
 
-        PieData data = new PieData(w.getLabels(), dataSet); // names, values=new PieDataSet(values, legend)
+        PieData data = new PieData(pieChartWidgetInstance.getLabels(), dataSet); // names, values=new PieDataSet(values, legend)
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);

@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="LineChart Title"
-        android:id="@+id/textView"
+        android:id="@+id/text_title_line_chart"
         android:layout_gravity="center_horizontal" />
 
     <com.github.mikephil.charting.charts.LineChart

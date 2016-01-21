@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -13,6 +14,10 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 
@@ -29,41 +34,40 @@ public class LineChartWidgetFragment extends WidgetFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_linechart, container, false);
+        View viewRoot = inflater.inflate(R.layout.fraggit ment_linechart, container, false);
 
-        //TODO uncomment this when the hardcode values are moved
-        //setWidgetLayout(viewRoot);
+        setWidgetLayout(viewRoot);
 
-        //TODO values hard coded
-        viewRoot.getLayoutParams().height = 550;
+        LineChartWidgetInstance lineChartWidgetInstance = (LineChartWidgetInstance) getWidgetInstance();
 
+        TextView lineChartTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
+        lineChartTitle.setText(lineChartWidgetInstance.getTitle());
 
-
-        ArrayList<ChartData> chartDatas = new ArrayList<>(8);
-        ChartData d = new ChartData("January", -10, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("February", -13,Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("March", 10,Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("April", 16, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("May", 20, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("June", 22, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("July", 28, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("August", 29, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("September", 25, Color.RED);
-        chartDatas.add(d);
-        d = new ChartData("October", 20, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("November", 10, Color.BLUE);
-        chartDatas.add(d);
-        d = new ChartData("December", 2, Color.BLUE);
-        chartDatas.add(d);
+//        ArrayList<ChartData> chartDatas = new ArrayList<>(8);
+//        ChartData d = new ChartData("January", -10, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("February", -13,Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("March", 10,Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("April", 16, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("May", 20, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("June", 22, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("July", 28, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("August", 29, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("September", 25, Color.RED);
+//        chartDatas.add(d);
+//        d = new ChartData("October", 20, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("November", 10, Color.BLUE);
+//        chartDatas.add(d);
+//        d = new ChartData("December", 2, Color.BLUE);
+//        chartDatas.add(d);
 
         LineChart lineChart = (LineChart) viewRoot.findViewById(R.id.line_chart);
 
@@ -151,7 +155,46 @@ public class LineChartWidgetFragment extends WidgetFragment{
 //        lineChart.getViewPortHandler().setMaximumScaleY(2f);
 //        lineChart.getViewPortHandler().setMaximumScaleX(2f);
 
-        lineChart.setData(DataFactory.createLineData("Heat", chartDatas));
+        ArrayList<ChartData> lineChartData = lineChartWidgetInstance.getData();
+
+        //x-axis
+        ArrayList<String> xVals = new ArrayList<>();
+        // y-axis values
+        ArrayList<Entry> yVals = new ArrayList<>();
+
+        for(int i = 0; i < lineChartData.size(); i++) {
+            ChartData chartData = lineChartData.get(i);
+            xVals.add(chartData.getName());
+            yVals.add(new BarEntry(chartData.getValue(), i));
+        }
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(yVals, "Heat"); //TODO description
+        // set1.setFillAlpha(110);
+        // set1.setFillColor(Color.RED);
+
+        // set the line to be drawn like this "- - - - - -"
+        set1.enableDashedLine(10f, 5f, 0f);
+        //  set1.enableDashedHighlightLine(10f, 5f, 0f);
+        set1.setColor(Color.BLACK);
+        set1.setCircleColor(Color.BLACK);
+        set1.setLineWidth(1f);
+        set1.setCircleSize(3f);
+        set1.setDrawCircleHole(false);
+        set1.setValueTextSize(9f);
+        set1.setFillAlpha(65);
+        set1.setFillColor(Color.BLACK);
+//        set1.setDrawFilled(true);
+        // set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
+        // Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+
+        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(xVals, dataSets);
+
+        lineChart.setData(data);
 
         lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 //        mChart.invalidate();
@@ -162,7 +205,6 @@ public class LineChartWidgetFragment extends WidgetFragment{
         // modify the legend ...
         legend1.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         legend1.setForm(Legend.LegendForm.LINE);
-
 
         return viewRoot;
     }

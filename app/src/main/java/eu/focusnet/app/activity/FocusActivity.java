@@ -1,6 +1,7 @@
 package eu.focusnet.app.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -29,6 +30,7 @@ import eu.focusnet.app.model.focus.User;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.manager.FragmentManager;
+import eu.focusnet.app.service.RefreshDataService;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 
@@ -40,6 +42,7 @@ public class FocusActivity extends BaseDrawerActivity
 
 	private static final String TAG = FocusActivity.class.getName();
 	private String[] navMenuTitles;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -202,34 +205,6 @@ public class FocusActivity extends BaseDrawerActivity
 			super.onBackPressed();
 		}
 	}
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
-
-//    @Override
-//    protected void onPause() {
-//    //   databaseAdapter.close();
-//        super.onPause();
-//    }
-
-//    @Override
-//    protected void onDestroy() {
-////        databaseAdapter.openWritableDatabase();
-////        userDao = new UserDAO(databaseAdapter.getDb());
-////        PreferenceDAO preferenceDAO = new PreferenceDAO(databaseAdapter.getDb());
-////        if(userDao.deleteUser(new Long(1)) && preferenceDAO.deletePreference(new Long(1))) {
-////            Log.d(TAG, "USER AND PREFERENCES DELETED");
-////        }
-////        else {
-////            Log.d(TAG, "EITHER USER OR PREFERENCES NOT DELETE");
-////        }
-////        databaseAdapter.close();
-//
-//        super.onDestroy();
-//    }
-
 
 	/**
 	 * Show the selected fragment when the user click on the drawer layout

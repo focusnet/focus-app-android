@@ -25,19 +25,7 @@ public class SampleDao {
     }
 
     public Long createSample(Sample sample) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(Constant.ID, sample.getId());
-        contentValues.put(Constant.URL, sample.getUrl());
-        contentValues.put(Constant.VERSION, sample.getVersion());
-        contentValues.put(Constant.TYPE, sample.getType());
-        contentValues.put(Constant.OWNER, sample.getOwner());
-        contentValues.put(Constant.CREATION_DATE_TIME, sample.getCreationDateTime().toString());
-        contentValues.put(Constant.EDITION_DATE_TIME, sample.getEditionDateTime().toString());
-        contentValues.put(Constant.EDITOR, sample.getEditor());
-        contentValues.put(Constant.ACTIVE, sample.isActive());
-        contentValues.put(Constant.DATA, sample.getData());
-        contentValues.put(Constant.TO_DELETE, sample.isToDelete());
-        contentValues.put(Constant.TO_PUSH, sample.isToPush());
+        ContentValues contentValues = createContentValues(sample);
         return database.insert(Constant.DATABASE_TABLE_SAMPLES, null, contentValues);
     }
 
@@ -86,6 +74,30 @@ public class SampleDao {
         return database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.ID + "=?", params) > 0;
     }
 
-    //TODO update
+    public void updateSample(Sample sample){
+        String where = Constant.ID+"="+sample.getId();
+        ContentValues updatedValues = createContentValues(sample);
+        //TODO this call may be needed
+        //updatedValues.remove(Constant.ID);
+        //
+        this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, null);
+    }
+
+    private ContentValues createContentValues(Sample sample) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Constant.ID, sample.getId());
+        contentValues.put(Constant.URL, sample.getUrl());
+        contentValues.put(Constant.VERSION, sample.getVersion());
+        contentValues.put(Constant.TYPE, sample.getType());
+        contentValues.put(Constant.OWNER, sample.getOwner());
+        contentValues.put(Constant.CREATION_DATE_TIME, sample.getCreationDateTime().toString());
+        contentValues.put(Constant.EDITION_DATE_TIME, sample.getEditionDateTime().toString());
+        contentValues.put(Constant.EDITOR, sample.getEditor());
+        contentValues.put(Constant.ACTIVE, sample.isActive());
+        contentValues.put(Constant.DATA, sample.getData());
+        contentValues.put(Constant.TO_DELETE, sample.isToDelete());
+        contentValues.put(Constant.TO_PUSH, sample.isToPush());
+        return contentValues;
+    }
 }
 

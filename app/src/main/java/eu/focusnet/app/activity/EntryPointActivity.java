@@ -45,7 +45,11 @@ public class EntryPointActivity extends Activity
 		DataManager dm = DataManager.getInstance();
 		dm.setContext(this.getApplicationContext());
 
-
+		//Create the database
+		//TODO this is only for test purpose. This call should be done somewhere else
+		DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
+		databaseAdapter.openWritableDatabase();
+		//End
 
 		if (dm.hasLoginInformation()) {
 			/*
@@ -60,9 +64,6 @@ public class EntryPointActivity extends Activity
 						sleep(2000); // FIXME TODO sleep for at least 2seconds, even if below tasks are already done
 
 						// FIXME TODO  display a progress wheel when we are executing this
-
-//						DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
-//						databaseAdapter.openWritableDatabase();
 
 						DataManager dm = DataManager.getInstance();
 						dm.retrieveApplicationData();

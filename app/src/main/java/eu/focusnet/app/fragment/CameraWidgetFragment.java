@@ -11,16 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import eu.focusnet.app.R;
 import eu.focusnet.app.activity.ImageActivity;
 import eu.focusnet.app.common.WidgetFragment;
+import eu.focusnet.app.model.internal.CameraWidgetInstance;
+import eu.focusnet.app.model.internal.TableWidgetInstance;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
 public class CameraWidgetFragment extends WidgetFragment {
-
 
     private final int PICTURE_REQUEST = 1;
     private Uri imageUri;
@@ -33,6 +36,11 @@ public class CameraWidgetFragment extends WidgetFragment {
         View viewRoot = inflater.inflate(R.layout.fragment_camera, container, false);
 
         setWidgetLayout(viewRoot);
+
+        CameraWidgetInstance cameraWidgetInstance = (CameraWidgetInstance) getWidgetInstance();
+
+        TextView title = (TextView) viewRoot.findViewById(R.id.title);
+        title.setText(cameraWidgetInstance.getTitle());
 
         imageView = (ImageView) viewRoot.findViewById(R.id.picture);
 

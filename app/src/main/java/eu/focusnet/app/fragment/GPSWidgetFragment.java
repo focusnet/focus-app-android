@@ -14,6 +14,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
+import eu.focusnet.app.model.internal.GPSWidgetInstance;
 
 /**
  * Created by yandypiedra on 14.01.16.
@@ -30,6 +31,11 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
         View viewRoot = inflater.inflate(R.layout.fragment_gps, container, false);
 
         setWidgetLayout(viewRoot);
+
+        GPSWidgetInstance gpsWidgetInstance = (GPSWidgetInstance) getWidgetInstance();
+
+        TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
+        title.setText(gpsWidgetInstance.getTitle());
 
         longitudeValue = (TextView) viewRoot.findViewById(R.id.text_longitude_value);
 

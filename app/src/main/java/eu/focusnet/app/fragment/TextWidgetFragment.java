@@ -22,9 +22,7 @@ public class TextWidgetFragment extends WidgetFragment {
         View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
         setWidgetLayout(viewRoot);
 
-        Bundle bundles = getArguments();
-        String path = bundles.getString(Constant.PATH);
-        TextWidgetInstance textWidgetInstance = (TextWidgetInstance) DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
+        TextWidgetInstance textWidgetInstance = (TextWidgetInstance)getWidgetInstance();
 
         TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title);
         textTitle.setText(textWidgetInstance.getTitle());

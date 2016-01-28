@@ -27,8 +27,10 @@ import eu.focusnet.app.fragment.CameraWidgetFragment;
 import eu.focusnet.app.fragment.EmptyWidgetFragment;
 import eu.focusnet.app.fragment.FormWidgetFragment;
 import eu.focusnet.app.fragment.GPSWidgetFragment;
+import eu.focusnet.app.fragment.Html5WidgetFragment;
 import eu.focusnet.app.fragment.LineChartWidgetFragment;
 import eu.focusnet.app.fragment.PieChartWidgetFragment;
+import eu.focusnet.app.fragment.SubmitWidgetFragment;
 import eu.focusnet.app.fragment.TableWidgetFragment;
 import eu.focusnet.app.fragment.TextWidgetFragment;
 import eu.focusnet.app.manager.DataManager;
@@ -51,11 +53,12 @@ public class ViewUtil {
     private static final String TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
     private static final String TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
     private static final String TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-    private static final String TYPE_CAMERA = "#/definitions/widget/visualize/camera";
-    private static final String TYPE_GPS = "#/definitions/widget/visualize/gps";
-    private static final String TYPE_FORM = "#/definitions/widget/visualize/form";
+    private static final String TYPE_CAMERA = "#/definitions/widget/collect/camera";
+    private static final String TYPE_GPS = "#/definitions/widget/collect/gps";
+    private static final String TYPE_FORM = "#/definitions/widget/collect/form";
     private static final String TYPE_EXTERNAL_APP = "#/definitions/widget/visualize/external-app";
     private static final String TYPE_SUBMIT = "#/definitions/widget/visualize/submit";
+    private static final String TYPE_HTML5 = "#/definitions/widget/visualize/html5-widget";
 
     public static final String WIDTH = "width";
     public static final String OF = "of";
@@ -140,6 +143,15 @@ public class ViewUtil {
             case TYPE_FORM:
                 widgetFragment = new FormWidgetFragment();
                 break;
+            case TYPE_EXTERNAL_APP:
+                //TODO
+                break;
+            case TYPE_SUBMIT:
+                widgetFragment = new SubmitWidgetFragment();
+                break;
+            case TYPE_HTML5:
+                widgetFragment = new Html5WidgetFragment();
+                break;
         }
         return widgetFragment;
     }
@@ -193,12 +205,10 @@ public class ViewUtil {
             if (weight != 0 && weight != screenSize)
                 linearLayoutWidth = 0;
 
-
             if (lastSizeLeft == 0 || lastSizeLeft == screenSize) {
                 linearLayoutHorizontal = ViewFactory.createLinearLayout(activity, LinearLayout.HORIZONTAL,
                         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 linearLayoutHorizontal.setId(++layoutID);
-
             }
 
             linearLayoutPageInfo.removeView(linearLayoutHorizontal);

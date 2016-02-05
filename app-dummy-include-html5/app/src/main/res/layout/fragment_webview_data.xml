@@ -12,18 +12,19 @@
             style="@style/TitleAppearance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pass some text to the index.html page while loading it."/>
+            android:text="Context to pass to JavaScript&apos;s init() function (a URI)"/>
 
         <EditText
             android:id="@+id/data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:hint="write some text here" />
+             android:hint="write some text here"
+            />
 
         <Button
             android:id="@+id/loadWebViewButton"
             android:layout_width="match_parent"
-            android:text="Load the index.html page"
+            android:text="Load the HTML5 dummy app"
             android:layout_height="wrap_content"
            />
 

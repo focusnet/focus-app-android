@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.DataManager;
@@ -16,7 +15,6 @@ import eu.focusnet.app.manager.DataManager;
  * Start screen of the application. If the application is not configured, yet, he is redirected
  * to the LoginActivity. If the application is configured, then the basic application data are
  * loaded and the user is then redirected to the FocusActivity.
- *
  */
 public class EntryPointActivity extends Activity
 {
@@ -45,7 +43,11 @@ public class EntryPointActivity extends Activity
 		DataManager dm = DataManager.getInstance();
 		dm.setContext(this.getApplicationContext());
 
-
+		//Create the database
+		//TODO this is only for test purpose. This call should be done somewhere else
+		DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
+		databaseAdapter.openWritableDatabase();
+		//End
 
 		if (dm.hasLoginInformation()) {
 			/*
@@ -60,9 +62,6 @@ public class EntryPointActivity extends Activity
 						sleep(2000); // FIXME TODO sleep for at least 2seconds, even if below tasks are already done
 
 						// FIXME TODO  display a progress wheel when we are executing this
-
-//						DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
-//						databaseAdapter.openWritableDatabase();
 
 						DataManager dm = DataManager.getInstance();
 						dm.retrieveApplicationData();

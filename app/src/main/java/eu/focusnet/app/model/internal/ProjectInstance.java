@@ -99,7 +99,7 @@ public class ProjectInstance
 	{
 		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<String, PageInstance>();
 
-		for(Linker s : source) {
+		for (Linker s : source) {
 			String page_id = s.getPageid();
 			PageTemplate pageTpl = this.template.findPage(page_id);
 
@@ -156,7 +156,7 @@ public class ProjectInstance
 	 * - my-project[http://www.example.org/data/123]
 	 *
 	 * @param expanded_guid
-	 * @param type Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
+	 * @param type          Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
 	 * @return
 	 */
 	public PageInstance getPageFromGuid(String expanded_guid, String type)
@@ -196,19 +196,23 @@ public class ProjectInstance
 
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return title;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public LinkedHashMap<String, PageInstance> getDashboards() {
+	public LinkedHashMap<String, PageInstance> getDashboards()
+	{
 		return dashboards;
 	}
 
-	public LinkedHashMap<String, PageInstance> getTools() {
+	public LinkedHashMap<String, PageInstance> getTools()
+	{
 		return tools;
 	}
 }

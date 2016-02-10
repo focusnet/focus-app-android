@@ -20,6 +20,13 @@ public class NetworkManager
 	// FIXME get the root of REST server on first request (such that we have the root of services)
 
 	/**
+	 * Dummy constructor for our Singleton.
+	 */
+	private NetworkManager()
+	{
+	}
+
+	/**
 	 * Singleton acquisition method.
 	 *
 	 * @return
@@ -27,13 +34,6 @@ public class NetworkManager
 	public static NetworkManager getInstance()
 	{
 		return ourInstance;
-	}
-
-	/**
-	 * Dummy constructor for our Singleton.
-	 */
-	private NetworkManager()
-	{
 	}
 
 	/**
@@ -45,12 +45,12 @@ public class NetworkManager
 	}
 
 
-	// FIXME TODO copy RefreshData service
+	// FIXME TODO copy RefreshData service from Yandy's code
 
 
 	/**
 	 * Is the network currently available?
-	 *
+	 * <p/>
 	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
 	 *
 	 * @return true if network is available, false otherwise.
@@ -81,8 +81,8 @@ public class NetworkManager
 
 	/**
 	 * Get a specific version of an existing resource
-	 *
-	 *
+	 * <p/>
+	 * <p/>
 	 * FIXME any use?
 	 *
 	 * @param url
@@ -150,7 +150,6 @@ public class NetworkManager
 	{
 		return true;
 	}
-
 
 
 }

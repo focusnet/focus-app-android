@@ -1,13 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" tools:context="eu.focusnet.app.activity.PageActivity"
-        android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="eu.focusnet.app.activity.PageActivity">
 
     <include layout="@layout/toolbar"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/page_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 

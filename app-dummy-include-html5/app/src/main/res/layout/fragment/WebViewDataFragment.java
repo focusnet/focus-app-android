@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment;
+package layout.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import eu.focusnet.app.R;
+import eu.focusnet.app.activity.R;
 import eu.focusnet.app.util.ViewFactory;
 
 /**
@@ -70,6 +70,12 @@ public class WebViewDataFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement DataSenderCallback");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
     }
 }
 

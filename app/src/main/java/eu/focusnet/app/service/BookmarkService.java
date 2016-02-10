@@ -14,30 +14,33 @@ import eu.focusnet.app.util.EventBus;
  * This service is used to save,remove the bookmarks
  * in the database and send it to the webservice
  */
-public class BookmarkService extends IntentService {
+public class BookmarkService extends IntentService
+{
 
-    private static final String TAG = BookmarkService.class.getName();
-    //TODO this path should be in the user data JSON response after the user is authenticated
-    private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
+	private static final String TAG = BookmarkService.class.getName();
+	//TODO this path should be in the user data JSON response after the user is authenticated
+	private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
 
-    public BookmarkService() {
-        super(BookmarkService.class.getName());
-    }
+	public BookmarkService()
+	{
+		super(BookmarkService.class.getName());
+	}
 
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        boolean isToSave = intent.getExtras().getBoolean(Constant.IS_TO_SAVE);
-        String path = intent.getStringExtra(Constant.PATH);
-        String title = intent.getStringExtra(Constant.NAME);
+	@Override
+	protected void onHandleIntent(Intent intent)
+	{
+		boolean isToSave = intent.getExtras().getBoolean(Constant.IS_TO_SAVE);
+		String path = intent.getStringExtra(Constant.PATH);
+		String title = intent.getStringExtra(Constant.NAME);
 //        int order = intent.getExtras().getInt(Constant.ORDER);
-        String bookmarkType = intent.getStringExtra(Constant.BOOKMARK_TYPE);
+		String bookmarkType = intent.getStringExtra(Constant.BOOKMARK_TYPE);
 
-        Log.d(TAG, "The path :" + path);
-        Log.d(TAG, "The title :" + title);
-        Log.d(TAG, "bookmark type:" + bookmarkType);
+		Log.d(TAG, "The path :" + path);
+		Log.d(TAG, "The title :" + title);
+		Log.d(TAG, "bookmark type:" + bookmarkType);
 
-        Preference userPreference  = DataManager.getInstance().getUserPreferences();
+		Preference userPreference = DataManager.getInstance().getUserPreferences();
 
 //        DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
 //        try {
@@ -50,15 +53,16 @@ public class BookmarkService extends IntentService {
 //                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(databaseAdapter.getDb());
 //                if (bookmarks != null) {
 //                    Long bookmarkId = bookmarks.getId();
-        if (isToSave) {
-            BookmarkLink bookmarkLink = new BookmarkLink(title, path, 0);
-            userPreference.addBookmarkLink(bookmarkLink, bookmarkType);
+		if (isToSave) {
+			BookmarkLink bookmarkLink = new BookmarkLink(title, path, 0);
+			userPreference.addBookmarkLink(bookmarkLink, bookmarkType);
 
 //            bookmarkLinkDao.createBookmarkLing(bookmarkLink, bookmarkType, bookmarkId);
-        } else {
+		}
+		else {
 //            bookmarkLinkDao.deleteBookmarkLing(path, bookmarkType, bookmarkId);
-            userPreference.removeBookmarkLink(path, title, bookmarkType);
-         }
+			userPreference.removeBookmarkLink(path, title, bookmarkType);
+		}
 //                }
 //            }
 //            Gson gson = new Gson();
@@ -66,8 +70,8 @@ public class BookmarkService extends IntentService {
 //            foundPref = preferenceDao.findPreference(new Long(123));
 //            String jsonPref = gson.toJson(foundPref);
 //            DataProviderManager.updateData(PATH, jsonPref);
-            EventBus.fireBookmarksUpdate();
-            DataManager.getInstance().saveUserPreferences();
+		EventBus.fireBookmarksUpdate();
+		DataManager.getInstance().saveUserPreferences();
 //        }
 //        catch(IOException e){
 //            //TODO
@@ -76,5 +80,5 @@ public class BookmarkService extends IntentService {
 //        finally{
 //            databaseAdapter.close();
 //        }
-    }
+	}
 }

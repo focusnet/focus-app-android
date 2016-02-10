@@ -1,7 +1,9 @@
 package eu.focusnet.app.network;
 
+import android.util.Base64;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,16 +32,43 @@ public class HttpResponse
 	{
 		this.method = connection.getRequestMethod();
 		this.returnCode = connection.getResponseCode();
+		if (!this.isSuccessful()) {
+			throw new IOException("HTTP request failed.");
+		}
+
 		this.headers = connection.getHeaderFields();
 		InputStream inputStream = connection.getInputStream();
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		StringBuffer buffer = new StringBuffer();
-		String line = "";
-		while ((line = bufferedReader.readLine()) != null) {
-			buffer.append(line);
+
+		// depending on the content type, we decide whether the object is binary or text.
+		List<String> content_types = this.headers.get("Content-Type");
+
+		// basically, only application/json is text
+		if (content_types.contains("application/json")) {
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuffer buffer = new StringBuffer();
+			String line = "";
+			while ((line = bufferedReader.readLine()) != null) {
+				buffer.append(line);
+			}
+			bufferedReader.close();
+			this.data = buffer.toString();
+			return;
 		}
-		bufferedReader.close();
-		this.data = buffer.toString();
+		// the rest is considered as data
+		else {
+			byte[] buffer = new byte[4096];
+			int n = -1;
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			while ((n = inputStream.read(buffer)) != -1) {
+				output.write(buffer, 0, n);
+			}
+
+			output.close();
+
+			// convert the output stream into a base64-encoded string
+			this.data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+			return;
+		}
 	}
 
 

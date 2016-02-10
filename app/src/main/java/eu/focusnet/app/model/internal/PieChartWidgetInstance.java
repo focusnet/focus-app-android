@@ -1,18 +1,9 @@
 package eu.focusnet.app.model.internal;
 
-import android.graphics.Color;
-
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.PercentFormatter;
-
 import java.util.ArrayList;
 import java.util.Map;
 
 import eu.focusnet.app.model.focus.WidgetTemplate;
-import eu.focusnet.app.model.ui.ChartData;
-import eu.focusnet.app.util.DataFactory;
 import eu.focusnet.app.util.TypesHelper;
 
 /**
@@ -53,7 +44,7 @@ public class PieChartWidgetInstance extends WidgetInstance
 
 		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
 		ArrayList a = (ArrayList) this.config.get(CONFIG_LABEL_PARTS);
-		for (Map m : (ArrayList<Map>)a) {
+		for (Map m : (ArrayList<Map>) a) {
 			this.labels.add(TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)));
 			this.values.add(TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE)));
 			++this.numberOfParts;
@@ -72,6 +63,7 @@ public class PieChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the total number of parts on the pie chart.
+	 *
 	 * @return
 	 */
 	public int getNumberOfParts()

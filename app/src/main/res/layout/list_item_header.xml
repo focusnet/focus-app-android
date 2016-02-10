@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/colorPrimary">
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/header_left_icon"
         android:layout_width="@dimen/list_item_image_width"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="22dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="22dp"/>
 
     <TextView
-        style="@style/HeaderTextAppearance"
         android:id="@+id/header_title"
+        style="@style/HeaderTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
@@ -27,7 +27,7 @@
         android:layout_width="@dimen/list_item_image_width"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="25dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"/>
 
 </RelativeLayout>

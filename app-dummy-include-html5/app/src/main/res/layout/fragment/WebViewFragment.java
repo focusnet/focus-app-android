@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment;
+package layout.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -9,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import eu.focusnet.app.R;
+import eu.focusnet.app.activity.R;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
@@ -49,6 +47,7 @@ public class WebViewFragment extends Fragment {
         this.data = data;
         myWebView.loadUrl("file:///android_asset/www/" + url + ".html");
     }
+
 
     /**
      * Send data to the html page using a javascript function defined on it

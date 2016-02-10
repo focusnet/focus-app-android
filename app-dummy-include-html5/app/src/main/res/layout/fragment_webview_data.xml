@@ -1,0 +1,33 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TitleAppearance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Context to pass to JavaScript&apos;s init() function (a URI)"/>
+
+        <EditText
+            android:id="@+id/context"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:hint="write some text here"
+            />
+
+        <Button
+            android:id="@+id/loadWebViewButton"
+            android:layout_width="match_parent"
+            android:text="Load the HTML5 dummy app"
+            android:layout_height="wrap_content"
+           />
+
+    </LinearLayout>
+
+</FrameLayout>

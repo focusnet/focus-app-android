@@ -1,7 +1,6 @@
 package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.exception.BadTypeException;

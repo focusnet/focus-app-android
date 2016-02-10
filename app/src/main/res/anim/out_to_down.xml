@@ -6,10 +6,10 @@
     <!--android:interpolator="@android:anim/accelerate_interpolator"-->
     <!--android:toYDelta="100%" />-->
     <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-        android:duration="700"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        android:propertyName="y"
-        android:valueFrom="0"
-        android:valueTo="1280"
-        android:valueType="floatType" />
+                    android:duration="700"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+                    android:propertyName="y"
+                    android:valueFrom="0"
+                    android:valueTo="1280"
+                    android:valueType="floatType"/>
 </set>

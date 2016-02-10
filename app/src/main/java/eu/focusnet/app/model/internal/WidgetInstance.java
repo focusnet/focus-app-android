@@ -5,13 +5,14 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.focusnet.app.model.focus.FocusSample;
 import eu.focusnet.app.model.focus.WidgetTemplate;
 import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 12.01.16.
  */
-abstract public class WidgetInstance
+public abstract class WidgetInstance
 {
 
 	/* widget types */
@@ -161,5 +162,16 @@ abstract public class WidgetInstance
 	public boolean isValid()
 	{
 		return true;
+	}
+
+
+	/**
+	 * Set the collected data
+	 *
+	 * @param focusSample
+	 */
+	public void setCollectedData(FocusSample focusSample)
+	{
+		//TODO implement this method
 	}
 }

@@ -1,6 +1,5 @@
 package eu.focusnet.app.model.internal;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class TableWidgetInstance extends WidgetInstance
 		ArrayList<ArrayList<String>> tmp_values = new ArrayList<ArrayList<String>>();
 
 		try {
-			for (Map m : (ArrayList<Map>)this.config.get(CONFIG_LABEL_COLUMNS)) {
+			for (Map m : (ArrayList<Map>) this.config.get(CONFIG_LABEL_COLUMNS)) {
 				String header = TypesHelper.asString(m.get(CONFIG_LABEL_HEADER));
 				ArrayList<String> values = TypesHelper.asArrayOfStrings(m.get(CONFIG_LABEL_VALUES));
 
@@ -68,10 +67,9 @@ public class TableWidgetInstance extends WidgetInstance
 		// We must therefore transform our columns into rows
 		this.values = new String[this.maxNumberOfRows][this.numberOfColumns];
 
-		for (int i=0; i < this.maxNumberOfRows; ++i) {
-			for (int j=0; j < this.numberOfColumns; ++j) {
-				try
-				{
+		for (int i = 0; i < this.maxNumberOfRows; ++i) {
+			for (int j = 0; j < this.numberOfColumns; ++j) {
+				try {
 					this.values[i][j] = tmp_values.get(j).get(i);
 				}
 				catch (IndexOutOfBoundsException e) {

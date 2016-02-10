@@ -5,19 +5,17 @@ import java.util.Map;
 
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.focus.FocusSample;
-import eu.focusnet.app.util.TypesHelper;
 
 /**
  * Created by julien on 13.01.16.
- *
+ * <p/>
  * TODO doc:
  * we always store FocusSamples, not actual scalar/leaf data
  * -> put() will retrieve a sample only
  * -> get() retrieves samples
  * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
- *
+ * <p/>
  * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
- *
  */
 public class DataContext extends HashMap<String, FocusSample>
 {
@@ -45,26 +43,24 @@ public class DataContext extends HashMap<String, FocusSample>
 	}
 
 	/**
-	 *
-	 *
 	 * Add a new FocusSample entry in our current data context, based on a description of the
 	 * new data to be included. These descriptions are the ones we can find in the 'data'
 	 * properties of the Application Content template JSON representation.
-	 * <p>
+	 * <p/>
 	 * All data context entries are FocusSample's
-	 * <p>
+	 * <p/>
 	 * The different options for the description are the following:
-	 * <p>
+	 * <p/>
 	 * - a simple URL, e.g. http://data.example.org/test/123
 	 * - a reference to an existing entry in this data context, with a selector to the
 	 * appropriate key in its data object; e.g. <ref|machine-ABC|data.woodpile-url>
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a lookup request, e.g. <lookup:http://schemas.focusnet.eu/my-special-type|URL>
 	 * where URL is the "context" of the FocusObject.
-	 *
+	 * <p/>
 	 * FIXME TODO document exactly what can be accepted here.
-	 *
-	 * <p>
+	 * <p/>
+	 * <p/>
 	 * In the last three possibilities, the URL can be interpolated by a "ref"
 	 * (but in this case the separator is ":" and not "|"
 	 *
@@ -173,9 +169,9 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * Resolve the provided request considering the present data context. e.g.
 	 * <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
 	 * data being stored under the simple-example entry.
-	 *
+	 * <p/>
 	 * If the request format is not recognized, return it as-is.
-	 *
+	 * <p/>
 	 * If the request does not succeed, return FIXME exception or null?
 	 *
 	 * @return

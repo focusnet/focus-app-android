@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    /**
+     * The init() function is called when the HTML5 widget is rendered.
+     *
+     * Its only argument is the context (a string) that has been defined in the widget creation
+     * configuration. It is typically the identifier (URI) of the object of interest for this
+     * HTML5 widget, such as the stand id.
+     */
+    function init(context)
+    {
+        $("#context").append( "<strong>" + context + "</strong>" );
+    }
+
+    /**
+     * Do something that uses the FocusApp mobile app interface.
+     *
+     * All available functions are accessible via the window.FocusApp object.
+     *
+     * Want to do something that is non-blocking? Use Web Workers, which are supported by the
+     * Android browser. See http://www.html5rocks.com/en/tutorials/workers/basics/
+     */
+    function do_something()
+    {
+        if(window.FocusApp) {
+            // GET a FocusSample
+            // Returns a JSON string containing the FocusSample, or null if an error occurred.
+            var context = FocusApp.getFocusData("http://focus.yatt.ch/debug/app-content-1.json");
+            $("#context").append( "<strong>" + context + "</strong>" );
+
+            // x will be undefined, because the object could not be fetched
+            var x = FocusApp.getFocusData("http://focus.yatt.ch/not-found.json");
+
+            // PUT a FocusSample
+            // returns true on success, or false on error
+            // not implemented in Java code
+            // FocusApp.putFocusData("http://focus.yatt.ch/blahblah/123", new_data);
+
+            // POST a FocusSample
+            // new_data is a stringified JSON FocusSample object
+            // returns true on success, or false on error
+            // not implemented in Java code
+            // FocusApp.postFocusData("http://focus.yatt.ch/blahblah/123", new_data);
+
+            // DELETE a FocusSample
+            // new_data is a stringified JSON FocusSample object
+            // returns true on success, or false on error
+            // not implemented in Java code
+            // FocusApp.deleteFocusData("http://focus.yatt.ch/blahblah/123", new_data);
+
+            // GET an external resource, such as a tile of the map
+            // returns a string containing a JSON object:
+            // "{ "mimetype":"image/png", "context":"base64-encoded context" }
+            // or null on error
+            var context = FocusApp.getResource("http://placehold.it/200x400"); // FIXME not working!
+            var data3 = FocusApp.getResource("https://i.ytimg.com/vi/3v5Q_dPQUYo/maxresdefault.jpg");
+            $("#context").append( "<strong>" + data3 + "</strong>" );
+
+        }
+    }
+
+    /**
+     * And other js functions.
+     */
+    $(document).ready(function()
+    {
+        $('body').css('background-color', 'pink');
+    });
+
+    </script>
+</head>
+
+<body>
+<h1>Test</h1>
+<img src="local-image.png"/>
+<br/>
+<input type="button" onclick="do_something()" value="Click to do something"/>
+<br/>
+
+<p id="context">Loaded context: </p>
+</body>
+</html>

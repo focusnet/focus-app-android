@@ -1,6 +1,5 @@
 package eu.focusnet.app.model.internal;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.model.focus.PageTemplate;
@@ -12,22 +11,16 @@ public class PageInstance
 {
 
 	public final static String LABEL_PAGE_ITERATOR = "$page-iterator$";
-	public enum PageType
-	{
-		DASHBOARD,
-		TOOL,
-		HIDDEN
-	};
+	LinkedHashMap<String, WidgetInstance> widgets; // layout + widgetdefinition, with dataContext.
 
+	;
+	DataContext dataContext;
 	private PageTemplate template;
 	private String guid;
 	private PageType type;
 	private String title;
 	private String description;
 	private boolean isValid; // <=> all widgets are valid
-	LinkedHashMap<String, WidgetInstance> widgets; // layout + widgetdefinition, with dataContext.
-	DataContext dataContext;
-
 
 	/**
 	 * C'tor
@@ -75,13 +68,13 @@ public class PageInstance
 		return this.type;
 	}
 
-	public LinkedHashMap<String, WidgetInstance> getWidgets() {
+	public LinkedHashMap<String, WidgetInstance> getWidgets()
+	{
 		return widgets;
 	}
 
 	/**
 	 * Get the page title (resolved within the current data context)
-
 	 *
 	 * @return
 	 */
@@ -109,6 +102,13 @@ public class PageInstance
 	public boolean isValid()
 	{
 		return this.isValid; // <=> all widgets are valid
+	}
+
+	public enum PageType
+	{
+		DASHBOARD,
+		TOOL,
+		HIDDEN
 	}
 
 }

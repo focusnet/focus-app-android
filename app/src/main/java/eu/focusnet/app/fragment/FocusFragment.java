@@ -17,7 +17,6 @@ import java.util.Map;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.activity.ProjectActivity;
-import eu.focusnet.app.activity.TestActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;

@@ -106,12 +106,12 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * Get FOCUS data
-		 * <p>
+		 * <p/>
 		 * advantages of going through app:
 		 * - take benefit of auth/access control
 		 * - permanent storage of accessed data
 		 * - not relying on buggy/unstable local storage
-		 * <p>
+		 * <p/>
 		 * disadvantages:
 		 * - no browser security (e.g. CORS) - but we only consume data, no scripts.
 		 */
@@ -130,7 +130,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * POST Focus data
-		 * <p>
+		 * <p/>
 		 * post data to localstore (will later be pushed to server)
 		 */
 		@JavascriptInterface
@@ -147,7 +147,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * PUT Focus data
-		 * <p>
+		 * <p/>
 		 * put data to local store (will later be pushed to server)
 		 */
 		@JavascriptInterface
@@ -164,7 +164,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * DELETE Focus data
-		 * <p>
+		 * <p/>
 		 * announce deletion in local store (will later be deleted on server)
 		 */
 		@JavascriptInterface
@@ -181,7 +181,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * GET a non-FOCUS resource
-		 * <p>
+		 * <p/>
 		 * get from local resources store
 		 * otherwise from network
 		 * if no network -> FALSE (should have been detected by HTML5)

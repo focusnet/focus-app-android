@@ -88,7 +88,7 @@ public class TypesHelper
 
 	/**
 	 * Make sure that the provided object in an ArrayList of URLs (as Strings), or throw an exception.
-	 * <p>
+	 * <p/>
 	 * We are a bit more paranoiac with this data types because it is used to follow references
 	 * and in iterators, so we must be sure it contains only valid data.
 	 *

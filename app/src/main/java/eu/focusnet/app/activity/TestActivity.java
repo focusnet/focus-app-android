@@ -45,7 +45,7 @@ public class TestActivity extends BaseActivity
 	private static final String EXAMPLE_APP_ACTION = "com.example.exampleapp.focus_external_dummy_app";
 	/**
 	 * Convention for extras names
-	 * <p>
+	 * <p/>
 	 * All applications being used as FOCUS Mobile external apps follow this convention
 	 */
 	private static final String

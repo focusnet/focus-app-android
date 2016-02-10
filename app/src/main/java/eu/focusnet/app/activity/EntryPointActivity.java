@@ -11,7 +11,7 @@ import eu.focusnet.app.manager.DataManager;
 
 /**
  * Entry point activity
- * <p>
+ * <p/>
  * Start screen of the application. If the application is not configured, yet, he is redirected
  * to the LoginActivity. If the application is configured, then the basic application data are
  * loaded and the user is then redirected to the FocusActivity.

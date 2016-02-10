@@ -38,14 +38,6 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.activity.WebViewTestActivity"/>
-      <point      
-        x = "3604"      
-        y = "1864"/>
-    </statePointEntry>
-    <statePointEntry>
-      <state      
-        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
         className = "eu.focusnet.app.activity.EntryPointActivity"/>
       <point      
         x = "1548"      

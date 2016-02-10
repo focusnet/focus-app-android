@@ -18,7 +18,6 @@ import java.util.Map;
 import eu.focusnet.app.R;
 import eu.focusnet.app.activity.ProjectActivity;
 import eu.focusnet.app.activity.TestActivity;
-import eu.focusnet.app.activity.WebViewTestActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
@@ -62,11 +61,12 @@ public class FocusFragment extends ListFragment
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 			if (position > notifHeaderPosition) {
 				//TODO navigate to notifications ...
-				Intent intent = new Intent(getActivity(), WebViewTestActivity.class);
+		/*		Intent intent = new Intent(getActivity(), WebViewTestActivity.class);
 				if (position - 1 == notifHeaderPosition) {
 					intent = new Intent(getActivity(), TestActivity.class);
 				}
 				startActivity(intent);
+				*/
 			}
 			else {
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);

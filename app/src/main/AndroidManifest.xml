@@ -52,10 +52,6 @@
             android:name=".activity.ImageActivity"
             android:label="@string/title_activity_image"
             android:screenOrientation="landscape"></activity>
-        <activity
-            android:name=".activity.WebViewTestActivity"
-            android:parentActivityName=".activity.FocusActivity"
-            android:screenOrientation="landscape"></activity>
 
         <service
             android:name=".service.BookmarkService"

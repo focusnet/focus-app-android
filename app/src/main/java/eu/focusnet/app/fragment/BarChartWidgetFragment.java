@@ -1,40 +1,25 @@
 package eu.focusnet.app.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-
-import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.WidgetFragment;
-import eu.focusnet.app.model.internal.PieChartWidgetInstance;
-import eu.focusnet.app.model.ui.ChartData;
-import eu.focusnet.app.util.DataFactory;
-import eu.focusnet.app.util.ViewFactory;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
-public class BarChartWidgetFragment extends WidgetFragment {
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
+public class BarChartWidgetFragment extends WidgetFragment
+{
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
 
-        setWidgetLayout(viewRoot);
+		setWidgetLayout(viewRoot);
 
 //        BarChartWidgetInstance barChartWidgetInstance = (BarChartWidgetInstance) getWidgetInstance();
 //
@@ -130,6 +115,6 @@ public class BarChartWidgetFragment extends WidgetFragment {
 //        legend.setTextSize(11f);
 //        legend.setXEntrySpace(4f);
 
-        return viewRoot;
-    }
+		return viewRoot;
+	}
 }

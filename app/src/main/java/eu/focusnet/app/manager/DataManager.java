@@ -29,10 +29,8 @@ import eu.focusnet.app.network.NetworkManager;
  */
 public class DataManager // FIXME a service?
 {
-	private static DataManager ourInstance = new DataManager();
-
 	private static final String TAG = DataManager.class.getName();
-
+	private static DataManager ourInstance = new DataManager();
 	// other information regarding login?
 	private String loginUser = "";
 	private String loginPassword = "";
@@ -54,11 +52,6 @@ public class DataManager // FIXME a service?
 	private Gson gson = null;
 	private NetworkManager net = null;
 
-
-	public static DataManager getInstance()
-	{
-		return ourInstance;
-	}
 
 	/**
 	 * Initialize the Singleton.
@@ -82,6 +75,11 @@ public class DataManager // FIXME a service?
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-1.json";
+	}
+
+	public static DataManager getInstance()
+	{
+		return ourInstance;
 	}
 
 	/**
@@ -183,7 +181,7 @@ public class DataManager // FIXME a service?
 			Log.d(TAG, "User cached!!!!");
 			return this.user;
 		}
-		this.user = (User)(this.get(this.userUrl, User.class));
+		this.user = (User) (this.get(this.userUrl, User.class));
 		return this.user;
 	}
 
@@ -201,7 +199,7 @@ public class DataManager // FIXME a service?
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		this.userPreferences = (Preference)(this.get(this.prefUrl, Preference.class));
+		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
 
 		return this.userPreferences;
 	}
@@ -220,7 +218,7 @@ public class DataManager // FIXME a service?
 		if (this.appContentTemplate != null) {
 			return this.appContentTemplate;
 		}
-		this.appContentTemplate = (AppContentTemplate)(this.get(this.appContentUrl, AppContentTemplate.class));
+		this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
 		return this.appContentTemplate;
 	}
 
@@ -246,7 +244,7 @@ public class DataManager // FIXME a service?
 		this.appContentInstance = new AppContentInstance(template);
 
 		FocusSample out = this.getSample("http://focus.yatt.ch/resources-server/data/yarr"); // FIXME DEBUG
-		FocusSample out2 = (FocusSample)null;
+		FocusSample out2 = (FocusSample) null;
 
 		return;
 	}
@@ -263,7 +261,7 @@ public class DataManager // FIXME a service?
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
 		}
-		FocusSample sample = (FocusSample)(this.get(url, FocusSample.class));
+		FocusSample sample = (FocusSample) (this.get(url, FocusSample.class));
 		return sample;
 	}
 
@@ -316,7 +314,7 @@ public class DataManager // FIXME a service?
 		FocusObject f = null;
 		if (response.isSuccessful()) {
 			String json = response.getData();
-			 f =(FocusObject)this.gson.fromJson(json, targetClass);
+			f = (FocusObject) this.gson.fromJson(json, targetClass);
 			// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
 		}
 		else {
@@ -324,7 +322,7 @@ public class DataManager // FIXME a service?
 		}
 
 		this.cache.put(url, f);
-return f;
+		return f;
 // FIXME cache the result.
 
 		/*
@@ -392,7 +390,7 @@ return f;
 
 	/**
 	 * Get the history for a url, according to provided parameters. This will call a remote service.
-	 *
+	 * <p/>
 	 * HistorySample = { data: field1: [], field2: []}
 	 *
 	 * @param url
@@ -406,7 +404,7 @@ return f;
 
 	/**
 	 * Look for objects that are of the specified type and context. This will call a remote service.
-	 *
+	 * <p/>
 	 * LookupSample = { data: urls: []}
 	 *
 	 * @param context
@@ -418,7 +416,8 @@ return f;
 		return null; // FIXME TODO
 	}
 
-	public void saveUserPreferences() {
+	public void saveUserPreferences()
+	{
 
 		throw new NotImplementedException("saveuserpref");
 	}

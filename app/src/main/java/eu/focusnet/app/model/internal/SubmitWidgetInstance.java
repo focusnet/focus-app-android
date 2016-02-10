@@ -9,20 +9,23 @@ import eu.focusnet.app.model.focus.WidgetTemplate;
  */
 
 //TODO implement this class and its methods
-public class SubmitWidgetInstance extends WidgetInstance {
-    /**
-     * C'tor
-     *
-     * @param wTpl
-     * @param layoutConfig
-     * @param dataCtx
-     */
-    public SubmitWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx) {
-        super(wTpl, layoutConfig, dataCtx);
-    }
+public class SubmitWidgetInstance extends WidgetInstance
+{
+	/**
+	 * C'tor
+	 *
+	 * @param wTpl
+	 * @param layoutConfig
+	 * @param dataCtx
+	 */
+	public SubmitWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
+	{
+		super(wTpl, layoutConfig, dataCtx);
+	}
 
-    @Override
-    public void processConfig() {
+	@Override
+	public void processConfig()
+	{
 
-    }
+	}
 }

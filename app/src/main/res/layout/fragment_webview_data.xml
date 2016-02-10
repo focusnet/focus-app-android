@@ -1,5 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,20 +12,19 @@
             style="@style/TitleAppearance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pass some text to the index.html page while loading it."/>
+            android:text="Pass some text to the index.html page while loading it." />
 
         <EditText
             android:id="@+id/data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:hint="write some text here" />
+            android:hint="write some text here" />
 
         <Button
             android:id="@+id/loadWebViewButton"
             android:layout_width="match_parent"
-            android:text="Load the index.html page"
             android:layout_height="wrap_content"
-           />
+            android:text="Load the index.html page" />
 
     </LinearLayout>
 

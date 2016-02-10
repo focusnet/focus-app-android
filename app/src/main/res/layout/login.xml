@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:weightSum="1"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="0.05"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:src="@drawable/focus_logo"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
         android:layout_weight="0.5"
-        android:layout_centerHorizontal="true" />
+        android:src="@drawable/focus_logo" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="0.05"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.4">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/login_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="@string/login_username"
-                android:id="@+id/login_username" />
+                android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/login_username_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/login_username_textView"
-                android:textSize="20sp"
                 android:layout_marginLeft="30dp"
-                android:ems="15"/>
+                android:ems="15"
+                android:textSize="20sp" />
 
         </TableRow>
 
@@ -57,20 +58,20 @@
             android:layout_marginTop="10dp">
 
             <TextView
+                android:id="@+id/login_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="@string/login_password"
-                android:id="@+id/login_password" />
+                android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/login_password_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textSize="20sp"
                 android:layout_marginLeft="30dp"
                 android:ems="15"
-                android:id="@+id/login_password_textView" />
+                android:inputType="textPassword"
+                android:textSize="20sp" />
 
         </TableRow>
 
@@ -83,11 +84,11 @@
 
             <Button
                 android:layout_height="wrap_content"
-                android:paddingRight="50dip"
-                android:paddingLeft="50dip"
-                android:text="@string/login_button"
                 android:layout_gravity="right"
-                android:onClick="onClick"/>
+                android:onClick="onClick"
+                android:paddingLeft="50dip"
+                android:paddingRight="50dip"
+                android:text="@string/login_button" />
             <!--android:background="@drawable/focus_round_button"-->
         </TableRow>
 

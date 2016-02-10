@@ -1,7 +1,6 @@
 package eu.focusnet.app.activity;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,11 +12,9 @@ import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import eu.focusnet.app.R;
-
 import java.util.Date;
 
+import eu.focusnet.app.R;
 import eu.focusnet.app.common.AbstractListItem;
 import eu.focusnet.app.common.BaseDrawerActivity;
 import eu.focusnet.app.fragment.BookmarkFragment;
@@ -26,11 +23,10 @@ import eu.focusnet.app.fragment.SettingFragment;
 import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.manager.DataManager;
+import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.model.focus.User;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
-import eu.focusnet.app.manager.FragmentManager;
-import eu.focusnet.app.service.RefreshDataService;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 

@@ -1,37 +1,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_marginLeft="10dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4a88901d">
+    android:layout_marginLeft="10dp"
+    android:background="#4a88901d"
+    android:orientation="vertical">
 
-    <TextView android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_fragment" />
 
     <TableLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/webservice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="Web Service URl"
-                android:id="@+id/webservice" />
+                android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/webservice_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/webservice_textView"
-                android:textSize="20sp"
                 android:layout_marginLeft="30dp"
-                android:ems="20"/>
+                android:ems="20"
+                android:textSize="20sp" />
 
         </TableRow>
 
@@ -40,18 +41,18 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/http_method"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="HTTP Method"
-                android:id="@+id/http_method" />
+                android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/http_method_spinner"
-                android:layout_marginLeft="30dp"
-                android:textSize="20sp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:textSize="20sp" />
 
         </TableRow>
 
@@ -69,20 +70,21 @@
     </TableLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView" >
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
-            <TextView android:layout_width="wrap_content"
-                android:layout_marginTop="20dp"
+            <TextView
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/settings" />
+                android:layout_marginTop="20dp" />
 
         </LinearLayout>
     </ScrollView>

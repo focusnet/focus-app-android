@@ -12,11 +12,11 @@
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="drawer_items">
-    <item >My FOCUS</item>
-    <item >Starred</item>
-    <item >Synchronize</item>
-    <item >Settings</item>
-    <item >User manual</item>
+        <item>My FOCUS</item>
+        <item>Starred</item>
+        <item>Synchronize</item>
+        <item>Settings</item>
+        <item>User manual</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -48,11 +48,11 @@
 
     <!-- ProjectTemplate Items -->
     <string-array name="focus_project_items">
-        <item >Cutting of stand #412</item>
-        <item >Company machines overview</item>
-        <item >Company roadmap</item>
-        <item >Cutting of stand #673</item>
-        <item >Stand #455</item>
+        <item>Cutting of stand #412</item>
+        <item>Company machines overview</item>
+        <item>Company roadmap</item>
+        <item>Cutting of stand #673</item>
+        <item>Stand #455</item>
     </string-array>
 
     <!-- ProjectTemplate Item Icons -->
@@ -66,8 +66,8 @@
 
     <!-- Notification Items -->
     <string-array name="focus_notification_items">
-        <item >Cutting of stand #412 / Delay announce (2 days)</item>
-        <item >Cutting of stand #412 / Fowarder in maintenance on 23.12.2014</item>
+        <item>Cutting of stand #412 / Delay announce (2 days)</item>
+        <item>Cutting of stand #412 / Fowarder in maintenance on 23.12.2014</item>
     </string-array>
 
     <!-- Notification Item Icons -->
@@ -85,8 +85,8 @@
     <string name="cutting_header_notification">Notifications (1 new)</string>
 
     <string-array name="cutting_dashboard_items">
-        <item >Productivity Panel</item>
-        <item >Human Resources Overview</item>
+        <item>Productivity Panel</item>
+        <item>Human Resources Overview</item>
     </string-array>
 
     <string-array name="cutting_dashboard_icons">
@@ -95,9 +95,9 @@
     </string-array>
 
     <string-array name="cutting_tool_items">
-        <item >Polterluchs</item>
-        <item >Time Control</item>
-        <item >Planing Control</item>
+        <item>Polterluchs</item>
+        <item>Time Control</item>
+        <item>Planing Control</item>
     </string-array>
 
     <string-array name="cutting_tool_icons">
@@ -108,8 +108,8 @@
 
     <!-- Notification Items -->
     <string-array name="cutting_notification_items">
-        <item >Delay approval request (2 days)</item>
-        <item >Fowarder in maintenance until 23.12.2015</item>
+        <item>Delay approval request (2 days)</item>
+        <item>Fowarder in maintenance until 23.12.2015</item>
     </string-array>
 
     <!-- Notification Item Icons -->
@@ -135,7 +135,7 @@
 
     <string name="hello_world">Hello world!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_page">PageActivity</string>
     <string name="title_activity_test">TestActivity</string>

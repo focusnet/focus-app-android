@@ -1,65 +1,49 @@
 package eu.focusnet.app.fragment;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.common.WidgetFragment;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.WidgetDao;
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.manager.FragmentManager;
-import eu.focusnet.app.model.focus.FocusSampleDataMap;
-import eu.focusnet.app.model.focus.WidgetTemplate;
-import eu.focusnet.app.model.focus.WidgetLinker;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.internal.WidgetInstance;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.NavigationUtil;
-import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
  * the characteristics of a page
  */
-public class PageFragment extends Fragment {
+public class PageFragment extends Fragment
+{
 
-    private static final String TAG  = PageFragment.class.getName();
+	private static final String TAG = PageFragment.class.getName();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState)
+	{
 
-        // Inflate the layout for this fragment
-        View viewRoot =  inflater.inflate(R.layout.fragment_page, container, false);
-        Bundle bundle = getArguments();
-        String projectPath = (String)bundle.get(Constant.PROJECT_PATH);
-        String pagePath = (String)bundle.get(Constant.PAGE_PATH);
+		// Inflate the layout for this fragment
+		View viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
+		Bundle bundle = getArguments();
+		String projectPath = (String) bundle.get(Constant.PROJECT_PATH);
+		String pagePath = (String) bundle.get(Constant.PAGE_PATH);
 
 //        new PageBuilderTask().execute(projectPath, pagePath);
 
-        AppContentInstance appContentInstance = DataManager.getInstance().getAppContentInstance();
-        ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
-        PageInstance pageInstance = appContentInstance.getPageFromPath(pagePath);
+		AppContentInstance appContentInstance = DataManager.getInstance().getAppContentInstance();
+		ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
+		PageInstance pageInstance = appContentInstance.getPageFromPath(pagePath);
 
-        LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
+		LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
 
-        ViewUtil.buildPageView(projectInstance, pageInstance, linearLayoutPageInfo, getActivity());
+		ViewUtil.buildPageView(projectInstance, pageInstance, linearLayoutPageInfo, getActivity());
 
 //        LinkedHashMap<String, WidgetInstance> widgetInstances = pageInstance.getWidgets();
 
@@ -74,8 +58,8 @@ public class PageFragment extends Fragment {
 //            FragmentManager.addFragment(linearLayoutPageInfo.getId(), widgetFragment, getFragmentManager());
 //        }
 
-        return viewRoot;
-    }
+		return viewRoot;
+	}
 
 
 //    /**

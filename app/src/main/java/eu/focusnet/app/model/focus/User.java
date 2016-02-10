@@ -1,58 +1,72 @@
 package eu.focusnet.app.model.focus;
 
-public class User extends FocusObject {
+public class User extends FocusObject
+{
 
 	private Long id;
 	private String firstName,
-					lastName,
-						email,
-			          company;
+			lastName,
+			email,
+			company;
 
-	public User() {}
+	public User()
+	{
+	}
 
 	public User(Long id, String firstname, String lastname, String email,
-				String company) {
+				String company)
+	{
 		this.email = email;
 		this.company = company;
 	}
 
-	public Long getId() {
+	public Long getId()
+	{
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Long id)
+	{
 		this.id = id;
 	}
 
-	public String getFirstName() {
+	public String getFirstName()
+	{
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	public void setFirstName(String firstName)
+	{
 		this.firstName = firstName;
 	}
 
-	public String getLastName() {
+	public String getLastName()
+	{
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public void setLastName(String lastName)
+	{
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
+	public String getEmail()
+	{
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email)
+	{
 		this.email = email;
 	}
 
-	public String getCompany() {
+	public String getCompany()
+	{
 		return company;
 	}
 
-	public void setCompany(String company) {
+	public void setCompany(String company)
+	{
 		this.company = company;
 	}
 

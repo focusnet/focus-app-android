@@ -33,7 +33,6 @@ public class TextWidgetInstance extends WidgetInstance
 	}
 
 
-
 	/**
 	 * Get the content
 	 *

@@ -1,6 +1,5 @@
 package eu.focusnet.app.util;
 
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,17 +11,6 @@ import eu.focusnet.app.exception.BadTypeException;
  */
 public class TypesHelper
 {
-	public enum TargetType
-	{
-		STRING,
-		DOUBLE,
-		INTEGER,
-		ARRAY_OF_STRINGS,
-		ARRAY_OF_DOUBLES,
-		ARRAY_OF_INTEGERS,
-		ARRAY_OF_URLS
-	}
-
 	/**
 	 * double, int, float, string, url
 	 *
@@ -54,7 +42,7 @@ public class TypesHelper
 		}
 		if (obj instanceof String) {
 			try {
-				return Double.parseDouble((String)obj);
+				return Double.parseDouble((String) obj);
 			}
 			catch (NumberFormatException e) {
 				throw new BadTypeException("not a valid double string");
@@ -77,7 +65,7 @@ public class TypesHelper
 			throw new BadTypeException("Provided values are not an ArrayList");
 		}
 		ArrayList<String> ret = new ArrayList<String>();
-		for(Object o2 : (ArrayList)obj) {
+		for (Object o2 : (ArrayList) obj) {
 			if (o2 instanceof String || o2 instanceof Double || o2 instanceof Integer) {
 				ret.add(o2.toString());
 			}
@@ -97,7 +85,6 @@ public class TypesHelper
 	{
 		return null;
 	}
-
 
 	/**
 	 * Make sure that the provided object in an ArrayList of URLs (as Strings), or throw an exception.
@@ -126,6 +113,18 @@ public class TypesHelper
 			}
 		}
 		return (ArrayList<String>) o;
+	}
+
+
+	public enum TargetType
+	{
+		STRING,
+		DOUBLE,
+		INTEGER,
+		ARRAY_OF_STRINGS,
+		ARRAY_OF_DOUBLES,
+		ARRAY_OF_INTEGERS,
+		ARRAY_OF_URLS
 	}
 
 

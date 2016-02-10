@@ -4,6 +4,7 @@
 <h1>My Heading</h1>
 
 <p>This is a paragraph.</p>
+
 <p id="data">Text received from Android on page load:</p>
 <hr>
 
@@ -14,26 +15,31 @@
 <br>
 <hr>
 <br>
+
 <div id="div">Text received from Android (life):</div>
 
 <br>
 <hr>
 <p>Click the button to see the counter increase.</p>
 <input type="button" onclick="clickCounter()" value="Increment counter"/>
+
 <div id="result"></div>
 <p>Close the App, and try again, and the counter will continue to count (is not reset).</p>
 
 <hr>
 <p>This image was loaded from the internet</p>
-<img id="internetImage" crossorigin="anonymous" src="http://www.gravatar.com/avatar/0e39d18b89822d1d9871e0d1bc839d06?s=128&d=identicon&r=PG%22"/>
+<img id="internetImage" crossorigin="anonymous"
+     src="http://www.gravatar.com/avatar/0e39d18b89822d1d9871e0d1bc839d06?s=128&d=identicon&r=PG%22"/>
 <br>
 <input type="button" onclick="saveImage()" value="Save image in local storage"/>
 
-<br><hr>
+<br>
+<hr>
 <img id="img"/><br>
 <input type="button" onclick="loadImage()" value="Load image from local storage"/>
 
-<br><hr>
+<br>
+<hr>
 <input type="button" onclick="removeImage()" value="Remove image from local storage"/>
 
 
@@ -114,6 +120,8 @@
        alert("Image removed from local storage");
       }
    }
+
+
 
 </script>
 </html>

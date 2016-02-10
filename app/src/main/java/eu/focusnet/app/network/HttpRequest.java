@@ -12,16 +12,15 @@ import java.net.URL;
 public class HttpRequest
 {
 
+	public static final String HTTP_METHOD_GET = "GET";
+	public static final String HTTP_METHOD_POST = "POST";
+	public static final String HTTP_METHOD_PUT = "PUT";
+	public static final String HTTP_METHOD_DELETE = "DELETE";
 	String method = null;
 	URL url = null;
 	String payload = "";
 	HttpResponse response = null;
 	int errors = 0; // we count number of errors.
-
-	public static final String HTTP_METHOD_GET = "GET";
-	public static final String HTTP_METHOD_POST = "POST";
-	public static final String HTTP_METHOD_PUT = "PUT";
-	public static final String HTTP_METHOD_DELETE = "DELETE";
 
 	/**
 	 * A simple Request without payload (GET or DELETE)
@@ -74,6 +73,27 @@ public class HttpRequest
 		this.payload = payload;
 	}
 
+	/**
+	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
+	 * <p/>
+	 * FIXME HttpsURLConnection for HTTPS connections?
+	 * <p/>
+	 * keepalive and persistent connections are automatically handled by Anroid. Nothing to do.
+	 *
+	 * @param url
+	 * @param httpMethod
+	 * @return
+	 * @throws IOException
+	 */
+	private static HttpURLConnection getHTTPConnection(URL url, String httpMethod) throws IOException
+	{
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setInstanceFollowRedirects(true); // FIXME we still have to resolve the redirection manually! TODO TODO
+		connection.setRequestMethod(httpMethod);
+		// no need to configure the persistence of HTTP connections. This is automatically handled
+		// by Android
+		return connection;
+	}
 
 	/**
 	 * Actually run the request and build the output Response object.
@@ -87,7 +107,6 @@ public class HttpRequest
 		if (this.errors != 0) {
 			throw new RuntimeException("Bad configuration for HTTP Request");
 		}
-
 
 
 		// object a new connection
@@ -124,30 +143,6 @@ public class HttpRequest
 
 
 		return response;
-	}
-
-	/**
-	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
-	 * <p/>
-	 * FIXME HttpsURLConnection ??
-	 *
-	 * FIXME keepalive / persistent connections? -> apparently handled automatically by Android. Nothing to do here.
-	 *
-	 *
-	 *
-	 * @param url
-	 * @param httpMethod
-	 * @return
-	 * @throws IOException
-	 */
-	private static HttpURLConnection getHTTPConnection(URL url, String httpMethod) throws IOException
-	{
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setRequestProperty("Accept", "application/json");
-		connection.setInstanceFollowRedirects(true);
-		connection.setRequestMethod(httpMethod);
-		return connection;
 	}
 
 

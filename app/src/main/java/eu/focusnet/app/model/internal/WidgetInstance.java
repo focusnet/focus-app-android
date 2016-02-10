@@ -167,9 +167,11 @@ public abstract class WidgetInstance
 
 	/**
 	 * Set the collected data
+	 *
 	 * @param focusSample
 	 */
-	public void setCollectedData(FocusSample focusSample){
+	public void setCollectedData(FocusSample focusSample)
+	{
 		//TODO implement this method
 	}
 }

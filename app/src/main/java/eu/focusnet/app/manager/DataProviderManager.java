@@ -22,13 +22,11 @@ import java.util.Map;
 public class DataProviderManager
 {
 
-	private static final String TAG = DataProviderManager.class.getName();
-
-
 	public static final String HTTP_METHOD_GET = "GET";
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_PUT = "PUT";
 	public static final String HTTP_METHOD_DELETE = "DELETE";
+	private static final String TAG = DataProviderManager.class.getName();
 
 	public static ResponseData retrieveData(String path) throws IOException
 	{

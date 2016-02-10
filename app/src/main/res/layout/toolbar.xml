@@ -10,16 +10,16 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:elevation="8dp"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:titleTextAppearance="@style/ToolBarTextHeaderAppearance"
-        app:titleTextAppearance="@style/ToolBarTextHeaderAppearance"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextAppearance="@style/ToolBarTextHeaderAppearance" />
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:elevation="8dp"-->
-        <!--android:background="@android:color/white"-->
-        <!--android:layout_below="@+id/toolbar"-->
-        <!--/>-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:elevation="8dp"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:layout_below="@+id/toolbar"-->
+    <!--/>-->
 </RelativeLayout>

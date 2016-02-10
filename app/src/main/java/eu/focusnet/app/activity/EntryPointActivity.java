@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 import eu.focusnet.app.R;
 import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.manager.DataManager;
@@ -16,7 +15,6 @@ import eu.focusnet.app.manager.DataManager;
  * Start screen of the application. If the application is not configured, yet, he is redirected
  * to the LoginActivity. If the application is configured, then the basic application data are
  * loaded and the user is then redirected to the FocusActivity.
- *
  */
 public class EntryPointActivity extends Activity
 {

@@ -1,28 +1,38 @@
 package eu.focusnet.app.model.focus;
 
-public class Setting {
+public class Setting
+{
 
 	private Long id;
 	private String language;
 
-	public Setting() {}
-	
-	public Setting(String language, Notification notification) {
+	public Setting()
+	{
+	}
+
+	public Setting(String language, Notification notification)
+	{
 
 		this.language = language;
 	}
-	public String getLanguage() {
+
+	public String getLanguage()
+	{
 		return language;
 	}
-	public void setLanguage(String language) {
+
+	public void setLanguage(String language)
+	{
 		this.language = language;
 	}
 
-	public Long getId() {
+	public Long getId()
+	{
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Long id)
+	{
 		this.id = id;
 	}
 }

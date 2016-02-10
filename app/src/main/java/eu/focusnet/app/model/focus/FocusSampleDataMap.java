@@ -9,9 +9,9 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 
 	/**
 	 * Only accept: .... TODO doc simple implementation like hashmap, but check for focus-compatible types.
-	 *
+	 * <p/>
 	 * FIXME TODO Custom exception.
-	 *
+	 * <p/>
 	 * FIXME TODO : no URL for now .
 	 *
 	 * @param s The key identifying the entry in the HashMap
@@ -19,7 +19,8 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 	 * @return The inserted object (o)
 	 */
 	@Override
-	public Object put(String s, Object o) {
+	public Object put(String s, Object o)
+	{
 
 		if (!this.isValidScalarType(o)) {
 			if (!(o instanceof ArrayList)) {
@@ -33,7 +34,8 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 				try {
 					first = ((ArrayList) o).get(0);
 				}
-				catch(NullPointerException e) { }
+				catch (NullPointerException e) {
+				}
 
 				if (first == null) {
 					// Empty array, let's force it to contain Strings (no real importance as it is empty)

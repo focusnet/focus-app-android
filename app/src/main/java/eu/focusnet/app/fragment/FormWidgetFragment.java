@@ -13,21 +13,23 @@ import eu.focusnet.app.model.internal.FormWidgetInstance;
 /**
  * Created by yandypiedra on 14.01.16.
  */
-public class FormWidgetFragment extends WidgetFragment {
+public class FormWidgetFragment extends WidgetFragment
+{
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View viewRoot = inflater.inflate(R.layout.fragment_form, container, false);
-        setWidgetLayout(viewRoot);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		View viewRoot = inflater.inflate(R.layout.fragment_form, container, false);
+		setWidgetLayout(viewRoot);
 
-        FormWidgetInstance formWidgetInstance = (FormWidgetInstance) getWidgetInstance();
+		FormWidgetInstance formWidgetInstance = (FormWidgetInstance) getWidgetInstance();
 
-        TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
-        title.setText(formWidgetInstance.getTitle());
+		TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
+		title.setText(formWidgetInstance.getTitle());
 
-        return viewRoot;
-    }
+		return viewRoot;
+	}
 
 }

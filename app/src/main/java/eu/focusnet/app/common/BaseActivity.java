@@ -44,7 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity
 
 	//TODO starting an stoping the service in each activity is not a good idea
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
 		intent = new Intent(this, RefreshDataService.class);
 		//TODO delay interval is hardcoded
@@ -53,7 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity
 	}
 
 	@Override
-	protected void onPause() {
+	protected void onPause()
+	{
 		super.onPause();
 		stopService(intent);
 	}

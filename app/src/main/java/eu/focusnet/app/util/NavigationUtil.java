@@ -1,31 +1,25 @@
 package eu.focusnet.app.util;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-
-import eu.focusnet.app.common.WidgetFragment;
-
 /**
  *
  */
-public class NavigationUtil {
+public class NavigationUtil
+{
 
-    public enum PathType {PROJECT_ID, PROJECT_ID_PAGE_ID}
+	public static PathType checkPathType(String path)
+	{
+		String[] parts = path.split("\\|");
+		PathType pathType = null;
+		switch (parts.length) {
+			case 1:
+				pathType = PathType.PROJECT_ID;
+				break;
+			case 3:
+				pathType = PathType.PROJECT_ID_PAGE_ID;
+				break;
+		}
 
-    public static PathType checkPathType(String path) {
-        String[] parts = path.split("\\|");
-        PathType pathType = null;
-        switch(parts.length) {
-            case 1:
-                pathType = PathType.PROJECT_ID;
-                break;
-            case 3:
-                pathType = PathType.PROJECT_ID_PAGE_ID;
-                break;
-        }
-
-        return pathType;
+		return pathType;
 
 //        if (parts.length >= 1) {
 //            return this.projects.get(parts[0]);
@@ -40,5 +34,10 @@ public class NavigationUtil {
 //            return PathType.PROJECT_ID_PAGE_ID;
 //        }
 //        return PathType.PROJECT_ID;
-    }
+	}
+
+	public enum PathType
+	{
+		PROJECT_ID, PROJECT_ID_PAGE_ID
+	}
 }

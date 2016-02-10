@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import eu.focusnet.app.network.NetworkManager;
-import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.R;
+import eu.focusnet.app.manager.DataManager;
 
 /**
  * Login Activity: this activity displays the login screen
@@ -43,7 +41,7 @@ public class LoginActivity extends Activity
 	/**
 	 * When the user clicks the login button, the provided username, password and server name
 	 * are used to authenticate.
-	 *
+	 * <p/>
 	 * This logic requires a network connection.
 	 */
 	public void onClick(View view)

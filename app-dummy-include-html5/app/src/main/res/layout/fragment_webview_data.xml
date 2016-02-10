@@ -15,7 +15,7 @@
             android:text="Context to pass to JavaScript&apos;s init() function (a URI)"/>
 
         <EditText
-            android:id="@+id/data"
+            android:id="@+id/context"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              android:hint="write some text here"

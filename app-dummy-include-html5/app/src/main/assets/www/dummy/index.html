@@ -14,7 +14,7 @@
      */
     function init(context)
     {
-        $("#data").append( "<strong>" + context + "</strong>" );
+        $("#context").append( "<strong>" + context + "</strong>" );
     }
 
     /**
@@ -30,8 +30,8 @@
         if(window.FocusApp) {
             // GET a FocusSample
             // Returns a JSON string containing the FocusSample, or null if an error occurred.
-            var data = FocusApp.getFocusData("http://focus.yatt.ch/debug/app-content-1.json");
-            $("#data").append( "<strong>" + data + "</strong>" );
+            var context = FocusApp.getFocusData("http://focus.yatt.ch/debug/app-content-1.json");
+            $("#context").append( "<strong>" + context + "</strong>" );
 
             // x will be undefined, because the object could not be fetched
             var x = FocusApp.getFocusData("http://focus.yatt.ch/not-found.json");
@@ -55,11 +55,11 @@
 
             // GET an external resource, such as a tile of the map
             // returns a string containing a JSON object:
-            // "{ "mimetype":"image/png", "data":"base64-encoded data" }
+            // "{ "mimetype":"image/png", "context":"base64-encoded context" }
             // or null on error
-            var data = FocusApp.getResource("http://placehold.it/200x400"); // FIXME not working!
+            var context = FocusApp.getResource("http://placehold.it/200x400"); // FIXME not working!
             var data3 = FocusApp.getResource("https://i.ytimg.com/vi/3v5Q_dPQUYo/maxresdefault.jpg");
-            $("#data").append( "<strong>" + data3 + "</strong>" );
+            $("#context").append( "<strong>" + data3 + "</strong>" );
 
         }
     }
@@ -82,6 +82,6 @@
 <input type="button" onclick="do_something()" value="Click to do something"/>
 <br/>
 
-<p id="data">Loaded data: </p>
+<p id="context">Loaded context: </p>
 </body>
 </html>

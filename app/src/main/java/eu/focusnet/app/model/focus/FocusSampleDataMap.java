@@ -9,9 +9,9 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 
 	/**
 	 * Only accept: .... TODO doc simple implementation like hashmap, but check for focus-compatible types.
-	 * <p/>
+	 * <p>
 	 * FIXME TODO Custom exception.
-	 * <p/>
+	 * <p>
 	 * FIXME TODO : no URL for now .
 	 *
 	 * @param s The key identifying the entry in the HashMap

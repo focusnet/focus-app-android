@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="@drawable/list_item_selector">
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/list_item_selector">
 
     <ImageView
         android:id="@+id/icon"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="22dp" />
+        android:layout_marginLeft="22dp"/>
 
     <TextView
         android:id="@+id/title"
@@ -20,7 +20,7 @@
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/icon"
         android:gravity="center_vertical"
-        android:paddingRight="40dp" />
+        android:paddingRight="40dp"/>
 
     <TextView
         android:id="@+id/info"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/icon"
         android:layout_marginLeft="64dp"
-        android:layout_marginTop="-10dp" />
+        android:layout_marginTop="-10dp"/>
 
     <ImageView
         android:id="@+id/right_icon"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="25dp" />
+        android:layout_marginRight="25dp"/>
 
     <!--<TextView android:id="@+id/counter"-->
     <!--android:layout_width="wrap_content"-->

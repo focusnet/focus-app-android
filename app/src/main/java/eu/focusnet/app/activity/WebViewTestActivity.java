@@ -5,7 +5,6 @@ import android.os.Bundle;
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.BaseActivity;
 import eu.focusnet.app.fragment.WebViewDataFragment;
-import eu.focusnet.app.fragment.WebViewFragment;
 
 /**
  * This activity is only for testing the iteration between android and the webview {@link eu.focusnet.app.fragment.WebViewDataFragment}

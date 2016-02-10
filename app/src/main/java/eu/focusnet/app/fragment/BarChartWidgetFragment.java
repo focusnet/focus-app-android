@@ -106,7 +106,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 //        data.setValueTextSize(10f);
 //        //data.setValueTypeface(mTf);
 //
-//        barChart.setData(data);
+//        barChart.setContext(data);
 //
 //        Legend legend = barChart.getLegend();
 //        legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);

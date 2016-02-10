@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:divider="?android:dividerHorizontal"
-    android:orientation="vertical"
-    android:showDividers="middle">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="?android:dividerHorizontal"
+              android:orientation="vertical"
+              android:showDividers="middle">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:textColor="@android:color/white"
-            android:textSize="19sp" />
+            android:textSize="19sp"/>
         <!--TODO internationalize all these message-->
 
     </LinearLayout>
@@ -41,7 +41,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
                 android:text="Name: "
-                android:textAppearance="@style/TitleAppearance" />
+                android:textAppearance="@style/TitleAppearance"/>
             <!--TODO internationalize all these message-->
 
             <EditText
@@ -49,12 +49,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.9" />
+                android:layout_weight="0.9"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="0.1" />
+                android:layout_weight="0.1"/>
         </TableRow>
 
     </TableLayout>
@@ -71,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="Cancel"/>
         <!-- TODO internationalization -->
 
         <!--<View-->
@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ok" />
+            android:text="Ok"/>
         <!-- TODO internationalization -->
     </LinearLayout>
 

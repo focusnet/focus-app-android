@@ -24,7 +24,7 @@ import eu.focusnet.app.network.NetworkManager;
 
 /**
  * This follows a Singleton pattern.
- * <p/>
+ * <p>
  * Created by julien on 07.01.16.
  */
 public class DataManager // FIXME a service?
@@ -92,7 +92,7 @@ public class DataManager // FIXME a service?
 
 	/**
 	 * Login and if successful, save the login information in the permanent store.
-	 * <p/>
+	 * <p>
 	 * This method relies on network connectivity.
 	 *
 	 * @param user
@@ -390,7 +390,7 @@ public class DataManager // FIXME a service?
 
 	/**
 	 * Get the history for a url, according to provided parameters. This will call a remote service.
-	 * <p/>
+	 * <p>
 	 * HistorySample = { data: field1: [], field2: []}
 	 *
 	 * @param url
@@ -404,7 +404,7 @@ public class DataManager // FIXME a service?
 
 	/**
 	 * Look for objects that are of the specified type and context. This will call a remote service.
-	 * <p/>
+	 * <p>
 	 * LookupSample = { data: urls: []}
 	 *
 	 * @param context

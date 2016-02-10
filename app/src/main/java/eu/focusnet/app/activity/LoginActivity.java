@@ -41,7 +41,7 @@ public class LoginActivity extends Activity
 	/**
 	 * When the user clicks the login button, the provided username, password and server name
 	 * are used to authenticate.
-	 * <p/>
+	 * <p>
 	 * This logic requires a network connection.
 	 */
 	public void onClick(View view)

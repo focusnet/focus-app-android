@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * This class contains all methods pertaining to networking. It follows a Singleton pattern.
- * <p/>
+ * <p>
  * This class is an abstraction library for communicating with our REST server.
  */
 public class NetworkManager
@@ -50,7 +50,7 @@ public class NetworkManager
 
 	/**
 	 * Is the network currently available?
-	 * <p/>
+	 * <p>
 	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
 	 *
 	 * @return true if network is available, false otherwise.
@@ -81,8 +81,8 @@ public class NetworkManager
 
 	/**
 	 * Get a specific version of an existing resource
-	 * <p/>
-	 * <p/>
+	 * <p>
+	 * <p>
 	 * FIXME any use?
 	 *
 	 * @param url

@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -24,7 +24,7 @@
             android:layout_gravity="start"
             android:background="@color/list_item_background"
             android:choiceMode="singleChoice"
-            android:dividerHeight="1dp" />
+            android:dividerHeight="1dp"/>
 
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

@@ -5,7 +5,7 @@
 
 <p>This is a paragraph.</p>
 
-<p id="data">Text received from Android on page load:</p>
+<p id="context">Text received from Android on page load:</p>
 <hr>
 
 <p>Pass some text to Android:</p>
@@ -62,8 +62,8 @@
     }
 
    function load(val){
-       var data = document.getElementById("data");
-       data.innerHTML = data.innerHTML + val;
+       var context = document.getElementById("context");
+       context.innerHTML = context.innerHTML + val;
    }
 
    function lifeData(value){
@@ -92,10 +92,10 @@
             // Draw image into canvas element
             imgContext.drawImage(internetImg, 0, 0);
 
-            // Get canvas contents as a data URL
+            // Get canvas contents as a context URL
             var dataURL = imgCanvas.toDataURL("image/png");
 
-           imgAsDataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+           imgAsDataURL = dataURL.replace(/^context:image\/(png|jpg);base64,/, "");
 
            localStorage.setItem("imgData", imgAsDataURL);
            alert("Image saved in local storage");
@@ -107,7 +107,7 @@
        var dataImage = localStorage.getItem("imgData");
        if(dataImage != null){
            image = document.getElementById("img");
-           image.src = "data:image/png;base64," + dataImage;
+           image.src = "context:image/png;base64," + dataImage;
        }
       }
    }
@@ -120,6 +120,7 @@
        alert("Image removed from local storage");
       }
    }
+
 
 
 

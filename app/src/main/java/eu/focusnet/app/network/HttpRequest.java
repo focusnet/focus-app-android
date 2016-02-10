@@ -75,9 +75,9 @@ public class HttpRequest
 
 	/**
 	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
-	 * <p/>
+	 * <p>
 	 * FIXME HttpsURLConnection for HTTPS connections?
-	 * <p/>
+	 * <p>
 	 * keepalive and persistent connections are automatically handled by Anroid. Nothing to do.
 	 *
 	 * @param url

@@ -27,6 +27,9 @@ import eu.focusnet.app.model.ui.ChartData;
 
 /**
  * Created by yandypiedra on 13.01.16.
+ *
+ * FIXME TODO use accessor functions that are in the LineChartWidgetInstance to create the UI.
+ * We may need to adapt these functions, though.
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {

@@ -76,8 +76,6 @@ public class LoginActivity extends Activity
 				catch (RuntimeException e) {
 					e.printStackTrace();
 				}
-
-
 			}
 		};
 		loginThread.start();

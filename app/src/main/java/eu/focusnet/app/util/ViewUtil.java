@@ -57,7 +57,7 @@ public class ViewUtil
 	private static final String TYPE_GPS = "#/definitions/widget/collect/gps";
 	private static final String TYPE_FORM = "#/definitions/widget/collect/form";
 	private static final String TYPE_EXTERNAL_APP = "#/definitions/widget/visualize/external-app";
-	private static final String TYPE_SUBMIT = "#/definitions/widget/visualize/submit";
+	private static final String TYPE_SUBMIT = "#/definitions/widget/collect/submit";
 	private static final String TYPE_HTML5 = "#/definitions/widget/visualize/html5-widget";
 
 	/**
@@ -231,6 +231,7 @@ public class ViewUtil
 				widgetBundle.putInt(LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			}
 			widgetBundle.putInt(LAYOUT_WEIGHT, weight);
+
 			widgetFragment.setArguments(widgetBundle);
 
 			FragmentManager.addFragment(linearLayoutHorizontal.getId(), widgetFragment, activity.getFragmentManager());

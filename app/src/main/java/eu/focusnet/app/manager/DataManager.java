@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import eu.focusnet.app.adapter.DateTypeAdapter;
+import eu.focusnet.app.db.DatabaseAdapter;
 import eu.focusnet.app.exception.NotImplementedException;
 import eu.focusnet.app.model.focus.AppContentTemplate;
 import eu.focusnet.app.model.focus.FocusObject;
@@ -31,6 +32,11 @@ public class DataManager // FIXME a service?
 {
 	private static final String TAG = DataManager.class.getName();
 	private static DataManager ourInstance = new DataManager();
+
+	private Context context;
+
+	private boolean isInitialized;
+
 	// other information regarding login?
 	private String loginUser = "";
 	private String loginPassword = "";
@@ -58,8 +64,31 @@ public class DataManager // FIXME a service?
 	 */
 	private DataManager()
 	{
+		this.isInitialized = false;
+	}
+
+	public static DataManager getInstance()
+	{
+		return ourInstance;
+	}
+
+	/**
+	 * Finish initializing the DataManager
+	 */
+	public void init(Context c)
+	{
+		if (this.isInitialized) {
+			return;
+		}
+
+		this.context = c;
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 		this.net = NetworkManager.getInstance();
+		this.net.setContext(this.context);
+		DatabaseAdapter databaseAdapter = new DatabaseAdapter(this.context); // was getApplication()
+		databaseAdapter.openWritableDatabase();
+
+
 
 		// get login infos from local store, and use it as the default FIXME TODO
 
@@ -75,26 +104,14 @@ public class DataManager // FIXME a service?
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
-	//	this.appContentUrl = "http://focus.yatt.ch/debug/app-content-all-widgets.json";
+		//	this.appContentUrl = "http://focus.yatt.ch/debug/app-content-all-widgets.json";
 		// FIXME FIXME DEBUG
 		// does not work :/
 	/*	this.userUrl = "file:///android_asset/tests/user.json";
 		this.prefUrl = "file:///android_asset/tests/pref.json";
 		this.appContentUrl = "file:///android_asset/tests/test-1.json";
 		*/
-	}
-
-	public static DataManager getInstance()
-	{
-		return ourInstance;
-	}
-
-	/**
-	 * Set the context of this manager
-	 */
-	public void setContext(Context c)
-	{
-		this.net.setContext(c);
+		this.isInitialized = true;
 	}
 
 	/**

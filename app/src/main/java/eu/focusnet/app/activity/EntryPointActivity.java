@@ -20,8 +20,6 @@ public class EntryPointActivity extends Activity
 {
 	private static final String TAG = EntryPointActivity.class.getName();
 
-	private Context context = null;
-
 	/**
 	 * Instantiate the activity.
 	 *
@@ -32,7 +30,6 @@ public class EntryPointActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		this.context = this.getApplicationContext();
 
 		/*
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
@@ -41,13 +38,13 @@ public class EntryPointActivity extends Activity
 		 * The Context must be set once.
 		 */
 		DataManager dm = DataManager.getInstance();
-		dm.setContext(this.getApplicationContext());
+		dm.init(this.getApplicationContext());
 
-		//Create the database
-		//TODO this is only for test purpose. This call should be done somewhere else
+
+
 		DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
 		databaseAdapter.openWritableDatabase();
-		//End
+
 
 		if (dm.hasLoginInformation()) {
 			/*

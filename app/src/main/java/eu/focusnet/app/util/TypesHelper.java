@@ -78,12 +78,42 @@ public class TypesHelper
 
 	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws BadTypeException
 	{
-		return null;
+		if (!(obj instanceof ArrayList)) {
+			throw new BadTypeException("Provided values are not an ArrayList");
+		}
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		for (Object o2 : (ArrayList) obj) {
+			if (o2 instanceof Integer) {
+				ret.add((Integer) o2);
+			}
+			else if (o2 instanceof String) {
+				ret.add(Integer.parseInt((String) o2));
+			}
+			else {
+				throw new BadTypeException("Invalid value in array");
+			}
+		}
+		return ret;
 	}
 
 	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws BadTypeException
 	{
-		return null;
+		if (!(obj instanceof ArrayList)) {
+			throw new BadTypeException("Provided values are not an ArrayList");
+		}
+		ArrayList<Double> ret = new ArrayList<Double>();
+		for (Object o2 : (ArrayList) obj) {
+			if (o2 instanceof Double || o2 instanceof Integer) {
+				ret.add((Double) o2);
+			}
+			else if (o2 instanceof String) {
+				ret.add(Double.parseDouble((String) o2));
+			}
+			else {
+				throw new BadTypeException("Invalid value in array");
+			}
+		}
+		return ret;
 	}
 
 	/**

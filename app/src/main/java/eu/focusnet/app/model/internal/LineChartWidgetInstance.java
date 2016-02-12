@@ -1,5 +1,6 @@
 package eu.focusnet.app.model.internal;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -8,10 +9,8 @@ import eu.focusnet.app.model.ui.ChartData;
 import eu.focusnet.app.util.TypesHelper;
 
 /**
- * Created by admin on 28.01.2016.
+ * WidgetInstance containing all information pertaining to a Line Chart widget.
  */
-
-
 public class LineChartWidgetInstance extends WidgetInstance
 {
 	private static final String CONFIG_LABEL_CAPTION = "caption";
@@ -60,6 +59,15 @@ public class LineChartWidgetInstance extends WidgetInstance
 		this.numberOfMaxLimits = 0;
 		this.numberOfMinLimits = 0;
 
+		this.series_labels = new ArrayList<>();
+		this.series_values = new ArrayList<ArrayList<Double>>();
+		this.limits_max_labels = new ArrayList<String>();
+		this.limits_min_labels = new ArrayList<String>();
+		this.limits_max_values = new ArrayList<Double>();
+		this.limits_min_values = new ArrayList<Double>();
+		this.xAxis_label = "";
+		this.xAxis_values = new ArrayList<String>();
+
 		// caption
 		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
 
@@ -89,19 +97,22 @@ public class LineChartWidgetInstance extends WidgetInstance
 			}
 
 			this.series_values.add(values);
-			for (Map m2 : (ArrayList<Map>) m.get(CONFIG_LABEL_LIMITS)) {
-				String label = TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL));
-				Double value = TypesHelper.asDouble(m2.get(CONFIG_LABEL_VALUE));
-				;
-				if (TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE)).equals("max")) {
-					this.limits_max_labels.add(label);
-					this.limits_max_values.add(value);
-					++this.numberOfMaxLimits;
-				}
-				else {
-					this.limits_min_labels.add(label);
-					this.limits_min_values.add(value);
-					++this.numberOfMinLimits;
+			ArrayList<Map> limits = (ArrayList<Map>) m.get(CONFIG_LABEL_LIMITS);
+			if (limits != null) {
+				for (Map m2 : limits) {
+					String label = TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL));
+					Double value = TypesHelper.asDouble(m2.get(CONFIG_LABEL_VALUE));
+					String type = TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE));
+					if (type != null && type.equals("max")) {
+						this.limits_max_labels.add(label);
+						this.limits_max_values.add(value);
+						++this.numberOfMaxLimits;
+					}
+					else {
+						this.limits_min_labels.add(label);
+						this.limits_min_values.add(value);
+						++this.numberOfMinLimits;
+					}
 				}
 			}
 			++this.numberOfSeries;

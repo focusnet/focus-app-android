@@ -40,6 +40,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 
 		LineChartWidgetInstance lineChartWidgetInstance = (LineChartWidgetInstance) getWidgetInstance();
 
+
 		TextView lineChartTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
 		lineChartTitle.setText(lineChartWidgetInstance.getTitle());
 
@@ -128,7 +129,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 //        lineChart.getViewPortHandler().setMaximumScaleY(2f);
 //        lineChart.getViewPortHandler().setMaximumScaleX(2f);
 
-		ArrayList<ChartData> lineChartData = lineChartWidgetInstance.getData();
+		ArrayList<ChartData> lineChartData = new ArrayList<ChartData>();// FIXME use available functions ... lineChartWidgetInstance.getData();
 
 		//x-axis
 		ArrayList<String> xVals = new ArrayList<>();

@@ -1,0 +1,32 @@
+{
+  "bookmarks": {
+    "id": 1,
+    "pages": [
+      {
+        "id": 1,
+        "name": "Welcome screen sadfjlsafjlasdkj",
+        "path": "__welcome__",
+        "order": 0
+      },
+      {
+        "id": 2,
+        "name": "4of4 | 4of4 (without explicit layout, default is TEST",
+        "path": "my-project-123[http:\/\/focus.yatt.ch\/debug\/focus-sample-2.json]|DASHBOARD|a-simple-page-1[http:\/\/focus.yatt.ch\/debug\/focus-sample-2.json]",
+        "order": 0
+      }
+    ],
+    "tools": []
+  },
+  "id": 123,
+  "settings": {
+    "language": "fr-CH"
+  },
+  "url": "http:\/\/focus.yatt.ch\/resources-server\/data\/user\/123\/app-user-preferences",
+  "editor": "123",
+  "owner": "123",
+  "type": "http:\/\/reference.focusnet.eu\/schemas\/focus-mobile-app-user-preferences\/v0.1",
+  "active": true,
+  "version": 497,
+  "creationDateTime": "2015-08-24T14:24:00+00:00",
+  "editionDateTime": "2016-01-20T16:04:13+00:00"
+}

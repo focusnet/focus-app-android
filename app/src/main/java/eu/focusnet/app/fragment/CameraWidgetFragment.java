@@ -3,15 +3,19 @@ package eu.focusnet.app.fragment;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.activity.ImageActivity;
@@ -28,6 +32,7 @@ public class CameraWidgetFragment extends WidgetFragment
 	private final int PICTURE_REQUEST = 1;
 	private Uri imageUri;
 	private ImageView imageView;
+	private CameraWidgetInstance cameraWidgetInstance;
 
 	private Button deleteButton, viewButton, takePictureButton;
 
@@ -39,7 +44,7 @@ public class CameraWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-		CameraWidgetInstance cameraWidgetInstance = (CameraWidgetInstance) getWidgetInstance();
+		cameraWidgetInstance = (CameraWidgetInstance) getWidgetInstance();
 
 		TextView title = (TextView) viewRoot.findViewById(R.id.title);
 		title.setText(cameraWidgetInstance.getTitle());
@@ -72,6 +77,7 @@ public class CameraWidgetFragment extends WidgetFragment
 												viewButton.setEnabled(false);
 												takePictureButton.setText("Take a Picture");
 												imageUri = null;
+												cameraWidgetInstance.saveImage(null);
 											}
 										}
 		);
@@ -91,7 +97,6 @@ public class CameraWidgetFragment extends WidgetFragment
 													 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 													 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 													 startActivityForResult(intent, PICTURE_REQUEST);
-
 												 }
 											 }
 
@@ -105,17 +110,12 @@ public class CameraWidgetFragment extends WidgetFragment
 	{
 		if (requestCode == PICTURE_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {
-				//    Bitmap tookPicture = (Bitmap) data.getExtras().get("data");
-//                Bitmap thumbnail = null;
-//                try {
-//                    thumbnail = MediaStore.Images.Media.getBitmap(
-//                            getContentResolver(), imageUri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
 
 				//  ImageView imageView = (ImageView) findViewById(R.id.imageView);
 				// imageView.setImageBitmap(tookPicture);
+// FIXME required
+
+				this.cameraWidgetInstance.saveImage((Bitmap) data.getExtras().get("data"));
 
 				imageView.setImageURI(imageUri);
 				deleteButton.setEnabled(true);

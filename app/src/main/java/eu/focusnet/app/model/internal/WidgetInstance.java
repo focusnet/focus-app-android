@@ -21,11 +21,12 @@ public abstract class WidgetInstance
 	private static final String WIDGET_TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
 	private static final String WIDGET_TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
 	private static final String WIDGET_TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-	private static final String WIDGET_TYPE_CAMERA = "#/definitions/widget/visualize/camera";
-	private static final String WIDGET_TYPE_GPS = "#/definitions/widget/visualize/gps";
-	private static final String WIDGET_TYPE_FORM = "#/definitions/widget/visualize/form";
-	private static final String WIDGET_TYPE_EXTERNAL_APP = "#/definitions/widget/visualize/external-app";
-	private static final String WIDGET_TYPE_SUBMIT = "#/definitions/widget/visualize/submit";
+	private static final String WIDGET_TYPE_CAMERA = "#/definitions/widget/collect/camera";
+	private static final String WIDGET_TYPE_GPS = "#/definitions/widget/collect/gps";
+	private static final String WIDGET_TYPE_FORM = "#/definitions/widget/collect/form";
+	private static final String WIDGET_TYPE_EXTERNAL_APP = "#/definitions/widget/collect/external-app"; // FIXME TODO
+	private static final String WIDGET_TYPE_HTML5_WEBAPP = "#/definitions/widget/visualize/html5-widget";
+	private static final String WIDGET_TYPE_SUBMIT = "#/definitions/widget/collect/submit";
 
 
 	private static final String WIDGET_LAYOUT_WIDTH_LABEL = "width";
@@ -63,8 +64,10 @@ public abstract class WidgetInstance
 
 		//	this.title = wTpl.getTitle(); // FIXME
 		// 	this.description = wTpl.getDescription();
-		this.config = (LinkedTreeMap<String, Object>) wTpl.getConfig(); // FIXME resolve?
-
+		Object cfg = wTpl.getConfig();
+		if (cfg != null) {
+			this.config = (LinkedTreeMap<String, Object>) cfg; // FIXME resolve content right away?
+		}
 		this.processCommonConfig();
 		this.processConfig();
 	}
@@ -78,8 +81,10 @@ public abstract class WidgetInstance
 				return new TableWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_PIE_CHART:
 				return new PieChartWidgetInstance(template, layoutConfig, newCtx);
-	/*		case WIDGET_TYPE_BAR_CHART:
-				return new BarChartWidgetInstance(template, layoutConfig, newCtx);
+			case WIDGET_TYPE_BAR_CHART:
+			//	return new BarChartWidgetInstance(template, layoutConfig, newCtx);
+				// FIXME
+				return new LineChartWidgetInstance(template, layoutConfig, newCtx); // hsould be BarChartWidget
 			case WIDGET_TYPE_LINE_CHART:
 				return new LineChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_CAMERA:
@@ -89,10 +94,11 @@ public abstract class WidgetInstance
 			case WIDGET_TYPE_FORM:
 				return new FormWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_EXTERNAL_APP:
-				return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
+			//	return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_SUBMIT:
 				return new SubmitWidgetInstance(template, layoutConfig, newCtx);
-		*/
+			case WIDGET_TYPE_HTML5_WEBAPP:
+				return new Html5WidgetInstance(template, layoutConfig, newCtx);
 		}
 		return null;
 	}

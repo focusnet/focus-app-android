@@ -43,32 +43,6 @@ public class LineChartWidgetFragment extends WidgetFragment
 		TextView lineChartTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
 		lineChartTitle.setText(lineChartWidgetInstance.getTitle());
 
-//        ArrayList<ChartData> chartDatas = new ArrayList<>(8);
-//        ChartData d = new ChartData("January", -10, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("February", -13,Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("March", 10,Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("April", 16, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("May", 20, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("June", 22, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("July", 28, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("August", 29, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("September", 25, Color.RED);
-//        chartDatas.add(d);
-//        d = new ChartData("October", 20, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("November", 10, Color.BLUE);
-//        chartDatas.add(d);
-//        d = new ChartData("December", 2, Color.BLUE);
-//        chartDatas.add(d);
-
 		LineChart lineChart = (LineChart) viewRoot.findViewById(R.id.line_chart);
 
 		float yAxisMinValue = -35;

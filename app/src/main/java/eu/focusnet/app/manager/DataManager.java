@@ -74,7 +74,14 @@ public class DataManager // FIXME a service?
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-1.json";
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
+	//	this.appContentUrl = "http://focus.yatt.ch/debug/app-content-all-widgets.json";
+		// FIXME FIXME DEBUG
+		// does not work :/
+	/*	this.userUrl = "file:///android_asset/tests/user.json";
+		this.prefUrl = "file:///android_asset/tests/pref.json";
+		this.appContentUrl = "file:///android_asset/tests/test-1.json";
+		*/
 	}
 
 	public static DataManager getInstance()

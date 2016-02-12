@@ -2,6 +2,7 @@ package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import eu.focusnet.app.exception.BadTypeException;
 import eu.focusnet.app.manager.DataManager;
@@ -144,7 +145,6 @@ public class ProjectInstance
 				PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
 				ret.put(p.getGuid(), p);
 			}
-
 		}
 		return ret;
 	}

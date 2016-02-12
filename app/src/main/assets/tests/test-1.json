@@ -1,0 +1,403 @@
+{
+  "__comment": "FOCUS Mobile application content - test 002",
+  "type": "http:\/\/reference.focusnet.eu\/schemas\/focus-mobile-app-content-definition\/v0.1",
+  "data": {
+    "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
+    "referenced-url": "<ctx/simple-url/my-url>",
+    "history-test": "<history|http://focus.yatt.ch/debug/focus-sample-1.json|params>",
+    "history-test-ref": "<history|ctx/simple-url/my-url|params,params2>",
+    "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
+    "lookup-test-ref": "<lookup|ctx/simple-url/my-url|http://www.type.com>"
+  },
+  "projects": [
+    {
+      "guid": "__welcome__",
+      "iterator": null,
+      "title": "Welcome screen",
+      "description": "This project is mandatory and is identified by its id '__welcome__'. It cannot define an iterator. The order is not relevant."
+    },
+    {
+      "guid": "my-project-123",
+      "data": {
+        "again-a-test-in-project-1": "http://focus.yatt.ch/debug/focus-sample-3.json",
+        "again-a-test-in-project-2": "<ctx/simple-url/my-url>",
+        "again-a-test-in-project-3": "<ctx/$project-iterator$/url>"
+      },
+      "iterator": "<ctx/simple-url/list-of-machines>",
+      "title": "The title of the project 123",
+      "description": "aaa",
+      "order": 5,
+      "widgets": [
+        {
+          "guid": "a-sample-widget-1",
+          "type": "#\/definitions\/widget\/visualize\/text",
+          "title": "Simple text widget",
+          "config": {
+            "content": "text \n text2"
+          }
+        },
+        {
+          "guid": "a-sample-widget-2",
+          "type": "#\/definitions\/widget\/visualize\/table",
+          "title": "A table widget",
+          "config": {
+            "columns": [
+              {
+                "header": "Header 1",
+                "values": [
+                  1,
+                  2,
+                  3,
+                  5.2
+                ]
+              },
+              {
+                "header": "Header 2",
+                "values": [
+                  "a",
+                  "b"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "guid": "a-sample-widget-3",
+          "type": "#\/definitions\/widget\/visualize\/piechart",
+          "title": "A pie chart widget",
+          "config": {
+            "caption": "my caption",
+            "parts": [
+              {
+                "label": "my label 1",
+                "value": 42
+              },
+              {
+                "label": "my label 2",
+                "value": 24
+              }
+            ]
+          }
+        },
+        {
+          "guid": "a-sample-widget-4",
+          "type": "#\/definitions\/widget\/collect\/camera",
+          "field": "unique-field-name-for-later-reference-to-collected-value-1",
+          "title": "Some text 4 - the value is saved as a base64-encoded jpeg image"
+        },
+        {
+          "guid": "a-sample-widget-5",
+          "type": "#\/definitions\/widget\/collect\/form",
+          "field": "unique-field-name-for-later-reference-to-collected-value-2",
+          "title": "Some text 4",
+          "config": {
+            "field-1-this-property-name-will-be-used-for-later-reference-to-collected-value": {
+              "type": "#\/definitions\/widget\/collect\/form\/fields\/textfield",
+              "mandatory": true,
+              "readonly": false,
+              "label": "A user-friendly label",
+              "input-type": "null|number|decimal|email",
+              "default-value": "a default value to use"
+            },
+            "field-2": {
+              "type": "#\/definitions\/widget\/collect\/form\/fields\/textarea",
+              "label": "A user-friendly label",
+              "mandatory": false,
+              "readonly": true,
+              "default-value": "a default value to use"
+            },
+            "field-3": {
+              "type": "#\/definitions\/widget\/collect\/form\/fields\/checkbox",
+              "label": "A user-friendly label",
+              "mandatory": false,
+              "readonly": false,
+              "checked-value": "value-as-string, e.g. YES; if absent, default to 1",
+              "unchecked-value": "value-as-string, e.g. NO; if absent, default to 0",
+              "default": "checked or unchecked"
+            },
+            "field-4": {
+              "type": "#\/definitions\/widget\/collect\/form\/fields\/select",
+              "label": "A user-friendly label",
+              "mandatory": true,
+              "readonly": true,
+              "options-texts": [
+                "France",
+                "Portugal"
+              ],
+              "options-values": [
+                "FR",
+                "PT"
+              ],
+              "default": "PT"
+            }
+          }
+        },
+        {
+          "guid": "a-sample-widget-6",
+          "type": "#\/definitions\/widget\/collect\/gps",
+          "field": "unique-field-name-for-later-reference-to-collected-value-3",
+          "title": "Some text 4"
+        },
+        {
+          "guid": "a-sample-widget-7",
+          "type": "#\/definitions\/widget\/visualize\/external-app",
+          "field": "unique-field-name-for-later-reference-to-collected-value-4",
+          "title": "Some text 4",
+          "config": {
+            "app-identifier": "ch.moti.app.test",
+            "input-object": "URI of source object. If set, this FocusSample is used as input. Otherwise, there is no input param to pass."
+          }
+        },
+        {
+          "guid": "a-sample-widget-8",
+          "type": "#\/definitions\/widget\/visualize\/html5-widget",
+          "field": "unique-field-name-for-later-reference-to-collected-value-5",
+          "title": "Some text 4",
+          "config": {
+            "asset": "stand-map-html5",
+            "context": "value that is passed in the javascript init() function",
+            "prefetch-data": [
+              "list-of-uri",
+              "to-prefetch"
+            ]
+          }
+        },
+        {
+          "guid": "a-sample-widget-9",
+          "type": "#\/definitions\/widget\/visualize\/submit",
+          "field": "unique-field-name-for-later-reference-to-collected-value-6",
+          "title": "Some text 4",
+          "config": {
+            "label": "The text to use in the button, e.g. SEND",
+            "reset-label": "if set, a reset button will be displayed with that label",
+            "submit-action": "leave it empty for now"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "guid": "a-simple-page-1",
+          "data": {
+            "again-a-test-in-page-1": "http://focus.yatt.ch/debug/focus-sample-3.json",
+            "again-a-test-in-page-2": "<ctx/simple-url/my-url>",
+            "again-a-test-in-page-3": "<ctx/$project-iterator$/url>",
+            "again-a-test-in-page-4": "<ctx/$page-iterator$/url>"
+          },
+          "iterator": "<ctx/simple-url/list-of-machines>",
+          "title": "4of4 | 4of4 (without explicit layout, default is 4of4)",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "order": 2
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "order": 1
+            }
+          ]
+        },
+        {
+          "guid": "a-simple-page-2",
+          "title": "1of4 1of4",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "layout": {
+                "width": "1of4"
+              }
+            }
+          ]
+        },
+        {
+          "guid": "a-simple-page-3",
+          "title": "2of4 1of4",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "layout": {
+                "width": "2of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "layout": {
+                "width": "1of4"
+              }
+            }
+          ]
+        },
+        {
+          "guid": "a-simple-page-4",
+          "title": "1of4 2of4 1of4",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "layout": {
+                "width": "2of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-3",
+              "layout": {
+                "width": "1of4"
+              }
+            }
+          ]
+        },
+        {
+          "guid": "a-simple-page-5",
+          "title": "2of4 1of4 1of4 | 4of4 (implicit) | 4of4 (explicit) | 2of4",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "layout": {
+                "width": "2of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-3",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-4"
+            },
+            {
+              "widgetid": "a-sample-widget-5",
+              "layout": {
+                "width": "4of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-6",
+              "layout": {
+                "width": "2of4"
+              }
+            }
+          ]
+        },
+        {
+          "guid": "a-simple-page-6",
+          "title": "1of4 3of4 | 1of4 2of4 1of4 | 2of4 | 3of4 | 3of4 1of4",
+          "description": "The friendly description of the page",
+          "widgets": [
+            {
+              "widgetid": "a-sample-widget-1",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-2",
+              "layout": {
+                "width": "3of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-3",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-4",
+              "layout": {
+                "width": "2of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-5",
+              "layout": {
+                "width": "1of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-6",
+              "layout": {
+                "width": "2of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-7",
+              "layout": {
+                "width": "3of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-8",
+              "layout": {
+                "width": "3of4"
+              }
+            },
+            {
+              "widgetid": "a-sample-widget-9",
+              "layout": {
+                "width": "1of4"
+              }
+            }
+          ]
+        }
+      ],
+      "dashboards": [
+        {
+          "pageid": "a-simple-page-1"
+        },
+        {
+          "pageid": "a-simple-page-2"
+        },
+        {
+          "pageid": "a-simple-page-3"
+        },
+        {
+          "pageid": "a-simple-page-4"
+        },
+        {
+          "pageid": "a-simple-page-5"
+        },
+        {
+          "pageid": "a-simple-page-6"
+        }
+      ],
+      "tools": [
+        {
+          "pageid": "a-simple-page-2",
+          "order": 1
+        }
+      ],
+      "notifications": [
+        {}
+      ]
+    }
+  ],
+  "url": "http:\/\/focus.yatt.ch\/resources-server\/data\/user\/123\/app-content-definition",
+  "version": 11,
+  "owner": "123",
+  "creationDateTime": "2015-08-24T14:25:14+00:00",
+  "editor": "123",
+  "editionDateTime": "2015-09-09T14:19:17+00:00",
+  "active": true
+}

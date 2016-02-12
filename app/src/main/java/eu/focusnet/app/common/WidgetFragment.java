@@ -23,7 +23,6 @@ public abstract class WidgetFragment extends Fragment
 	@Override
 	public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-
 	public void setWidgetLayout(View viewRoot)
 	{
 		Bundle arguments = getArguments();

@@ -218,6 +218,11 @@ public class ViewUtil
 			Bundle widgetBundle = new Bundle();
 			widgetBundle.putString(Constant.PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
 			widgetBundle.putInt(LAYOUT_WIDTH, linearLayoutWidth);
+
+			// FIXME FIXME FIXME:
+			// access the instance, that may contain information about the height: widgetInstance.getHeightAdvice() = small | full | medium
+			// TODO TODO
+			// or another strategy: height is ALWAYS 90% of viewport height, execpt if TEXT / TABLE ?
 			if (widgetFragment instanceof TableWidgetFragment || widgetFragment instanceof PieChartWidgetFragment) // FIXME FIXME height may depend on widget type and content !
 			{
 				widgetBundle.putInt(LAYOUT_HEIGHT, 500);

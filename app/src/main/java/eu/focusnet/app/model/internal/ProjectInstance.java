@@ -2,15 +2,15 @@ package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import eu.focusnet.app.exception.BadTypeException;
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.model.focus.Linker;
-import eu.focusnet.app.model.focus.PageTemplate;
-import eu.focusnet.app.model.focus.ProjectTemplate;
-import eu.focusnet.app.model.focus.WidgetLinker;
-import eu.focusnet.app.model.focus.WidgetTemplate;
+import eu.focusnet.app.model.json.Linker;
+import eu.focusnet.app.model.json.PageTemplate;
+import eu.focusnet.app.model.json.ProjectTemplate;
+import eu.focusnet.app.model.json.WidgetLinker;
+import eu.focusnet.app.model.json.WidgetTemplate;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.util.TypesHelper;
 
 /**

@@ -5,8 +5,9 @@ import java.util.LinkedHashMap;
 
 import eu.focusnet.app.exception.BadTypeException;
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.model.focus.AppContentTemplate;
-import eu.focusnet.app.model.focus.ProjectTemplate;
+import eu.focusnet.app.model.json.AppContentTemplate;
+import eu.focusnet.app.model.json.ProjectTemplate;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.util.TypesHelper;
 
 /**

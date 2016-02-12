@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.focusnet.app.model.focus.Sample;
+import eu.focusnet.app.model.json.Sample;
 import eu.focusnet.app.util.Constant;
 
 /**

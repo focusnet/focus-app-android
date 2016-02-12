@@ -11,8 +11,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.focus.FocusSampleDataMap;
-import eu.focusnet.app.model.focus.WidgetTemplate;
+import eu.focusnet.app.model.json.FocusSampleDataMap;
+import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.util.Constant;
 
 /**

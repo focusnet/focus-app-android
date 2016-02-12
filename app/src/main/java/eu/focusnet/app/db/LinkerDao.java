@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.focus.Linker;
+import eu.focusnet.app.model.json.Linker;
 import eu.focusnet.app.util.Constant;
 
 /**

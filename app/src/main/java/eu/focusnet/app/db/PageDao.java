@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.focus.PageTemplate;
-import eu.focusnet.app.model.focus.WidgetLinker;
+import eu.focusnet.app.model.json.PageTemplate;
+import eu.focusnet.app.model.json.WidgetLinker;
 import eu.focusnet.app.util.Constant;
 
 /**

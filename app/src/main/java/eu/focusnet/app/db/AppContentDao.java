@@ -7,8 +7,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.model.focus.AppContentTemplate;
-import eu.focusnet.app.model.focus.ProjectTemplate;
+import eu.focusnet.app.model.json.AppContentTemplate;
+import eu.focusnet.app.model.json.ProjectTemplate;
 import eu.focusnet.app.util.Constant;
 
 /**

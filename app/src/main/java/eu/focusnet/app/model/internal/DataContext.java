@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.model.focus.FocusSample;
+import eu.focusnet.app.model.json.FocusSample;
 
 /**
  * Created by julien on 13.01.16.

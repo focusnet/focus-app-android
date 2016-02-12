@@ -24,7 +24,7 @@ import eu.focusnet.app.fragment.SynchronizeFragment;
 import eu.focusnet.app.fragment.UserManualFragment;
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.manager.FragmentManager;
-import eu.focusnet.app.model.focus.User;
+import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.ui.DrawerListItem;
 import eu.focusnet.app.model.ui.HeaderDrawerListItem;
 import eu.focusnet.app.util.Constant;

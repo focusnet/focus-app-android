@@ -23,9 +23,9 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.adapter.DateTypeAdapter;
 import eu.focusnet.app.db.AppContentDao;
 import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.manager.DataProviderManager;
-import eu.focusnet.app.manager.DataProviderManager.RequestData;
-import eu.focusnet.app.model.focus.AppContentTemplate;
+import eu.focusnet.app.DEPRECATED.DataProviderManager;
+import eu.focusnet.app.DEPRECATED.DataProviderManager.RequestData;
+import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 

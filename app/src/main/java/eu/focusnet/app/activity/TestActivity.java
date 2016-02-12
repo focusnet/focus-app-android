@@ -25,15 +25,15 @@ import java.util.List;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.BaseActivity;
-import eu.focusnet.app.fragment.BarChartWidgetFragment;
-import eu.focusnet.app.fragment.CameraWidgetFragment;
-import eu.focusnet.app.fragment.GPSWidgetFragment;
-import eu.focusnet.app.fragment.LineChartWidgetFragment;
-import eu.focusnet.app.fragment.PieChartWidgetFragment;
-import eu.focusnet.app.fragment.TableWidgetFragment;
-import eu.focusnet.app.fragment.TextWidgetFragment;
+import eu.focusnet.app.fragment.widgets.BarChartWidgetFragment;
+import eu.focusnet.app.fragment.widgets.CameraWidgetFragment;
+import eu.focusnet.app.fragment.widgets.GPSWidgetFragment;
+import eu.focusnet.app.fragment.widgets.LineChartWidgetFragment;
+import eu.focusnet.app.fragment.widgets.PieChartWidgetFragment;
+import eu.focusnet.app.fragment.widgets.TableWidgetFragment;
+import eu.focusnet.app.fragment.widgets.TextWidgetFragment;
 import eu.focusnet.app.manager.FragmentManager;
-import eu.focusnet.app.model.focus.FocusSample;
+import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.util.ViewFactory;
 import eu.focusnet.app.util.ViewUtil;
 

@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import eu.focusnet.app.manager.DataManager;
-import eu.focusnet.app.model.focus.BookmarkLink;
-import eu.focusnet.app.model.focus.Preference;
+import eu.focusnet.app.model.json.BookmarkLink;
+import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.EventBus;
 

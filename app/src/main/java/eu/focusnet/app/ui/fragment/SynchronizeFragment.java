@@ -21,7 +21,6 @@ import java.util.Date;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.model.store.AppContentDao;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.DEPRECATED.DataProviderManager;
 import eu.focusnet.app.DEPRECATED.DataProviderManager.RequestData;
@@ -102,8 +101,11 @@ public class SynchronizeFragment extends Fragment
 											  @Override
 											  public void onClick(View v)
 											  {
-												  ViewUtil.displayToast(getActivity(), "Refreshing resource");
-												  //database (it may be, that we also has to use the IventBus pattern)
+												  // FIXME FIXME FIXME TODO, that we also has to use the IventBus pattern)
+
+
+
+
 												  DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
 												  try {
 													  databaseAdapter.openWritableDatabase();

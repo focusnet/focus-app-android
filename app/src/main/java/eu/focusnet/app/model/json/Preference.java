@@ -3,7 +3,7 @@ package eu.focusnet.app.model.json;
 import java.util.ArrayList;
 import java.util.Date;
 
-import eu.focusnet.app.db.BookmarkLinkDao;
+import eu.focusnet.app.model.store.BookmarkLinkDao;
 
 public class Preference extends FocusObject
 {

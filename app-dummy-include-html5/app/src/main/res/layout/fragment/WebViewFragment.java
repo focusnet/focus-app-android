@@ -14,7 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.ui.activity.R;
 import eu.focusnet.app.util.ViewUtil;
 
 /**

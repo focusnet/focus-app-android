@@ -4,11 +4,10 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.EventBus;
+import eu.focusnet.app.service.util.EventBus;
 
 /**
  * This service is used to save,remove the bookmarks
@@ -18,8 +17,13 @@ public class BookmarkService extends IntentService
 {
 
 	private static final String TAG = BookmarkService.class.getName();
-	//TODO this path should be in the user data JSON response after the user is authenticated
-	private static final String PATH = "http://focus.yatt.ch/resources-server/data/user/123/app-user-preferences";
+
+	public static final String
+			NAME = "name",
+			PATH = "path",
+			BOOKMARK_TYPE = "BookmarkType",
+			IS_TO_SAVE = "isToSave";
+
 
 	public BookmarkService()
 	{
@@ -30,11 +34,11 @@ public class BookmarkService extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
-		boolean isToSave = intent.getExtras().getBoolean(Constant.IS_TO_SAVE);
-		String path = intent.getStringExtra(Constant.PATH);
-		String title = intent.getStringExtra(Constant.NAME);
+		boolean isToSave = intent.getExtras().getBoolean(IS_TO_SAVE);
+		String path = intent.getStringExtra(PATH);
+		String title = intent.getStringExtra(NAME);
 //        int order = intent.getExtras().getInt(Constant.ORDER);
-		String bookmarkType = intent.getStringExtra(Constant.BOOKMARK_TYPE);
+		String bookmarkType = intent.getStringExtra(BOOKMARK_TYPE);
 
 		Log.d(TAG, "The path :" + path);
 		Log.d(TAG, "The title :" + title);

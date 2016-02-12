@@ -17,6 +17,8 @@ public class RefreshDataService extends Service
 
 	private static final String TAG = RefreshDataService.class.getName();
 
+	public static final String DELAY_INTERVAL = "DelayInterval";
+
 	private ScheduledExecutorService scheduleTaskExecutor;
 
 	@Override
@@ -29,7 +31,7 @@ public class RefreshDataService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		scheduleRefreshData(intent.getExtras().getInt(Constant.DELAY_INTERVAL));
+		scheduleRefreshData(intent.getExtras().getInt(DELAY_INTERVAL));
 		return START_REDELIVER_INTENT;
 	}
 

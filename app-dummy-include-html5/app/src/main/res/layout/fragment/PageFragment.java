@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-import eu.focusnet.app.activity.R;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.PageDao;
-import eu.focusnet.app.db.WidgetDao;
+import eu.focusnet.app.ui.activity.R;
+import eu.focusnet.app.model.store.db.DatabaseAdapter;
+import eu.focusnet.app.model.store.db.PageDao;
+import eu.focusnet.app.model.store.db.WidgetDao;
 import eu.focusnet.app.model.data.Page;
 import eu.focusnet.app.model.data.Widget;
 import eu.focusnet.app.model.data.WidgetLinker;

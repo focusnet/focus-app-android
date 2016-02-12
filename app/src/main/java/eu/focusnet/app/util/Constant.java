@@ -7,7 +7,7 @@ package eu.focusnet.app.util;
 //TODO some constant might be changed to other classes on the future
 public class Constant
 {
-
+/*
 	public static final String DELAY_INTERVAL = "DelayInterval";
 
 	public static final int FOCUS_FRAGMENT = 1,
@@ -268,7 +268,7 @@ public class Constant
 			TO_DELETE + " BOOL, " +
 			TO_PUSH + " BOOL, " +
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE)";
-
+*/
 	private Constant()
 	{
 	}

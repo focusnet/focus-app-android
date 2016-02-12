@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.focusnet.app.activity.R;
+import eu.focusnet.app.ui.activity.R;
 
 
 /**

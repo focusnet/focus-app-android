@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="eu.focusnet.app.activity.WebViewTestActivity">
+    tools:context="eu.focusnet.app.ui.activity.WebViewTestActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

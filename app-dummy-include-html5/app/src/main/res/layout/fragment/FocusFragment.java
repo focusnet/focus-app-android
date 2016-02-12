@@ -14,16 +14,16 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.activity.ProjectActivity;
-import eu.focusnet.app.activity.R;
-import eu.focusnet.app.activity.TestActivity;
-import eu.focusnet.app.activity.WebViewTestActivity;
-import eu.focusnet.app.adapter.StandardListAdapter;
+import eu.focusnet.app.ui.activity.ProjectActivity;
+import eu.focusnet.app.ui.activity.R;
+import eu.focusnet.app.ui.activity.TestActivity;
+import eu.focusnet.app.ui.activity.WebViewTestActivity;
+import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.db.BookmarkLinkDao;
-import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
-import eu.focusnet.app.db.DatabaseAdapter;
-import eu.focusnet.app.db.ProjectDao;
+import eu.focusnet.app.model.store.db.BookmarkLinkDao;
+import eu.focusnet.app.model.store.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
+import eu.focusnet.app.model.store.db.DatabaseAdapter;
+import eu.focusnet.app.model.store.db.ProjectDao;
 import eu.focusnet.app.model.data.Project;
 import eu.focusnet.app.model.ui.HeaderListItem;
 import eu.focusnet.app.model.ui.StandardListItem;

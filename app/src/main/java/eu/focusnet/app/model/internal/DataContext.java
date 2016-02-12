@@ -3,7 +3,7 @@ package eu.focusnet.app.model.internal;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.focusnet.app.manager.DataManager;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.FocusSample;
 
 /**

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
-import eu.focusnet.app.util.TypesHelper;
+import eu.focusnet.app.model.util.TypesHelper;
 
 /**
  * WidgetInstance containing all information pertaining to a Line Chart widget.

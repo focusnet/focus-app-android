@@ -16,7 +16,7 @@
 
         <fragment
             android:id="@+id/web_view_fragment"
-            android:name="eu.focusnet.app.fragment.WebViewFragment"
+            android:name="eu.focusnet.app.ui.WebViewFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6"/>
@@ -24,7 +24,7 @@
 
         <fragment
             android:id="@+id/data_fragment"
-            android:name="eu.focusnet.app.fragment.WebViewDataFragment"
+            android:name="eu.focusnet.app.ui.WebViewDataFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"/>

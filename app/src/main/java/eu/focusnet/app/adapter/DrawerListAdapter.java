@@ -11,9 +11,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.model.ui.DrawerListItem;
-import eu.focusnet.app.model.ui.HeaderDrawerListItem;
+import eu.focusnet.app.ui.common.AbstractListItem;
+import eu.focusnet.app.ui.common.DrawerListItem;
+import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 
 /**
  * Created by admin on 15.06.2015.

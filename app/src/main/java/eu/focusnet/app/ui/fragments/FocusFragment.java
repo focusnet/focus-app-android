@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment;
+package eu.focusnet.app.ui.fragments;
 
 import android.app.ListFragment;
 import android.content.Intent;
@@ -18,12 +18,12 @@ import java.util.Map;
 import eu.focusnet.app.R;
 import eu.focusnet.app.activity.ProjectActivity;
 import eu.focusnet.app.adapter.StandardListAdapter;
-import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.db.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.ui.HeaderListItem;
-import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.ui.common.HeaderListItem;
+import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 

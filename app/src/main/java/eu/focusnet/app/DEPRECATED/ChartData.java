@@ -1,4 +1,4 @@
-package eu.focusnet.app.model.ui;
+package eu.focusnet.app.DEPRECATED;
 
 /**
  * Created by yandypiedra on 23.11.15.

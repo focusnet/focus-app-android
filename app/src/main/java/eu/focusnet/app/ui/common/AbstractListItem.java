@@ -1,4 +1,4 @@
-package eu.focusnet.app.common;
+package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 

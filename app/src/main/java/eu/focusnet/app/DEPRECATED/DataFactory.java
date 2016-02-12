@@ -1,4 +1,4 @@
-package eu.focusnet.app.util;
+package eu.focusnet.app.DEPRECATED;
 
 import android.graphics.Color;
 
@@ -10,8 +10,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-
-import eu.focusnet.app.model.ui.ChartData;
 
 /**
  * Created by yandypiedra on 23.11.15.

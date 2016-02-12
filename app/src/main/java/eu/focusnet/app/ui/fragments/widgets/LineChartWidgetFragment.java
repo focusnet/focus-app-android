@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment.widgets;
+package eu.focusnet.app.ui.fragments.widgets;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
-import eu.focusnet.app.model.ui.ChartData;
+import eu.focusnet.app.DEPRECATED.ChartData;
 
 /**
  * Created by yandypiedra on 13.01.16.

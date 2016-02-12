@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment.widgets;
+package eu.focusnet.app.ui.fragments.widgets;
 
 import android.graphics.Color;
 import android.os.Bundle;

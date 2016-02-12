@@ -2,7 +2,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="eu.focusnet.app.fragment.PageFragment">
+            tools:context=".ui.fragments.PageFragment">
 
     <LinearLayout
         android:id="@+id/pageInfo"

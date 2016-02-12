@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.common.BaseActivity;
-import eu.focusnet.app.fragment.PageFragment;
+import eu.focusnet.app.ui.fragments.PageFragment;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.util.Constant;
 

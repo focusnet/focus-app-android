@@ -1,8 +1,6 @@
-package eu.focusnet.app.model.ui;
+package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
-
-import eu.focusnet.app.common.AbstractListItem;
 
 /**
  * Drawer header item which contains an icon, the username, email and the company, the user belongs to

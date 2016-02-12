@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.adapter.DrawerListAdapter;
+import eu.focusnet.app.ui.common.AbstractListItem;
 
 /**
  * Created by yandypiedra on 17.11.15.

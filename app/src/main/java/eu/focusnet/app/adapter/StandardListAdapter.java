@@ -18,9 +18,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.common.AbstractListItem;
-import eu.focusnet.app.model.ui.HeaderListItem;
-import eu.focusnet.app.model.ui.StandardListItem;
+import eu.focusnet.app.ui.common.AbstractListItem;
+import eu.focusnet.app.ui.common.HeaderListItem;
+import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.service.BookmarkService;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;

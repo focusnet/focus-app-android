@@ -1,8 +1,6 @@
-package eu.focusnet.app.model.ui;
+package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
-
-import eu.focusnet.app.common.AbstractListItem;
 
 /**
  * Header list item which contains a left icon, a title and a right icon

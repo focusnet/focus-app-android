@@ -15,18 +15,18 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.common.AbstractListItem;
+import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.common.BaseDrawerActivity;
-import eu.focusnet.app.fragment.BookmarkFragment;
-import eu.focusnet.app.fragment.FocusFragment;
-import eu.focusnet.app.fragment.SettingFragment;
-import eu.focusnet.app.fragment.SynchronizeFragment;
-import eu.focusnet.app.fragment.UserManualFragment;
+import eu.focusnet.app.ui.fragments.BookmarkFragment;
+import eu.focusnet.app.ui.fragments.FocusFragment;
+import eu.focusnet.app.ui.fragments.SettingFragment;
+import eu.focusnet.app.ui.fragments.SynchronizeFragment;
+import eu.focusnet.app.ui.fragments.UserManualFragment;
 import eu.focusnet.app.manager.DataManager;
 import eu.focusnet.app.manager.FragmentManager;
 import eu.focusnet.app.model.json.User;
-import eu.focusnet.app.model.ui.DrawerListItem;
-import eu.focusnet.app.model.ui.HeaderDrawerListItem;
+import eu.focusnet.app.ui.common.DrawerListItem;
+import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.ViewUtil;
 

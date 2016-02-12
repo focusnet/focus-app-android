@@ -3,9 +3,11 @@ package eu.focusnet.app.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.focusnet.app.ui.fragments.BookmarkFragment;
+
 /**
  * Event bus class which reacts to bookmark's update in the application. When a bookmark is
- * updated the {@link #fireBookmarksUpdate} will be called updating so the {@link eu.focusnet.app.fragment.BookmarkFragment}
+ * updated the {@link #fireBookmarksUpdate} will be called updating so the {@link BookmarkFragment}
  */
 public class EventBus
 {

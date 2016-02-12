@@ -1,4 +1,4 @@
-package eu.focusnet.app.fragment;
+package eu.focusnet.app.ui.fragments;
 
 import android.app.Fragment;
 import android.os.AsyncTask;

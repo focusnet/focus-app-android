@@ -22,7 +22,7 @@ import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.service.util.EventBus;
 import eu.focusnet.app.ui.util.NavigationUtil;
 import eu.focusnet.app.ui.util.ViewUtil;
@@ -79,8 +79,8 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 					break;
 			}
 
-			intent.putExtra(Constant.PATH, selectedItem.getPath());
-			intent.putExtra(Constant.TITLE, selectedItem.getTitle());
+			intent.putExtra(Constant.UI_EXTRA_PATH, selectedItem.getPath());
+			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
 	}

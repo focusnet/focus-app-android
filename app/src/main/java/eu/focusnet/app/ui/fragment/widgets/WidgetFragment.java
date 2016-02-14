@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -35,7 +35,7 @@ public abstract class WidgetFragment extends Fragment
 	public WidgetInstance getWidgetInstance()
 	{
 		Bundle bundles = getArguments();
-		String path = bundles.getString(Constant.PATH);
+		String path = bundles.getString(Constant.UI_EXTRA_PATH);
 		return DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
 	}
 

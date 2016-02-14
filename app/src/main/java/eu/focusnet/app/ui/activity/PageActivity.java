@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.PageFragment;
 import eu.focusnet.app.ui.util.FragmentManager;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 
 
 /**
@@ -23,15 +23,15 @@ public class PageActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		String pageTitle = getIntent().getStringExtra(Constant.TITLE);
-		String pageId = getIntent().getStringExtra(Constant.PAGE_PATH);
-		String projectId = getIntent().getStringExtra(Constant.PROJECT_PATH);
+		String pageTitle = getIntent().getStringExtra(Constant.UI_EXTRA_TITLE);
+		String pageId = getIntent().getStringExtra(Constant.UI_EXTRA_PAGE_PATH);
+		String projectId = getIntent().getStringExtra(Constant.UI_EXTRA_PROJECT_PATH);
 		setTitle(pageTitle);
 
 		Fragment fragment = new PageFragment();
 		Bundle bundle = new Bundle();
-		bundle.putString(Constant.PAGE_PATH, pageId);
-		bundle.putString(Constant.PROJECT_PATH, projectId);
+		bundle.putString(Constant.UI_EXTRA_PAGE_PATH, pageId);
+		bundle.putString(Constant.UI_EXTRA_PROJECT_PATH, projectId);
 		fragment.setArguments(bundle);
 		FragmentManager.replaceFragment(R.id.page_container, fragment, getFragmentManager());
 	}

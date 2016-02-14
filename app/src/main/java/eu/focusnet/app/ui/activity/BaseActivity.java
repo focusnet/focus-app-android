@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.RefreshDataService;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 
 /**
  * Created by yandypiedra on 17.11.15.
@@ -49,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity
 		super.onResume();
 		intent = new Intent(this, RefreshDataService.class);
 		//TODO delay interval is hardcoded
-		intent.putExtra(Constant.DELAY_INTERVAL, 1);
+		intent.putExtra(Constant.UI_EXTRA_DELAY_INTERVAL, 1);
 		startService(intent);
 	}
 

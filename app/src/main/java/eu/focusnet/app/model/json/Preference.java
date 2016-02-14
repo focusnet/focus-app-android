@@ -3,6 +3,7 @@ package eu.focusnet.app.model.json;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class Preference extends FocusObject
 {
 
@@ -59,7 +60,7 @@ public class Preference extends FocusObject
 
 	public void addBookmarkLink(BookmarkLink bookmarkLink, String bookmarkType)
 	{
-		if (bookmarkType.equals(BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE)) {
+		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE)) {
 			bookmarks.getPages().add(bookmarkLink);
 		}
 		else {
@@ -70,7 +71,7 @@ public class Preference extends FocusObject
 	public void removeBookmarkLink(String path, String title, String bookmarkType)
 	{
 		int indexToRemove = -1;
-		if (bookmarkType.equals(BookmarkLinkDao.BOOKMARK_LINK_TYPE.PAGE)) {
+		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE)) {
 			ArrayList<BookmarkLink> pages = bookmarks.getPages();
 			for (int i = 0; i < pages.size(); i++) {
 				BookmarkLink page = pages.get(i);

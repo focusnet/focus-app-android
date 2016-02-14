@@ -12,7 +12,7 @@ import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -32,8 +32,8 @@ public class PageFragment extends Fragment
 		// Inflate the layout for this fragment
 		View viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
 		Bundle bundle = getArguments();
-		String projectPath = (String) bundle.get(Constant.PROJECT_PATH);
-		String pagePath = (String) bundle.get(Constant.PAGE_PATH);
+		String projectPath = (String) bundle.get(Constant.UI_EXTRA_PROJECT_PATH);
+		String pagePath = (String) bundle.get(Constant.UI_EXTRA_PAGE_PATH);
 
 //        new PageBuilderTask().execute(projectPath, pagePath);
 
@@ -51,7 +51,7 @@ public class PageFragment extends Fragment
 //            WidgetInstance widgetInstance = entry.getValue();
 //            WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
 //            Bundle widgetBundle = new Bundle();
-//            widgetBundle.putString(Constant.PATH, appContentInstance.buildPath(projectInstance, pageInstance, widgetInstance));
+//            widgetBundle.putString(Constant.UI_EXTRA_PATH, appContentInstance.buildPath(projectInstance, pageInstance, widgetInstance));
 //            widgetFragment.setArguments(widgetBundle);
 //            //Test
 //            LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
@@ -104,7 +104,7 @@ public class PageFragment extends Fragment
 //
 //                WidgetFragment widgetFragment = NavigationUtil.checkWidgetType(widgetInstance.getType());
 //                Bundle bundle = new Bundle();
-//                bundle.putString(Constant.PATH, DataManager.getInstance().getAppContentInstance().buildPath(project , page, widgetInstance));
+//                bundle.putString(Constant.UI_EXTRA_PATH, DataManager.getInstance().getAppContentInstance().buildPath(project , page, widgetInstance));
 //
 //            }
 //

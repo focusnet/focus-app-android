@@ -26,7 +26,7 @@ import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -58,7 +58,7 @@ public class FocusActivity extends BaseDrawerActivity
 		//TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
 //        if (savedInstanceState == null) {
 //            // on first time display view for first nav item
-		showView(Constant.FOCUS_FRAGMENT);
+		showView(Constant.UI_FRAGMENT_FOCUS);
 //                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
 //        }
 //
@@ -68,11 +68,11 @@ public class FocusActivity extends BaseDrawerActivity
 //                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
 //                Log.d(TAG, data.get(0));
 //                Util.displayToast(this, data.get(0));
-//                showView(Constant.FOCUS_FRAGMENT);
+//                showView(Constant.UI_FRAGMENT_FOCUS);
 //            }
 //            else {
 		//if started from a notification display the appropriate fragment
-		//              showView(extras.getInt(Constant.NOTIFICATION_ID));
+		//              showView(extras.getInt(Constant.UI_EXTRA_NOTIFICATION_ID));
 //            }
 //        }
 		//////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,12 +180,12 @@ public class FocusActivity extends BaseDrawerActivity
 			Log.d(TAG, "Getting the fragment's argument");
 			Bundle bundle = fragment.getArguments();
 
-			String title = (String) bundle.get(Constant.FRAGMENT_TITLE);
+			String title = (String) bundle.get(Constant.UI_BUNDLE_FRAGMENT_TITLE);
 			Log.d(TAG, "Title :" + title);
 			// Set title
 			setTitle(title);
 
-			int position = (int) bundle.get(Constant.FRAGMENT_POSITION);
+			int position = (int) bundle.get(Constant.UI_BUNDLE_FRAGMENT_POSITION);
 			Log.d(TAG, "Position :" + position);
 			// Highlight the item
 			highlightSelectedMenuItem(position);
@@ -211,19 +211,19 @@ public class FocusActivity extends BaseDrawerActivity
 		Fragment fragment = null;
 
 		switch (position) {
-			case Constant.FOCUS_FRAGMENT:
+			case Constant.UI_FRAGMENT_FOCUS:
 				fragment = new FocusFragment();
 				break;
-			case Constant.BOOKMARK_FRAGMENT:
+			case Constant.UI_FRAGMENT_BOOKMARK:
 				fragment = new BookmarkFragment();
 				break;
-			case Constant.SYNCHRONIZE_FRAGMENT:
+			case Constant.UI_FRAGMENT_SYNCHRONIZE:
 				fragment = new SynchronizeFragment();
 				break;
-			case Constant.SETTING_FRAGMENT:
+			case Constant.UI_FRAGMENT_SETTINGS:
 				fragment = new SettingFragment();
 				break;
-			case Constant.USER_MANUAL_FRAGMENT:
+			case Constant.UI_FRAGMENT_USER_MANUAL:
 				fragment = new UserManualFragment();
 				break;
 			default:
@@ -234,8 +234,8 @@ public class FocusActivity extends BaseDrawerActivity
 			int effectivePosition = position - 1;
 			String title = navMenuTitles[effectivePosition];
 			Bundle bundle = new Bundle();
-			bundle.putString(Constant.FRAGMENT_TITLE, title);
-			bundle.putInt(Constant.FRAGMENT_POSITION, effectivePosition);
+			bundle.putString(Constant.UI_BUNDLE_FRAGMENT_TITLE, title);
+			bundle.putInt(Constant.UI_BUNDLE_FRAGMENT_POSITION, effectivePosition);
 			fragment.setArguments(bundle);
 			FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
 			// Highlight the selected item

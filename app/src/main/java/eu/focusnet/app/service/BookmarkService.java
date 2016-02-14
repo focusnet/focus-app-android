@@ -6,7 +6,6 @@ import android.util.Log;
 
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
-import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.service.util.EventBus;
 
 /**
@@ -73,7 +72,7 @@ public class BookmarkService extends IntentService
 //            //TODO need the preference ID
 //            foundPref = preferenceDao.findPreference(new Long(123));
 //            String jsonPref = gson.toJson(foundPref);
-//            DataProviderManager.updateData(PATH, jsonPref);
+//            DataProviderManager.updateData(UI_EXTRA_PATH, jsonPref);
 		EventBus.fireBookmarksUpdate();
 		DataManager.getInstance().saveUserPreferences();
 //        }

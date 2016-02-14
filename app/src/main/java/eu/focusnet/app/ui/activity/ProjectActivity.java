@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.ProjectFragment;
 import eu.focusnet.app.ui.util.FragmentManager;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 
 /**
  * This class displays (loading the ProjectFragment) the characteristics of a project after
@@ -27,20 +27,20 @@ public class ProjectActivity extends BaseActivity
 		//Get the project title and project id either from the
 		//saved instance or from the received intent
 		if (savedInstanceState == null) {
-			projectTitle = getIntent().getStringExtra(Constant.TITLE);
+			projectTitle = getIntent().getStringExtra(Constant.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			projectId = getIntent().getStringExtra(Constant.PROJECT_PATH);
+			projectId = getIntent().getStringExtra(Constant.UI_EXTRA_PROJECT_PATH);
 		}
 		else {
-			projectTitle = savedInstanceState.getString(Constant.TITLE);
+			projectTitle = savedInstanceState.getString(Constant.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			projectId = savedInstanceState.getString(Constant.PROJECT_PATH);
+			projectId = savedInstanceState.getString(Constant.UI_EXTRA_PROJECT_PATH);
 		}
 
 		setTitle(projectTitle);
 		Fragment fragment = new ProjectFragment();
 		Bundle bundle = new Bundle();
-		bundle.putString(Constant.PROJECT_PATH, projectId);
+		bundle.putString(Constant.UI_EXTRA_PROJECT_PATH, projectId);
 		fragment.setArguments(bundle);
 		FragmentManager.replaceFragment(R.id.project_container, fragment, getFragmentManager());
 	}
@@ -55,8 +55,8 @@ public class ProjectActivity extends BaseActivity
 	public void onSaveInstanceState(Bundle saveInstanceState)
 	{
 		super.onSaveInstanceState(saveInstanceState);
-		saveInstanceState.putString(Constant.TITLE, projectTitle);
-		saveInstanceState.putString(Constant.PROJECT_PATH, projectId);
+		saveInstanceState.putString(Constant.UI_EXTRA_TITLE, projectTitle);
+		saveInstanceState.putString(Constant.UI_EXTRA_PROJECT_PATH, projectId);
 	}
 
 	@Override

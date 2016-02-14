@@ -16,15 +16,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.model.store.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 
@@ -71,8 +71,8 @@ public class FocusFragment extends ListFragment
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
 				//intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-				intent.putExtra(Constant.PROJECT_PATH, selectedItem.getPath());
-				intent.putExtra(Constant.TITLE, selectedItem.getTitle());
+				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
+				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 				startActivity(intent);
 			}
 		}
@@ -118,7 +118,7 @@ public class FocusFragment extends ListFragment
 
 				//TODO add the bookmarks to the dataManager
 				int projectOrder = 0;
-				String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
+				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString();
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 

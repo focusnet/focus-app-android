@@ -9,9 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import eu.focusnet.app.util.Constant;
-
-
 public class RefreshDataService extends Service
 {
 

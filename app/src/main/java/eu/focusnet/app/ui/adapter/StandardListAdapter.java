@@ -22,7 +22,7 @@ import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.service.BookmarkService;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -147,9 +147,9 @@ public class StandardListAdapter extends BaseAdapter
 								public void onClick(View view)
 								{
 									final Intent intent = new Intent(context, BookmarkService.class);
-									intent.putExtra(Constant.PATH, standardListItem.getPath());
+									intent.putExtra(Constant.UI_EXTRA_PATH, standardListItem.getPath());
 //                                    intent.putExtra(Constant.ORDER, standardListItem.getOrder());
-									intent.putExtra(Constant.BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
+									intent.putExtra(Constant.UI_EXTRA_BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
 
 									if (isRightIconActive) {
 										//   dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
@@ -157,7 +157,7 @@ public class StandardListAdapter extends BaseAdapter
 										Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star_o);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										intent.putExtra(Constant.IS_TO_SAVE, false);
+										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, false);
 									}
 									else {
 										//     dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
@@ -165,9 +165,9 @@ public class StandardListAdapter extends BaseAdapter
 										Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										intent.putExtra(Constant.IS_TO_SAVE, true);
+										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, true);
 									}
-									intent.putExtra(Constant.NAME, selectedContext.getText().toString());
+									intent.putExtra(Constant.UI_EXTRA_NAME, selectedContext.getText().toString());
 									context.startService(intent);
 									dialog.dismiss();
 								}

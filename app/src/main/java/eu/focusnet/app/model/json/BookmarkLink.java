@@ -6,6 +6,11 @@ package eu.focusnet.app.model.json;
 public class BookmarkLink
 {
 
+	public static enum BOOKMARK_LINK_TYPE
+	{
+		PAGE, TOOL
+	}
+
 	private Long id;
 	private String name,
 			path;

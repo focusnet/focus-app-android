@@ -16,17 +16,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.model.store.BookmarkLinkDao.BOOKMARK_LINK_TYPE;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
-import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -51,7 +51,7 @@ public class ProjectFragment extends ListFragment
 		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 		Bundle bundle = getArguments();
 		//Path is the same as projectId
-		projectId = bundle.getString(Constant.PROJECT_PATH);
+		projectId = bundle.getString(Constant.UI_EXTRA_PROJECT_PATH);
 		new ProjectBuilderTask().execute();
 
 		return viewRoot;
@@ -73,9 +73,9 @@ public class ProjectFragment extends ListFragment
 				// GuiUtil.displayToast(getActivity(), "Dashboard selected");
 				Intent intent = new Intent(getActivity(), PageActivity.class);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-				intent.putExtra(Constant.PROJECT_PATH, projectId);
-				intent.putExtra(Constant.PAGE_PATH, selectedItem.getPath());
-				intent.putExtra(Constant.TITLE, selectedItem.getTitle());
+				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, projectId);
+				intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
+				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 				startActivity(intent);
 			}
 		}
@@ -120,7 +120,7 @@ public class ProjectFragment extends ListFragment
 				//END
 
 				StandardListItem drawListItem = new StandardListItem(dashboardId, ViewUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
-						dashboard.getTitle(), dashboard.getDescription(), dashboardOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.PAGE.toString()); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
+						dashboard.getTitle(), dashboard.getDescription(), dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 			}
 
@@ -143,7 +143,7 @@ public class ProjectFragment extends ListFragment
 				int dashboardOrder = 0;
 
 				StandardListItem drawListItem = new StandardListItem(toolId, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
-						dashboardOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
+						dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 
 			}

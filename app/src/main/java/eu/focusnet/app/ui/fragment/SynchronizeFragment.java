@@ -103,9 +103,11 @@ public class SynchronizeFragment extends Fragment
 											  {
 												  // FIXME FIXME FIXME TODO, that we also has to use the IventBus pattern)
 
+												  // FIXME FIXM FIXME TODO call DataManager to rebuild the database, posssibly with the ApplicationConntentInstance.
+												  // FIXME FIXME FIXME TODO will be done in bg.
+												  // no need to access the database anymore.
 
-
-
+/*
 												  DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
 												  try {
 													  databaseAdapter.openWritableDatabase();
@@ -134,6 +136,7 @@ public class SynchronizeFragment extends Fragment
 												  finally {
 													  databaseAdapter.close();
 												  }
+												  */
 											  }
 										  }
 

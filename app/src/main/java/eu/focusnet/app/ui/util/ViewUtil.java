@@ -34,7 +34,6 @@ import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.util.Constant;
 
 /**
  * Util class for displaying android specific messages
@@ -86,7 +85,7 @@ public class ViewUtil
 
 		// Intent to be triggered when the notification is selected
 		Intent intent = new Intent(context, cls);
-		intent.putExtra(Constant.NOTIFICATION_ID, notificationId);
+		intent.putExtra(Constant.UI_EXTRA_NOTIFICATION_ID, notificationId);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
 		//   mBuilder.setVibrate(new long[]{100, 250, 100, 500});
@@ -216,7 +215,7 @@ public class ViewUtil
 
 			WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putString(Constant.PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
+			widgetBundle.putString(Constant.UI_EXTRA_PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
 			widgetBundle.putInt(LAYOUT_WIDTH, linearLayoutWidth);
 
 			// FIXME FIXME FIXME:

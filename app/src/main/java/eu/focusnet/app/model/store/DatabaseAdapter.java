@@ -12,17 +12,14 @@ import eu.focusnet.app.model.util.Constant;
 public class DatabaseAdapter
 {
 
-	private static final String TAG = DatabaseAdapter.class.getName();
-
-
 	private static final int DATABASE_VERSION = 1;
 
-	private DataBaseHelper dataBaseHelper;
+	private DatabaseHelper dataBaseHelper;
 	private SQLiteDatabase db;
 
 	public DatabaseAdapter(Context context)
 	{
-		dataBaseHelper = new DataBaseHelper(context);
+		dataBaseHelper = new DatabaseHelper(context);
 	}
 
 	public DatabaseAdapter openWritableDatabase()
@@ -43,10 +40,14 @@ public class DatabaseAdapter
 		return db;
 	}
 
-	private static class DataBaseHelper extends SQLiteOpenHelper
+
+	/**
+	 * Helper class for database management.
+	 */
+	private static class DatabaseHelper extends SQLiteOpenHelper
 	{
 
-		private DataBaseHelper(Context context)
+		private DatabaseHelper(Context context)
 		{
 			super(context, Constant.DATABASE_NAME, null, DATABASE_VERSION);
 		}
@@ -54,56 +55,28 @@ public class DatabaseAdapter
 		@Override
 		public void onCreate(SQLiteDatabase db)
 		{
-			/*
-			db.execSQL(Constant.CREATE_TABLE_BOOKMARKS_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_BOOKMARK_LINK_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_SETTING_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_PREFERENCE_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_USER_QUERY);
-
-			db.execSQL(Constant.CREATE_TABLE_APP_CONTENT_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_PROJECT_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_PAGE_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_WIDGETS_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_LINKER_QUERY);
-			db.execSQL(Constant.CREATE_TABLE_WIDGET_LINKER_QUERY);
-*/
 			db.execSQL(Constant.CREATE_TABLE_SAMPLES_QUERY);
-
-
 		}
 
+		// FIXME TODO do something smarter for migration between versions.
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 		{
-			/*
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_BOOKMARK);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_BOOKMARK_LINK);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_SETTING);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_PREFERENCE);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_USER);
-
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_APP_CONTENT);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_PROJECT);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_PAGE);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_WIDGET);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_LINKER);
-			db.execSQL("DROP TABLE IF EXISTS" + Constant.DATABASE_TABLE_WIDGET_LINKER);
-*/
 			db.execSQL("DROP TABLE IF EXISTS " + Constant.DATABASE_TABLE_SAMPLES);
-
 			onCreate(db);
 		}
 
+		/*
 		@Override
 		public void onOpen(SQLiteDatabase db)
 		{
 			super.onOpen(db);
 			if (!db.isReadOnly()) {
 				// Enable foreign key constraints
-				db.execSQL("PRAGMA foreign_keys=ON;");
+				db.execSQL("PRAGMA foreign_keys=ON;"); // no need for foreign keys as our database is flat.
 			}
 		}
+		*/
 
 	}
 }

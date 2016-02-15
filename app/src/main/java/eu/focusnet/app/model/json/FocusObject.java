@@ -22,6 +22,9 @@ public class FocusObject implements Serializable
 
 	private boolean active;
 
+	// this field is not in the database, but is used for manual garbage collection of our cache.
+	private Date lastUsage;
+
 	public FocusObject(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
 		this.type = type;
@@ -127,5 +130,15 @@ public class FocusObject implements Serializable
 	public void setContext(String context)
 	{
 		this.context = context;
+	}
+
+	public Date getLastUsage()
+	{
+		return lastUsage;
+	}
+
+	public void updateLastUsage()
+	{
+		this.lastUsage = new Date();
 	}
 }

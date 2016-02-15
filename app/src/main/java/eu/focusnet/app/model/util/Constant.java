@@ -6,10 +6,14 @@ package eu.focusnet.app.model.util;
 public class Constant
 {
 
+	public static final String DATABASE_NAME = "Focus_DB";
+
 	public static final String DATABASE_TABLE_SAMPLES = "samples";
+
 	public static final String ID = "id",
 			TYPE = "type",
 			URL = "url",
+			CONTEXT = "context",
 			OWNER = "owner",
 			EDITOR = "editor",
 			CREATION_DATE_TIME = "creation_date_time",
@@ -19,9 +23,11 @@ public class Constant
 			DATA = "data",
 			TO_DELETE = "toDelete",
 			TO_PUSH = "toPush";
+
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
 			"(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			URL + " TEXT, " +
+			CONTEXT + " TEXT, " +
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +
@@ -34,7 +40,6 @@ public class Constant
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE)";
 
 
-	public static final String DATABASE_NAME = "Focus_DB";
 
 
 }

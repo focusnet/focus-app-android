@@ -58,6 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity
 	{
 		super.onPause();
 		stopService(intent);
+
+		// FIXME TODO also flush database modifications - DataManager ... flush()
 	}
 
 }

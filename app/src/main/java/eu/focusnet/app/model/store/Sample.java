@@ -1,6 +1,8 @@
-package eu.focusnet.app.model.json;
+package eu.focusnet.app.model.store;
 
 import java.util.Date;
+
+import eu.focusnet.app.model.json.FocusObject;
 
 /**
  * Created by admin on 21.01.2016.
@@ -10,6 +12,7 @@ public class Sample
 
 	private Long id;
 	private String url;
+	private String context;
 	private int version;
 	private String type;
 	private String owner;
@@ -21,10 +24,15 @@ public class Sample
 	private boolean toDelete;
 	private boolean toPush;
 
-	public Sample(Long id, String url, int version, String type, String owner, Date creationDateTime, Date editionDateTime, String editor, boolean active, String data, boolean toDelete, boolean toPush)
+	public Sample(Long id, String url, String context, int version,
+				  String type, String owner,
+				  Date creationDateTime, Date editionDateTime,
+				  String editor, boolean active,
+				  String data, boolean toDelete, boolean toPush)
 	{
 		this.id = id;
 		this.url = url;
+		this.context = context;
 		this.version = version;
 		this.type = type;
 		this.owner = owner;
@@ -159,5 +167,29 @@ public class Sample
 	public void setToPush(boolean toPush)
 	{
 		this.toPush = toPush;
+	}
+
+	public void cloneFromFocusObject(FocusObject fo, String raw_data)
+	{
+
+		this.type = fo.getType();
+		this.url = fo.getUrl();
+		this.context = fo.getContext();
+		this.owner = fo.getOwner();
+		this.editor = fo.getEditor();
+		this.version = fo.getVersion();
+		this.creationDateTime = fo.getCreationDateTime();
+		this.editionDateTime = fo.getEditionDateTime();
+		this.active = fo.isActive();
+
+		this.data = raw_data;
+
+		this.toDelete = false;
+		this.toPush = false;
+	}
+
+	public String getContext()
+	{
+		return context;
 	}
 }

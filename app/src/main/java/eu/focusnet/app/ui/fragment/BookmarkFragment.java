@@ -60,7 +60,6 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 		super.onStop();
 	}
 
-
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{

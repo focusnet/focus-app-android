@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 
+import eu.focusnet.app.model.store.Sample;
+import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.exception.NotImplementedException;
@@ -57,7 +59,8 @@ public class DataManager // FIXME a service?
 
 	private Gson gson = null;
 	private NetworkManager net = null;
-
+	private DatabaseAdapter databaseAdapter;
+	private boolean isDbClosed;
 
 	/**
 	 * Initialize the Singleton.
@@ -82,12 +85,16 @@ public class DataManager // FIXME a service?
 		}
 
 		this.context = c;
+
+		// setup GSON
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+
+		// setup network
 		this.net = NetworkManager.getInstance();
 		this.net.setContext(this.context);
-		DatabaseAdapter databaseAdapter = new DatabaseAdapter(this.context); // was getApplication()
-		databaseAdapter.openWritableDatabase();
 
+		// setup database
+		this.databaseAdapter = new DatabaseAdapter(this.context); // was getApplication() // TODO FIXME check that is working anyway
 
 
 		// get login infos from local store, and use it as the default FIXME TODO
@@ -113,6 +120,8 @@ public class DataManager // FIXME a service?
 		*/
 		this.isInitialized = true;
 	}
+
+
 
 	/**
 	 * Login and if successful, save the login information in the permanent store.
@@ -295,26 +304,15 @@ public class DataManager // FIXME a service?
 	 */
 	private FocusObject get(String url, Class targetClass) throws RuntimeException
 	{
-
-
+		// do we have it in the cache?
+		// FIXME TODO check if not too old
 		if (this.cache.get(url) != null) {
-			return this.cache.get(url);
+			FocusObject result = this.cache.get(url);
+			result.updateLastUsage();
+			return result;
 		}
-		// 2 cases: with or without network
+
 		/*
-		 * NETWORK:
-		 * 		download if not available in local store
-		 * 			on failure return null
-		 * 		put in local stores
-		 *
-		 * 		will be automatically reloaded by sync service -> no need to check for freshness at this point!
-		 *
-		 * NO NETWORK:
-		 * 		get it if in local store if available
-		 * 		otherwise return null
-		 *
-		 *
-		 *
 		 *
 		 * GARBAGE COLLECTION:
 		 * 		everytime a sample is used (.get()), we update the lastUsage field
@@ -323,66 +321,63 @@ public class DataManager // FIXME a service?
 		 */
 
 
-		// for now everything comes from the network.
 
-		HttpResponse response = null;
+		FocusObject result = null;
 
+		// try to get it from the local SQL db
 		try {
-			response = this.net.get(url);
+			this.databaseAdapter.openWritableDatabase();
+			SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
+			Sample sample = sampleDao.get(url);
+			if (sample != null) {
+				result = (FocusObject) this.gson.fromJson(sample.getData(), targetClass);
+			}
 		}
-		catch (IOException e) {
-			Log.d(TAG, "IOEXecption HTTP get in dm");
-			e.printStackTrace();
-		}
-
-		FocusObject f = null;
-		if (response.isSuccessful()) {
-			String json = response.getData();
-			f = (FocusObject) this.gson.fromJson(json, targetClass);
-			// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
-		}
-		else {
-			return null;
+		finally {
+			this.databaseAdapter.close();
 		}
 
-		this.cache.put(url, f);
-		return f;
-// FIXME cache the result.
 
-		/*
-		 * 1. local cache
-		 * 2. local store -> push to local cache
-		 * 3. network -> push in local store + local cache
-		 *
+		// try to get it from the network
+		if (result == null && this.net.isNetworkAvailable()) {
+			// for now everything comes from the network.
 
-		if (!this.net.isNetworkAvailable()) {
-			throw new RuntimeException("No network"); // not required, may take from local store.
-		}
+			HttpResponse response = null;
+			try {
+				response = this.net.get(url);
+			}
+			catch (IOException e) {
+				Log.d(TAG, "IOEXecption HTTP get in dm");
+				e.printStackTrace();
+			}
 
-		try {
-			NetworkManager.Response r = this.net.get(url);
-			if (r.hasError()) { // ignore it, but mark as error in local store?
+			if (response.isSuccessful()) {
+				String json = response.getData();
+				result = (FocusObject) this.gson.fromJson(json, targetClass);
 
+				// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
+
+				// Convert into a sample and save it into the database
+				Sample sample = new Sample();
+				sample.cloneFromFocusObject(result, json);
+
+				try {
+					this.databaseAdapter.openWritableDatabase();
+					SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
+					sampleDao.create(sample);
+				}
+				finally {
+					this.databaseAdapter.close();
+				}
 			}
 			else {
-				String ret = r.getData();
+				return null;
 			}
 		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
-		//DataProviderManager.ResponseData r = this.net.get(url);
-*/
 
-
-		// is resource available in local cache?
-		// Y -> is it recent enough?
-		// 	-> Y use it, gonetwork = false
-		//  -> N discard it gonetwork = true
-		// gonetwork == true ? -> download
-
-		// here I get some JSON
-
+		result.updateLastUsage();
+		this.cache.put(url, result);
+		return result;
 	}
 
 	public void post(URL url, Object data, Class targetClass)
@@ -410,6 +405,8 @@ public class DataManager // FIXME a service?
 		 * 2. update local store (mark as deleted)
 		 * 3. update remote store NetworkManager.post();
 		 */
+
+		// if no network, mark as "TO BE DELETED"
 	}
 
 	/**

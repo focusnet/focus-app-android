@@ -108,6 +108,7 @@ public class FocusFragment extends ListFragment
 //                ArrayList<ProjectTemplate> projects = projectDao.findAllProjects();
 //                BookmarkLinkDao bookmarkLinkManager = new BookmarkLinkDao(db);
 
+			DataManager dm = DataManager.getInstance();
 			LinkedHashMap<String, ProjectInstance> projects = DataManager.getInstance().getAppContentInstance().getProjects();
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {

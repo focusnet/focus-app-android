@@ -1,66 +1,70 @@
 package eu.focusnet.app.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 
-import eu.focusnet.app.model.store.Sample;
-import eu.focusnet.app.model.store.SampleDao;
-import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.model.store.DatabaseAdapter;
+import eu.focusnet.app.exception.InternalErrorException;
 import eu.focusnet.app.exception.NotImplementedException;
+import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.model.json.User;
-import eu.focusnet.app.model.internal.AppContentInstance;
+import eu.focusnet.app.model.store.DatabaseAdapter;
+import eu.focusnet.app.model.store.Sample;
+import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 
 /**
  * This follows a Singleton pattern.
  * <p/>
  * Created by julien on 07.01.16.
  */
-public class DataManager // FIXME a service?
+public class DataManager
 {
-	private static final String TAG = DataManager.class.getName();
-	private static DataManager ourInstance = new DataManager();
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION = FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "focus-internal-configuration";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER = "login-server";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME = "login-username";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD = "login-password";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS = "user-infos";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
 
-	private Context context;
+	private static DataManager ourInstance = new DataManager();
 
 	private boolean isInitialized;
 
 	// other information regarding login?
-	private String loginUser = "";
-	private String loginPassword = "";
-	private String loginServer = "";
-	private String userUrl = "";
-	private String prefUrl = "";
-	private String appContentUrl = "";
+	private String loginUser;
+	private String loginPassword;
+	private String loginServer;
+	private String userUrl;
+	private String prefUrl;
+	private String appContentUrl;
 
 	// java objects
-	private User user = null;
-	private Preference userPreferences = null;
-	private AppContentTemplate appContentTemplate = null;
-	private AppContentInstance appContentInstance = null;
+	private User user;
+	private Preference userPreferences;
+	private AppContentTemplate appContentTemplate;
+	private AppContentInstance appContentInstance;
 
 
 	// for samples
-	private HashMap<String, FocusObject> cache = new HashMap<String, FocusObject>();
+	private HashMap<String, FocusObject> cache;
 
-	private Gson gson = null;
-	private NetworkManager net = null;
+	private Gson gson;
+	private NetworkManager net;
 	private DatabaseAdapter databaseAdapter;
-	private boolean isDbClosed;
 
 	/**
 	 * Initialize the Singleton.
@@ -70,103 +74,130 @@ public class DataManager // FIXME a service?
 		this.isInitialized = false;
 	}
 
+	/**
+	 * Get the Singleton instance
+	 *
+	 * @return a pointer to the Singleton
+	 */
 	public static DataManager getInstance()
 	{
 		return ourInstance;
 	}
 
+
 	/**
 	 * Finish initializing the DataManager
+	 *
+	 * @param context The Application Context this DataManager lives in
 	 */
-	public void init(Context c)
+	public void init(Context context)
 	{
 		if (this.isInitialized) {
 			return;
 		}
-
-		this.context = c;
 
 		// setup GSON
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 
 		// setup network
 		this.net = NetworkManager.getInstance();
-		this.net.setContext(this.context);
+		this.net.setContext(context);
+
+		// setup cache
+		this.cache = new HashMap<>();
 
 		// setup database
-		this.databaseAdapter = new DatabaseAdapter(this.context); // was getApplication() // TODO FIXME check that is working anyway
+		this.databaseAdapter = new DatabaseAdapter(context); // was getApplication() // TODO FIXME check that is always working
 
+		// get login infos from local store, and use it as the default
+		FocusSample internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+		// FIXME TODO YANDY: would that be better to use SharedPreferences? Or is that way of doing ok?
+		if (internal_config != null) {
+			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
+			this.loginPassword = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD);
+			this.loginServer = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER);
+			this.userUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS);
+			this.prefUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS);
+			this.appContentUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT);
+		}
 
-		// get login infos from local store, and use it as the default FIXME TODO
-
-
-		// FIXME DEBUG for now we just use hard-coded values.
-		this.loginUser = "dummy-user";
-		this.loginPassword = "dummy-password";
-		this.loginServer = "dummy-server";
-		// get the different application configuration objects
-		// FIXME that may be in retrieveApplicationData();
-		int userId = 123; // FIXME hard-coded. should be obtained from network.
-		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
-		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
-		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
-		//	this.appContentUrl = "http://focus.yatt.ch/debug/app-content-all-widgets.json";
-		// FIXME FIXME DEBUG
-		// does not work :/
-	/*	this.userUrl = "file:///android_asset/tests/user.json";
-		this.prefUrl = "file:///android_asset/tests/pref.json";
-		this.appContentUrl = "file:///android_asset/tests/test-1.json";
-		*/
 		this.isInitialized = true;
 	}
 
 
+	/**
+	 * Get the GSON object used for data conversion in our app
+	 *
+	 * @return a pointer to the GSON object, which is already properly configured for our application
+	 */
+	public Gson getGson()
+	{
+		return this.gson;
+	}
 
 	/**
 	 * Login and if successful, save the login information in the permanent store.
 	 * <p/>
 	 * This method relies on network connectivity.
 	 *
-	 * @param user
-	 * @param password
-	 * @param server
+	 * @param user     The login user
+	 * @param password The login password
+	 * @param server   The login server
 	 */
 	public boolean login(String user, String password, String server)
 	{
-
-//		// if no network, then return RuntimeException
-
-//		if (!this.net.isNetworkAvailable()) {
-//			throw new RuntimeException("No network");
-//		}
+		// if there is no network available, trigger a failure right away
+		if (!this.net.isNetworkAvailable()) {
+			throw new RuntimeException("No network");
+		}
 
 		// do network login
-		if (!this.net.login(user, password, server)) {
+		try {
+			boolean login_result = this.net.login(user, password, server);
+			if (!login_result) { // 403 error
+				this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+				return false;
+			}
+		}
+		catch (IOException e) { // network failure
 			return false;
 		}
 
-		// otherwise save the content of our new login into the permanent store for later use
-		/*this.loginUser = user;
-		this.loginPassword = password;
-		this.loginServer = server;
-
-		// get the different application configuration objects
-		// FIXME that may be in retrieveApplicationData();
+		// then acquire application basic content
+		// FIXME how do we retrieve the proper URLs? lookup() service ?
+		// FIXME FIXME TODO when we have data from Jussi
+		// and save the urls for later uses (no need to actually get the information at this point)
 		int userId = 123; // FIXME hard-coded. should be obtained from network.
+		this.loginServer = "server";
+		this.loginUser = "username";
+		this.loginPassword = "password";
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
-*/
-		// permanently store FIXME TODO
-		// e.g. in http://localhost/LOCAL/app-config (which is a FocusSample)
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
+
+		// if all ok, save info to local database for later loading
+		FocusSample fs = new FocusSample();
+		fs.setUrl(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS, this.userUrl);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
+
+		// and save in the local SQLite database (it won't be sent on the network)
+		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
+		this.post(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, fs, FocusSample.class);
 
 		return true;
-
 	}
 
 	/**
 	 * Delete login information, and reset the content of the whole application
+	 * <p/>
+	 * FIXME FIXME TODO YANDY: add logout button in settings fragment that triggers this function and then
+	 * redirects to the Entrypoint activity (user will redo the whole login process).
 	 */
 	public void logout()
 	{
@@ -179,39 +210,40 @@ public class DataManager // FIXME a service?
 		this.user = null;
 		this.userPreferences = null;
 		this.appContentTemplate = null;
-		this.cache = new HashMap<String, FocusObject>();
+		this.cache = new HashMap<>();
 
 		// delete SQL db
+		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		// delete the whole database content FIXME TODO
 	}
 
 
 	/**
 	 * Do we have login information?
 	 *
-	 * @return
+	 * @return true if we have all required login information, false otherwise
 	 */
 	public boolean hasLoginInformation()
 	{
-		return !this.loginUser.isEmpty()
-				&& !this.loginPassword.isEmpty()
-				&& !this.loginServer.isEmpty()
-				&& !this.userUrl.isEmpty()
-				&& !this.prefUrl.isEmpty()
-				&& !this.appContentUrl.isEmpty();
+		return this.loginUser != null
+				&& this.loginPassword != null
+				&& this.loginServer != null
+				&& this.userUrl != null
+				&& this.prefUrl != null
+				&& this.appContentUrl != null;
 	}
 
 
 	/**
 	 * Acquire personal information about the user of the application
 	 */
-	public User getUser() throws RuntimeException
+	public User getUser() throws InternalErrorException
 	{
 		if (!this.hasLoginInformation()) {
-			throw new RuntimeException("No login information. Cannot continue.");
+			throw new InternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.user != null) {
-			Log.d(TAG, "User cached!!!!");
 			return this.user;
 		}
 		this.user = (User) (this.get(this.userUrl, User.class));
@@ -277,7 +309,6 @@ public class DataManager // FIXME a service?
 		this.appContentInstance = new AppContentInstance(template);
 
 		FocusSample out = this.getSample("http://focus.yatt.ch/resources-server/data/yarr"); // FIXME DEBUG
-		FocusSample out2 = (FocusSample) null;
 
 		return;
 	}
@@ -302,7 +333,7 @@ public class DataManager // FIXME a service?
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
 	 */
-	private FocusObject get(String url, Class targetClass) throws RuntimeException
+	private FocusObject get(String url, Class targetClass)
 	{
 		// do we have it in the cache?
 		// FIXME TODO check if not too old
@@ -311,15 +342,6 @@ public class DataManager // FIXME a service?
 			result.updateLastUsage();
 			return result;
 		}
-
-		/*
-		 *
-		 * GARBAGE COLLECTION:
-		 * 		everytime a sample is used (.get()), we update the lastUsage field
-		 * 		on garbage collection (=when max num of elements is reached) -> delete up to N based on that info
-		 	* 	e.g. max usage == 100MB -> if needed, free 20MB   or   the ones that are >2 days old
-		 */
-
 
 
 		FocusObject result = null;
@@ -337,17 +359,18 @@ public class DataManager // FIXME a service?
 			this.databaseAdapter.close();
 		}
 
+		// special case: internal configuration
+		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX) && result == null) {
+			return null;
+		}
 
 		// try to get it from the network
 		if (result == null && this.net.isNetworkAvailable()) {
-			// for now everything comes from the network.
-
 			HttpResponse response = null;
 			try {
 				response = this.net.get(url);
 			}
 			catch (IOException e) {
-				Log.d(TAG, "IOEXecption HTTP get in dm");
 				e.printStackTrace();
 			}
 
@@ -375,12 +398,80 @@ public class DataManager // FIXME a service?
 			}
 		}
 
-		result.updateLastUsage();
+		if (result == null) {
+			result.updateLastUsage();
+		}
+
 		this.cache.put(url, result);
+		// FIXME FIXME TODO do delete some elements of the cache if memory consumption is > threshold
+		// FIXME find a smart strategy for that.
+
 		return result;
 	}
 
-	public void post(URL url, Object data, Class targetClass)
+	/**
+	 * Create a new data entry
+	 *
+	 * @param url
+	 * @param data
+	 * @param targetClass
+	 */
+	public void post(String url, FocusObject data, Class targetClass)
+	{
+		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
+
+		// make it accessible through the cache
+		this.cache.put(url, data);
+		data.updateLastUsage();
+
+		// store in local database, with the "to_post" flag
+		String json = this.gson.toJson(data);
+		Sample sample = new Sample();
+		sample.cloneFromFocusObject(data, json);
+		if (!is_special_url) {
+
+			sample.setToPost(true); // FIXME not correct, must be toPost
+		}
+
+		try {
+			this.databaseAdapter.openWritableDatabase();
+			SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
+			sample_dao.create(sample);
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
+
+		if (is_special_url) {
+			return;
+		}
+
+		// push on the network
+		boolean net_post = false;
+		try {
+			net_post = this.net.post(url, data).isSuccessful();
+		}
+		catch (IOException e) {
+			// FIXME TODO
+		}
+		if (net_post) { // if POST on network, also remove POST flag in local db copy
+			try {
+				this.databaseAdapter.openWritableDatabase();
+				SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
+				sample.setToPost(false);
+				sample_dao.update(sample);
+			}
+			finally
+			{
+				this.databaseAdapter.close();
+			}
+		}
+
+
+
+	}
+
+	public void put(String url, FocusObject data, Class targetClass)
 	{
 		/*
 		 * 1. update local cache
@@ -389,24 +480,39 @@ public class DataManager // FIXME a service?
 		 */
 	}
 
-	public void put(URL url, Object data, Class targetClass)
+	public void delete(String url)
 	{
-		/*
-		 * 1. update local cache
-		 * 2. update local store
-		 * 3. update remote store NetworkManager.post();
-		 */
-	}
+		// remove from RAM cache
+		this.cache.remove(url);
 
-	public void delete(URL url)
-	{
-		/*
-		 * 1. update local cache
-		 * 2. update local store (mark as deleted)
-		 * 3. update remote store NetworkManager.post();
-		 */
+		// mark data for deletion in local database
+		try {
+			this.databaseAdapter.openWritableDatabase();
+			SampleDao dao = new SampleDao(this.databaseAdapter.getDb());
 
-		// if no network, mark as "TO BE DELETED"
+			// no network for special urls
+			if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
+				dao.delete(url);
+				return;
+			}
+
+			dao.markForDeletion(url);
+
+			// remove from network server
+			boolean net_remove = false;
+			try {
+				net_remove = this.net.delete(url).isSuccessful();
+			}
+			catch (IOException e) {
+				// FIXME TODO
+			}
+			if (net_remove) { // if remove on network, also remove copy in local db
+				dao.delete(url);
+			}
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
 	}
 
 	/**

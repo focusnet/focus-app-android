@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
+import eu.focusnet.app.model.json.FocusObject;
+
 
 /**
  * This class contains all methods pertaining to networking. It follows a Singleton pattern.
@@ -104,7 +106,7 @@ public class NetworkManager
 	 * @return
 	 * @throws IOException
 	 */
-	public HttpResponse put(String url, Object data) throws IOException
+	public HttpResponse put(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_PUT, url, data);
 		return request.execute();
@@ -118,7 +120,7 @@ public class NetworkManager
 	 * @return
 	 * @throws IOException
 	 */
-	public HttpResponse post(String url, Object data) throws IOException
+	public HttpResponse post(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_POST, url, data);
 		return request.execute();
@@ -144,9 +146,10 @@ public class NetworkManager
 	 * @param user
 	 * @param password
 	 * @param server
-	 * @return
+	 * @return true on success or false on failure (access forbidden). If a network error occurs,
+	 * throw a IOException.
 	 */
-	public boolean login(String user, String password, String server)
+	public boolean login(String user, String password, String server) throws IOException
 	{
 		return true;
 	}

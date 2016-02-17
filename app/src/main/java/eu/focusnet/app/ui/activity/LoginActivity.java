@@ -70,7 +70,7 @@ public class LoginActivity extends Activity
 					else {
 						// TODO
 						// adapt current activity to highlight the fact that the login failed.
-						// e.g. "try again" message
+						// e.g. "try again" message in a toast
 					}
 				}
 				catch (RuntimeException e) {

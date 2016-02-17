@@ -13,8 +13,7 @@ public class Constant
 			UI_EXTRA_IS_TO_SAVE = "eu.focusnet.extra.IS_TO_SAVE",
 			UI_EXTRA_NAME = "eu.focusnet.extra.NAME",
 			UI_EXTRA_BOOKMARK_TYPE = "eu.focusnet.extra.BOOKMARK_TYPE",
-			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.extra.NOTIFICATION_ID",
-			UI_EXTRA_DELAY_INTERVAL = "eu.focusnet.extra.DELAY_INTERVAL";
+			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.extra.NOTIFICATION_ID";
 
 	// and bundle
 	public static final String UI_BUNDLE_FRAGMENT_TITLE = "eu.focusnet.bundle.FRAGMENT_TITLE",

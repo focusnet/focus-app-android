@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class FocusSampleDataMap extends HashMap<String, Object>
 {
 
-
 	/**
 	 * Only accept: .... TODO doc simple implementation like hashmap, but check for focus-compatible types.
 	 * <p/>

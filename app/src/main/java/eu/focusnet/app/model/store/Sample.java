@@ -23,12 +23,13 @@ public class Sample
 	private String data;
 	private boolean toDelete;
 	private boolean toPush;
+	private boolean toPost;
 
 	public Sample(Long id, String url, String context, int version,
 				  String type, String owner,
 				  Date creationDateTime, Date editionDateTime,
 				  String editor, boolean active,
-				  String data, boolean toDelete, boolean toPush)
+				  String data, boolean toDelete, boolean toPush, boolean toPost)
 	{
 		this.id = id;
 		this.url = url;
@@ -43,6 +44,7 @@ public class Sample
 		this.data = data;
 		this.toDelete = toDelete;
 		this.toPush = toPush;
+		this.toPost = toPost;
 	}
 
 	public Sample()
@@ -191,5 +193,15 @@ public class Sample
 	public String getContext()
 	{
 		return context;
+	}
+
+	public boolean isToPost()
+	{
+		return this.toPost;
+	}
+
+	public void setToPost(boolean toPost)
+	{
+		this.toPost = toPost;
 	}
 }

@@ -1,4 +1,4 @@
-package eu.focusnet.app.ui.fragment.widgets;
+package eu.focusnet.app.ui.fragment.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,11 @@ import java.io.IOException;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
+import eu.focusnet.app.model.json.FocusObject;
+import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.service.DataManager;
 
 // FIXME should use DataManager instead of NetworkManager!
 public class Html5WidgetFragment extends WidgetFragment
@@ -137,7 +140,8 @@ public class Html5WidgetFragment extends WidgetFragment
 		{
 			NetworkManager net = NetworkManager.getInstance();
 			try {
-				return net.post(url, data).isSuccessful();
+				FocusSample fs = DataManager.getInstance().getGson().fromJson(data, FocusSample.class);
+				return net.post(url, fs).isSuccessful();
 			}
 			catch (IOException e) {
 				return false;
@@ -154,7 +158,8 @@ public class Html5WidgetFragment extends WidgetFragment
 		{
 			NetworkManager net = NetworkManager.getInstance();
 			try {
-				return net.put(url, data).isSuccessful();
+				FocusSample fs = DataManager.getInstance().getGson().fromJson(data, FocusSample.class);
+				return net.put(url, fs).isSuccessful();
 			}
 			catch (IOException e) {
 				return false;

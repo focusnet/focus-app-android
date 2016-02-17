@@ -1,4 +1,4 @@
-package eu.focusnet.app.ui.fragment.widgets;
+package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Activity;
 import android.content.ContentValues;

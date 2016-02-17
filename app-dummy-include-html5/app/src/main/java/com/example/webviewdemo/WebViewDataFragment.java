@@ -23,7 +23,7 @@ public class WebViewDataFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View viewRoot = inflater.inflate(R.layout.fragment_webview_data, container, false);
 
-		final EditText data = (EditText) viewRoot.findViewById(R.id.data);
+		final EditText data = (EditText) viewRoot.findViewById(R.id.context);
 		Button button = (Button) viewRoot.findViewById(R.id.loadWebViewButton);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override

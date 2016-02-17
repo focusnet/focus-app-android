@@ -6,6 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import eu.focusnet.app.model.json.FocusObject;
+import eu.focusnet.app.service.DataManager;
+
 /**
  * An HTTP request to be issued to the REST server
  */
@@ -48,16 +51,9 @@ public class HttpRequest
 	 * @param url
 	 * @param payload An object to be GSON-ified
 	 */
-	public HttpRequest(String method, String url, Object payload)
+	public HttpRequest(String method, String url, FocusObject payload)
 	{
-		// do check that object is valid JSON output FIXME TODO
-		/*		if ( ... ) {
-			++this.errors;
-		}
-		*/
-
-
-		this(method, url, payload.toString());
+		this(method, url, DataManager.getInstance().getGson().toJson(payload));
 	}
 
 	/**

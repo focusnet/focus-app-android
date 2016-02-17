@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.service.DataManager;
 
 /**
@@ -17,7 +16,12 @@ import eu.focusnet.app.service.DataManager;
  */
 public class EntryPointActivity extends Activity
 {
-	private static final String TAG = EntryPointActivity.class.getName();
+	/**
+	 * ATTENTION: This was auto-generated to implement the App Indexing API.
+	 * See https://g.co/AppIndexing/AndroidStudio for more information.
+	 */
+	// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly.
+	// private GoogleApiClient client;
 
 	/**
 	 * Instantiate the activity.
@@ -28,6 +32,7 @@ public class EntryPointActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.splash);
 
 		/*
@@ -39,45 +44,104 @@ public class EntryPointActivity extends Activity
 		DataManager dm = DataManager.getInstance();
 		dm.init(this.getApplicationContext());
 
-
-
-		DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplication());
-		databaseAdapter.openWritableDatabase();
-
-
 		if (dm.hasLoginInformation()) {
+
 			/*
-			 * Do everything in a different Thread
+			 * This thread will retrieve the application configuration.
 			 */
-			final Thread splashScreen = new Thread()
+			final Thread app_acquisition = new Thread()
+			{
+				public void run()
+				{
+					DataManager dm = DataManager.getInstance();
+					dm.retrieveApplicationData();
+				}
+			};
+
+			/*
+			 * This thread will simply sleep for a minimum amount of time, waiting for the
+			 * app_acquisition Thread to complete.
+			 */
+			final Thread splash_screen = new Thread()
 			{
 				public void run()
 				{
 					try {
-
-						sleep(2000); // FIXME TODO sleep for at least 2seconds, even if below tasks are already done
-
-						// FIXME TODO  display a progress wheel when we are executing this
-
-						DataManager dm = DataManager.getInstance();
-						dm.retrieveApplicationData();
+						int min_splashscreen_display_time = 2000;
+						sleep(1000);
+						min_splashscreen_display_time -= 1000;
+						while (app_acquisition.isAlive() || min_splashscreen_display_time > 0) {
+							sleep(500);
+							min_splashscreen_display_time -= 500;
+						}
 						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
 					}
-					catch (InterruptedException e) {
-						e.printStackTrace();
+					catch (InterruptedException ex) {
 					}
 					finally {
 						finish();
 					}
+
 				}
 			};
 
-			splashScreen.start();
+			// start threads
+			splash_screen.start();
+			app_acquisition.start();
+
 		}
 		else {
 			startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
 			finish();
 		}
 
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly.
+		//	client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
+
+/*
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client.connect();
+		Action viewAction = Action.newAction(
+				Action.TYPE_VIEW, // TODO: choose an action type.
+				"EntryPoint Page", // TODO: Define a title for the content shown.
+				// TODO: If you have web page content that matches this app activity's content,
+				// make sure this auto-generated web page URL is correct.
+				// Otherwise, set the URL to null.
+				Uri.parse("http://host/path"),
+				// TODO: Make sure this auto-generated app deep link URI is correct.
+				Uri.parse("android-app://eu.focusnet.app.ui.activity/http/host/path")
+		);
+		AppIndex.AppIndexApi.start(client, viewAction);
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		Action viewAction = Action.newAction(
+				Action.TYPE_VIEW, // TODO: choose an action type.
+				"EntryPoint Page", // TODO: Define a title for the content shown.
+				// TODO: If you have web page content that matches this app activity's content,
+				// make sure this auto-generated web page URL is correct.
+				// Otherwise, set the URL to null.
+				Uri.parse("http://host/path"),
+				// TODO: Make sure this auto-generated app deep link URI is correct.
+				Uri.parse("android-app://eu.focusnet.app.ui.activity/http/host/path")
+		);
+		AppIndex.AppIndexApi.end(client, viewAction);
+		client.disconnect();
+	}
+	*/
 }

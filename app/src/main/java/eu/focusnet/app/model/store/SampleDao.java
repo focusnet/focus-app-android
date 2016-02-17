@@ -30,7 +30,8 @@ public class SampleDao
 			Constant.ACTIVE,
 			Constant.DATA,
 			Constant.TO_DELETE,
-			Constant.TO_PUSH
+			Constant.TO_PUSH,
+			Constant.TO_POST
 	};
 
 	private SQLiteDatabase database;
@@ -58,15 +59,15 @@ public class SampleDao
 		String[] params = {
 				url
 		};
-		Cursor cursor = database.query(true,
+		Cursor cursor = this.database.query(true,
 				Constant.DATABASE_TABLE_SAMPLES,
-				columnsToRetrieve,
-				Constant.URL + "='?'", // FIXME EXCLUDE TO_DELETE
+				this.columnsToRetrieve,
+				Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0",
 				params,
 				null,
 				null,
 				Constant.VERSION + " DESC, " + Constant.ID + " DESC",
-				"LIMIT 1");
+				"1");
 		return this.buildSampleFromCursor(cursor);
 	}
 
@@ -79,7 +80,7 @@ public class SampleDao
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
-		if (cursor == null) {
+		if (cursor.getCount() == 0) {
 			return null;
 		}
 		Sample sample = new Sample();
@@ -97,16 +98,15 @@ public class SampleDao
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date creationDate = null;
 		Date editionDate = null;
-
 		try {
 			creationDate = dateFormat.parse(creationDateTime);
 			editionDate = dateFormat.parse(editionDateTime);
-			sample.setCreationDateTime(creationDate);
-			sample.setEditionDateTime(editionDate);
 		}
 		catch (ParseException e) {
 			//TODO
 		}
+		sample.setCreationDateTime(creationDate);
+		sample.setEditionDateTime(editionDate);
 
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
@@ -116,10 +116,20 @@ public class SampleDao
 		return sample;
 	}
 
-	public boolean delete(Long sampleId)
+	public void markForDeletion(String url)
 	{
-		String[] params = {String.valueOf(sampleId)};
-		return database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.ID + "=?", params) > 0;
+		String where = Constant.URL + "= ?";
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(Constant.TO_DELETE, true);
+		database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, null);
+	}
+
+	public boolean delete(String url)
+	{
+		String[] params = {
+				url
+		};
+		return database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.URL + "= ? ", params) > 0;
 	}
 
 	public void update(Sample sample)
@@ -148,6 +158,7 @@ public class SampleDao
 		contentValues.put(Constant.DATA, sample.getData());
 		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
 		contentValues.put(Constant.TO_PUSH, sample.isToPush());
+		contentValues.put(Constant.TO_POST, sample.isToPost());
 		return contentValues;
 	}
 }

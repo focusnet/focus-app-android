@@ -9,12 +9,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RefreshDataService extends Service
+public class SyncDataService extends Service
 {
 
-	private static final String TAG = RefreshDataService.class.getName();
+	private static final String TAG = SyncDataService.class.getName();
 
-	public static final String DELAY_INTERVAL = "DelayInterval";
+	public static final String SERVICE_EXTRA_DELAY_INTERVAL = "eu.focusnet.extra.DELAY_INTERVAL";
 
 	private ScheduledExecutorService scheduleTaskExecutor;
 
@@ -28,7 +28,7 @@ public class RefreshDataService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		scheduleRefreshData(intent.getExtras().getInt(DELAY_INTERVAL));
+		scheduleRefreshData(intent.getExtras().getInt(SERVICE_EXTRA_DELAY_INTERVAL));
 		return START_REDELIVER_INTENT;
 	}
 

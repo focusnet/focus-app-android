@@ -1,7 +1,7 @@
 package eu.focusnet.app.exception;
 
 /**
- * Created by julien on 13.01.16.
+ * NotImplementedException is thrown when some code branch that has not been implemented is reached
  */
 public class NotImplementedException extends RuntimeException
 {

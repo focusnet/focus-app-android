@@ -33,6 +33,7 @@ dependencies {
             'com.google.code.gson:gson:2.3.1',
             'de.codecrafters.tableview:tableview:0.9.5',
             'com.github.PhilJay:MPAndroidChart:v2.1.3',
-            'com.google.android.gms:play-services:7.5.0'
+            'com.google.android.gms:play-services:8.1.0'
     compile 'com.android.support:support-v4:22.0.1'
+    compile 'ch.acra:acra:4.8.2'
 }

@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class SyncDataService extends Service
 {
 
-	private static final String TAG = SyncDataService.class.getName();
-
 	public static final String SERVICE_EXTRA_DELAY_INTERVAL = "eu.focusnet.extra.DELAY_INTERVAL";
 
 	private ScheduledExecutorService scheduleTaskExecutor;
@@ -39,7 +37,7 @@ public class SyncDataService extends Service
 			@Override
 			public void run()
 			{
-				Log.i(TAG, "Refreshing data right now!");
+			// 	Log.i(TAG, "Refreshing data right now!");
 			}
 		}, 0, delay, TimeUnit.MINUTES);
 	}
@@ -47,8 +45,10 @@ public class SyncDataService extends Service
 	@Override
 	public void onDestroy()
 	{
+		// FIXME TODO also flush database modifications - DataManager ... flush()
+
 		super.onDestroy();
-		Log.d(TAG, "Destroying Service");
+	//	Log.d(TAG, "Destroying Service");
 		scheduleTaskExecutor.shutdown();
 	}
 

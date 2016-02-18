@@ -177,9 +177,7 @@ public class DataManager
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
-		FocusSample fs; //  = new FocusSample();
-		fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
-		// fs.setUrl(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
@@ -552,7 +550,6 @@ public class DataManager
 	 */
 	public void saveUserPreferences()
 	{
-
 		throw new NotImplementedException("saveuserpref");
 	}
 }

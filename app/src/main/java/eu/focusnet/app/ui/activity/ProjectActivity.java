@@ -25,7 +25,7 @@ public class ProjectActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 
 		//Get the project title and project id either from the
-		//saved instance or from the received intent
+		//saved instance or from the received syncServiceIntent
 		if (savedInstanceState == null) {
 			projectTitle = getIntent().getStringExtra(Constant.UI_EXTRA_TITLE);
 			//Path is the same as projectId

@@ -48,7 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:ems="15"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:maxLines="1"/>
 
         </TableRow>
 
@@ -71,7 +72,8 @@
                 android:layout_marginLeft="30dp"
                 android:ems="15"
                 android:inputType="textPassword"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:maxLines="1"/>
 
         </TableRow>
 

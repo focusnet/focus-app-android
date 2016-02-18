@@ -36,7 +36,7 @@ public class BookmarkService extends IntentService
 		boolean isToSave = intent.getExtras().getBoolean(IS_TO_SAVE);
 		String path = intent.getStringExtra(PATH);
 		String title = intent.getStringExtra(NAME);
-//        int order = intent.getExtras().getInt(Constant.ORDER);
+//        int order = syncServiceIntent.getExtras().getInt(Constant.ORDER);
 		String bookmarkType = intent.getStringExtra(BOOKMARK_TYPE);
 
 		Log.d(TAG, "The path :" + path);

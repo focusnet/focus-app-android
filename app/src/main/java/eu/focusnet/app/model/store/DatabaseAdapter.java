@@ -64,6 +64,8 @@ public class DatabaseAdapter
 		{
 			db.execSQL("DROP TABLE IF EXISTS " + Constant.DATABASE_TABLE_SAMPLES);
 			onCreate(db);
+
+			// FIXME Upgrade path should be a bit smarter.
 		}
 
 		/*

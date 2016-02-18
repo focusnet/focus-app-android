@@ -9,14 +9,18 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.service.SyncDataService;
 
 /**
- * Created by yandypiedra on 17.11.15.
+ * The BaseActivity is used as the basis for Activities that have a title bar and a content below
  */
 public abstract class BaseActivity extends AppCompatActivity
 {
-	//Set the toolbar
 	protected Toolbar toolbar;
-	protected Intent intent;
+	protected Intent syncServiceIntent;
 
+	/**
+	 * Override creation method. Add a toolbar.
+	 *
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -28,37 +32,62 @@ public abstract class BaseActivity extends AppCompatActivity
 		getSupportActionBar().setHomeButtonEnabled(isHomeButtonEnabled());
 	}
 
+	/**
+	 * Retrieve the content of the view
+	 *
+	 * @return a valid Content View id
+	 */
 	protected abstract int getContentView();
 
+	/**
+	 * Do we FIXME documentation
+	 *
+	 * @return True if we do
+	 */
 	protected boolean isDisplayHomeAsUpEnabled()
 	{
 		return true;
 	}
 
+	/**
+	 * Do we FIXME documentation
+	 *
+	 * @return True if we do
+	 */
 	protected boolean isHomeButtonEnabled()
 	{
 		return true;
 	}
 
-
 	//TODO starting an stoping the service in each activity is not a good idea
+	// NOTE: why? except the fact that this is a pain to maintain (easy to forget to add the service to an activity)
+
+	/**
+	 * When starting the activity, also start the data sync service.
+	 */
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
-		intent = new Intent(this, SyncDataService.class);
+
+		// start the synchronization service
+		syncServiceIntent = new Intent(this, SyncDataService.class);
 		//TODO delay interval is hardcoded
-		intent.putExtra(SyncDataService.SERVICE_EXTRA_DELAY_INTERVAL, 1);
-		startService(intent);
+		syncServiceIntent.putExtra(SyncDataService.SERVICE_EXTRA_DELAY_INTERVAL, 1);
+		startService(syncServiceIntent);
 	}
 
+	/**
+	 * And stop it when the activity is paused, such that we don't consume resources without any reason
+	 */
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-		stopService(intent);
 
-		// FIXME TODO also flush database modifications - DataManager ... flush()
+		// stop the synchronization service
+		stopService(syncServiceIntent);
+
 	}
 
 }

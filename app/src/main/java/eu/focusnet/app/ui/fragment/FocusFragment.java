@@ -60,16 +60,16 @@ public class FocusFragment extends ListFragment
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 			if (position > notifHeaderPosition) {
 				//TODO navigate to notifications ...
-		/*		Intent intent = new Intent(getActivity(), WebViewTestActivity.class);
+		/*		Intent syncServiceIntent = new Intent(getActivity(), WebViewTestActivity.class);
 				if (position - 1 == notifHeaderPosition) {
-					intent = new Intent(getActivity(), TestActivity.class);
+					syncServiceIntent = new Intent(getActivity(), TestActivity.class);
 				}
-				startActivity(intent);
+				startActivity(syncServiceIntent);
 				*/
 			}
 			else {
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
-				//intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				//syncServiceIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
 				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
 				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());

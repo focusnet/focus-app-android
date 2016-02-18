@@ -171,6 +171,21 @@ public class Sample
 		this.toPush = toPush;
 	}
 
+	public String getContext()
+	{
+		return context;
+	}
+
+	public boolean isToPost()
+	{
+		return this.toPost;
+	}
+
+	public void setToPost(boolean toPost)
+	{
+		this.toPost = toPost;
+	}
+
 	public void cloneFromFocusObject(FocusObject fo, String raw_data)
 	{
 
@@ -188,20 +203,5 @@ public class Sample
 
 		this.toDelete = false;
 		this.toPush = false;
-	}
-
-	public String getContext()
-	{
-		return context;
-	}
-
-	public boolean isToPost()
-	{
-		return this.toPost;
-	}
-
-	public void setToPost(boolean toPost)
-	{
-		this.toPost = toPost;
 	}
 }

@@ -32,7 +32,6 @@ public class EntryPointActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.splash);
 
 		/*
@@ -41,10 +40,9 @@ public class EntryPointActivity extends Activity
 		 *
 		 * The Context must be set once.
 		 */
-		DataManager dm = DataManager.getInstance();
-		dm.init(this.getApplicationContext());
 
-		if (dm.hasLoginInformation()) {
+
+		if (DataManager.getInstance().hasLoginInformation()) {
 
 			/*
 			 * This thread will retrieve the application configuration.
@@ -67,7 +65,7 @@ public class EntryPointActivity extends Activity
 				public void run()
 				{
 					try {
-						int min_splashscreen_display_time = 2000;
+						int min_splashscreen_display_time = 5000;
 						sleep(1000);
 						min_splashscreen_display_time -= 1000;
 						while (app_acquisition.isAlive() || min_splashscreen_display_time > 0) {
@@ -81,7 +79,6 @@ public class EntryPointActivity extends Activity
 					finally {
 						finish();
 					}
-
 				}
 			};
 
@@ -97,7 +94,7 @@ public class EntryPointActivity extends Activity
 
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly.
+		// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly (i.e. with real configuration).
 		//	client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 

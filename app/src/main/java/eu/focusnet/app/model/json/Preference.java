@@ -18,7 +18,7 @@ public class Preference extends FocusObject
 		this.bookmarks = bookmarks;
 	}
 
-	public Preference(String type, Setting settings, Bookmark bookmarks)
+	public Preference(Setting settings, Bookmark bookmarks)
 	{
 		this.settings = settings;
 		this.bookmarks = bookmarks;

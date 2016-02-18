@@ -33,9 +33,11 @@ public class FocusObject implements Serializable
 		this.owner = owner;
 		this.editor = editor;
 		this.version = version;
-		this.creationDateTime = creationDateTime;
-		this.editionDateTime = editionDateTime;
+		this.creationDateTime = creationDateTime != null ? creationDateTime : new Date();
+		this.editionDateTime = editionDateTime != null ? editionDateTime : new Date();
 		this.active = active;
+
+		this.lastUsage = new Date();
 	}
 
 	public FocusObject()

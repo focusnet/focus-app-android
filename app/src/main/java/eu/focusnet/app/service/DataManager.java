@@ -164,21 +164,22 @@ public class DataManager
 		}
 
 		// then acquire application basic content
-		// FIXME how do we retrieve the proper URLs? lookup() service ?
+		// FIXME how do we retrieve the proper URLs? lookup() service ? context = user, but what is user url/identifier?
 		// FIXME FIXME TODO when we have data from Jussi
 		// and save the urls for later uses (no need to actually get the information at this point)
 		int userId = 123; // FIXME hard-coded. should be obtained from network.
-		this.loginServer = "server";
-		this.loginUser = "username";
-		this.loginPassword = "password";
+		this.loginServer = server;
+		this.loginUser = user;
+		this.loginPassword = password;
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
-		this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
+		// this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
-		FocusSample fs = new FocusSample();
-		fs.setUrl(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		FocusSample fs; //  = new FocusSample();
+		fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		// fs.setUrl(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
@@ -188,7 +189,7 @@ public class DataManager
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
-		this.post(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, fs, FocusSample.class);
+		this.post(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, fs);
 
 		return true;
 	}
@@ -253,7 +254,7 @@ public class DataManager
 	/**
 	 * Acquire the application's user preferences.
 	 *
-	 * @return
+	 * @return A Preference object
 	 */
 	public Preference getUserPreferences() throws RuntimeException
 	{
@@ -272,7 +273,7 @@ public class DataManager
 	/**
 	 * Acquire the application content object
 	 *
-	 * @return
+	 * @return An AppContentTemplate object (not an instance, it still must be processed)
 	 */
 	public AppContentTemplate getAppContentTemplate() throws RuntimeException
 	{
@@ -290,7 +291,7 @@ public class DataManager
 	/**
 	 * Get the application content instance, i.e. with data context and iterator having beeen resolved.
 	 *
-	 * @return
+	 * @return An ApplicationInstance object reflecting the current content of the app
 	 * @throws RuntimeException
 	 */
 	public AppContentInstance getAppContentInstance() throws RuntimeException
@@ -307,26 +308,21 @@ public class DataManager
 		this.getUserPreferences();
 		AppContentTemplate template = this.getAppContentTemplate();
 		this.appContentInstance = new AppContentInstance(template);
-
-		FocusSample out = this.getSample("http://focus.yatt.ch/resources-server/data/yarr"); // FIXME DEBUG
-
-		return;
 	}
 
 
 	/**
 	 * Get a FocusSample
 	 *
-	 * @param url
-	 * @return
+	 * @param url The URL identifyiing the sample to retrieve
+	 * @return A FocusSample
 	 */
 	public FocusSample getSample(String url) throws RuntimeException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
 		}
-		FocusSample sample = (FocusSample) (this.get(url, FocusSample.class));
-		return sample;
+		return (FocusSample) (this.get(url, FocusSample.class));
 	}
 
 
@@ -336,13 +332,12 @@ public class DataManager
 	private FocusObject get(String url, Class targetClass)
 	{
 		// do we have it in the cache?
-		// FIXME TODO check if not too old
+		// FIXME TODO check if not too old ? (see sample.lastUsage)
 		if (this.cache.get(url) != null) {
 			FocusObject result = this.cache.get(url);
 			result.updateLastUsage();
 			return result;
 		}
-
 
 		FocusObject result = null;
 
@@ -359,52 +354,55 @@ public class DataManager
 			this.databaseAdapter.close();
 		}
 
-		// special case: internal configuration
-		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX) && result == null) {
-			return null;
-		}
-
-		// try to get it from the network
-		if (result == null && this.net.isNetworkAvailable()) {
-			HttpResponse response = null;
-			try {
-				response = this.net.get(url);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (response.isSuccessful()) {
-				String json = response.getData();
-				result = (FocusObject) this.gson.fromJson(json, targetClass);
-
-				// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
-
-				// Convert into a sample and save it into the database
-				Sample sample = new Sample();
-				sample.cloneFromFocusObject(result, json);
-
-				try {
-					this.databaseAdapter.openWritableDatabase();
-					SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
-					sampleDao.create(sample);
-				}
-				finally {
-					this.databaseAdapter.close();
-				}
-			}
-			else {
+		if (result == null) {
+			// special case: internal configuration
+			if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
 				return null;
 			}
+
+			// try to get it from the network
+			if (this.net.isNetworkAvailable()) {
+				HttpResponse response = null;
+				try {
+					response = this.net.get(url);
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				if (response.isSuccessful()) {
+					String json = response.getData();
+					result = (FocusObject) this.gson.fromJson(json, targetClass);
+
+					// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
+
+					// Convert into a sample and save it into the database
+					Sample sample = new Sample();
+					sample.cloneFromFocusObject(result, json);
+
+					try {
+						this.databaseAdapter.openWritableDatabase();
+						SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
+						sampleDao.create(sample);
+					}
+					finally {
+						this.databaseAdapter.close();
+					}
+				}
+				else {
+					return null;
+				}
+			}
 		}
 
-		if (result == null) {
+		if (result != null) {
 			result.updateLastUsage();
+			this.cache.put(url, result);
 		}
 
-		this.cache.put(url, result);
 		// FIXME FIXME TODO do delete some elements of the cache if memory consumption is > threshold
 		// FIXME find a smart strategy for that.
+		// we could do that in the DataContext access functions!
 
 		return result;
 	}
@@ -412,11 +410,10 @@ public class DataManager
 	/**
 	 * Create a new data entry
 	 *
-	 * @param url
-	 * @param data
-	 * @param targetClass
+	 * @param url The URL identifying the resource to POST
+	 * @param data The FocusObject representing the data to POST
 	 */
-	public void post(String url, FocusObject data, Class targetClass)
+	public void post(String url, FocusObject data)
 	{
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
@@ -424,13 +421,12 @@ public class DataManager
 		this.cache.put(url, data);
 		data.updateLastUsage();
 
-		// store in local database, with the "to_post" flag
+		// store in local database, with the "toPost" flag
 		String json = this.gson.toJson(data);
 		Sample sample = new Sample();
 		sample.cloneFromFocusObject(data, json);
 		if (!is_special_url) {
-
-			sample.setToPost(true); // FIXME not correct, must be toPost
+			sample.setToPost(true);
 		}
 
 		try {
@@ -461,25 +457,33 @@ public class DataManager
 				sample.setToPost(false);
 				sample_dao.update(sample);
 			}
-			finally
-			{
+			finally {
 				this.databaseAdapter.close();
 			}
 		}
-
-
-
 	}
 
-	public void put(String url, FocusObject data, Class targetClass)
+	/**
+	 * PUT some data to a remote server.
+	 *
+	 * @param url The URL identifying the resource to PUT
+	 * @param data The FocusObject data to PUT
+	 */
+	public void put(String url, FocusObject data)
 	{
 		/*
 		 * 1. update local cache
-		 * 2. update local store
+		 * 2. update local store, mark as to push
 		 * 3. update remote store NetworkManager.post();
+		 * 4. if net success, unmark push flag
 		 */
 	}
 
+	/**
+	 * DELETE a resource
+	 *
+	 * @param url The URL identifying the resource to DELETE.
+	 */
 	public void delete(String url)
 	{
 		// remove from RAM cache

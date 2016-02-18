@@ -55,14 +55,13 @@ public class SampleDao
 	 */
 	public Sample get(String url)
 	{
-		Sample sample = null;
 		String[] params = {
 				url
 		};
 		Cursor cursor = this.database.query(true,
 				Constant.DATABASE_TABLE_SAMPLES,
 				this.columnsToRetrieve,
-				Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0",
+				Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0 AND " + Constant.ACTIVE + " = 1",
 				params,
 				null,
 				null,

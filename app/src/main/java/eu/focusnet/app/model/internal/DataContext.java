@@ -3,8 +3,9 @@ package eu.focusnet.app.model.internal;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.FocusSample;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by julien on 13.01.16.
@@ -78,7 +79,12 @@ public class DataContext extends HashMap<String, FocusSample>
 
 			if (description.startsWith("ctx/")) {
 				String u = this.resolveReferencedUrl(description);
-				f = this.dataManager.getSample(u);
+				try {
+					f = this.dataManager.getSample(u);
+				}
+				catch (FocusMissingResourceException ex) {
+					return null;
+				}
 			}
 			else {
 				String[] parts = description.split("\\|");
@@ -113,13 +119,14 @@ public class DataContext extends HashMap<String, FocusSample>
 		}
 		else {
 			// simple URL
-			f = this.dataManager.getSample(description);
+			try {
+				f = this.dataManager.getSample(description);
+			}
+			catch (FocusMissingResourceException ex) {
+				return null;
+			}
 		}
 
-		if (f == null) {
-			return null; // for now FIXME DEBUG
-//			throw new RuntimeException("No FocusSample obtained");
-		}
 		return super.put(key, f);
 	}
 

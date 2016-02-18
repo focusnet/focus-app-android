@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.Linker;
 import eu.focusnet.app.model.json.PageTemplate;
@@ -119,7 +120,12 @@ public class ProjectInstance
 					continue;
 				}
 				for (String url : urls) {
-					DataManager.getInstance().getSample(url);
+					try {
+						DataManager.getInstance().getSample(url);
+					}
+					catch (FocusMissingResourceException ex) {
+						continue;
+					}
 					DataContext new_ctx = new DataContext(this.dataContext);
 					new_ctx.put(PageInstance.LABEL_PAGE_ITERATOR, url);
 					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();

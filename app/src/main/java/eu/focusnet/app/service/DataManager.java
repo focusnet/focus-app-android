@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
-import eu.focusnet.app.exception.InternalErrorException;
-import eu.focusnet.app.exception.NotImplementedException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
@@ -110,7 +111,13 @@ public class DataManager
 		this.databaseAdapter = new DatabaseAdapter(context); // was getApplication() // TODO FIXME check that is always working
 
 		// get login infos from local store, and use it as the default
-		FocusSample internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+		FocusSample internal_config = null;
+		try {
+			internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+		}
+		catch (IOException ex) {
+			// not a network resource, ok to ignore
+		}
 		// FIXME TODO YANDY: would that be better to use SharedPreferences? Or is that way of doing ok?
 		if (internal_config != null) {
 			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
@@ -143,23 +150,20 @@ public class DataManager
 	 * @param user     The login user
 	 * @param password The login password
 	 * @param server   The login server
+	 * @return true on successful authentication, false otherwise (403 error)
+	 * @exception IOException if a network error occurs
 	 */
-	public boolean login(String user, String password, String server)
+	public boolean login(String user, String password, String server) throws IOException
 	{
 		// if there is no network available, trigger a failure right away
 		if (!this.net.isNetworkAvailable()) {
-			throw new RuntimeException("No network");
+			throw new IOException("No network");
 		}
 
 		// do network login
-		try {
-			boolean login_result = this.net.login(user, password, server);
-			if (!login_result) { // 403 error
-				this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
-				return false;
-			}
-		}
-		catch (IOException e) { // network failure
+		boolean login_result = this.net.login(user, password, server);
+		if (!login_result) { // 403 error
+			this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 			return false;
 		}
 
@@ -212,7 +216,12 @@ public class DataManager
 		this.cache = new HashMap<>();
 
 		// delete SQL db
-		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		try {
+			this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		}
+		catch (IOException ex) {
+			// FIXME should not happen as this is local resource (internal)
+		}
 		// delete the whole database content FIXME TODO
 	}
 
@@ -236,16 +245,24 @@ public class DataManager
 	/**
 	 * Acquire personal information about the user of the application
 	 */
-	public User getUser() throws InternalErrorException
+	public User getUser() throws FocusInternalErrorException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
-			throw new InternalErrorException("No login information. Cannot continue.");
+			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.user != null) {
 			return this.user;
 		}
-		this.user = (User) (this.get(this.userUrl, User.class));
+		try {
+			this.user = (User) (this.get(this.userUrl, User.class));
+		}
+		catch (IOException ex) {
+			throw new FocusMissingResourceException("Cannot retrieve User object (network problem).");
+		}
+		if (this.user == null) {
+			throw new FocusMissingResourceException("Cannot retrieve User object.");
+		}
 		return this.user;
 	}
 
@@ -254,7 +271,7 @@ public class DataManager
 	 *
 	 * @return A Preference object
 	 */
-	public Preference getUserPreferences() throws RuntimeException
+	public Preference getUserPreferences() throws RuntimeException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
@@ -263,8 +280,15 @@ public class DataManager
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
-
+		try {
+			this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
+		}
+		catch (IOException ex) {
+			throw new FocusMissingResourceException("Cannot retrieve Preference object (network problem).");
+		}
+		if (this.userPreferences == null) {
+			throw new FocusMissingResourceException("Cannot retrieve Preference object.");
+		}
 		return this.userPreferences;
 	}
 
@@ -273,7 +297,7 @@ public class DataManager
 	 *
 	 * @return An AppContentTemplate object (not an instance, it still must be processed)
 	 */
-	public AppContentTemplate getAppContentTemplate() throws RuntimeException
+	public AppContentTemplate getAppContentTemplate() throws RuntimeException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new RuntimeException("No login information. Cannot continue.");
@@ -282,7 +306,15 @@ public class DataManager
 		if (this.appContentTemplate != null) {
 			return this.appContentTemplate;
 		}
-		this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
+		try {
+			this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
+		}
+		catch (IOException ex) {
+			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object (network problem).");
+		}
+		if (this.appContentTemplate == null) {
+			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
+		}
 		return this.appContentTemplate;
 	}
 
@@ -292,7 +324,7 @@ public class DataManager
 	 * @return An ApplicationInstance object reflecting the current content of the app
 	 * @throws RuntimeException
 	 */
-	public AppContentInstance getAppContentInstance() throws RuntimeException
+	public AppContentInstance getAppContentInstance()
 	{
 		return this.appContentInstance;
 	}
@@ -300,7 +332,7 @@ public class DataManager
 	/**
 	 * Get the three basic informations that are required to build the application UI
 	 */
-	public void retrieveApplicationData() throws RuntimeException
+	public void retrieveApplicationData() throws FocusMissingResourceException
 	{
 		this.getUser();
 		this.getUserPreferences();
@@ -308,26 +340,35 @@ public class DataManager
 		this.appContentInstance = new AppContentInstance(template);
 	}
 
-
 	/**
 	 * Get a FocusSample
 	 *
 	 * @param url The URL identifyiing the sample to retrieve
 	 * @return A FocusSample
 	 */
-	public FocusSample getSample(String url) throws RuntimeException
+	public FocusSample getSample(String url) throws RuntimeException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
-			throw new RuntimeException("No login information. Cannot continue.");
+			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
-		return (FocusSample) (this.get(url, FocusSample.class));
+		FocusSample fs = null;
+		try {
+			fs = (FocusSample) (this.get(url, FocusSample.class));
+			if (fs == null) {
+				throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.");
+			}
+		}
+		catch (IOException ex) {
+			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample (network problem).");
+		}
+		return fs;
 	}
 
 
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
 	 */
-	private FocusObject get(String url, Class targetClass)
+	private FocusObject get(String url, Class targetClass) throws IOException
 	{
 		// do we have it in the cache?
 		// FIXME TODO check if not too old ? (see sample.lastUsage)
@@ -411,7 +452,7 @@ public class DataManager
 	 * @param url The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
-	public void post(String url, FocusObject data)
+	public void post(String url, FocusObject data) throws IOException
 	{
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
@@ -467,7 +508,7 @@ public class DataManager
 	 * @param url The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
-	public void put(String url, FocusObject data)
+	public void put(String url, FocusObject data) throws IOException
 	{
 		/*
 		 * 1. update local cache
@@ -482,7 +523,7 @@ public class DataManager
 	 *
 	 * @param url The URL identifying the resource to DELETE.
 	 */
-	public void delete(String url)
+	public void delete(String url) throws IOException
 	{
 		// remove from RAM cache
 		this.cache.remove(url);
@@ -501,14 +542,7 @@ public class DataManager
 			dao.markForDeletion(url);
 
 			// remove from network server
-			boolean net_remove = false;
-			try {
-				net_remove = this.net.delete(url).isSuccessful();
-			}
-			catch (IOException e) {
-				// FIXME TODO
-			}
-			if (net_remove) { // if remove on network, also remove copy in local db
+			if (this.net.delete(url).isSuccessful()) { // if remove on network, also remove copy in local db
 				dao.delete(url);
 			}
 		}
@@ -550,6 +584,6 @@ public class DataManager
 	 */
 	public void saveUserPreferences()
 	{
-		throw new NotImplementedException("saveuserpref");
+		throw new FocusNotImplementedException("saveuserpref");
 	}
 }

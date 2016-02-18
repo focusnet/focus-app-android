@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.DataManager;
 
@@ -46,31 +48,34 @@ public class LoginActivity extends Activity
 		{
 			public void run()
 			{
-
 				// FIXME TODO YANDY progress indicator? disable all controls? Or just a Toast-like thing that says "Connecting. Please wait..."
+				// if we do have a progress indicator, let's make it generic so we can reuse it in other fragments/activities.
+				// preferably, let's use Android's default one
+
+				String username = ((EditText) findViewById(R.id.login_username_textView)).getText().toString();
+				String password = ((EditText) findViewById(R.id.login_password_textView)).getText().toString();
+				String server = "server"; // TODO FIXME YANDY also a field for server name
 
 				try {
-
-					String username = ((EditText) findViewById(R.id.login_username_textView)).getText().toString();
-					String password = ((EditText) findViewById(R.id.login_password_textView)).getText().toString();
-					// TODO FIXME YANDY also a field for server name
-					String server = "server";
-
 					if (DataManager.getInstance().login(username, password, server)) {
 						Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
 						startActivity(i);
 						finish();
 					}
 					else {
-						Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error, Toast.LENGTH_SHORT);
+						Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error_bad_credentials, Toast.LENGTH_SHORT);
 						toast.show();
 					}
 				}
-				catch (RuntimeException e) {
-					// FIXME TODO
+				catch (IOException ex) {
+					// no network
+					Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error_no_network, Toast.LENGTH_SHORT);
+					toast.show();
 				}
+
 			}
 		};
+
 		loginThread.start();
 	}
 }

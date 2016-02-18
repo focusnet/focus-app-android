@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.MissingFormatArgumentException;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -104,7 +106,13 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 //                PreferenceDao preferenceDao = new PreferenceDao(databaseAdapter.getDb());
 //                //TODO get the preference's ID
 //                Preference preference = preferenceDao.findPreference(new Long(123));
-			Preference preference = DataManager.getInstance().getUserPreferences();
+			Preference preference = null;
+			try {
+				preference = DataManager.getInstance().getUserPreferences();
+			}
+			catch (FocusMissingResourceException ex) {
+				// FIXME TODO do something smart.
+			}
 
 			Bookmark bookmark = preference.getBookmarks();
 			ArrayList<BookmarkLink> pages = bookmark.getPages();

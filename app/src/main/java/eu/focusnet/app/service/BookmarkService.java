@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.service.util.EventBus;
@@ -43,7 +44,14 @@ public class BookmarkService extends IntentService
 		Log.d(TAG, "The title :" + title);
 		Log.d(TAG, "bookmark type:" + bookmarkType);
 
-		Preference userPreference = DataManager.getInstance().getUserPreferences();
+		Preference userPreference = null;
+		try {
+			userPreference = DataManager.getInstance().getUserPreferences();
+		}
+		catch (FocusMissingResourceException ex) {
+			// FIXME FIXME TODO
+			// kill ???
+		}
 
 //        DatabaseAdapter databaseAdapter = new DatabaseAdapter(getApplicationContext());
 //        try {

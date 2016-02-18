@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.FocusFragment;
@@ -101,7 +102,15 @@ public class FocusActivity extends BaseDrawerActivity
 		//User user = (User) extras.getSerializable(Constant.USER_DATA);
 
 		DataManager dm = DataManager.getInstance();
-		User user = dm.getUser();
+		User user = null;
+
+		try {
+			user = dm.getUser();
+		}
+		catch (FocusMissingResourceException ex) {
+			// FIXME do something smart
+			// e.g. throw internal error exception !
+		}
 
 
 		drawerItems.add(new HeaderDrawerListItem(ViewUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));

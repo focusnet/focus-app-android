@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 
 /**
@@ -16,17 +17,11 @@ import eu.focusnet.app.service.DataManager;
  */
 public class EntryPointActivity extends Activity
 {
-	/**
-	 * ATTENTION: This was auto-generated to implement the App Indexing API.
-	 * See https://g.co/AppIndexing/AndroidStudio for more information.
-	 */
-	// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly.
-	// private GoogleApiClient client;
 
 	/**
 	 * Instantiate the activity.
 	 *
-	 * @param savedInstanceState
+	 * @param savedInstanceState past Activity state
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -37,11 +32,7 @@ public class EntryPointActivity extends Activity
 		/*
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
 		 * Otherwise, load the basic application configuration and redirect to FocusActivity
-		 *
-		 * The Context must be set once.
 		 */
-
-
 		if (DataManager.getInstance().hasLoginInformation()) {
 
 			/*
@@ -52,7 +43,13 @@ public class EntryPointActivity extends Activity
 				public void run()
 				{
 					DataManager dm = DataManager.getInstance();
-					dm.retrieveApplicationData();
+					try {
+						dm.retrieveApplicationData();
+					}
+					catch (FocusMissingResourceException ex) {
+						// FIXME TODO what do we do? Toast + exit
+						// or redirect to new Activity that explains the problem and proposes to try again later (button)
+					}
 				}
 			};
 
@@ -75,6 +72,7 @@ public class EntryPointActivity extends Activity
 						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
 					}
 					catch (InterruptedException ex) {
+						// empty, but that's ok.
 					}
 					finally {
 						finish();
@@ -95,6 +93,7 @@ public class EntryPointActivity extends Activity
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly (i.e. with real configuration).
+		// FIXME TODO otherwise, let's completely remove it.
 		//	client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 

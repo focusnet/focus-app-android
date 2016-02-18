@@ -1,9 +1,11 @@
 package eu.focusnet.app.model.internal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
@@ -88,7 +90,12 @@ public class AppContentInstance
 				}
 
 				for (String url : urls) {
-					this.dataManager.getSample(url);
+					try {
+						this.dataManager.getSample(url);
+					}
+					catch (FocusMissingResourceException ex) {
+						continue;
+					}
 					DataContext new_ctx = new DataContext(this.dataContext);
 					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					// the guid is adapted in the ProjectInstance constructor

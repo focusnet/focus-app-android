@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -43,6 +44,8 @@ public class ProjectFragment extends ListFragment
 	private ArrayList<AbstractListItem> abstractItems;
 	private String projectId;
 
+	private ProjectInstance projectInstance;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -55,6 +58,13 @@ public class ProjectFragment extends ListFragment
 		new ProjectBuilderTask().execute();
 
 		return viewRoot;
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		// useful for our custom garbage collection in DataManager
+		DataManager.getInstance().unregisterActiveInstance(this.projectInstance);
 	}
 
 
@@ -83,6 +93,8 @@ public class ProjectFragment extends ListFragment
 
 	/**
 	 * This class loads the project characteristics from the database
+	 *
+	 * FIXME TODO is that useful to have it in async now that we do things from RAM?
 	 */
 	private class ProjectBuilderTask extends AsyncTask<String, Void, StandardListAdapter>
 	{
@@ -106,12 +118,17 @@ public class ProjectFragment extends ListFragment
 			// load icons
 			toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
 
-			ProjectInstance projectInstance = DataManager.getInstance().getAppContentInstance().getProjectFromPath(projectId);
+			DataManager dm = DataManager.getInstance();
+			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
+
+			// useful for our custom garbage collection in DataManager
+			dm.registerActiveInstance(projectInstance);
+
 			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
 
 			for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 				PageInstance dashboard = entry.getValue();
-				String dashboardId = DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, dashboard);
+				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 				int dashboardOrder = 0;
 
 				//TODO add the bookmarks to the dataManager
@@ -133,7 +150,7 @@ public class ProjectFragment extends ListFragment
 			LinkedHashMap<String, PageInstance> tools = projectInstance.getTools();
 			for (Map.Entry<String, PageInstance> entry : tools.entrySet()) {
 				PageInstance tool = entry.getValue();
-				String toolId = DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, tool);
+				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
 				//TODO add the bookmarks to the dataManager
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);

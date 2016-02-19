@@ -2,6 +2,7 @@ package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,16 @@ public abstract class WidgetFragment extends Fragment
 {
 
 	//TODO
+	WidgetInstance widgetInstance;
 
 	@Override
 	public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+	@Override
+	public void onDestroyView()
+	{
+		DataManager.getInstance().unregisterActiveInstance(this.widgetInstance);
+	}
 
 	public void setWidgetLayout(View viewRoot)
 	{
@@ -36,7 +44,10 @@ public abstract class WidgetFragment extends Fragment
 	{
 		Bundle bundles = getArguments();
 		String path = bundles.getString(Constant.UI_EXTRA_PATH);
-		return DataManager.getInstance().getAppContentInstance().getWidgetFromPath(path);
+		DataManager dm = DataManager.getInstance();
+		this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
+		dm.registerActiveInstance(this.widgetInstance);
+		return this.widgetInstance;
 	}
 
 }

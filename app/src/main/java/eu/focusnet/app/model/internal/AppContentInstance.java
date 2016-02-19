@@ -19,7 +19,7 @@ import eu.focusnet.app.model.util.TypesHelper;
  * An Application content instance, i.e. the application template has been resolved and real
  * instances of the different contained objects are accessible through the present object.
  */
-public class AppContentInstance
+public class AppContentInstance extends Instance
 {
 	private DataManager dataManager;
 	private AppContentTemplate appTemplate;

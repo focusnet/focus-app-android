@@ -6,18 +6,26 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
+import eu.focusnet.app.model.internal.Instance;
+import eu.focusnet.app.model.internal.PageInstance;
+import eu.focusnet.app.model.internal.ProjectInstance;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.model.json.User;
+import eu.focusnet.app.model.json.WidgetLinker;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.model.store.Sample;
 import eu.focusnet.app.model.store.SampleDao;
@@ -66,6 +74,8 @@ public class DataManager
 	private Gson gson;
 	private NetworkManager net;
 	private DatabaseAdapter databaseAdapter;
+
+	private ArrayList<Instance> activeInstances;
 
 	/**
 	 * Initialize the Singleton.
@@ -338,6 +348,7 @@ public class DataManager
 		this.getUserPreferences();
 		AppContentTemplate template = this.getAppContentTemplate();
 		this.appContentInstance = new AppContentInstance(template);
+		this.registerActiveInstance(this.appContentInstance);
 	}
 
 	/**
@@ -433,6 +444,8 @@ public class DataManager
 	/**
 	 * Create a new data entry
 	 *
+	 * a POST is seen as a data commit, so we call data.commit()
+	 *
 	 * @param url  The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
@@ -457,6 +470,7 @@ public class DataManager
 
 		// make it accessible through the cache
 		this.cache.put(url, data);
+		data.commit();
 
 		// push on the network
 		if (is_special_url) {
@@ -487,6 +501,8 @@ public class DataManager
 	 * this method, we replace the old object in our RAM cache with the new one, such that the old
 	 * one will be garbage collected.
 	 *
+	 * a PUT is seen as a data commit, so we call data.commit()
+	 *
 	 * @param url  The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
@@ -514,6 +530,7 @@ public class DataManager
 
 		// make it accessible through the cache
 		this.cache.put(url, data);
+		data.commit();
 
 		// network PUT
 		if (this.net.put(url, data).isSuccessful()) { // if PUT on network, also remove PUT flag in local db copy
@@ -601,11 +618,37 @@ public class DataManager
 	}
 
 	/**
+	 * Adds the specified Instance to the list of currently active instances.
+	 *
+	 * @param i
+	 */
+	public void registerActiveInstance(Instance i)
+	{
+		this.activeInstances.add(i);
+	}
+
+	/**
+	 * Removes the specified Instance from the list of active instances.
+	 *
+	 * @param i
+	 */
+	public void unregisterActiveInstance(Instance i)
+	{
+		this.activeInstances.remove(i);
+	}
+
+	/**
 	 * Free memory from our in-RAM data structure, where this is possible
 	 */
 	public void freeMemory()
 	{
-		// likely to browser all DataContext's and free memory there
+		// We have this.activeInstances
+
+		// in each we can access the data context, which is a url => data pair
+
+		// so we can clean the this.cache accordingly.
+
+// FIXME TODO TODO
 		return;
 	}
 

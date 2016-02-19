@@ -21,7 +21,7 @@ import eu.focusnet.app.model.util.TypesHelper;
 /**
  * Created by julien on 12.01.16.
  */
-public class ProjectInstance
+public class ProjectInstance extends Instance
 {
 	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
 	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
@@ -212,16 +212,16 @@ public class ProjectInstance
 
 	public String getDescription()
 	{
-		return description;
+		return this.description;
 	}
 
 	public LinkedHashMap<String, PageInstance> getDashboards()
 	{
-		return dashboards;
+		return this.dashboards;
 	}
 
 	public LinkedHashMap<String, PageInstance> getTools()
 	{
-		return tools;
+		return this.tools;
 	}
 }

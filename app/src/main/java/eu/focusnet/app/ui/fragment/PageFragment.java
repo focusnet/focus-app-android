@@ -2,6 +2,7 @@ package eu.focusnet.app.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import eu.focusnet.app.ui.util.ViewUtil;
 public class PageFragment extends Fragment
 {
 
-	private static final String TAG = PageFragment.class.getName();
+	private PageInstance pageInstance;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +40,10 @@ public class PageFragment extends Fragment
 
 		AppContentInstance appContentInstance = DataManager.getInstance().getAppContentInstance();
 		ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
-		PageInstance pageInstance = appContentInstance.getPageFromPath(pagePath);
+		this.pageInstance = appContentInstance.getPageFromPath(pagePath);
+
+		// useful for our custom garbage collection in DataManager
+		DataManager.getInstance().registerActiveInstance(this.pageInstance);
 
 		LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
 
@@ -59,6 +63,13 @@ public class PageFragment extends Fragment
 //        }
 
 		return viewRoot;
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		// useful for our custom garbage collection in DataManager
+		DataManager.getInstance().unregisterActiveInstance(this.pageInstance);
 	}
 
 

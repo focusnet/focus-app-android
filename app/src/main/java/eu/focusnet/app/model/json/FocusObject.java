@@ -64,12 +64,34 @@ public class FocusObject implements Serializable
 		return fo;
 	}
 
+	/**
+	 * Update the current object to highlight the fact that we are providing a new version (sampe) of the same resource
+	 *
+	 * We do not commit() yet, as this is done once the resource is submitted for POST/PUT-ing (i.e. to the DataManager)
+	 */
 	public void updateToNewVersion()
 	{
 		++this.version;
-		// update editor, editiontime, etc.
+		User user;
+		try {
+			user = DataManager.getInstance().getUser();
+		}
+		catch (FocusMissingResourceException e) {
+			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
+		}
+		this.editor = user.toString();
+		this.editionDateTime = new Date();
+	}
 
-		// FIXME FIFXME TODO when we modify an object, we should update its original_data string
+	/**
+	 * Committing means that the current object is considered a valid entity in the FOCUS context,
+	 * so we update the original_data to reflect this new state.
+	 */
+	public void commit()
+	{
+		this.originalData = ""; // avoid to store useless data
+		this.originalData = DataManager.getInstance().getGson().toJson(this);
+		return;
 	}
 
 	public String getType()
@@ -126,4 +148,6 @@ public class FocusObject implements Serializable
 	{
 		this.originalData = original_data;
 	}
+
+
 }

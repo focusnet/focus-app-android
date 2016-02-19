@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 
 
@@ -60,7 +61,7 @@ public class NetworkManager
 	public boolean isNetworkAvailable() throws RuntimeException
 	{
 		if (context == null) {
-			throw new RuntimeException("You must define a context!");
+			throw new FocusInternalErrorException("You must define a context!");
 		}
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();

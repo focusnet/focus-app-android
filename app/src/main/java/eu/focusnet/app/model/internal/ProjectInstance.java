@@ -1,10 +1,14 @@
 package eu.focusnet.app.model.internal;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.Linker;
 import eu.focusnet.app.model.json.PageTemplate;
@@ -49,7 +53,7 @@ public class ProjectInstance
 		this.tools = new LinkedHashMap<String, PageInstance>();
 		this.isValid = false;
 		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
-			this.guid = this.guid + "[" + dataContext.get(LABEL_PROJECT_ITERATOR).getUrl() + "]";
+			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR).getUrl() + Constant.PATH_SELECTOR_CLOSE;
 		}
 
 		this.build();
@@ -99,7 +103,7 @@ public class ProjectInstance
 	 */
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<Linker> source, PageInstance.PageType type)
 	{
-		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<String, PageInstance>();
+		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<>();
 
 		for (Linker s : source) {
 			String page_id = s.getPageid();
@@ -108,15 +112,14 @@ public class ProjectInstance
 			// if we have an iterator, this means that we must construct multiple times the same page,
 			// but with a different data context each time
 			if (pageTpl.getIterator() != null) {
-				ArrayList<String> urls = null;
+				ArrayList<String> urls;
 				try {
 					urls = TypesHelper.asArrayOfUrls(
 							this.dataContext.resolve(pageTpl.getIterator())
 					);
 				}
 				catch (FocusBadTypeException e) {
-					// invalid iterator. ignore but log?
-					// FIXME
+					// invalid iterator. survive by ignoring, but log the event
 					continue;
 				}
 				for (String url : urls) {

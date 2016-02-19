@@ -3,12 +3,14 @@ package eu.focusnet.app.model.internal.widgets;
 import java.util.ArrayList;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by julien on 20.01.16.
+ * An instance containing all information pertaining to a Table widget.
  */
 public class TableWidgetInstance extends WidgetInstance
 {
@@ -21,6 +23,13 @@ public class TableWidgetInstance extends WidgetInstance
 	private int numberOfColumns;
 	private int maxNumberOfRows;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param template
+	 * @param layoutConfig
+	 * @param newCtx
+	 */
 	public TableWidgetInstance(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
 		super(template, layoutConfig, newCtx);
@@ -33,30 +42,38 @@ public class TableWidgetInstance extends WidgetInstance
 	 * - columns[].values: ArrayList<String>: values for each row
 	 */
 	@Override
-	void processConfig()
+	protected void processConfig()
 	{
 		this.numberOfColumns = 0;
 		this.maxNumberOfRows = 0;
-		ArrayList<String> tmp_headers = new ArrayList<String>();
-		ArrayList<ArrayList<String>> tmp_values = new ArrayList<ArrayList<String>>();
+		ArrayList<String> tmp_headers = new ArrayList<>();
+		ArrayList<ArrayList<String>> tmp_values = new ArrayList<>();
+		ArrayList<Map> map = (ArrayList<Map>) this.config.get(CONFIG_LABEL_COLUMNS);
 
-		try {
-			for (Map m : (ArrayList<Map>) this.config.get(CONFIG_LABEL_COLUMNS)) {
-				String header = TypesHelper.asString(m.get(CONFIG_LABEL_HEADER));
-				ArrayList<String> values = TypesHelper.asArrayOfStrings(m.get(CONFIG_LABEL_VALUES));
+		// try {
+		for (Map m : map) {
 
-// FIXME resolve data
+			String header;
+			ArrayList<String> values;
 
-				tmp_headers.add(header);
-				tmp_values.add(values);
-				this.maxNumberOfRows = (this.maxNumberOfRows >= values.size()) ? this.maxNumberOfRows : values.size();
-				++this.numberOfColumns;
+			try {
+				header = TypesHelper.asString(m.get(CONFIG_LABEL_HEADER));
+				values = TypesHelper.asArrayOfStrings(m.get(CONFIG_LABEL_VALUES));
 			}
+			catch (FocusBadTypeException e) {
+				// ignore this column
+				FocusApplication.reportError(e);
+				continue;
+			}
+
+// FIXME TODO resolve data
+
+			tmp_headers.add(header);
+			tmp_values.add(values);
+			this.maxNumberOfRows = (this.maxNumberOfRows >= values.size()) ? this.maxNumberOfRows : values.size();
+			++this.numberOfColumns;
 		}
-		catch (ClassCastException e) {
-			// invalid casting -> bad.
-			// FIXME FIXME report error.
-		}
+
 
 		// transform the headers into the format that the TableWidgetFragment is expecting
 		// an array of Strings

@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.service.DataManager;
 
@@ -101,7 +102,7 @@ public class HttpRequest
 	public HttpResponse execute() throws RuntimeException, IOException
 	{
 		if (this.errors != 0) {
-			throw new RuntimeException("Bad configuration for HTTP Request");
+			throw new FocusInternalErrorException("Bad configuration for HTTP Request");
 		}
 
 

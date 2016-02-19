@@ -274,7 +274,7 @@ public class DataManager
 	public Preference getUserPreferences() throws RuntimeException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
-			throw new RuntimeException("No login information. Cannot continue.");
+			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.userPreferences != null) {
@@ -300,7 +300,7 @@ public class DataManager
 	public AppContentTemplate getAppContentTemplate() throws RuntimeException, FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
-			throw new RuntimeException("No login information. Cannot continue.");
+			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.appContentTemplate != null) {
@@ -448,9 +448,8 @@ public class DataManager
 		data.updateLastUsage();
 
 		// store in local database, with the "toPost" flag
-		String json = this.gson.toJson(data);
 		Sample sample = new Sample();
-		sample.cloneFromFocusObject(data, json);
+		sample.cloneFromFocusObject(data);
 		if (!is_special_url) {
 			sample.setToPost(true);
 		}
@@ -544,7 +543,8 @@ public class DataManager
 	 */
 	public FocusSample getHistorySample(String url, String params)
 	{
-		throw new FocusNotImplementedException("getHistorySample");
+		return null;
+ 	// 	throw new FocusNotImplementedException("getHistorySample");
 	}
 
 	/**
@@ -558,7 +558,8 @@ public class DataManager
 	 */
 	public FocusSample getLookupSample(String context, String type)
 	{
-		throw new FocusNotImplementedException("getLookupSample");
+		return null;
+// 		throw new FocusNotImplementedException("getLookupSample");
 	}
 
 	/**

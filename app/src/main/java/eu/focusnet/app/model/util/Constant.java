@@ -41,4 +41,18 @@ public class Constant
 			TO_POST + " BOOL," +
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE," +
 			"UNIQUE(" + Constant.URL + ", " + Constant.VERSION + ") ON CONFLICT REPLACE)";
+
+	public static final String PATH_SEPARATOR = "|",
+			PATH_SEPARATOR_PATTERN = "\\|",
+			PATH_SELECTOR_OPEN = "[",
+			PATH_SELECTOR_CLOSE = "]";
+
+	public static final String SELECTOR_SERVICE_OPEN = "<",
+			SELECTOR_SERVICE_CLOSE = ">",
+			SELECTOR_SERVICE_CTX = "ctx",
+			SELECTOR_SERVICE_HISTORY = "history",
+			SELECTOR_SERVICE_LOOKUP = "lookup",
+		//	SELECTOR_SERVICE_SEPARATOR_OUTER = "|",
+			SELECTOR_SERVICE_SEPARATOR_OUTER_PATTERN = "\\|",
+			SELECTOR_SERVICE_SEPARATOR_INNER = "/";
 }

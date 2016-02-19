@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.model.util.Constant;
 
 /**
  * Created by julien on 12.01.16.
@@ -37,7 +38,7 @@ public class PageInstance
 		this.type = type;
 		this.isValid = false;
 		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
-			this.guid = this.guid + "[" + dataCtx.get(LABEL_PAGE_ITERATOR).getUrl() + "]";
+			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR).getUrl() + Constant.PATH_SELECTOR_CLOSE;
 		}
 		this.widgets = widgets;
 		this.dataContext = dataCtx;

@@ -3,8 +3,9 @@ package eu.focusnet.app.model.internal.widgets;
 import java.util.ArrayList;
 import java.util.Map;
 
-import eu.focusnet.app.model.json.WidgetTemplate;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.model.internal.DataContext;
+import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
@@ -58,28 +59,52 @@ public class LineChartWidgetInstance extends WidgetInstance
 		this.numberOfMaxLimits = 0;
 		this.numberOfMinLimits = 0;
 
+		this.caption = "";
 		this.series_labels = new ArrayList<>();
-		this.series_values = new ArrayList<ArrayList<Double>>();
-		this.limits_max_labels = new ArrayList<String>();
-		this.limits_min_labels = new ArrayList<String>();
-		this.limits_max_values = new ArrayList<Double>();
-		this.limits_min_values = new ArrayList<Double>();
+		this.series_values = new ArrayList<>();
+		this.limits_max_labels = new ArrayList<>();
+		this.limits_min_labels = new ArrayList<>();
+		this.limits_max_values = new ArrayList<>();
+		this.limits_min_values = new ArrayList<>();
 		this.xAxis_label = "";
-		this.xAxis_values = new ArrayList<String>();
+		this.xAxis_values = new ArrayList<>();
+
 
 		// caption
-		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
+		try {
+			// caption
+			this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
+		}
+		catch (FocusBadTypeException e) {
+			this.caption = "";
+		}
 
 		// x-axis
-		Map xMap = (Map<String, Object>) this.config.get(CONFIG_LABEL_X_AXIS);
-		this.xAxis_label = TypesHelper.asString(xMap.get(CONFIG_LABEL_LABEL));
-		this.xAxis_values = TypesHelper.asArrayOfStrings(xMap.get(CONFIG_LABEL_VALUES));
+		try {
+			Map xMap = (Map<String, Object>) this.config.get(CONFIG_LABEL_X_AXIS);
+			this.xAxis_label = TypesHelper.asString(xMap.get(CONFIG_LABEL_LABEL));
+			this.xAxis_values = TypesHelper.asArrayOfStrings(xMap.get(CONFIG_LABEL_VALUES));
+		}
+		catch (FocusBadTypeException e) {
+			// not safe to continue without label or values for x-axis
+			return;
+		}
 
 		// series and limits
-		ArrayList a = (ArrayList) this.config.get(CONFIG_LABEL_SERIES);
-		for (Map m : (ArrayList<Map>) a) {
-			this.series_labels.add(TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)));
-			ArrayList<Double> values = TypesHelper.asArrayOfDoubles(m.get(CONFIG_LABEL_VALUES));
+		ArrayList<Map> a = (ArrayList<Map>) this.config.get(CONFIG_LABEL_SERIES);
+		for (Map m : a) {
+
+			String new_label;
+			ArrayList<Double> values;
+
+			try {
+				new_label = TypesHelper.asString(m.get(CONFIG_LABEL_LABEL));
+				values = TypesHelper.asArrayOfDoubles(m.get(CONFIG_LABEL_VALUES));
+			}
+			catch (FocusBadTypeException e) {
+				// ignore this serie
+				continue;
+			}
 
 			// if the array of values does not match the number of values that is expecteed, e.g.
 			// xAxis size, then fill/remove elements. We always keep the first elements and fill/
@@ -92,16 +117,26 @@ public class LineChartWidgetInstance extends WidgetInstance
 				}
 			}
 			else if (vsize > xsize) {
-				values = new ArrayList<Double>(values.subList(0, xsize));
+				values = new ArrayList<>(values.subList(0, xsize));
 			}
 
-			this.series_values.add(values);
+
 			ArrayList<Map> limits = (ArrayList<Map>) m.get(CONFIG_LABEL_LIMITS);
 			if (limits != null) {
 				for (Map m2 : limits) {
-					String label = TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL));
-					Double value = TypesHelper.asDouble(m2.get(CONFIG_LABEL_VALUE));
-					String type = TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE));
+					String label;
+					Double value;
+					String type;
+					try {
+						label = TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL));
+						value = TypesHelper.asDouble(m2.get(CONFIG_LABEL_VALUE));
+						type = TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE));
+					}
+					catch (FocusBadTypeException e) {
+						// ignore this limit as a whole
+						continue;
+					}
+
 					if (type != null && type.equals("max")) {
 						this.limits_max_labels.add(label);
 						this.limits_max_values.add(value);
@@ -114,12 +149,17 @@ public class LineChartWidgetInstance extends WidgetInstance
 					}
 				}
 			}
+
+			this.series_labels.add(new_label);
+			this.series_values.add(values);
+
 			++this.numberOfSeries;
 		}
 
 	}
 
 
+	// FIXME TODO add documentation
 	public String getCaption()
 	{
 		return this.caption;

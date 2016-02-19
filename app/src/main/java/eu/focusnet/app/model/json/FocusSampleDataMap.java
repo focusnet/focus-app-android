@@ -3,6 +3,8 @@ package eu.focusnet.app.model.json;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import eu.focusnet.app.exception.FocusInternalErrorException;
+
 public class FocusSampleDataMap extends HashMap<String, Object>
 {
 
@@ -24,7 +26,7 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 		if (!this.isValidScalarType(o)) {
 			if (!(o instanceof ArrayList)) {
 				// Fail
-				throw new RuntimeException("Invalid type: " + o.getClass().getName());
+				throw new FocusInternalErrorException("Invalid type: " + o.getClass().getName());
 			}
 			else {
 				// Because of type erasure, no knowledge of parameterized type at runtime.
@@ -42,7 +44,7 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 				}
 				else {
 					if (!this.isValidScalarType(first)) {
-						throw new RuntimeException("Invalid type: ArrayList<" + first.getClass().getName() + ">");
+						throw new FocusInternalErrorException("Invalid type: ArrayList<" + first.getClass().getName() + ">");
 					}
 					// and the rest of the array should also be of this type. TODO FIXME useful? or too paranoid?
 				}

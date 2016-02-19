@@ -3,6 +3,7 @@ package eu.focusnet.app.ui.activity;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -167,14 +168,14 @@ public class FocusActivity extends BaseDrawerActivity
 		};
 	}
 
-	/*
-	FIXME TODO YANDY not used anymore. let's remove it if this is the case. otherwise document its purpose.
+
+// 	FIXME TODO YANDY document purpose of this method.
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
-	}*/
+	}
 
 
 	/**

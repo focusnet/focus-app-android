@@ -35,6 +35,24 @@ import eu.focusnet.app.service.DataManager;
  */
 public class FocusApplication extends Application
 {
+
+	/**
+	 * A helper function that allows reporting uncaught errors via ACRA
+	 *
+	 * @param e
+	 */
+	public static final void reportError(Exception e)
+	{
+		// FIXME TODO we should alter the report to remove sensitive information
+
+		if (!BuildConfig.DEBUG) {
+			ACRA.getErrorReporter().handleSilentException(e);
+		}
+		else {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * On Application creation, do initialize the DataManager and ACRA
 	 */

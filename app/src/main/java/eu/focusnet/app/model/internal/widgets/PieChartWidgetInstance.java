@@ -3,12 +3,13 @@ package eu.focusnet.app.model.internal.widgets;
 import java.util.ArrayList;
 import java.util.Map;
 
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by julien on 20.01.16.
+ * An object containing everything required to build a Pie Chart widget
  */
 public class PieChartWidgetInstance extends WidgetInstance
 {
@@ -36,18 +37,34 @@ public class PieChartWidgetInstance extends WidgetInstance
 	 * - parts[]{}.value: Double
 	 */
 	@Override
-	void processConfig()
+	protected void processConfig()
 	{
 		this.caption = "";
 		this.numberOfParts = 0;
-		this.labels = new ArrayList<String>();
-		this.values = new ArrayList<Double>();
+		this.labels = new ArrayList<>();
+		this.values = new ArrayList<>();
 
-		this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
-		ArrayList a = (ArrayList) this.config.get(CONFIG_LABEL_PARTS);
-		for (Map m : (ArrayList<Map>) a) {
-			this.labels.add(TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)));
-			this.values.add(TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE)));
+		try {
+			this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
+		}
+		catch (FocusBadTypeException e) {
+			this.caption = "";
+		}
+
+		ArrayList<Map> parts = (ArrayList<Map>) this.config.get(CONFIG_LABEL_PARTS);
+		for (Map m : parts) {
+			String label;
+			Double value;
+			try {
+				label = TypesHelper.asString(m.get(CONFIG_LABEL_LABEL));
+				value = TypesHelper.asDouble(m.get(CONFIG_LABEL_VALUE));
+			}
+			catch (FocusBadTypeException e) {
+				// ignore this part, go to the next
+				continue;
+			}
+			this.labels.add(label);
+			this.values.add(value);
 			++this.numberOfParts;
 		}
 	}

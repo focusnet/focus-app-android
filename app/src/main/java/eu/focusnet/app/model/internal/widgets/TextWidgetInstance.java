@@ -2,6 +2,7 @@ package eu.focusnet.app.model.internal.widgets;
 
 import java.util.Map;
 
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
@@ -27,10 +28,14 @@ public class TextWidgetInstance extends WidgetInstance
 	 * - content (String)
 	 */
 	@Override
-	void processConfig() // FIXME use TypesHelper
+	protected void processConfig() // FIXME use TypesHelper
 	{
-		this.content = TypesHelper.asString(this.config.get(CONFIG_LABEL_CONTENT));
-		return;
+		try {
+			this.content = TypesHelper.asString(this.config.get(CONFIG_LABEL_CONTENT));
+		}
+		catch (FocusBadTypeException e) {
+			this.content = "";
+		}
 	}
 
 

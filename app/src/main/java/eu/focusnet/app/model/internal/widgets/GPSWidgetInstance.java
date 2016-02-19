@@ -25,7 +25,7 @@ public class GPSWidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	public void processConfig()
+	protected void processConfig()
 	{
 
 	}

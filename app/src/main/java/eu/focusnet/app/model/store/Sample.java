@@ -3,9 +3,10 @@ package eu.focusnet.app.model.store;
 import java.util.Date;
 
 import eu.focusnet.app.model.json.FocusObject;
+import eu.focusnet.app.service.DataManager;
 
 /**
- * Created by admin on 21.01.2016.
+ * A Sample is the object representation of the rows in the "samples" database table
  */
 public class Sample
 {
@@ -25,6 +26,9 @@ public class Sample
 	private boolean toPush;
 	private boolean toPost;
 
+	/**
+	 * Constructor
+	 */
 	public Sample(Long id, String url, String context, int version,
 				  String type, String owner,
 				  Date creationDateTime, Date editionDateTime,
@@ -47,9 +51,48 @@ public class Sample
 		this.toPost = toPost;
 	}
 
+	/**
+	 * Dummy empty ctor
+	 */
 	public Sample()
 	{
 	}
+
+	/**
+	 * Clone a FocusObject into the present Sample
+	 *
+	 * @param fo the FocusObject to get inspiration from
+	 */
+	public void cloneFromFocusObject(FocusObject fo)
+	{
+		this.cloneFromFocusObject(fo, DataManager.getInstance().getGson().toJson(fo));
+	}
+
+	/**
+	 * Clone a FocusObject into the present Sample
+	 *
+	 * @param fo the FocusObject to get inspiration from
+	 * @param raw_json the raw JSON representation of the object, as a string.
+	 *
+	 */
+	public void cloneFromFocusObject(FocusObject fo, String raw_json)
+	{
+		this.type = fo.getType();
+		this.url = fo.getUrl();
+		this.context = fo.getContext();
+		this.owner = fo.getOwner();
+		this.editor = fo.getEditor();
+		this.version = fo.getVersion();
+		this.creationDateTime = fo.getCreationDateTime();
+		this.editionDateTime = fo.getEditionDateTime();
+		this.active = fo.isActive();
+
+		this.data = raw_json;
+
+		this.toDelete = false;
+		this.toPush = false;
+	}
+
 
 	public Long getId()
 	{
@@ -186,22 +229,5 @@ public class Sample
 		this.toPost = toPost;
 	}
 
-	public void cloneFromFocusObject(FocusObject fo, String raw_data)
-	{
 
-		this.type = fo.getType();
-		this.url = fo.getUrl();
-		this.context = fo.getContext();
-		this.owner = fo.getOwner();
-		this.editor = fo.getEditor();
-		this.version = fo.getVersion();
-		this.creationDateTime = fo.getCreationDateTime();
-		this.editionDateTime = fo.getEditionDateTime();
-		this.active = fo.isActive();
-
-		this.data = raw_data;
-
-		this.toDelete = false;
-		this.toPush = false;
-	}
 }

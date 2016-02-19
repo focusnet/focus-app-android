@@ -25,7 +25,7 @@ public class SubmitWidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	public void processConfig()
+	protected void processConfig()
 	{
 
 	}

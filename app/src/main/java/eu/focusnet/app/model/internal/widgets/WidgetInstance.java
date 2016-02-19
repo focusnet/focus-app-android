@@ -5,9 +5,11 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.WidgetTemplate;
-import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
@@ -83,9 +85,9 @@ public abstract class WidgetInstance
 			case WIDGET_TYPE_PIE_CHART:
 				return new PieChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_BAR_CHART:
-			//	return new BarChartWidgetInstance(template, layoutConfig, newCtx);
-				// FIXME
-				return new LineChartWidgetInstance(template, layoutConfig, newCtx); // hsould be BarChartWidget
+				//	return new BarChartWidgetInstance(template, layoutConfig, newCtx);
+				// FIXME TODO
+				return new LineChartWidgetInstance(template, layoutConfig, newCtx); // FIXME FIXME should be BarChartWidget
 			case WIDGET_TYPE_LINE_CHART:
 				return new LineChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_CAMERA:
@@ -95,7 +97,7 @@ public abstract class WidgetInstance
 			case WIDGET_TYPE_FORM:
 				return new FormWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_EXTERNAL_APP:
-			//	return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
+				//	return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_SUBMIT:
 				return new SubmitWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_HTML5_WEBAPP:
@@ -109,13 +111,18 @@ public abstract class WidgetInstance
 	 */
 	private void processCommonConfig()
 	{
-		this.title = TypesHelper.asString(this.template.getTitle());
+		try {
+			this.title = TypesHelper.asString(this.template.getTitle());
+		}
+		catch (FocusBadTypeException e) {
+			this.title = "";
+		}
 	}
 
 	/**
 	 * Acquire the configuration of the widget
 	 */
-	abstract void processConfig();
+	abstract protected void processConfig();
 
 	/**
 	 * Return this WidgetInstance's guid.

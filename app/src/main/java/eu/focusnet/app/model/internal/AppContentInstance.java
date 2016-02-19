@@ -1,10 +1,14 @@
 package eu.focusnet.app.model.internal;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
@@ -12,7 +16,8 @@ import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by julien on 12.01.16.
+ * An Application content instance, i.e. the application template has been resolved and real
+ * instances of the different contained objects are accessible through the present object.
  */
 public class AppContentInstance
 {
@@ -49,7 +54,7 @@ public class AppContentInstance
 	 */
 	public static String buildPath(ProjectInstance project, PageInstance page)
 	{
-		return buildPath(project) + "|" + page.getType() + "|" + page.getGuid();
+		return buildPath(project) + Constant.PATH_SEPARATOR + page.getType() + Constant.PATH_SEPARATOR + page.getGuid();
 	}
 
 	/**
@@ -57,7 +62,7 @@ public class AppContentInstance
 	 */
 	public static String buildPath(ProjectInstance project, PageInstance page, WidgetInstance w)
 	{
-		return buildPath(project, page) + "|" + w.getGuid();
+		return buildPath(project, page) + Constant.PATH_SEPARATOR + w.getGuid();
 	}
 
 	/**
@@ -75,16 +80,15 @@ public class AppContentInstance
 		for (ProjectTemplate projTpl : projectTemplates) {
 
 			// Iterators use application-level data context list of urls
-			String x = projTpl.getIterator();
-
 			if (projTpl.getIterator() != null) {
-				ArrayList<String> urls = null;
+				ArrayList<String> urls;
 				try {
-					urls = TypesHelper.asArrayOfUrls(this.dataContext.resolve(projTpl.getIterator()));
+					urls = TypesHelper.asArrayOfUrls(
+							this.dataContext.resolve(projTpl.getIterator())
+					);
 				}
 				catch (FocusBadTypeException e) {
-					// invalid iterator. ignore and log?
-					// FIXME
+					// invalid iterator. survive by ignoring, but log the event
 					continue;
 				}
 
@@ -131,7 +135,7 @@ public class AppContentInstance
 	 */
 	public ProjectInstance getProjectFromPath(String path)
 	{
-		String[] parts = path.split("\\|");
+		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 1) {
 			return this.projects.get(parts[0]);
 		}
@@ -154,7 +158,7 @@ public class AppContentInstance
 		if (pr == null) {
 			return null;
 		}
-		String[] parts = path.split("\\|");
+		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 3) {
 			return pr.getPageFromGuid(parts[2], parts[1]);
 		}
@@ -179,7 +183,7 @@ public class AppContentInstance
 		if (p == null) {
 			return null;
 		}
-		String[] parts = path.split("\\|");
+		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 4) {
 			return p.widgets.get(parts[3]);
 		}

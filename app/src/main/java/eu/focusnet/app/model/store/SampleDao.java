@@ -9,11 +9,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.util.Constant;
 
 /**
- * Created by admin on 21.01.2016.
+ * SQL Sample Data Access Object
  */
 public class SampleDao
 {
@@ -37,11 +38,17 @@ public class SampleDao
 
 	private SQLiteDatabase database;
 
+	/**
+	 * Constructor
+	 */
 	public SampleDao(SQLiteDatabase database)
 	{
 		this.database = database;
 	}
 
+	/**
+	 * Create a new row in the table, based on the provided Sample
+	 */
 	public Long create(Sample sample)
 	{
 		ContentValues contentValues = this.createContentValues(sample);
@@ -50,9 +57,6 @@ public class SampleDao
 
 	/**
 	 * Get the latest version of a URL that is stored in the database
-	 *
-	 * @param url
-	 * @return
 	 */
 	public Sample get(String url)
 	{
@@ -68,15 +72,12 @@ public class SampleDao
 				null,
 				Constant.VERSION + " DESC, " + Constant.ID + " DESC",
 				"1");
-		return this.buildSampleFromCursor(cursor);
+		return SampleDao.buildSampleFromCursor(cursor);
 	}
 
 	/**
 	 * Create a new Sample based on the provided cursor. We only take the first entry in
 	 * consideration, and this method will move the cursor, so the calling method should not.
-	 *
-	 * @param cursor
-	 * @return
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
@@ -103,7 +104,14 @@ public class SampleDao
 			editionDate = dateFormat.parse(editionDateTime);
 		}
 		catch (ParseException e) {
-			//TODO
+			// let's me consilient, and default these dates with the current timestamp
+			FocusApplication.reportError(e);
+			if (creationDate == null) {
+				creationDate = new Date();
+			}
+			if (editionDate == null) {
+				editionDate = new Date();
+			}
 		}
 		sample.setCreationDateTime(creationDate);
 		sample.setEditionDateTime(editionDate);
@@ -116,20 +124,29 @@ public class SampleDao
 		return sample;
 	}
 
+	/**
+	 * Mark a row for deletion
+	 */
 	public void markForDeletion(String url)
 	{
+		String[] params = {
+				url
+		};
 		String where = Constant.URL + "= ?";
 		ContentValues updatedValues = new ContentValues();
 		updatedValues.put(Constant.TO_DELETE, true);
-		database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, null);
+		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
 
+	/**
+	 * Actually delete a row
+	 */
 	public boolean delete(String url)
 	{
 		String[] params = {
 				url
 		};
-		return database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.URL + "= ? ", params) > 0;
+		return this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.URL + "= ? ", params) > 0;
 	}
 
 	public void update(Sample sample)
@@ -142,6 +159,9 @@ public class SampleDao
 		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, null);
 	}
 
+	/**
+	 * Create content values for a row
+	 */
 	private ContentValues createContentValues(Sample sample)
 	{
 		ContentValues contentValues = new ContentValues();

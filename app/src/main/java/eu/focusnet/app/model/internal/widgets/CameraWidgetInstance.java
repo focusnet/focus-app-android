@@ -32,7 +32,7 @@ public class CameraWidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	public void processConfig()
+	protected void processConfig()
 	{
 
 	}
@@ -50,5 +50,15 @@ public class CameraWidgetInstance extends WidgetInstance
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 		byte[] byteArray = byteArrayOutputStream .toByteArray();
 		this.savedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+	}
+
+	/**
+	 * Get the saved image.
+	 *
+	 * @return
+	 */
+	public String getSavedImage()
+	{
+		return savedImage;
 	}
 }

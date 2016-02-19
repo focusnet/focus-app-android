@@ -7,17 +7,11 @@ import java.util.ArrayList;
 import eu.focusnet.app.exception.FocusBadTypeException;
 
 /**
- * Created by julien on 18.01.16.
+ * This class provides static methods for handling types and reporting inconsistencies
  */
 public class TypesHelper
 {
-	/**
-	 * double, int, float, string, url
-	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
-	 */
+
 	public static String asString(Object obj) throws FocusBadTypeException
 	{
 		if (obj == null) {

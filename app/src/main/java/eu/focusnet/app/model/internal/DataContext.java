@@ -3,8 +3,10 @@ package eu.focusnet.app.model.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.FocusSample;
+import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
 
 /**
@@ -54,30 +56,35 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * <p/>
 	 * - a simple URL, e.g. http://data.example.org/test/123
 	 * - a reference to an existing entry in this data context, with a selector to the
-	 * appropriate key in its data object; e.g. <ref|machine-ABC|data.woodpile-url>
+	 * appropriate key in its data object; e.g. <ctx|machine-ABC|woodpile-url>
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a lookup request, e.g. <lookup:http://schemas.focusnet.eu/my-special-type|URL>
 	 * where URL is the "context" of the FocusObject.
 	 * <p/>
-	 * FIXME TODO document exactly what can be accepted here.
+	 * In the last 2 possibilities, the URL can also be replaced by a reference from an existing
+	 * context. In this case, the separator "|" is replaced by "/" within this context description.
 	 * <p/>
-	 * <p/>
-	 * In the last three possibilities, the URL can be interpolated by a "ref"
-	 * (but in this case the separator is ":" and not "|"
-	 *
-	 * @param key
-	 * @param description
+	 * Examples:
+	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
+	 * "referenced-url": "<ctx/simple-url/url1>",
+	 * "history-test": "<history|http://focus.yatt.ch/debug/focus-sample-1.json|params>",
+	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
+	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
+	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
 	 */
 	public FocusSample put(String key, String description)
 	{
 		// what kind of data do we have?
-		FocusSample f = null;
+		FocusSample f;
 
-		if (description.startsWith("<") && description.endsWith(">")) {
+		if (description.startsWith(Constant.SELECTOR_SERVICE_OPEN)
+				&& description.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
 
-			description = description.replace("<", "").replace(">", "");
+			description = description
+					.replace(Constant.SELECTOR_SERVICE_OPEN, "")
+					.replace(Constant.SELECTOR_SERVICE_CLOSE, "");
 
-			if (description.startsWith("ctx/")) {
+			if (description.startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 				String u = this.resolveReferencedUrl(description);
 				try {
 					f = this.dataManager.getSample(u);
@@ -87,13 +94,13 @@ public class DataContext extends HashMap<String, FocusSample>
 				}
 			}
 			else {
-				String[] parts = description.split("\\|");
+				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_OUTER_PATTERN);
 				if (parts.length != 3) {
-					throw new RuntimeException("Wrong number of fields for description of data context.");
+					throw new FocusInternalErrorException("Wrong number of fields for description of data context.");
 				}
-				if (parts[0].equals("history")) {
+				if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
 					String u = null;
-					if (parts[1].startsWith("ctx/")) {
+					if (parts[1].startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 						u = this.resolveReferencedUrl(parts[1]);
 					}
 					else {
@@ -101,9 +108,9 @@ public class DataContext extends HashMap<String, FocusSample>
 					}
 					f = this.dataManager.getHistorySample(u, parts[2]);
 				}
-				else if (parts[0].equals("lookup")) {
+				else if (parts[0].equals(Constant.SELECTOR_SERVICE_LOOKUP)) {
 					String u = null;
-					if (parts[1].startsWith("ctx/")) {
+					if (parts[1].startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 						u = this.resolveReferencedUrl(parts[1]);
 					}
 					else {
@@ -112,9 +119,8 @@ public class DataContext extends HashMap<String, FocusSample>
 					f = this.dataManager.getLookupSample(u, parts[2]);
 				}
 				else {
-					throw new RuntimeException("This data reference is not supported.");
+					throw new FocusInternalErrorException("This data reference is not supported.");
 				}
-
 			}
 		}
 		else {
@@ -139,18 +145,18 @@ public class DataContext extends HashMap<String, FocusSample>
 	 */
 	private String resolveReferencedUrl(String description)
 	{
-		String[] parts = description.split("/");
+		String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
 		if (parts.length != 3) {
-			throw new RuntimeException("badly formatted reference");
+			throw new FocusInternalErrorException("badly formatted reference");
 		}
 
 		String ref = parts[1];
 		if (this.get(ref) == null) {
-			throw new RuntimeException("no data reference found");
+			throw new FocusInternalErrorException("no data reference found");
 		}
 		String res = this.get(ref).getString(parts[2]);
 		if (res == null) {
-			throw new RuntimeException("Cannot find this field.");
+			throw new FocusInternalErrorException("Cannot find this field.");
 		}
 		// if that's indeed a url, then we can retrieve it.
 		return res;
@@ -185,12 +191,15 @@ public class DataContext extends HashMap<String, FocusSample>
 	 */
 	public Object resolve(String request)
 	{
-		if (!request.startsWith("<ctx/") || !request.endsWith(">")) {
+		if (!request.startsWith(Constant.SELECTOR_SERVICE_OPEN + Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)
+				|| !request.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
 			return request;
 		}
-		request = request.replace("<", "").replace(">", "");
+		request = request
+				.replace(Constant.SELECTOR_SERVICE_OPEN, "")
+				.replace(Constant.SELECTOR_SERVICE_CLOSE, "");
 
-		String[] parts = request.split("/");
+		String[] parts = request.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
 		if (parts.length < 2) {
 			return null;
 		}

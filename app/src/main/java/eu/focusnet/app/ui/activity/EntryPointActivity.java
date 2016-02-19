@@ -63,7 +63,7 @@ public class EntryPointActivity extends Activity
 				public void run()
 				{
 					try {
-						int min_splashscreen_display_time = 5000;
+						int min_splashscreen_display_time = 2000;
 						sleep(1000);
 						min_splashscreen_display_time -= 1000;
 						while (app_acquisition.isAlive() || min_splashscreen_display_time > 0) {

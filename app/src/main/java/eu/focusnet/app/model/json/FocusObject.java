@@ -2,9 +2,17 @@ package eu.focusnet.app.model.json;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.MissingResourceException;
+
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by admin on 06.07.2015.
+ *
+ * There are no setters on this object properties because we don't want it to be altered by
+ * the application logic.
  */
 public class FocusObject implements Serializable
 {
@@ -14,34 +22,54 @@ public class FocusObject implements Serializable
 			context,
 			owner,
 			editor;
-
+	private String originalData;
 	private int version;
-
 	private Date creationDateTime,
 			editionDateTime;
-
 	private boolean active;
 
-	// this field is not in the database, but is used for manual garbage collection of our cache.
-	private Date lastUsage;
-
-	public FocusObject(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
+	protected FocusObject(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
+
+		User user;
+		try {
+			user = DataManager.getInstance().getUser();
+		}
+		catch (FocusMissingResourceException e) {
+			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
+		}
+
 		this.type = type;
 		this.url = url;
 		this.context = context;
-		this.owner = owner;
-		this.editor = editor;
+		this.owner = owner == null ? user.toString() : owner;
+		this.editor = editor == null ? user.toString() : editor;
 		this.version = version;
 		this.creationDateTime = creationDateTime != null ? creationDateTime : new Date();
 		this.editionDateTime = editionDateTime != null ? editionDateTime : new Date();
 		this.active = active;
-
-		this.lastUsage = new Date();
 	}
 
 	public FocusObject()
 	{
+	}
+
+	/**
+	 * Create a new FocusObject, based on the provided JSON string and target class.
+	 */
+	public static FocusObject factory(String json, Class targetClass)
+	{
+		FocusObject fo = (FocusObject) DataManager.getInstance().getGson().fromJson(json, targetClass);
+		fo.setOriginalData(json);
+		return fo;
+	}
+
+	public void updateToNewVersion()
+	{
+		++this.version;
+		// update editor, editiontime, etc.
+
+		// FIXME FIFXME TODO when we modify an object, we should update its original_data string
 	}
 
 	public String getType()
@@ -49,19 +77,9 @@ public class FocusObject implements Serializable
 		return type;
 	}
 
-	public void setType(String type)
-	{
-		this.type = type;
-	}
-
 	public String getUrl()
 	{
 		return url;
-	}
-
-	public void setUrl(String url)
-	{
-		this.url = url;
 	}
 
 	public String getOwner()
@@ -69,19 +87,9 @@ public class FocusObject implements Serializable
 		return owner;
 	}
 
-	public void setOwner(String owner)
-	{
-		this.owner = owner;
-	}
-
 	public String getEditor()
 	{
 		return editor;
-	}
-
-	public void setEditor(String editor)
-	{
-		this.editor = editor;
 	}
 
 	public int getVersion()
@@ -89,19 +97,9 @@ public class FocusObject implements Serializable
 		return version;
 	}
 
-	public void setVersion(int version)
-	{
-		this.version = version;
-	}
-
 	public Date getCreationDateTime()
 	{
 		return creationDateTime;
-	}
-
-	public void setCreationDateTime(Date creationDateTime)
-	{
-		this.creationDateTime = creationDateTime;
 	}
 
 	public Date getEditionDateTime()
@@ -109,19 +107,9 @@ public class FocusObject implements Serializable
 		return editionDateTime;
 	}
 
-	public void setEditionDateTime(Date editionDateTime)
-	{
-		this.editionDateTime = editionDateTime;
-	}
-
 	public boolean isActive()
 	{
 		return active;
-	}
-
-	public void setActive(boolean active)
-	{
-		this.active = active;
 	}
 
 	public String getContext()
@@ -129,18 +117,13 @@ public class FocusObject implements Serializable
 		return context;
 	}
 
-	public void setContext(String context)
+	public String getOriginalData()
 	{
-		this.context = context;
+		return originalData;
 	}
 
-	public Date getLastUsage()
+	private void setOriginalData(String original_data)
 	{
-		return lastUsage;
-	}
-
-	public void updateLastUsage()
-	{
-		this.lastUsage = new Date();
+		this.originalData = original_data;
 	}
 }

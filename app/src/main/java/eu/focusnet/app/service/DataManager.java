@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
-import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
@@ -151,7 +151,7 @@ public class DataManager
 	 * @param password The login password
 	 * @param server   The login server
 	 * @return true on successful authentication, false otherwise (403 error)
-	 * @exception IOException if a network error occurs
+	 * @throws IOException if a network error occurs
 	 */
 	public boolean login(String user, String password, String server) throws IOException
 	{
@@ -374,7 +374,6 @@ public class DataManager
 		// FIXME TODO check if not too old ? (see sample.lastUsage)
 		if (this.cache.get(url) != null) {
 			FocusObject result = this.cache.get(url);
-			result.updateLastUsage();
 			return result;
 		}
 
@@ -386,7 +385,7 @@ public class DataManager
 			SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
 			Sample sample = sampleDao.get(url);
 			if (sample != null) {
-				result = (FocusObject) this.gson.fromJson(sample.getData(), targetClass);
+				result = FocusObject.factory(sample.getData(), targetClass);
 			}
 		}
 		finally {
@@ -404,11 +403,10 @@ public class DataManager
 				HttpResponse response = this.net.get(url);
 				if (response.isSuccessful()) {
 					String json = response.getData();
-					result = (FocusObject) this.gson.fromJson(json, targetClass);
+					result = FocusObject.factory(json, targetClass);
 
 					// Convert into a sample and save it into the database
-					Sample sample = new Sample();
-					sample.cloneFromFocusObject(result, json);
+					Sample sample = Sample.cloneFromFocusObject(result);
 
 					try {
 						this.databaseAdapter.openWritableDatabase();
@@ -426,7 +424,6 @@ public class DataManager
 		}
 
 		if (result != null) {
-			result.updateLastUsage();
 			this.cache.put(url, result);
 		}
 
@@ -436,20 +433,15 @@ public class DataManager
 	/**
 	 * Create a new data entry
 	 *
-	 * @param url The URL identifying the resource to POST
+	 * @param url  The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
 	public void post(String url, FocusObject data) throws IOException
 	{
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
-		// make it accessible through the cache
-		this.cache.put(url, data);
-		data.updateLastUsage();
-
 		// store in local database, with the "toPost" flag
-		Sample sample = new Sample();
-		sample.cloneFromFocusObject(data);
+		Sample sample = Sample.cloneFromFocusObject(data);
 		if (!is_special_url) {
 			sample.setToPost(true);
 		}
@@ -463,11 +455,14 @@ public class DataManager
 			this.databaseAdapter.close();
 		}
 
+		// make it accessible through the cache
+		this.cache.put(url, data);
+
+		// push on the network
 		if (is_special_url) {
 			return;
 		}
 
-		// push on the network
 		if (this.net.post(url, data).isSuccessful()) { // if POST on network, also remove POST flag in local db copy
 			try {
 				this.databaseAdapter.openWritableDatabase();
@@ -483,20 +478,55 @@ public class DataManager
 
 	/**
 	 * PUT some data to a remote server.
+	 * <p/>
+	 * Methods calling this object do not have to take care of the FocusObject attributes, e.g.
+	 * version, creationTime, editionTime, owner, editor, etc. They should only modify the object's
+	 * specific attributes, such as the content of the data Map for FocusSample objects.
+	 * <p/>
+	 * We consider that we are provided with a *copy* of the FocusObject we update. At the end of
+	 * this method, we replace the old object in our RAM cache with the new one, such that the old
+	 * one will be garbage collected.
 	 *
-	 * @param url The URL identifying the resource to PUT
+	 * @param url  The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
 	public void put(String url, FocusObject data) throws IOException
 	{
-		/*
-		 * PUT = new entry, updated, with version += 1
-		 *
-		 * 1. update local cache
-		 * 2. update local store, mark as to push
-		 * 3. update remote store NetworkManager.post();
-		 * 4. if net success, unmark push flag
-		 */
+		// special internal data are NOT to be PUT, ever.
+		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
+			throw new FocusInternalErrorException("Cannot PUT internal data");
+		}
+
+		// update the object to a new version
+		data.updateToNewVersion();
+
+		// store in local database, with the "toPut" flag
+		Sample sample = Sample.cloneFromFocusObject(data);
+		sample.setToPut(true);
+		try {
+			this.databaseAdapter.openWritableDatabase();
+			SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
+			sample_dao.create(sample); // we create a new sample of the object identified by url, and this is ok
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
+
+		// make it accessible through the cache
+		this.cache.put(url, data);
+
+		// network PUT
+		if (this.net.put(url, data).isSuccessful()) { // if PUT on network, also remove PUT flag in local db copy
+			try {
+				this.databaseAdapter.openWritableDatabase();
+				SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
+				sample.setToPut(false);
+				sample_dao.update(sample);
+			}
+			finally {
+				this.databaseAdapter.close();
+			}
+		}
 	}
 
 	/**
@@ -544,7 +574,7 @@ public class DataManager
 	public FocusSample getHistorySample(String url, String params)
 	{
 		return null;
- 	// 	throw new FocusNotImplementedException("getHistorySample");
+		// 	throw new FocusNotImplementedException("getHistorySample");
 	}
 
 	/**

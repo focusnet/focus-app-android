@@ -118,7 +118,7 @@ public class SampleDao
 
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
-		sample.setToPush(cursor.getInt(cursor.getColumnIndex(Constant.TO_PUSH)) > 0);
+		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_PUSH)) > 0);
 		cursor.close();
 
 		return sample;
@@ -177,7 +177,7 @@ public class SampleDao
 		contentValues.put(Constant.ACTIVE, sample.isActive());
 		contentValues.put(Constant.DATA, sample.getData());
 		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
-		contentValues.put(Constant.TO_PUSH, sample.isToPush());
+		contentValues.put(Constant.TO_PUSH, sample.isToPut());
 		contentValues.put(Constant.TO_POST, sample.isToPost());
 		return contentValues;
 	}

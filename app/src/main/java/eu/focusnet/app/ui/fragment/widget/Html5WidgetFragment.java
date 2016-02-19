@@ -140,7 +140,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		{
 			NetworkManager net = NetworkManager.getInstance();
 			try {
-				FocusSample fs = DataManager.getInstance().getGson().fromJson(data, FocusSample.class);
+				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
 				return net.post(url, fs).isSuccessful();
 			}
 			catch (IOException e) {
@@ -158,7 +158,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		{
 			NetworkManager net = NetworkManager.getInstance();
 			try {
-				FocusSample fs = DataManager.getInstance().getGson().fromJson(data, FocusSample.class);
+				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
 				return net.put(url, fs).isSuccessful();
 			}
 			catch (IOException e) {

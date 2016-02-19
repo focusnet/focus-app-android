@@ -3,7 +3,6 @@ package eu.focusnet.app.model.store;
 import java.util.Date;
 
 import eu.focusnet.app.model.json.FocusObject;
-import eu.focusnet.app.service.DataManager;
 
 /**
  * A Sample is the object representation of the rows in the "samples" database table
@@ -23,7 +22,7 @@ public class Sample
 	private boolean active;
 	private String data;
 	private boolean toDelete;
-	private boolean toPush;
+	private boolean toPut;
 	private boolean toPost;
 
 	/**
@@ -47,7 +46,7 @@ public class Sample
 		this.active = active;
 		this.data = data;
 		this.toDelete = toDelete;
-		this.toPush = toPush;
+		this.toPut = toPush;
 		this.toPost = toPost;
 	}
 
@@ -58,39 +57,31 @@ public class Sample
 	{
 	}
 
-	/**
-	 * Clone a FocusObject into the present Sample
-	 *
-	 * @param fo the FocusObject to get inspiration from
-	 */
-	public void cloneFromFocusObject(FocusObject fo)
-	{
-		this.cloneFromFocusObject(fo, DataManager.getInstance().getGson().toJson(fo));
-	}
 
 	/**
 	 * Clone a FocusObject into the present Sample
 	 *
 	 * @param fo the FocusObject to get inspiration from
-	 * @param raw_json the raw JSON representation of the object, as a string.
 	 *
 	 */
-	public void cloneFromFocusObject(FocusObject fo, String raw_json)
+	public static Sample cloneFromFocusObject(FocusObject fo)
 	{
-		this.type = fo.getType();
-		this.url = fo.getUrl();
-		this.context = fo.getContext();
-		this.owner = fo.getOwner();
-		this.editor = fo.getEditor();
-		this.version = fo.getVersion();
-		this.creationDateTime = fo.getCreationDateTime();
-		this.editionDateTime = fo.getEditionDateTime();
-		this.active = fo.isActive();
-
-		this.data = raw_json;
-
-		this.toDelete = false;
-		this.toPush = false;
+		return new Sample(
+				null,
+				fo.getUrl(),
+				fo.getContext(),
+				fo.getVersion(),
+				fo.getType(),
+				fo.getOwner(),
+				fo.getCreationDateTime(),
+				fo.getEditionDateTime(),
+				fo.getEditor(),
+				fo.isActive(),
+				fo.getOriginalData(),
+				false,
+				false,
+				false
+		);
 	}
 
 
@@ -204,14 +195,14 @@ public class Sample
 		this.toDelete = toDelete;
 	}
 
-	public boolean isToPush()
+	public boolean isToPut()
 	{
-		return toPush;
+		return toPut;
 	}
 
-	public void setToPush(boolean toPush)
+	public void setToPut(boolean toPut)
 	{
-		this.toPush = toPush;
+		this.toPut = toPut;
 	}
 
 	public String getContext()

@@ -70,5 +70,8 @@ public class User extends FocusObject
 		this.company = company;
 	}
 
-
+	public String toString()
+	{
+		return this.getUrl();
+	}
 }

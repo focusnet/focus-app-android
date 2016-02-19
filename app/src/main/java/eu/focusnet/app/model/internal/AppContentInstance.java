@@ -1,10 +1,9 @@
 package eu.focusnet.app.model.internal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.AppContentTemplate;
@@ -83,7 +82,7 @@ public class AppContentInstance
 				try {
 					urls = TypesHelper.asArrayOfUrls(this.dataContext.resolve(projTpl.getIterator()));
 				}
-				catch (BadTypeException e) {
+				catch (FocusBadTypeException e) {
 					// invalid iterator. ignore and log?
 					// FIXME
 					continue;

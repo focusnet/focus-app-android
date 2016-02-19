@@ -108,7 +108,7 @@ public class DataManager
 		this.cache = new HashMap<>();
 
 		// setup database
-		this.databaseAdapter = new DatabaseAdapter(context); // was getApplication() // TODO FIXME check that is always working
+		this.databaseAdapter = new DatabaseAdapter(context);
 
 		// get login infos from local store, and use it as the default
 		FocusSample internal_config = null;
@@ -118,7 +118,7 @@ public class DataManager
 		catch (IOException ex) {
 			// not a network resource, ok to ignore
 		}
-		// FIXME TODO YANDY: would that be better to use SharedPreferences? Or is that way of doing ok?
+		// FIXME TODO YANDY: would that be better to use SharedPreferences? Or is that way of doing ok? Basically I store everything in an entry of our samples SQLlite table
 		if (internal_config != null) {
 			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
 			this.loginPassword = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD);
@@ -351,7 +351,7 @@ public class DataManager
 		if (!this.hasLoginInformation()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
-		FocusSample fs = null;
+		FocusSample fs;
 		try {
 			fs = (FocusSample) (this.get(url, FocusSample.class));
 			if (fs == null) {
@@ -401,19 +401,10 @@ public class DataManager
 
 			// try to get it from the network
 			if (this.net.isNetworkAvailable()) {
-				HttpResponse response = null;
-				try {
-					response = this.net.get(url);
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				HttpResponse response = this.net.get(url);
 				if (response.isSuccessful()) {
 					String json = response.getData();
 					result = (FocusObject) this.gson.fromJson(json, targetClass);
-
-					// FIXME TODO check that type corresponds to what we expected with targetClass ? also cathc exceptions (e.g. json format)
 
 					// Convert into a sample and save it into the database
 					Sample sample = new Sample();
@@ -438,10 +429,6 @@ public class DataManager
 			result.updateLastUsage();
 			this.cache.put(url, result);
 		}
-
-		// FIXME FIXME TODO do delete some elements of the cache if memory consumption is > threshold
-		// FIXME find a smart strategy for that.
-		// we could do that in the DataContext access functions!
 
 		return result;
 	}
@@ -482,14 +469,7 @@ public class DataManager
 		}
 
 		// push on the network
-		boolean net_post = false;
-		try {
-			net_post = this.net.post(url, data).isSuccessful();
-		}
-		catch (IOException e) {
-			// FIXME TODO
-		}
-		if (net_post) { // if POST on network, also remove POST flag in local db copy
+		if (this.net.post(url, data).isSuccessful()) { // if POST on network, also remove POST flag in local db copy
 			try {
 				this.databaseAdapter.openWritableDatabase();
 				SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
@@ -511,6 +491,8 @@ public class DataManager
 	public void put(String url, FocusObject data) throws IOException
 	{
 		/*
+		 * PUT = new entry, updated, with version += 1
+		 *
 		 * 1. update local cache
 		 * 2. update local store, mark as to push
 		 * 3. update remote store NetworkManager.post();
@@ -562,7 +544,7 @@ public class DataManager
 	 */
 	public FocusSample getHistorySample(String url, String params)
 	{
-		return null; // FIXME TODO
+		throw new FocusNotImplementedException("getHistorySample");
 	}
 
 	/**
@@ -576,7 +558,7 @@ public class DataManager
 	 */
 	public FocusSample getLookupSample(String context, String type)
 	{
-		return null; // FIXME TODO
+		throw new FocusNotImplementedException("getLookupSample");
 	}
 
 	/**
@@ -586,4 +568,14 @@ public class DataManager
 	{
 		throw new FocusNotImplementedException("saveuserpref");
 	}
+
+	/**
+	 * Free memory from our in-RAM data structure, where this is possible
+	 */
+	public void freeMemory()
+	{
+		// likely to browser all DataContext's and free memory there
+		return;
+	}
+
 }

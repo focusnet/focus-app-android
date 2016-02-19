@@ -72,7 +72,6 @@ public class LoginActivity extends Activity
 					Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error_no_network, Toast.LENGTH_SHORT);
 					toast.show();
 				}
-
 			}
 		};
 

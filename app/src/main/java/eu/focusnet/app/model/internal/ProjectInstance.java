@@ -3,7 +3,7 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.Linker;
@@ -114,7 +114,7 @@ public class ProjectInstance
 							this.dataContext.resolve(pageTpl.getIterator())
 					);
 				}
-				catch (BadTypeException e) {
+				catch (FocusBadTypeException e) {
 					// invalid iterator. ignore but log?
 					// FIXME
 					continue;

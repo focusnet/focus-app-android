@@ -16,20 +16,22 @@ import eu.focusnet.app.ui.adapter.DrawerListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
 
 /**
- * Created by yandypiedra on 17.11.15.
+ * This Activity is the common frame for activities that do contain a left drawer.
  */
 public abstract class BaseDrawerActivity extends BaseActivity
 {
-
 	protected DrawerLayout drawerLayout;
 	protected ListView drawerListMenu;
 	protected ActionBarDrawerToggle drawerToggle;
 	protected ArrayList<AbstractListItem> drawerItems;
-	// nav drawer title
 	private CharSequence drawerTitle;
-	// used to store app title
 	private CharSequence savedTitle;
 
+	/**
+	 * Create the Activity. Create the UI.
+	 *
+	 * @param savedInstanceState past state
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -48,28 +50,32 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		savedTitle = drawerTitle = getTitle();
 
 		drawerToggle = new ActionBarDrawerToggle(
-				this,               /* host Activity */
-				drawerLayout,      /* DrawerLayout object */
+				this,
+				drawerLayout,
 				toolbar,
-				R.string.app_name, /* "openWritableDatabase drawer" description */
-				R.string.app_name /* "close drawer" description */
+				R.string.focus_drawer_open_description,
+				R.string.focus_drawer_close_description
 		)
 		{
-			/** Called when a drawer has settled in a completely closed state. */
+			/**
+			 * Called when a drawer has settled in a completely closed state.
+			 */
 			public void onDrawerClosed(View view)
 			{
 				super.onDrawerClosed(view);
 				setTitle(savedTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
+				// calling onPrepareOptionsMenu() to show action bar icons // FIXME YANDY still something to do here, or can we delete this comment?
 				invalidateOptionsMenu();
 			}
 
-			/** Called when a drawer has settled in a completely openWritableDatabase state. */
+			/**
+			 * Called when a drawer has settled in a completely open state.
+			 */
 			public void onDrawerOpened(View drawerView)
 			{
 				super.onDrawerOpened(drawerView);
 				setTitle(drawerTitle);
-				// calling onPrepareOptionsMenu() to hide action bar icons
+				// calling onPrepareOptionsMenu() // FIXME YANDY still something to do here, or can we delete this comment?
 				invalidateOptionsMenu();
 			}
 		};
@@ -80,6 +86,13 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		drawerLayout.setDrawerListener(drawerToggle);
 	}
 
+	/**
+	 * Triggered when an item is selected
+	 *
+	 * @param item the item being selected
+	 * @return Return false to allow normal menu processing to
+	 *         proceed, true to consume it here.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -88,7 +101,7 @@ public abstract class BaseDrawerActivity extends BaseActivity
 			return true;
 		}
 		// Handle action bar actions click
-		//TODO analise this
+		//TODO YANDY analyze this
 		switch (item.getItemId()) {
 			case R.id.action_settings:
 				return true;
@@ -97,7 +110,9 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		}
 	}
 
-	/* Called whenever we call invalidateOptionsMenu() */
+	/**
+	 *  Called whenever we call invalidateOptionsMenu()
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
@@ -107,6 +122,11 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	/**
+	 * Set the drawer title
+	 *
+	 * @param title Title to set
+	 */
 	@Override
 	public void setTitle(CharSequence title)
 	{
@@ -116,7 +136,7 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 	/**
 	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * onPostCreate() and onConfigurationChanged().
 	 */
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState)
@@ -126,6 +146,10 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		drawerToggle.syncState();
 	}
 
+	/**
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged().
+	 */
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
@@ -134,27 +158,64 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	/**
+	 * Get the view to pass to the content part of the Activity
+	 *
+	 * @return the view ID
+	 */
 	@Override
 	protected abstract int getContentView();
 
 
+	/**
+	 * Is the "up" affordance enabled?
+	 *
+	 * @return true if so, false otherwise
+	 *
+	 * // FIXME YANDY : can't we just use an instance variable for these flags? And set it into the onCreate() (or constructor)?
+	 */
 	@Override
 	protected boolean isDisplayHomeAsUpEnabled()
 	{
 		return false;
 	}
 
+	/**
+	 * Tells whether the home button is enabled.
+	 *
+	 * @return true if so, false otherwise
+	 */
 	@Override
 	protected boolean isHomeButtonEnabled()
 	{
 		return false;
 	}
 
+	/**
+	 * Retrieve the list of drawer items
+	 *
+	 * @return the list of drawer items
+	 */
 	protected abstract ArrayList<AbstractListItem> getDrawerItems();
 
+	/**
+	 * Get the drawer layout
+	 *
+	 * @return the layout ID
+	 */
 	protected abstract int getDrawerLayout();
 
+	/**
+	 * Get the drawer list
+	 *
+	 * @return the list ID
+	 */
 	protected abstract int getDrawerList();
 
+	/**
+	 * The listener being triggered when clicking an item.
+	 *
+	 * @return an OnItemClickListener
+	 */
 	protected abstract ListView.OnItemClickListener getOnClickListener();
 }

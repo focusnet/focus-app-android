@@ -3,9 +3,6 @@ package eu.focusnet.app.ui.activity;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,19 +12,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.json.User;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.AbstractListItem;
+import eu.focusnet.app.ui.common.DrawerListItem;
+import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.FocusFragment;
 import eu.focusnet.app.ui.fragment.SettingFragment;
 import eu.focusnet.app.ui.fragment.SynchronizeFragment;
 import eu.focusnet.app.ui.fragment.UserManualFragment;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.ui.util.FragmentManager;
-import eu.focusnet.app.model.json.User;
-import eu.focusnet.app.ui.common.DrawerListItem;
-import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -35,57 +33,62 @@ import eu.focusnet.app.ui.util.ViewUtil;
  */
 public class FocusActivity extends BaseDrawerActivity
 {
-
-	private static final String TAG = FocusActivity.class.getName();
 	private String[] navMenuTitles;
 
-
+	/**
+	 * Create the activity.
+	 *
+	 * @param savedInstanceState past state
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
-		//TODO remove this when the application is finished
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-				.detectAll()   // or .detectAll() for all detectable problems
-				.penaltyLog()
-				.build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-				.detectAll()
-				.penaltyLog()
-				.build());
-
-
-		//TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
-//        if (savedInstanceState == null) {
-//            // on first time display view for first nav item
 		showView(Constant.UI_FRAGMENT_FOCUS);
-//                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
-//        }
-//
-		//TODO change this
-		//     else if(extras != null){
-//            if(extras.get(Constant.USER_DATA) != null){
-//                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
-//                Log.d(TAG, data.get(0));
-//                Util.displayToast(this, data.get(0));
-//                showView(Constant.UI_FRAGMENT_FOCUS);
-//            }
-//            else {
-		//if started from a notification display the appropriate fragment
-		//              showView(extras.getInt(Constant.UI_EXTRA_NOTIFICATION_ID));
-//            }
-//        }
-		//////////////////////////////////////////////////////////////////////////////////////////////
+
+					/*
+							//TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
+							// FIXME TOOD YANDY what is the status of this code snippet? Can we simply remove this commented part? it looks so to me.
+					//        if (savedInstanceState == null) {
+					//            // on first time display view for first nav item
+							// 	showView(Constant.UI_FRAGMENT_FOCUS); // FIXME this one was enaabled
+					//                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
+					//        }
+					//
+							//TODO change this
+							//     else if(extras != null){
+					//            if(extras.get(Constant.USER_DATA) != null){
+					//                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
+					//                Log.d(TAG, data.get(0));
+					//                Util.displayToast(this, data.get(0));
+					//                showView(Constant.UI_FRAGMENT_FOCUS);
+					//            }
+					//            else {
+							//if started from a notification display the appropriate fragment
+							//              showView(extras.getInt(Constant.UI_EXTRA_NOTIFICATION_ID));
+					//            }
+					//        }
+							//////////////////////////////////////////////////////////////////////////////////////////////
+							*/
 	}
 
-
+	/**
+	 * Get the current activity's view
+	 *
+	 * @return The view
+	 */
 	@Override
 	protected int getContentView()
 	{
 		return R.layout.activity_focus;
 	}
 
+	/**
+	 * This method gives a list of items to display in the left drawer.
+	 *
+	 * @return An array list of items to display in the drawer
+	 */
 	@Override
 	protected ArrayList<AbstractListItem> getDrawerItems()
 	{
@@ -97,32 +100,21 @@ public class FocusActivity extends BaseDrawerActivity
 
 		ArrayList<AbstractListItem> drawerItems = new ArrayList<AbstractListItem>();
 
-		//Get the user data from the bundle
-		//	Bundle extras = getIntent().getExtras();
-		//User user = (User) extras.getSerializable(Constant.USER_DATA);
-
-		DataManager dm = DataManager.getInstance();
 		User user = null;
-
 		try {
-			user = dm.getUser();
+			user = DataManager.getInstance().getUser();
 		}
 		catch (FocusMissingResourceException ex) {
-			// FIXME do something smart
-			// e.g. throw internal error exception !
+			throw new FocusInternalErrorException("User object cannot be accessed.");
 		}
 
-
 		drawerItems.add(new HeaderDrawerListItem(ViewUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-
-		ViewUtil.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName()); //TODO remove this when app is finished
-
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
 			DrawerListItem drawListItem = new DrawerListItem(ViewUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
 			//find out the synchronize menu
 			if (menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
-				//TODO set the synchronized info
+				//TODO FIXME YANDY set the synchronized info
 				String lastUpdate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
 				drawListItem.setInfo(getResources().getString(R.string.drawer_menu_update) + " " + lastUpdate);
 			}
@@ -135,18 +127,33 @@ public class FocusActivity extends BaseDrawerActivity
 		return drawerItems;
 	}
 
+	/**
+	 * Retrieve the drawer layout
+	 *
+	 * @return the drawer layout ID
+	 */
 	@Override
 	protected int getDrawerLayout()
 	{
 		return R.id.drawer_layout;
 	}
 
+	/**
+	 * Retrieve the drawer list
+	 *
+	 * @return the drawer list ID
+	 */
 	@Override
 	protected int getDrawerList()
 	{
 		return R.id.drawer_list_menu;
 	}
 
+	/**
+	 * Register a click listener for drawer items
+	 *
+	 * @return a ListView
+	 */
 	@Override
 	protected ListView.OnItemClickListener getOnClickListener()
 	{
@@ -155,56 +162,52 @@ public class FocusActivity extends BaseDrawerActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				//display view for selected nav drawer item
-				//  ((TextView)view.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.app_color));
 				showView(position);
 			}
 		};
 	}
 
+	/*
+	FIXME TODO YANDY not used anymore. let's remove it if this is the case. otherwise document its purpose.
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
-	}
+	}*/
 
 
+	/**
+	 * Listener for the back button
+	 *
+	 */
 	@Override
 	public void onBackPressed()
 	{
 		//Navigate back to the last Fragment or exit the application
-		Log.d(TAG, "Back button pressed");
 		android.app.FragmentManager fragmentMng = getFragmentManager();
 		int fragmentBackStackNumber = fragmentMng.getBackStackEntryCount();
 		// If we have more than one fragments in the stack remove the last inserted
 		if (fragmentBackStackNumber > 1) {
-			Log.d(TAG, "Number of fragment on the stack: " + fragmentBackStackNumber);
 			//remove the last inserted fragment from the stack
 			fragmentMng.popBackStackImmediate();
 
 			//Get the current fragment
-			Fragment fragment = (Fragment) FragmentManager.getCurrentFragment(fragmentMng);
-
-			Log.d(TAG, "Getting the fragment's argument");
+			Fragment fragment = FragmentManager.getCurrentFragment(fragmentMng);
 			Bundle bundle = fragment.getArguments();
 
-			String title = (String) bundle.get(Constant.UI_BUNDLE_FRAGMENT_TITLE);
-			Log.d(TAG, "Title :" + title);
 			// Set title
+			String title = (String) bundle.get(Constant.UI_BUNDLE_FRAGMENT_TITLE);
 			setTitle(title);
 
-			int position = (int) bundle.get(Constant.UI_BUNDLE_FRAGMENT_POSITION);
-			Log.d(TAG, "Position :" + position);
 			// Highlight the item
+			int position = (int) bundle.get(Constant.UI_BUNDLE_FRAGMENT_POSITION);
 			highlightSelectedMenuItem(position);
 
-			//In case the drawer menu is openWritableDatabase and the user click the back button,
-			// the drawer menu will be closed
+			// close the drawer if the user clicks the back button
 			drawerLayout.closeDrawer(drawerListMenu);
 		}
 		else {
-			Log.d(TAG, "There is only one fragment in the stack, the application will exit");
 			// Exit the application
 			super.onBackPressed();
 		}
@@ -247,20 +250,23 @@ public class FocusActivity extends BaseDrawerActivity
 			bundle.putInt(Constant.UI_BUNDLE_FRAGMENT_POSITION, effectivePosition);
 			fragment.setArguments(bundle);
 			FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
-			// Highlight the selected item
+
 			highlightSelectedMenuItem(position);
-			//set title
 			setTitle(title);
+
 			drawerLayout.closeDrawer(drawerListMenu);
 		}
 	}
 
+	/**
+	 * Highlight the selected menu item
+	 *
+	 * @param position
+	 */
 	private void highlightSelectedMenuItem(int position)
 	{
 		// Highlight the selected item
 		drawerListMenu.setItemChecked(position, true);
 		drawerListMenu.setSelection(position);
-
-
 	}
 }

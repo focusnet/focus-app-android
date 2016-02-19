@@ -69,6 +69,8 @@ public class DatabaseAdapter
 		}
 
 		/*
+		// FIXME TODO YANDY: we now have a flat single table (samples), so ne need for constraints
+		// on foreign keys, right? if so, let's delete this commented part.
 		@Override
 		public void onOpen(SQLiteDatabase db)
 		{

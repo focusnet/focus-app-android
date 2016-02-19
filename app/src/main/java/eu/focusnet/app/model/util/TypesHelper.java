@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import eu.focusnet.app.exception.BadTypeException;
+import eu.focusnet.app.exception.FocusBadTypeException;
 
 /**
  * Created by julien on 18.01.16.
@@ -16,23 +16,23 @@ public class TypesHelper
 	 *
 	 * @param obj
 	 * @return
-	 * @throws BadTypeException
+	 * @throws FocusBadTypeException
 	 */
-	public static String asString(Object obj) throws BadTypeException
+	public static String asString(Object obj) throws FocusBadTypeException
 	{
 		if (obj == null) {
 			return "";
 		}
 		if (obj instanceof ArrayList) {
-			throw new BadTypeException("Array cannot be converted to string.");
+			throw new FocusBadTypeException("Array cannot be converted to string.");
 		}
 		if (obj instanceof String || obj instanceof Double || obj instanceof Integer) {
 			return obj.toString();
 		}
-		throw new BadTypeException("Unsupported type");
+		throw new FocusBadTypeException("Unsupported type");
 	}
 
-	public static Double asDouble(Object obj) throws BadTypeException
+	public static Double asDouble(Object obj) throws FocusBadTypeException
 	{
 		if (obj instanceof Double) {
 			return (Double) obj;
@@ -45,24 +45,24 @@ public class TypesHelper
 				return Double.parseDouble((String) obj);
 			}
 			catch (NumberFormatException e) {
-				throw new BadTypeException("not a valid double string");
+				throw new FocusBadTypeException("not a valid double string");
 			}
 		}
-		throw new BadTypeException("Not a Double");
+		throw new FocusBadTypeException("Not a Double");
 	}
 
-	public static Integer asInteger(Object obj) throws BadTypeException
+	public static Integer asInteger(Object obj) throws FocusBadTypeException
 	{
 		return null;
 	}
 
-	public static ArrayList<String> asArrayOfStrings(Object obj) throws BadTypeException
+	public static ArrayList<String> asArrayOfStrings(Object obj) throws FocusBadTypeException
 	{
 		// obj should be an array list,
 		// each element should be a scalar -> toSTring() it.
-		// if any error, ClassCastException | BadTypeException
+		// if any error, ClassCastException | FocusBadTypeException
 		if (!(obj instanceof ArrayList)) {
-			throw new BadTypeException("Provided values are not an ArrayList");
+			throw new FocusBadTypeException("Provided values are not an ArrayList");
 		}
 		ArrayList<String> ret = new ArrayList<String>();
 		for (Object o2 : (ArrayList) obj) {
@@ -70,16 +70,16 @@ public class TypesHelper
 				ret.add(o2.toString());
 			}
 			else {
-				throw new BadTypeException("Invalid value in array");
+				throw new FocusBadTypeException("Invalid value in array");
 			}
 		}
 		return ret;
 	}
 
-	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws BadTypeException
+	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws FocusBadTypeException
 	{
 		if (!(obj instanceof ArrayList)) {
-			throw new BadTypeException("Provided values are not an ArrayList");
+			throw new FocusBadTypeException("Provided values are not an ArrayList");
 		}
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		for (Object o2 : (ArrayList) obj) {
@@ -90,16 +90,16 @@ public class TypesHelper
 				ret.add(Integer.parseInt((String) o2));
 			}
 			else {
-				throw new BadTypeException("Invalid value in array");
+				throw new FocusBadTypeException("Invalid value in array");
 			}
 		}
 		return ret;
 	}
 
-	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws BadTypeException
+	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws FocusBadTypeException
 	{
 		if (!(obj instanceof ArrayList)) {
-			throw new BadTypeException("Provided values are not an ArrayList");
+			throw new FocusBadTypeException("Provided values are not an ArrayList");
 		}
 		ArrayList<Double> ret = new ArrayList<Double>();
 		for (Object o2 : (ArrayList) obj) {
@@ -110,7 +110,7 @@ public class TypesHelper
 				ret.add(Double.parseDouble((String) o2));
 			}
 			else {
-				throw new BadTypeException("Invalid value in array");
+				throw new FocusBadTypeException("Invalid value in array");
 			}
 		}
 		return ret;
@@ -124,22 +124,22 @@ public class TypesHelper
 	 *
 	 * @param o
 	 * @return
-	 * @throws BadTypeException
+	 * @throws FocusBadTypeException
 	 */
-	public static ArrayList<String> asArrayOfUrls(Object o) throws BadTypeException
+	public static ArrayList<String> asArrayOfUrls(Object o) throws FocusBadTypeException
 	{
 		if (!(o instanceof ArrayList)) {
-			throw new BadTypeException("Not an ArrayList");
+			throw new FocusBadTypeException("Not an ArrayList");
 		}
 		for (Object o2 : (ArrayList) o) {
 			if (!(o2 instanceof String)) {
-				throw new BadTypeException("Entry of ArrayList is not a String.");
+				throw new FocusBadTypeException("Entry of ArrayList is not a String.");
 			}
 			try {
 				new URL((String) o2);
 			}
 			catch (MalformedURLException e) {
-				throw new BadTypeException("Entry of ArrayList is not a URL.");
+				throw new FocusBadTypeException("Entry of ArrayList is not a URL.");
 			}
 		}
 		return (ArrayList<String>) o;

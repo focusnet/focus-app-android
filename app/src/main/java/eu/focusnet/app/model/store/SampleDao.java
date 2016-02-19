@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.util.Constant;
 
 /**
@@ -159,6 +160,16 @@ public class SampleDao
 		contentValues.put(Constant.TO_PUSH, sample.isToPush());
 		contentValues.put(Constant.TO_POST, sample.isToPost());
 		return contentValues;
+	}
+
+	/**
+	 * Clean the samples table from useless entries.
+	 *
+	 */
+	public void cleanTable()
+	{
+		// will use the DataContext's coming from DataManager
+		throw new FocusNotImplementedException("cleanTable");
 	}
 }
 

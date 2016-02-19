@@ -151,4 +151,7 @@
 
     <string name="focus_login_error_bad_credentials">Invalid credentials.</string>
     <string name="focus_login_error_no_network">Network problem.</string>
+    <string name="focus_drawer_open_description">Open drawer</string>
+    <string name="focus_drawer_close_description">Close drawer</string>
+
 </resources>

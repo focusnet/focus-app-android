@@ -49,6 +49,7 @@ public class EntryPointActivity extends Activity
 					catch (FocusMissingResourceException ex) {
 						// FIXME TODO what do we do? Toast + exit
 						// or redirect to new Activity that explains the problem and proposes to try again later (button)
+						// this may occur when no data has been previously loaded
 					}
 				}
 			};

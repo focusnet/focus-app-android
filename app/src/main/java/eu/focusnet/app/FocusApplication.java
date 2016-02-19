@@ -1,7 +1,9 @@
 package eu.focusnet.app;
 
 import android.app.Application;
+import android.os.StrictMode;
 
+import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
@@ -41,13 +43,26 @@ public class FocusApplication extends Application
 	{
 		super.onCreate();
 
+		// Safety checks in DEBUG mode
+		if (BuildConfig.DEBUG) {
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+					.detectAll()
+					.penaltyLog()
+					.build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+					.detectAll()
+					.penaltyLog()
+					.build());
+		}
+
 		// setup DataManager
 		DataManager dm = DataManager.getInstance();
 		dm.init(this.getApplicationContext());
 
-		// FIXME TODO enable
-		// setup ACRA
-		// 	ACRA.init(this);
+		// setup ACRA, only in release mode
+		if (!BuildConfig.DEBUG) {
+			ACRA.init(this);
+		}
 	}
 
 	/**
@@ -57,7 +72,8 @@ public class FocusApplication extends Application
 	public void onLowMemory()
 	{
 		super.onLowMemory();
-		// FIXME TODO
+
+		DataManager.getInstance().freeMemory();
 	}
 
 	/**
@@ -69,6 +85,7 @@ public class FocusApplication extends Application
 	public void onTrimMemory(int level)
 	{
 		super.onTrimMemory(level);
-		// FIXME TODO
+
+		DataManager.getInstance().freeMemory();
 	}
 }

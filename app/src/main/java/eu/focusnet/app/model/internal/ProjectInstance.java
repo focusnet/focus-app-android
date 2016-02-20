@@ -1,11 +1,8 @@
 package eu.focusnet.app.model.internal;
 
-import org.acra.ACRA;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.util.Constant;
@@ -21,7 +18,7 @@ import eu.focusnet.app.model.util.TypesHelper;
 /**
  * Created by julien on 12.01.16.
  */
-public class ProjectInstance extends Instance
+public class ProjectInstance extends AbstractInstance
 {
 	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
 	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
@@ -34,7 +31,6 @@ public class ProjectInstance extends Instance
 	private LinkedHashMap<String, PageInstance> tools;
 
 	private ProjectTemplate template;
-	private DataContext dataContext;
 
 	private boolean isValid;
 

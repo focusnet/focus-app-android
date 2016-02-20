@@ -9,14 +9,12 @@ import eu.focusnet.app.model.util.Constant;
 /**
  * Created by julien on 12.01.16.
  */
-public class PageInstance extends Instance
+public class PageInstance extends AbstractInstance
 {
 
 	public final static String LABEL_PAGE_ITERATOR = "$page-iterator$";
 	LinkedHashMap<String, WidgetInstance> widgets; // layout + widgetdefinition, with dataContext.
 
-	;
-	DataContext dataContext;
 	private PageTemplate template;
 	private String guid;
 	private PageType type;

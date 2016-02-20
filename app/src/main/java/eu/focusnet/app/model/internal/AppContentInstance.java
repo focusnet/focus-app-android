@@ -1,11 +1,8 @@
 package eu.focusnet.app.model.internal;
 
-import org.acra.ACRA;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.util.Constant;
@@ -19,12 +16,11 @@ import eu.focusnet.app.model.util.TypesHelper;
  * An Application content instance, i.e. the application template has been resolved and real
  * instances of the different contained objects are accessible through the present object.
  */
-public class AppContentInstance extends Instance
+public class AppContentInstance extends AbstractInstance
 {
 	private DataManager dataManager;
 	private AppContentTemplate appTemplate;
 	private LinkedHashMap<String, ProjectInstance> projects;
-	private DataContext dataContext;
 
 	/**
 	 * C'tor

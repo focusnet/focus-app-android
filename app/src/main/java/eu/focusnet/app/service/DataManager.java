@@ -9,23 +9,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.AppContentInstance;
-import eu.focusnet.app.model.internal.Instance;
-import eu.focusnet.app.model.internal.PageInstance;
-import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.model.json.User;
-import eu.focusnet.app.model.json.WidgetLinker;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.model.store.Sample;
 import eu.focusnet.app.model.store.SampleDao;
@@ -35,7 +32,7 @@ import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 
 /**
  * This follows a Singleton pattern.
- * <p/>
+ * <p>
  * Created by julien on 07.01.16.
  */
 public class DataManager
@@ -75,7 +72,7 @@ public class DataManager
 	private NetworkManager net;
 	private DatabaseAdapter databaseAdapter;
 
-	private ArrayList<Instance> activeInstances;
+	private ArrayList<AbstractInstance> activeInstances;
 
 	/**
 	 * Initialize the Singleton.
@@ -154,7 +151,7 @@ public class DataManager
 
 	/**
 	 * Login and if successful, save the login information in the permanent store.
-	 * <p/>
+	 * <p>
 	 * This method relies on network connectivity.
 	 *
 	 * @param user     The login user
@@ -208,7 +205,7 @@ public class DataManager
 
 	/**
 	 * Delete login information, and reset the content of the whole application
-	 * <p/>
+	 * <p>
 	 * FIXME FIXME TODO YANDY: add logout button in settings fragment that triggers this function and then
 	 * redirects to the Entrypoint activity (user will redo the whole login process).
 	 */
@@ -443,7 +440,7 @@ public class DataManager
 
 	/**
 	 * Create a new data entry
-	 *
+	 * <p>
 	 * a POST is seen as a data commit, so we call data.commit()
 	 *
 	 * @param url  The URL identifying the resource to POST
@@ -492,15 +489,15 @@ public class DataManager
 
 	/**
 	 * PUT some data to a remote server.
-	 * <p/>
+	 * <p>
 	 * Methods calling this object do not have to take care of the FocusObject attributes, e.g.
 	 * version, creationTime, editionTime, owner, editor, etc. They should only modify the object's
 	 * specific attributes, such as the content of the data Map for FocusSample objects.
-	 * <p/>
+	 * <p>
 	 * We consider that we are provided with a *copy* of the FocusObject we update. At the end of
 	 * this method, we replace the old object in our RAM cache with the new one, such that the old
 	 * one will be garbage collected.
-	 *
+	 * <p>
 	 * a PUT is seen as a data commit, so we call data.commit()
 	 *
 	 * @param url  The URL identifying the resource to PUT
@@ -581,7 +578,7 @@ public class DataManager
 
 	/**
 	 * Get the history for a url, according to provided parameters. This will call a remote service.
-	 * <p/>
+	 * <p>
 	 * HistorySample = { data: field1: [], field2: []}
 	 *
 	 * @param url
@@ -596,7 +593,7 @@ public class DataManager
 
 	/**
 	 * Look for objects that are of the specified type and context. This will call a remote service.
-	 * <p/>
+	 * <p>
 	 * LookupSample = { data: urls: []}
 	 *
 	 * @param context
@@ -618,21 +615,21 @@ public class DataManager
 	}
 
 	/**
-	 * Adds the specified Instance to the list of currently active instances.
+	 * Adds the specified AbstractInstance to the list of currently active instances.
 	 *
 	 * @param i
 	 */
-	public void registerActiveInstance(Instance i)
+	public void registerActiveInstance(AbstractInstance i)
 	{
 		this.activeInstances.add(i);
 	}
 
 	/**
-	 * Removes the specified Instance from the list of active instances.
+	 * Removes the specified AbstractInstance from the list of active instances.
 	 *
 	 * @param i
 	 */
-	public void unregisterActiveInstance(Instance i)
+	public void unregisterActiveInstance(AbstractInstance i)
 	{
 		this.activeInstances.remove(i);
 	}
@@ -642,14 +639,32 @@ public class DataManager
 	 */
 	public void freeMemory()
 	{
-		// We have this.activeInstances
+		Set<String> used_urls = new HashSet<>();
+		for (AbstractInstance ai : this.activeInstances) {
+			Map<String, FocusSample> m = ai.getDataContext();
+			for (Map.Entry<String, FocusSample> e : m.entrySet()) {
+				used_urls.add(e.getValue().getUrl());
+			}
+		}
 
-		// in each we can access the data context, which is a url => data pair
+		for (Map.Entry<String, FocusObject> e : this.cache.entrySet()) {
+			String url = e.getKey();
+			if (!used_urls.contains(url)) {
+				this.cache.remove(url);
+			}
+		}
+	}
 
-		// so we can clean the this.cache accordingly.
+	/**
+	 * Remove unused resources from the data store
+	 */
+	public void cleanDataStore()
+	{
+		// if not in any data context, then delete
 
-// FIXME TODO TODO
-		return;
+		// NOTE: datacontext does only contains FocusSample -> do not delete other types!
+
+		// also delete all entries that are not latest version of resources
 	}
 
 }

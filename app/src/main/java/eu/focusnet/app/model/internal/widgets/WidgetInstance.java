@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
-import eu.focusnet.app.model.internal.Instance;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
@@ -16,7 +15,7 @@ import eu.focusnet.app.model.util.TypesHelper;
 /**
  * Created by julien on 12.01.16.
  */
-public abstract class WidgetInstance extends Instance
+public abstract class WidgetInstance extends AbstractInstance
 {
 
 	/* widget types */

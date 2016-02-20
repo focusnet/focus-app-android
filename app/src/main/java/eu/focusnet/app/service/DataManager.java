@@ -32,12 +32,12 @@ import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 
 /**
  * This follows a Singleton pattern.
- * <p>
+ * <p/>
  * Created by julien on 07.01.16.
  */
 public class DataManager
 {
-	private static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
+	public static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION = FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "focus-internal-configuration";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER = "login-server";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME = "login-username";
@@ -73,6 +73,7 @@ public class DataManager
 	private DatabaseAdapter databaseAdapter;
 
 	private ArrayList<AbstractInstance> activeInstances;
+	private boolean applicationReady;
 
 	/**
 	 * Initialize the Singleton.
@@ -92,7 +93,6 @@ public class DataManager
 		return ourInstance;
 	}
 
-
 	/**
 	 * Finish initializing the DataManager
 	 *
@@ -103,6 +103,9 @@ public class DataManager
 		if (this.isInitialized) {
 			return;
 		}
+
+		this.activeInstances = new ArrayList<>();
+		this.applicationReady = false;
 
 		// setup GSON
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
@@ -150,8 +153,18 @@ public class DataManager
 	}
 
 	/**
+	 * Tells whether the application is ready for being run, i.e. all basic objects have been loaded
+	 *
+	 * @return
+	 */
+	public boolean isApplicationReady()
+	{
+		return this.applicationReady;
+	}
+
+	/**
 	 * Login and if successful, save the login information in the permanent store.
-	 * <p>
+	 * <p/>
 	 * This method relies on network connectivity.
 	 *
 	 * @param user     The login user
@@ -205,7 +218,7 @@ public class DataManager
 
 	/**
 	 * Delete login information, and reset the content of the whole application
-	 * <p>
+	 * <p/>
 	 * FIXME FIXME TODO YANDY: add logout button in settings fragment that triggers this function and then
 	 * redirects to the Entrypoint activity (user will redo the whole login process).
 	 */
@@ -227,7 +240,7 @@ public class DataManager
 			this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		}
 		catch (IOException ex) {
-			// FIXME should not happen as this is local resource (internal)
+			// will not happen as this is local resource (internal)
 		}
 		// delete the whole database content FIXME TODO
 	}
@@ -278,7 +291,7 @@ public class DataManager
 	 *
 	 * @return A Preference object
 	 */
-	public Preference getUserPreferences() throws RuntimeException, FocusMissingResourceException
+	public Preference getUserPreferences() throws FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -304,7 +317,7 @@ public class DataManager
 	 *
 	 * @return An AppContentTemplate object (not an instance, it still must be processed)
 	 */
-	public AppContentTemplate getAppContentTemplate() throws RuntimeException, FocusMissingResourceException
+	public AppContentTemplate getAppContentTemplate() throws FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -345,7 +358,9 @@ public class DataManager
 		this.getUserPreferences();
 		AppContentTemplate template = this.getAppContentTemplate();
 		this.appContentInstance = new AppContentInstance(template);
+		this.appContentInstance.build(mode); // optimistic | sync
 		this.registerActiveInstance(this.appContentInstance);
+		this.applicationReady = true;
 	}
 
 	/**
@@ -354,7 +369,7 @@ public class DataManager
 	 * @param url The URL identifyiing the sample to retrieve
 	 * @return A FocusSample
 	 */
-	public FocusSample getSample(String url) throws RuntimeException, FocusMissingResourceException
+	public FocusSample getSample(String url) throws FocusMissingResourceException
 	{
 		if (!this.hasLoginInformation()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -372,6 +387,66 @@ public class DataManager
 		return fs;
 	}
 
+	/**
+	 * Get a FocusSample, but in synchronization context: we get it from the network and store it
+	 * in our local db, and in our cache. Normally when we consume data (in getSample), we would do
+	 * the oppostion (RAM > local db > Network)
+	 *
+	 * @param url
+	 * @return
+	 */
+	private FocusSample getSampleFord  Sync(String url) throws IOException
+	{
+		HttpResponse response = this.net.get(url);
+		if (response.isSuccessful()) {
+			String json = response.getData();
+			FocusSample fs = (FocusSample) FocusObject.factory(json, FocusSample.class);
+
+			// Convert into a sample and save it into the database
+			Sample sample = Sample.cloneFromFocusObject(fs);
+
+			try {
+				SampleDao dao = this.databaseAdapter.getSampleDao();
+				dao.create(sample);
+			}
+			finally {
+				this.databaseAdapter.close();
+			}
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Retrieve a sample that is stored in the local database (or in the cache), but do not get it from the network
+	 *
+	 * @param url
+	 * @return
+	 */
+	public FocusObject getLocalObject(String url)
+	{
+		if (!this.hasLoginInformation()) {
+			throw new FocusInternalErrorException("No login information. Cannot continue.");
+		}
+
+		if (this.cache.get(url) != null) {
+			return this.cache.get(url);
+		}
+
+		try {
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			Sample sample = dao.get(url);
+			if (sample != null) {
+				return FocusObject.factory(sample.getData(), FocusObject.class); // FIXME TODO check if that works for UserPreference object, for example, and for FocusSample's
+			}
+		}
+		finally {
+			// FIXME nested finally -> problem will close the dao but outside we are not finished.
+		}
+		return null;
+	}
+
 
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
@@ -379,7 +454,6 @@ public class DataManager
 	private FocusObject get(String url, Class targetClass) throws IOException
 	{
 		// do we have it in the cache?
-		// FIXME TODO check if not too old ? (see sample.lastUsage)
 		if (this.cache.get(url) != null) {
 			FocusObject result = this.cache.get(url);
 			return result;
@@ -389,9 +463,8 @@ public class DataManager
 
 		// try to get it from the local SQL db
 		try {
-			this.databaseAdapter.openWritableDatabase();
-			SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
-			Sample sample = sampleDao.get(url);
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			Sample sample = dao.get(url);
 			if (sample != null) {
 				result = FocusObject.factory(sample.getData(), targetClass);
 			}
@@ -417,9 +490,8 @@ public class DataManager
 					Sample sample = Sample.cloneFromFocusObject(result);
 
 					try {
-						this.databaseAdapter.openWritableDatabase();
-						SampleDao sampleDao = new SampleDao(this.databaseAdapter.getDb());
-						sampleDao.create(sample);
+						SampleDao dao = this.databaseAdapter.getSampleDao();
+						dao.create(sample);
 					}
 					finally {
 						this.databaseAdapter.close();
@@ -440,7 +512,7 @@ public class DataManager
 
 	/**
 	 * Create a new data entry
-	 * <p>
+	 * <p/>
 	 * a POST is seen as a data commit, so we call data.commit()
 	 *
 	 * @param url  The URL identifying the resource to POST
@@ -457,9 +529,8 @@ public class DataManager
 		}
 
 		try {
-			this.databaseAdapter.openWritableDatabase();
-			SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
-			sample_dao.create(sample);
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			dao.create(sample);
 		}
 		finally {
 			this.databaseAdapter.close();
@@ -475,11 +546,10 @@ public class DataManager
 		}
 
 		if (this.net.post(url, data).isSuccessful()) { // if POST on network, also remove POST flag in local db copy
+			sample.setToPost(false);
 			try {
-				this.databaseAdapter.openWritableDatabase();
-				SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
-				sample.setToPost(false);
-				sample_dao.update(sample);
+				SampleDao dao = this.databaseAdapter.getSampleDao();
+				dao.update(sample);
 			}
 			finally {
 				this.databaseAdapter.close();
@@ -489,15 +559,15 @@ public class DataManager
 
 	/**
 	 * PUT some data to a remote server.
-	 * <p>
+	 * <p/>
 	 * Methods calling this object do not have to take care of the FocusObject attributes, e.g.
 	 * version, creationTime, editionTime, owner, editor, etc. They should only modify the object's
 	 * specific attributes, such as the content of the data Map for FocusSample objects.
-	 * <p>
+	 * <p/>
 	 * We consider that we are provided with a *copy* of the FocusObject we update. At the end of
 	 * this method, we replace the old object in our RAM cache with the new one, such that the old
 	 * one will be garbage collected.
-	 * <p>
+	 * <p/>
 	 * a PUT is seen as a data commit, so we call data.commit()
 	 *
 	 * @param url  The URL identifying the resource to PUT
@@ -517,9 +587,8 @@ public class DataManager
 		Sample sample = Sample.cloneFromFocusObject(data);
 		sample.setToPut(true);
 		try {
-			this.databaseAdapter.openWritableDatabase();
-			SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
-			sample_dao.create(sample); // we create a new sample of the object identified by url, and this is ok
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			dao.create(sample); // we create a new sample of the object identified by url, and this is ok
 		}
 		finally {
 			this.databaseAdapter.close();
@@ -531,11 +600,12 @@ public class DataManager
 
 		// network PUT
 		if (this.net.put(url, data).isSuccessful()) { // if PUT on network, also remove PUT flag in local db copy
+			sample.setToPut(false);
 			try {
-				this.databaseAdapter.openWritableDatabase();
-				SampleDao sample_dao = new SampleDao(this.databaseAdapter.getDb());
-				sample.setToPut(false);
-				sample_dao.update(sample);
+				SampleDao dao = this.databaseAdapter.getSampleDao();
+				dao.update(sample);
+
+				// FIXME TODO we should delete the old versions of the resource
 			}
 			finally {
 				this.databaseAdapter.close();
@@ -555,8 +625,7 @@ public class DataManager
 
 		// mark data for deletion in local database
 		try {
-			this.databaseAdapter.openWritableDatabase();
-			SampleDao dao = new SampleDao(this.databaseAdapter.getDb());
+			SampleDao dao = this.databaseAdapter.getSampleDao();
 
 			// no network for special urls
 			if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
@@ -578,7 +647,7 @@ public class DataManager
 
 	/**
 	 * Get the history for a url, according to provided parameters. This will call a remote service.
-	 * <p>
+	 * <p/>
 	 * HistorySample = { data: field1: [], field2: []}
 	 *
 	 * @param url
@@ -593,7 +662,7 @@ public class DataManager
 
 	/**
 	 * Look for objects that are of the specified type and context. This will call a remote service.
-	 * <p>
+	 * <p/>
 	 * LookupSample = { data: urls: []}
 	 *
 	 * @param context
@@ -656,15 +725,158 @@ public class DataManager
 	}
 
 	/**
-	 * Remove unused resources from the data store
+	 * Clean the samples table from useless entries.
 	 */
 	public void cleanDataStore()
 	{
-		// if not in any data context, then delete
+		if (!this.isApplicationReady()) {
+			return;
+		}
 
-		// NOTE: datacontext does only contains FocusSample -> do not delete other types!
-
-		// also delete all entries that are not latest version of resources
+		try {
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			dao.cleanTable();
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
 	}
 
+	/**
+	 * Sync data currently on the client side with the ones of the backends,
+	 * and then retrieve latest versions of resources.
+	 */
+	public void syncData() throws FocusMissingResourceException
+	{
+		if (!this.isApplicationReady()) {
+			return;
+		}
+
+		if (!this.net.isNetworkAvailable()) {
+			return;
+		}
+
+		this.pushLocalModifications();
+		this.rebuildApplicationData();
+	}
+
+	/**
+	 * Push local modifications to the backends
+	 */
+	private void pushLocalModifications() throws FocusMissingResourceException
+	{
+		// POST
+		String[] to_post_urls;
+		int report_failure = 0; // 1 = network failure only, 2 = at some point a HTTP request had a failed status
+		try {
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+			to_post_urls = dao.getAllMarkedForPost();
+			for (String url : to_post_urls) {
+				FocusObject fo = this.getLocalObject(url);
+				if (fo == null) {
+					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (POST).");
+				}
+				Sample sample = Sample.cloneFromFocusObject(fo);
+				try {
+					if (this.net.post(url, fo).isSuccessful()) {
+						sample.setToPost(false);
+						dao.update(sample);
+					}
+					else {
+						report_failure = 2;
+					}
+				}
+				catch (IOException e) {
+					report_failure = report_failure == 2 ? 2 : 1;
+				}
+			}
+
+			// PUT
+			String[] to_put_urls;
+			to_put_urls = dao.getAllMarkedForPut();
+			for (String url : to_put_urls) {
+				FocusObject fo = this.getLocalObject(url);
+				if (fo == null) {
+					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (PUT).");
+				}
+				Sample sample = Sample.cloneFromFocusObject(fo);
+				try {
+					if (this.net.put(url, fo).isSuccessful()) {
+						sample.setToPut(false);
+						dao.update(sample);
+					}
+					else {
+						report_failure = 2;
+					}
+				}
+				catch (IOException e) {
+					report_failure = report_failure == 2 ? 2 : 1;
+				}
+			}
+
+			// DELETE
+			String[] to_delete_urls;
+			to_delete_urls = dao.getAllMarkedForDeletion();
+			for (String url : to_delete_urls) {
+				try {
+					if (this.net.delete(url).isSuccessful()) {
+						dao.delete(url);
+					}
+					else {
+						report_failure = 2;
+					}
+				}
+				catch (IOException e) {
+					report_failure = report_failure == 2 ? 2 : 1;
+				}
+			}
+
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
+		if (report_failure > 0) {
+			throw new FocusMissingResourceException("Cannot retrieve resource - " + (report_failure == 2 ? "At least one unsuccessful request" : "Network failure only") );
+		}
+	}
+
+
+	/**
+	 * GET latest versions of all resources required for running the application
+	 */
+	public void rebuildApplicationData() throws FocusMissingResourceException
+	{
+		// get all
+
+		/*
+			User u = this.getUser(); // no, use this.net.get() ... directly. // only for these three,
+			 and then replace existing object with the value that was obtained at the end of method (commit)
+
+			Preference p = this.getUserPreferences();
+			AppContentTemplate template = this.getAppContentTemplate();
+			AppContentInstance appi = new AppContentInstance(template);
+
+			this.registerActiveInstance(appi);
+
+
+			// FIXME no need to get urls -> no new login
+
+
+
+
+		// for samples
+		private HashMap<String, FocusObject> cache; // empty it. NO! just overwrite it, cannot hurt to have more recent version
+		// FIXME when syncing, NET -> DB -> RAM
+		// when using: RAM -> DB -> NET
+		-> getForSync(... they are all Samples);
+
+
+		private ArrayList<AbstractInstance> activeInstances; // only with appInstnace
+
+*/
+
+		// FIXME FIXME FIXME FIXME TODO
+		// we should get everything as local variables and once we have everything, copy them to the current object.
+		// FIXME FIXME FIXME FIXME TODO
+	}
 }

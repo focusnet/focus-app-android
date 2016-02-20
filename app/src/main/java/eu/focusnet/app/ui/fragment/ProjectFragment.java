@@ -120,6 +120,8 @@ public class ProjectFragment extends ListFragment
 
 			DataManager dm = DataManager.getInstance();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
+			// FIXME FIXME TODO YANDY: check that you don't get NULL, if that's the case, go back to FocusActivity
+			// FIXME FIXME TODO YANDY this is also true for other call such as this one (for page, widget, etc.)
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);

@@ -3,6 +3,7 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.util.Constant;
@@ -116,6 +117,7 @@ public class ProjectInstance extends AbstractInstance
 				}
 				catch (FocusBadTypeException e) {
 					// invalid iterator. survive by ignoring, but log the event
+					FocusApplication.reportError(e);
 					continue;
 				}
 				for (String url : urls) {

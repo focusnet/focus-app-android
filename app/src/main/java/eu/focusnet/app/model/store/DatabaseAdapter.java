@@ -16,6 +16,7 @@ public class DatabaseAdapter
 
 	private DatabaseHelper databaseHelper;
 	private SQLiteDatabase db;
+	private Object sampleDao;
 
 	/**
 	 * Constructor.
@@ -32,7 +33,7 @@ public class DatabaseAdapter
 	 *
 	 * @return A DatabaseAdapter to interact with the database.
 	 */
-	public DatabaseAdapter openWritableDatabase()
+	private DatabaseAdapter openWritableDatabase()
 	{
 		if (db == null || !db.isOpen()) {
 			db = databaseHelper.getWritableDatabase();
@@ -51,6 +52,12 @@ public class DatabaseAdapter
 	public SQLiteDatabase getDb()
 	{
 		return db;
+	}
+
+	public SampleDao getSampleDao()
+	{
+		this.openWritableDatabase();
+		return new SampleDao(this.getDb());
 	}
 
 

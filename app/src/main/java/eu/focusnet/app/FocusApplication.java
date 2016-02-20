@@ -1,12 +1,14 @@
 package eu.focusnet.app;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.StrictMode;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
+import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 
 /**
@@ -19,7 +21,6 @@ import eu.focusnet.app.service.DataManager;
 		httpMethod = org.acra.sender.HttpSender.Method.PUT,
 		formUriBasicAuthLogin = "felicalliestedisfallatur",
 		formUriBasicAuthPassword = "55b877fb01347d01d9dec53b54fa33e107d16b9e",
-		// mailTo = "julien.kuenzi@bfh.ch",
 		mode = ReportingInteractionMode.DIALOG,
 		resToastText = R.string.focus_crash_toast_text,
 		resDialogText = R.string.focus_crash_dialog_text,
@@ -32,6 +33,8 @@ import eu.focusnet.app.service.DataManager;
  * FOCUS Application
  *
  * FIXME ideally we would start/stop the sync service in the Application, but there is no onResume() or onPause() at the Application level
+ *
+ * FIXME TODO review all methods and 'synchronized' them if necessary, but only if necessary.
  */
 public class FocusApplication extends Application
 {
@@ -43,7 +46,7 @@ public class FocusApplication extends Application
 	 */
 	public static final void reportError(Exception e)
 	{
-		// FIXME TODO we should alter the report to remove sensitive information
+		// FIXME TODO we should alter the report to remove sensitive information!
 
 		if (!BuildConfig.DEBUG) {
 			ACRA.getErrorReporter().handleSilentException(e);
@@ -76,6 +79,11 @@ public class FocusApplication extends Application
 		// setup DataManager
 		DataManager dm = DataManager.getInstance();
 		dm.init(this.getApplicationContext());
+
+		// start the CronService
+		// FIXME TODO YANDY: I moved the service creation here because it makes more sense (Service is relevant for whole app)
+		// but is that a problem regarding sleep/wake? we could detect the sleeping into the service itself (?)
+		this.startService(new Intent(this, CronService.class));
 
 		// setup ACRA, only in release mode
 		if (!BuildConfig.DEBUG) {

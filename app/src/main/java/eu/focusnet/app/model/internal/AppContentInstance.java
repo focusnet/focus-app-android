@@ -34,7 +34,6 @@ public class AppContentInstance extends AbstractInstance
 		this.dataManager = DataManager.getInstance();
 		this.dataContext = new DataContext();
 		this.build();
-		return;
 	}
 
 	/**
@@ -99,6 +98,7 @@ public class AppContentInstance extends AbstractInstance
 					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					// the guid is adapted in the ProjectInstance constructor
 					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
+					p.build(mode);
 					this.projects.put(p.getGuid(), p);
 				}
 			}
@@ -108,6 +108,8 @@ public class AppContentInstance extends AbstractInstance
 				this.projects.put(p.getGuid(), p);
 			}
 		}
+
+		change mode to optimistic
 	}
 
 	/**

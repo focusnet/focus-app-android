@@ -22,7 +22,7 @@ public class Constant
 			ACTIVE = "active",
 			DATA = "data",
 			TO_DELETE = "toDelete",
-			TO_PUSH = "toPush",
+			TO_PUT = "toPut",
 			TO_POST = "toPost";
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
@@ -37,7 +37,7 @@ public class Constant
 			EDITOR + " TEXT, " +
 			DATA + " TEXT, " +
 			TO_DELETE + " BOOL, " +
-			TO_PUSH + " BOOL, " +
+			TO_PUT + " BOOL, " +
 			TO_POST + " BOOL," +
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE," +
 			"UNIQUE(" + Constant.URL + ", " + Constant.VERSION + ") ON CONFLICT REPLACE)";

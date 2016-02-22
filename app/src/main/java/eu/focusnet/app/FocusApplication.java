@@ -23,6 +23,7 @@
 package eu.focusnet.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
 
@@ -35,14 +36,16 @@ import eu.focusnet.app.service.DataManager;
 
 /**
  * ACRA configuration
+ *
+ * FIXME TODO YANDY move credentials / formUri to a properties file, which is not committed to git! and failsafe with defaults
  */
 @ReportsCrashes(
 		// formKey = "",
 		formUri = "https://focus.cloudant.com/acra-focus-app/_design/acra-storage/_update/report",
 		reportType = org.acra.sender.HttpSender.Type.JSON,
 		httpMethod = org.acra.sender.HttpSender.Method.PUT,
-		formUriBasicAuthLogin = "felicalliestedisfallatur",
-		formUriBasicAuthPassword = "55b877fb01347d01d9dec53b54fa33e107d16b9e",
+		formUriBasicAuthLogin = "USER", // FIXME TODO JULIEN must request API key in cloudant
+		formUriBasicAuthPassword = "KEY",
 		mode = ReportingInteractionMode.DIALOG,
 		resToastText = R.string.focus_crash_toast_text,
 		resDialogText = R.string.focus_crash_dialog_text,
@@ -54,12 +57,50 @@ import eu.focusnet.app.service.DataManager;
 /**
  * FOCUS Application
  *
- * FIXME ideally we would start/stop the sync service in the Application, but there is no onResume() or onPause() at the Application level
- *
  * FIXME TODO review all methods and 'synchronized' them if necessary, but only if necessary.
+ *
+ * This is a Singleton, which allows us to access the application context and DataManager from anywhere.
  */
 public class FocusApplication extends Application
 {
+
+	/**
+	 * Static instance variable, hence our Singleton instanciatio
+	 */
+	private static FocusApplication instance;
+
+	/**
+	 * DataManager
+	 */
+	private DataManager dataManager;
+
+	/**
+	 * Acquire the instance of this app
+	 *
+	 * @return
+	 */
+	public static FocusApplication getInstance() {
+		return instance;
+	}
+
+	/**
+	 * Retrieve application-wide context
+	 *
+	 * @return
+	 */
+	public static Context getContext(){
+		return instance.getApplicationContext();
+	}
+
+	/**
+	 * Retrieve the DataManager
+	 *
+	 * @return
+	 */
+	public DataManager getDataManager()
+	{
+		return this.dataManager;
+	}
 
 	/**
 	 * A helper function that allows reporting uncaught errors via ACRA
@@ -84,6 +125,9 @@ public class FocusApplication extends Application
 	@Override
 	public void onCreate()
 	{
+		// Singleton reference saving
+		instance = this;
+
 		super.onCreate();
 
 		// Safety checks in DEBUG mode
@@ -99,8 +143,8 @@ public class FocusApplication extends Application
 		}
 
 		// setup DataManager
-		DataManager dm = DataManager.getInstance();
-		dm.init(this.getApplicationContext());
+		this.dataManager = new DataManager();
+		this.dataManager.init(this.getApplicationContext());
 
 		// start the CronService
 		// FIXME TODO YANDY: I moved the service creation here because it makes more sense (Service is relevant for whole app)
@@ -121,7 +165,7 @@ public class FocusApplication extends Application
 	{
 		super.onLowMemory();
 
-		DataManager.getInstance().freeMemory();
+		this.dataManager.freeMemory();
 	}
 
 	/**
@@ -134,6 +178,6 @@ public class FocusApplication extends Application
 	{
 		super.onTrimMemory(level);
 
-		DataManager.getInstance().freeMemory();
+		this.dataManager.freeMemory();
 	}
 }

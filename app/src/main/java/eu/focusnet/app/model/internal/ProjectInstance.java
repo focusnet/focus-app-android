@@ -145,10 +145,10 @@ public class ProjectInstance extends AbstractInstance
 					DataContext new_page_ctx = new DataContext(this.dataContext);
 					try {
 						if (new_page_ctx.isOptimisticFillMode()) {
-							DataManager.getInstance().getSample(url);
+							FocusApplication.getInstance().getDataManager().getSample(url);
 						}
 						else {
-							DataManager.getInstance().getSampleForSync(url);
+							FocusApplication.getInstance().getDataManager().getSampleForSync(url);
 						}
 					}
 					catch (FocusMissingResourceException ex) {

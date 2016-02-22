@@ -54,7 +54,7 @@ public class AppContentInstance extends AbstractInstance
 	{
 		this.appTemplate = tpl;
 		this.projects = new LinkedHashMap<String, ProjectInstance>();
-		this.dataManager = DataManager.getInstance();
+		this.dataManager = FocusApplication.getInstance().getDataManager();
 		this.dataContext = new DataContext(isOptimisticFillMode);
 		this.build();
 	}

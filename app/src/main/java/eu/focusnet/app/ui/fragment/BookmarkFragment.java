@@ -34,6 +34,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.ui.activity.PageActivity;
@@ -130,7 +131,7 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 //                Preference preference = preferenceDao.findPreference(new Long(123));
 			Preference preference = null;
 			try {
-				preference = DataManager.getInstance().getUserPreferences();
+				preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 			}
 			catch (FocusMissingResourceException ex) {
 				// FIXME TODO do something smart.

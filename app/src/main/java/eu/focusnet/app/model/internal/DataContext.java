@@ -25,6 +25,7 @@ package eu.focusnet.app.model.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.FocusSample;
@@ -55,7 +56,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 */
 	public DataContext(boolean isOptimisticFillMode)
 	{
-		this.dataManager = DataManager.getInstance();
+		this.dataManager = FocusApplication.getInstance().getDataManager();
 		this.isOptimisticFillMode = isOptimisticFillMode;
 	}
 
@@ -68,7 +69,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	public DataContext(DataContext c)
 	{
 		super(c);
-		this.dataManager = DataManager.getInstance();
+		this.dataManager = FocusApplication.getInstance().getDataManager();
 		this.isOptimisticFillMode = c.isOptimisticFillMode();
 	}
 

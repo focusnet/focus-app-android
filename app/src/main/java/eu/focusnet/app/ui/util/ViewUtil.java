@@ -40,6 +40,7 @@ import android.widget.Toast;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.BarChartWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.CameraWidgetFragment;
@@ -237,7 +238,7 @@ public class ViewUtil
 
 			WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putString(Constant.UI_EXTRA_PATH, DataManager.getInstance().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
+			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
 			widgetBundle.putInt(LAYOUT_WIDTH, linearLayoutWidth);
 
 			// FIXME FIXME FIXME:

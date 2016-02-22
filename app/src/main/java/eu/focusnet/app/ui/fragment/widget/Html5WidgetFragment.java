@@ -37,6 +37,7 @@ import android.webkit.WebViewClient;
 
 import java.io.IOException;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
@@ -51,11 +52,15 @@ public class Html5WidgetFragment extends WidgetFragment
 
 	private WebView myWebView;
 	private String context;
+	private NetworkManager net;
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// assign network manager with the one of the application
+		this.net = FocusApplication.getInstance().getDataManager().getNetworkManager();
+
 		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
 		setWidgetLayout(viewRoot);
 
@@ -142,7 +147,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getFocusData(String url)
 		{
-			NetworkManager net = NetworkManager.getInstance();
 			try {
 				HttpResponse response = net.get(url);
 				return response.getData();
@@ -160,7 +164,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public boolean postFocusData(String url, String data)
 		{
-			NetworkManager net = NetworkManager.getInstance();
 			try {
 				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
 				return net.post(url, fs).isSuccessful();
@@ -178,7 +181,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public boolean putFocusData(String url, String data)
 		{
-			NetworkManager net = NetworkManager.getInstance();
 			try {
 				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
 				return net.put(url, fs).isSuccessful();
@@ -196,7 +198,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public boolean deleteFocusData(String url)
 		{
-			NetworkManager net = NetworkManager.getInstance();
 			try {
 				return net.delete(url).isSuccessful();
 			}
@@ -215,7 +216,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getResource(String url)
 		{
-			NetworkManager net = NetworkManager.getInstance();
 			try {
 				HttpResponse response = net.get(url);
 				return response.getData();

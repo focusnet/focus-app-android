@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.BookmarkLink;
@@ -86,7 +87,7 @@ public class ProjectFragment extends ListFragment
 	public void onDestroyView()
 	{
 		// useful for our custom garbage collection in DataManager
-		DataManager.getInstance().unregisterActiveInstance(this.projectInstance);
+		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.projectInstance);
 	}
 
 
@@ -140,7 +141,7 @@ public class ProjectFragment extends ListFragment
 			// load icons
 			toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
 
-			DataManager dm = DataManager.getInstance();
+			DataManager dm = FocusApplication.getInstance().getDataManager();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
 			// FIXME FIXME TODO YANDY: check that you don't get NULL, if that's the case, go back to FocusActivity
 			// FIXME FIXME TODO YANDY this is also true for other call such as this one (for page, widget, etc.)

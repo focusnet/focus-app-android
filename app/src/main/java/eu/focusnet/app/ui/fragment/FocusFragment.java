@@ -37,8 +37,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.json.BookmarkLink;
+import eu.focusnet.app.ui.activity.FocusActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
@@ -130,12 +132,12 @@ public class FocusFragment extends ListFragment
 //                ArrayList<ProjectTemplate> projects = projectDao.findAllProjects();
 //                BookmarkLinkDao bookmarkLinkManager = new BookmarkLinkDao(db);
 
-			DataManager dm = DataManager.getInstance();
-			LinkedHashMap<String, ProjectInstance> projects = DataManager.getInstance().getAppContentInstance().getProjects();
+			DataManager dm = FocusApplication.getInstance().getDataManager();
+			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
-				String projectId = DataManager.getInstance().getAppContentInstance().buildPath(p);
+				String projectId = dm.getAppContentInstance().buildPath(p);
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 

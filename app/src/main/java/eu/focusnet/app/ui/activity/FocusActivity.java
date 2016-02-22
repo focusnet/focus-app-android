@@ -34,11 +34,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.User;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
@@ -125,7 +125,7 @@ public class FocusActivity extends BaseDrawerActivity
 
 		User user = null;
 		try {
-			user = DataManager.getInstance().getUser();
+			user = FocusApplication.getInstance().getDataManager().getUser();
 		}
 		catch (FocusMissingResourceException ex) {
 			throw new FocusInternalErrorException("User object cannot be accessed.");

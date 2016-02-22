@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.DataManager;
 
@@ -79,7 +80,7 @@ public class LoginActivity extends Activity
 				String server = "server"; // TODO FIXME YANDY also a field for server name
 
 				try {
-					if (DataManager.getInstance().login(username, password, server)) {
+					if (FocusApplication.getInstance().getDataManager().login(username, password, server)) {
 						Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
 						startActivity(i);
 						finish();

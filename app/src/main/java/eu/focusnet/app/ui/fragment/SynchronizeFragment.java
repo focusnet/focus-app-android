@@ -53,6 +53,9 @@ import eu.focusnet.app.ui.util.ViewUtil;
 /**
  * The synchronized fragment is used to refresh the data
  * getting the new data from the webservice
+ *
+ * FIXME TODO FIXME use CronService's logic to trigger -> cronService.doNotDoNextSync()
+ * and remove useless codce
  */
 public class SynchronizeFragment extends Fragment
 {

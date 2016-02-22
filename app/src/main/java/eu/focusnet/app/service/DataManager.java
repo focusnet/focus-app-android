@@ -68,8 +68,6 @@ public class DataManager
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
 
-	private static DataManager ourInstance = new DataManager();
-
 	private boolean isInitialized;
 
 	// other information regarding login?
@@ -100,19 +98,9 @@ public class DataManager
 	/**
 	 * Initialize the Singleton.
 	 */
-	private DataManager()
+	public DataManager()
 	{
 		this.isInitialized = false;
-	}
-
-	/**
-	 * Get the Singleton instance
-	 *
-	 * @return a pointer to the Singleton
-	 */
-	public static DataManager getInstance()
-	{
-		return ourInstance;
 	}
 
 	/**
@@ -133,8 +121,7 @@ public class DataManager
 		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 
 		// setup network
-		this.net = NetworkManager.getInstance();
-		this.net.setContext(context);
+		this.net = new NetworkManager(context);
 
 		// setup cache
 		this.cache = new HashMap<>();
@@ -172,6 +159,16 @@ public class DataManager
 	public Gson getGson()
 	{
 		return this.gson;
+	}
+
+	/**
+	 * Get the network manager
+	 *
+	 * @return
+	 */
+	public NetworkManager getNetworkManager()
+	{
+		return this.net;
 	}
 
 	/**

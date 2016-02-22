@@ -36,37 +36,21 @@ import eu.focusnet.app.model.json.FocusObject;
  * This class contains all methods pertaining to networking. It follows a Singleton pattern.
  * <p/>
  * This class is an abstraction library for communicating with our REST server.
+ *
+ * FIXME convert to non-singleton.
  */
 public class NetworkManager
 {
-	private static NetworkManager ourInstance = new NetworkManager();
-	private static Context context = null;
+	private Context context = null;
 
 	// FIXME get the root of REST server on first request (such that we have the root of services)
 
 	/**
 	 * Dummy constructor for our Singleton.
 	 */
-	private NetworkManager()
+	public NetworkManager(Context c)
 	{
-	}
-
-	/**
-	 * Singleton acquisition method.
-	 *
-	 * @return
-	 */
-	public static NetworkManager getInstance()
-	{
-		return ourInstance;
-	}
-
-	/**
-	 * Set the context of this manager
-	 */
-	public void setContext(Context c)
-	{
-		context = c;
+		this.context = c;
 	}
 
 

@@ -30,11 +30,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
+import eu.focusnet.app.ui.activity.FocusActivity;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
@@ -60,12 +62,13 @@ public class PageFragment extends Fragment
 
 //        new PageBuilderTask().execute(projectPath, pagePath);
 
-		AppContentInstance appContentInstance = DataManager.getInstance().getAppContentInstance();
+		DataManager dm = FocusApplication.getInstance().getDataManager();
+		AppContentInstance appContentInstance = dm.getAppContentInstance();
 		ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
 		this.pageInstance = appContentInstance.getPageFromPath(pagePath);
 
 		// useful for our custom garbage collection in DataManager
-		DataManager.getInstance().registerActiveInstance(this.pageInstance);
+		dm.registerActiveInstance(this.pageInstance);
 
 		LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
 
@@ -91,7 +94,7 @@ public class PageFragment extends Fragment
 	public void onDestroyView()
 	{
 		// useful for our custom garbage collection in DataManager
-		DataManager.getInstance().unregisterActiveInstance(this.pageInstance);
+		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.pageInstance);
 	}
 
 

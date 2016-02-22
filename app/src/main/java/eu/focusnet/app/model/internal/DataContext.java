@@ -99,6 +99,9 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
+	 *
+	 * FIXME FIXME TODO the value of the .put() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
+	 * for history / lookup, that's less easy (?)
 	 */
 	public FocusSample put(String key, String description) throws FocusMissingResourceException
 	{
@@ -171,7 +174,7 @@ public class DataContext extends HashMap<String, FocusSample>
 			}
 		}
 
-		return super.put(key, f);
+		return super.put(key, f); problem here. if we getSample() then cache will never be free -> do save url instead. and use that url on resolve() ////  TO CHECK logic / is that ok?
 	}
 
 	/**

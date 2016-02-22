@@ -79,7 +79,7 @@ public class CronService extends Service
 			public void run()
 			{
 				try {
-					DataManager.getInstance().syncData();
+					FocusApplication.getInstance().getDataManager().syncData();
 				}
 				catch (FocusMissingResourceException e) {
 					++failures;
@@ -102,7 +102,7 @@ public class CronService extends Service
 			@Override
 			public void run()
 			{
-				DataManager.getInstance().cleanDataStore();
+				FocusApplication.getInstance().getDataManager().cleanDataStore();
 			}
 		}, 0, CRON_SERVICE_CLEAN_SQL_PERIOD, TimeUnit.MINUTES);
 	}
@@ -110,10 +110,8 @@ public class CronService extends Service
 	@Override
 	public void onDestroy()
 	{
-		// FIXME TODO also flush database modifications - DataManager ... flush()
-
 		super.onDestroy();
-	//	Log.d(TAG, "Destroying Service");
+
 		scheduleTaskExecutor.shutdown();
 	}
 

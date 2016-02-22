@@ -484,8 +484,7 @@ public class DataManager
 	{
 		// do we have it in the cache?
 		if (this.cache.get(url) != null) {
-			FocusObject result = this.cache.get(url);
-			return result;
+			return this.cache.get(url);
 		}
 
 		FocusObject result = null;
@@ -875,6 +874,18 @@ public class DataManager
 	 */
 	public void rebuildApplicationData() throws FocusMissingResourceException
 	{
+
+		// FIXME FIXME now that we don't have a DataManager singleton anymore
+		// we can simply create
+		// 		a new DataManager();
+		(we may pass the old one as a parameter to copy some elements, such as the cache?)
+		// populate it
+		// and when we are ready, then FocusApplication.getInstance().replaceDataManager(new_dm);
+
+
+
+
+
 		// get all
 
 		/*

@@ -42,7 +42,7 @@ public class TableWidgetInstance extends WidgetInstance
 	 * - columns[].values: ArrayList<String>: values for each row
 	 */
 	@Override
-	protected void processConfig()
+	protected void processSpecificConfig()
 	{
 		this.numberOfColumns = 0;
 		this.maxNumberOfRows = 0;

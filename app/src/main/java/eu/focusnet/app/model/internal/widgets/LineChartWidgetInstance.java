@@ -53,7 +53,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 	 * library. That could be improved, but will work for now.
 	 */
 	@Override
-	public void processConfig()
+	public void processSpecificConfig()
 	{
 		this.numberOfSeries = 0;
 		this.numberOfMaxLimits = 0;

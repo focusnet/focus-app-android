@@ -357,8 +357,7 @@ public class DataManager
 		this.getUser();
 		this.getUserPreferences();
 		AppContentTemplate template = this.getAppContentTemplate();
-		this.appContentInstance = new AppContentInstance(template);
-		this.appContentInstance.build(mode); // optimistic | sync
+		this.appContentInstance = new AppContentInstance(template, true);
 		this.registerActiveInstance(this.appContentInstance);
 		this.applicationReady = true;
 	}
@@ -395,9 +394,15 @@ public class DataManager
 	 * @param url
 	 * @return
 	 */
-	private FocusSample getSampleFord  Sync(String url) throws IOException
+	public FocusSample getSampleForSync(String url) throws FocusMissingResourceException
 	{
-		HttpResponse response = this.net.get(url);
+		HttpResponse response;
+		try {
+			response = this.net.get(url);
+		}
+		catch (IOException e) {
+			throw new FocusMissingResourceException("Cannot retrieve resource (sync mode / network issue).");
+		}
 		if (response.isSuccessful()) {
 			String json = response.getData();
 			FocusSample fs = (FocusSample) FocusObject.factory(json, FocusSample.class);
@@ -412,10 +417,12 @@ public class DataManager
 			finally {
 				this.databaseAdapter.close();
 			}
+
+			// add to cache
+			this.cache.put(url, fs);
+			return fs;
 		}
-		else {
-			return null;
-		}
+		throw new FocusMissingResourceException("Cannot retrieve resource (sync mode / HTTP error code).");
 	}
 
 	/**
@@ -836,7 +843,7 @@ public class DataManager
 			this.databaseAdapter.close();
 		}
 		if (report_failure > 0) {
-			throw new FocusMissingResourceException("Cannot retrieve resource - " + (report_failure == 2 ? "At least one unsuccessful request" : "Network failure only") );
+			throw new FocusMissingResourceException("Cannot retrieve resource - " + (report_failure == 2 ? "At least one unsuccessful request" : "Network failure only"));
 		}
 	}
 

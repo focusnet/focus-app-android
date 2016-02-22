@@ -33,8 +33,6 @@ public class ProjectInstance extends AbstractInstance
 
 	private ProjectTemplate template;
 
-	private boolean isValid;
-
 	/**
 	 * C'tor
 	 *
@@ -88,8 +86,9 @@ public class ProjectInstance extends AbstractInstance
 		}
 		// FIXME should we add a 'hidden' category?
 
+		this.dataContext.setIsOptimisticFillMode(true);
+
 		this.isValid = true; // FIXME may not be true inthe end
-		return;
 	}
 
 	/**
@@ -121,35 +120,44 @@ public class ProjectInstance extends AbstractInstance
 					continue;
 				}
 				for (String url : urls) {
+					DataContext new_page_ctx = new DataContext(this.dataContext);
 					try {
-						DataManager.getInstance().getSample(url);
+						if (new_page_ctx.isOptimisticFillMode()) {
+							DataManager.getInstance().getSample(url);
+						}
+						else {
+							DataManager.getInstance().getSampleForSync(url);
+						}
 					}
 					catch (FocusMissingResourceException ex) {
 						continue;
 					}
-					DataContext new_ctx = new DataContext(this.dataContext);
-					new_ctx.put(PageInstance.LABEL_PAGE_ITERATOR, url);
+					new_page_ctx.put(PageInstance.LABEL_PAGE_ITERATOR, url);
 					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 					for (WidgetLinker wl : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_ctx);
+						DataContext new_widget_ctx = new DataContext(new_page_ctx);
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
 						widgets.put(wi.getGuid(), wi); // FIXME if widget-id is same as a previous widget, we won't have 2x the widget.
 					}
 					// the guid is adapted in the PageInstance constructor
-					PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
+					PageInstance p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
+					new_page_ctx.setIsOptimisticFillMode(true);
 					ret.put(p.getGuid(), p);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
-				DataContext new_ctx = new DataContext(this.dataContext);
+				DataContext new_page_ctx = new DataContext(this.dataContext);
 				LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 				for (WidgetLinker wl : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_ctx);
+					DataContext new_widget_ctx = new DataContext(new_page_ctx);
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
 					widgets.put(wi.getGuid(), wi);
 				}
-				PageInstance p = new PageInstance(pageTpl, type, widgets, new_ctx);
+				PageInstance p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
+				new_page_ctx.setIsOptimisticFillMode(true);
 				ret.put(p.getGuid(), p);
 			}
 		}

@@ -32,7 +32,7 @@ public class CameraWidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	protected void processConfig()
+	protected void processSpecificConfig()
 	{
 
 	}

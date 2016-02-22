@@ -25,7 +25,7 @@ public class Html5WidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	protected void processConfig()
+	protected void processSpecificConfig()
 	{
 
 	}

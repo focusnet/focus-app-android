@@ -20,7 +20,6 @@ public class PageInstance extends AbstractInstance
 	private PageType type;
 	private String title;
 	private String description;
-	private boolean isValid; // <=> all widgets are valid
 
 	/**
 	 * C'tor

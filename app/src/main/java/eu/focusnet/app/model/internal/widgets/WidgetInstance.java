@@ -71,8 +71,9 @@ public abstract class WidgetInstance extends AbstractInstance
 		if (cfg != null) {
 			this.config = (LinkedTreeMap<String, Object>) cfg; // FIXME resolve content right away?
 		}
+
+		this.processSpecificConfig();
 		this.processCommonConfig();
-		this.processConfig();
 	}
 
 	public static WidgetInstance factory(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
@@ -117,12 +118,14 @@ public abstract class WidgetInstance extends AbstractInstance
 		catch (FocusBadTypeException e) {
 			this.title = "";
 		}
+
+		this.dataContext.setIsOptimisticFillMode(true);
 	}
 
 	/**
 	 * Acquire the configuration of the widget
 	 */
-	abstract protected void processConfig();
+	abstract protected void processSpecificConfig();
 
 	/**
 	 * Return this WidgetInstance's guid.

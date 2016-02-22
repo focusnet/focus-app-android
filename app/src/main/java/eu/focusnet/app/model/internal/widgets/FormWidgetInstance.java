@@ -24,7 +24,7 @@ public class FormWidgetInstance extends WidgetInstance
 	}
 
 	@Override
-	protected void processConfig()
+	protected void processSpecificConfig()
 	{
 
 	}

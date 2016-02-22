@@ -24,13 +24,17 @@ public class DataContext extends HashMap<String, FocusSample>
 {
 
 	private DataManager dataManager;
+	private boolean isOptimisticFillMode;
 
 	/**
 	 * Default c'tor
+	 *
+	 * FIXME document optimistic fill mode
 	 */
-	public DataContext()
+	public DataContext(boolean isOptimisticFillMode)
 	{
 		this.dataManager = DataManager.getInstance();
+		this.isOptimisticFillMode = isOptimisticFillMode;
 	}
 
 	/**
@@ -43,6 +47,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	{
 		super(c);
 		this.dataManager = DataManager.getInstance();
+		this.isOptimisticFillMode = c.isOptimisticFillMode();
 	}
 
 	/**
@@ -72,7 +77,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
 	 */
-	public FocusSample put(String key, String description)
+	public FocusSample put(String key, String description) throws FocusMissingResourceException
 	{
 		// what kind of data do we have?
 		FocusSample f;
@@ -87,7 +92,12 @@ public class DataContext extends HashMap<String, FocusSample>
 			if (description.startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 				String u = this.resolveReferencedUrl(description);
 				try {
-					f = this.dataManager.getSample(u);
+					if (this.isOptimisticFillMode) {
+						f = this.dataManager.getSample(u);
+					}
+					else {
+						f= this.dataManager.getSampleForSync(u);
+					}
 				}
 				catch (FocusMissingResourceException ex) {
 					return null;
@@ -126,7 +136,12 @@ public class DataContext extends HashMap<String, FocusSample>
 		else {
 			// simple URL
 			try {
-				f = this.dataManager.getSample(description);
+				if (this.isOptimisticFillMode) {
+					f = this.dataManager.getSample(description);
+				}
+				else {
+					f= this.dataManager.getSampleForSync(description);
+				}
 			}
 			catch (FocusMissingResourceException ex) {
 				return null;
@@ -168,7 +183,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 *
 	 * @param data
 	 */
-	public void provideData(HashMap<String, String> data)
+	public void provideData(HashMap<String, String> data) throws FocusMissingResourceException
 	{
 		if (data == null) {
 			return;
@@ -204,7 +219,7 @@ public class DataContext extends HashMap<String, FocusSample>
 			return null;
 		}
 
-		FocusSample fs = this.get(parts[1]);
+		FocusSample fs = this.get(parts[1]); problem - if we store FocusSample, we will never free them. stupid. stupid stupid. we should store urls instead, and then getSample() them on request (which should be fast)
 		if (parts.length > 2) {
 			if (fs == null) {
 				return null;
@@ -212,5 +227,15 @@ public class DataContext extends HashMap<String, FocusSample>
 			return fs.get(parts[2]);
 		}
 		return fs;
+	}
+
+	public boolean isOptimisticFillMode()
+	{
+		return isOptimisticFillMode;
+	}
+
+	public void setIsOptimisticFillMode(boolean isOptimisticFillMode)
+	{
+		this.isOptimisticFillMode = isOptimisticFillMode;
 	}
 }

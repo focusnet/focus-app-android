@@ -3,6 +3,7 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.util.Constant;
@@ -27,12 +28,12 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @param tpl
 	 */
-	public AppContentInstance(AppContentTemplate tpl)
+	public AppContentInstance(AppContentTemplate tpl, boolean isOptimisticFillMode)
 	{
 		this.appTemplate = tpl;
 		this.projects = new LinkedHashMap<String, ProjectInstance>();
 		this.dataManager = DataManager.getInstance();
-		this.dataContext = new DataContext();
+		this.dataContext = new DataContext(isOptimisticFillMode);
 		this.build();
 	}
 
@@ -88,17 +89,26 @@ public class AppContentInstance extends AbstractInstance
 				}
 
 				for (String url : urls) {
+					DataContext new_ctx = new DataContext(this.dataContext);
 					try {
-						this.dataManager.getSample(url);
+						if (new_ctx.isOptimisticFillMode()) {
+							this.dataManager.getSample(url);
+						}
+						else {
+							this.dataManager.getSampleForSync(url);
+						}
 					}
 					catch (FocusMissingResourceException ex) {
+						// should not happen, but let's continue silently
+						FocusApplication.reportError(ex);
 						continue;
 					}
-					DataContext new_ctx = new DataContext(this.dataContext);
+
+					TODO use missingresource to propagate isValid = false through instances.
+
 					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					// the guid is adapted in the ProjectInstance constructor
 					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
-					p.build(mode);
 					this.projects.put(p.getGuid(), p);
 				}
 			}
@@ -109,7 +119,8 @@ public class AppContentInstance extends AbstractInstance
 			}
 		}
 
-		change mode to optimistic
+		// eventually set the data context is optimistic mode
+		this.dataContext.setIsOptimisticFillMode(true);
 	}
 
 	/**

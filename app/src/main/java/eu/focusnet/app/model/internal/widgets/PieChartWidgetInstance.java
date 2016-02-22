@@ -37,7 +37,7 @@ public class PieChartWidgetInstance extends WidgetInstance
 	 * - parts[]{}.value: Double
 	 */
 	@Override
-	protected void processConfig()
+	protected void processSpecificConfig()
 	{
 		this.caption = "";
 		this.numberOfParts = 0;

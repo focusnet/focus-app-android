@@ -28,7 +28,7 @@ public class TextWidgetInstance extends WidgetInstance
 	 * - content (String)
 	 */
 	@Override
-	protected void processConfig() // FIXME use TypesHelper
+	protected void processSpecificConfig() // FIXME use TypesHelper
 	{
 		try {
 			this.content = TypesHelper.asString(this.config.get(CONFIG_LABEL_CONTENT));

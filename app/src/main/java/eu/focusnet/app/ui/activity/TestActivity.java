@@ -20,6 +20,8 @@
  *
  */
 
+// FIXME TODO deprecated. kept for reference.
+
 package eu.focusnet.app.ui.activity;
 
 import android.content.Intent;

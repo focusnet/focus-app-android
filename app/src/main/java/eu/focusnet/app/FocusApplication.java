@@ -38,9 +38,10 @@ import eu.focusnet.app.service.DataManager;
  * ACRA configuration
  *
  * FIXME TODO YANDY move credentials / formUri to a properties file, which is not committed to git! and failsafe with defaults
+ * see assets/acra.properties
+ * we can use the programmatic way of settings params of ACRA if necessary, into onCreate()
  */
 @ReportsCrashes(
-		// formKey = "",
 		formUri = "https://focus.cloudant.com/acra-focus-app/_design/acra-storage/_update/report",
 		reportType = org.acra.sender.HttpSender.Type.JSON,
 		httpMethod = org.acra.sender.HttpSender.Method.PUT,
@@ -88,7 +89,7 @@ public class FocusApplication extends Application
 	 *
 	 * @return
 	 */
-	public static Context getContext(){
+	public Context getContext(){
 		return instance.getApplicationContext();
 	}
 
@@ -120,7 +121,7 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * On Application creation, do initialize the DataManager and ACRA
+	 * On Application creation, do initialize the DataManager, CronService and ACRA
 	 */
 	@Override
 	public void onCreate()
@@ -144,7 +145,6 @@ public class FocusApplication extends Application
 
 		// setup DataManager
 		this.dataManager = new DataManager();
-		this.dataManager.init(this.getApplicationContext());
 
 		// start the CronService
 		// FIXME TODO YANDY: I moved the service creation here because it makes more sense (Service is relevant for whole app)

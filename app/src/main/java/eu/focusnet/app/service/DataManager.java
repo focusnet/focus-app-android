@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
@@ -101,18 +102,20 @@ public class DataManager
 	public DataManager()
 	{
 		this.isInitialized = false;
+		this.init();
 	}
 
 	/**
 	 * Finish initializing the DataManager
 	 *
-	 * @param context The Application Context this DataManager lives in
 	 */
-	public void init(Context context)
+	public void init()
 	{
 		if (this.isInitialized) {
 			return;
 		}
+
+		Context context = FocusApplication.getInstance().getContext();
 
 		this.activeInstances = new ArrayList<>();
 		this.applicationReady = false;

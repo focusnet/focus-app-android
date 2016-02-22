@@ -2,7 +2,7 @@
 
 FOCUS Android application
 
-(still in active development)
+(still in active development ... may not compile at all)
 
 ## License
 

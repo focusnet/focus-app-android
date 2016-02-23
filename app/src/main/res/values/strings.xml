@@ -7,6 +7,7 @@
     <!-- Login screen -->
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
+    <string name="login_server">Server</string>
     <string name="login_button">Login</string>
 
 
@@ -150,7 +151,7 @@
     <string name="focus_crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
 
     <string name="focus_login_error_bad_credentials">Invalid credentials.</string>
-    <string name="focus_login_error_no_network">Network problem.</string>
+    <string name="focus_login_error_no_network">There is no internet connection. Please connect to the internet</string>
     <string name="focus_drawer_open_description">Open drawer</string>
     <string name="focus_drawer_close_description">Close drawer</string>
 

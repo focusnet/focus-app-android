@@ -111,7 +111,6 @@ public class CronService extends Service
 	public void onDestroy()
 	{
 		super.onDestroy();
-
 		scheduleTaskExecutor.shutdown();
 	}
 

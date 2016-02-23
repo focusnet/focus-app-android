@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.ui.util.Constant;
@@ -40,7 +41,6 @@ import eu.focusnet.app.ui.util.ViewUtil;
  */
 public abstract class WidgetFragment extends Fragment
 {
-
 	//TODO
 	WidgetInstance widgetInstance;
 
@@ -50,7 +50,7 @@ public abstract class WidgetFragment extends Fragment
 	@Override
 	public void onDestroyView()
 	{
-		DataManager.getInstance().unregisterActiveInstance(this.widgetInstance);
+		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.widgetInstance);
 	}
 
 	public void setWidgetLayout(View viewRoot)
@@ -66,7 +66,7 @@ public abstract class WidgetFragment extends Fragment
 	{
 		Bundle bundles = getArguments();
 		String path = bundles.getString(Constant.UI_EXTRA_PATH);
-		DataManager dm = DataManager.getInstance();
+		DataManager dm =FocusApplication.getInstance().getDataManager();
 		this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
 		dm.registerActiveInstance(this.widgetInstance);
 		return this.widgetInstance;

@@ -94,6 +94,17 @@ public class ViewUtil
 	}
 
 	/**
+	 * Displays a toast
+	 *
+	 * @param context the context
+	 * @param msg     the message in the toast as integer
+	 */
+	public static void displayToast(Context context, int msg)
+	{
+		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+	}
+
+	/**
 	 * Displays a notification
 	 *
 	 * @param context        the context

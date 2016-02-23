@@ -23,7 +23,12 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -33,7 +38,8 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.util.ViewFactory;
+import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * Login Activity: this activity displays the login screen
@@ -44,7 +50,6 @@ public class LoginActivity extends Activity
 
 	/**
 	 * Instantiate the activity UI
-	 *
 	 * @param savedInstanceState
 	 */
 	@Override
@@ -52,10 +57,6 @@ public class LoginActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-
-		// FIXME TODO YANDY: if no network then disable SUBMIT button and mention the problem
-		// to the end user. adapt Activity such that it changes depending on connectivity:
-		// http://developer.android.com/training/basics/network-ops/managing.html
 	}
 
 	/**
@@ -66,38 +67,83 @@ public class LoginActivity extends Activity
 	 */
 	public void onClick(View view)
 	{
-		// network calls -> run in another Thread
-		Thread loginThread = new Thread()
-		{
-			public void run()
-			{
-				// FIXME TODO YANDY progress indicator? disable all controls? Or just a Toast-like thing that says "Connecting. Please wait..."
-				// if we do have a progress indicator, let's make it generic so we can reuse it in other fragments/activities.
-				// preferably, let's use Android's default one
-
-				String username = ((EditText) findViewById(R.id.login_username_textView)).getText().toString();
-				String password = ((EditText) findViewById(R.id.login_password_textView)).getText().toString();
-				String server = "server"; // TODO FIXME YANDY also a field for server name
-
-				try {
-					if (FocusApplication.getInstance().getDataManager().login(username, password, server)) {
-						Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
-						startActivity(i);
-						finish();
-					}
-					else {
-						Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error_bad_credentials, Toast.LENGTH_SHORT);
-						toast.show();
-					}
-				}
-				catch (IOException ex) {
-					// no network
-					Toast toast = Toast.makeText(getApplicationContext(), R.string.focus_login_error_no_network, Toast.LENGTH_SHORT);
-					toast.show();
-				}
-			}
-		};
-
-		loginThread.start();
+		//test If the device is connected to the internet, if true
+		// test then the given credentials otherwise display an error message(toast) to the user
+		if(hasInternetConnection()){
+			String username = ((EditText) findViewById(R.id.login_username_editText)).getText().toString();
+			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
+			String server =  ((EditText) findViewById(R.id.login_server_editText)).getText().toString();// "server";
+			new LoginTask(this).execute(username, password, server);
+		}
+		else {
+			ViewUtil.displayToast(this, R.string.focus_login_error_no_network);
+		}
 	}
+
+	/**
+	 * Test if the device is connected to the internet
+	 * @return true if connected otherwise false
+	 */
+	private boolean hasInternetConnection(){
+		ConnectivityManager connMgr = (ConnectivityManager)
+				getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		boolean isWifiConn = networkInfo.isConnected();
+		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		boolean isMobileConn = networkInfo.isConnected();
+		return  isWifiConn || isMobileConn;
+	}
+
+	/**
+	 * This class is used for testing if the given credential are correct
+	 */
+	private class LoginTask extends AsyncTask<String, Void, Boolean> {
+
+		private ProgressDialog progressDialog;
+		private Context context;
+
+		public LoginTask(Context context){
+			this.context = context;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog = ViewFactory.createProgressDialog(context, "Authentication process running", "Please wait..."); //TODO internationalize this message
+			progressDialog.show();
+		}
+
+		@Override
+		protected Boolean doInBackground(String... data) {
+			String username = data[0];
+			String password = data[1];
+			String server = data[2];
+
+			Boolean hasAccess;
+			try {
+				hasAccess = new Boolean(FocusApplication.getInstance().getDataManager().login(username, password, server));
+			}
+			catch (IOException ex) {
+				hasAccess = new Boolean(false);
+			}
+			return hasAccess;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasAccess) {
+			if(progressDialog.isShowing())
+				progressDialog.dismiss();
+
+			//If the given credential were correct start the EntryPointActivity otherwise display an error message(toast) to the user
+			if(hasAccess){
+				Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
+				startActivity(i);
+				finish();
+			}
+			else {
+				ViewUtil.displayToast(this.context, R.string.focus_login_error_bad_credentials);
+				//TODO maybe we should also show some text in red or something like this ...?
+			}
+		}
+	}
+
 }

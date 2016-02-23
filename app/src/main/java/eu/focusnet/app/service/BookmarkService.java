@@ -26,6 +26,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
@@ -68,7 +69,7 @@ public class BookmarkService extends IntentService
 
 		Preference userPreference = null;
 		try {
-			userPreference = DataManager.getInstance().getUserPreferences();
+			userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 		}
 		catch (FocusMissingResourceException ex) {
 			// FIXME FIXME TODO
@@ -104,7 +105,7 @@ public class BookmarkService extends IntentService
 //            String jsonPref = gson.toJson(foundPref);
 //            DataProviderManager.updateData(UI_EXTRA_PATH, jsonPref);
 		EventBus.fireBookmarksUpdate();
-		DataManager.getInstance().saveUserPreferences();
+		FocusApplication.getInstance().getDataManager().saveUserPreferences();
 //        }
 //        catch(IOException e){
 //            //TODO

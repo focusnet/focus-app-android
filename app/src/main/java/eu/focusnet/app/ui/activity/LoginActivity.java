@@ -89,8 +89,14 @@ public class LoginActivity extends Activity
 				getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		boolean isWifiConn = networkInfo.isConnected();
+
+		//Falls the app run on a mobile phone (I think, this is not needed because this app will be only installed in tables or???)
 		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		boolean isMobileConn = networkInfo.isConnected();
+		boolean isMobileConn = false;
+		if(networkInfo != null)
+			isMobileConn = networkInfo.isConnected();
+		//End
+
 		return  isWifiConn || isMobileConn;
 	}
 

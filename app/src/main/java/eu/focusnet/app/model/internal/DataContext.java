@@ -226,7 +226,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * <p/>
 	 * If the request format is not recognized, return it as-is.
 	 * <p/>
-	 * If the request does not succeed, return FIXME exception or null?
+	 * If the request does not succeed, return FIXME exception or null?  FocusMissingException is a good candidate
 	 *
 	 * @return
 	 */

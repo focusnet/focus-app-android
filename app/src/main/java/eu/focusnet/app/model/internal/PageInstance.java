@@ -52,7 +52,7 @@ public class PageInstance extends AbstractInstance
 	 * @param widgets
 	 * @param dataCtx
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, LinkedHashMap<String, WidgetInstance> widgets, DataContext dataCtx)
+	public PageInstance(PageTemplate pageTpl, PageType type, LinkedHashMap<String, WidgetInstance> widgets, DataContext dataCtx) throws FocusMissingResourceException
 	{
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
@@ -64,14 +64,7 @@ public class PageInstance extends AbstractInstance
 		this.dataContext = dataCtx;
 
 		// register page-specific data to our current data context
-		try {
-			this.dataContext.provideData(this.template.getData());
-		}
-		catch (FocusMissingResourceException ex) {
-			// should not happen, but let's continue silently
-			FocusApplication.reportError(ex);
-			return;
-		}
+		this.dataContext.provideData(this.template.getData());
 
 		this.title = pageTpl.getTitle(); // FIXME resolve?
 		this.description = pageTpl.getDescription(); // FIXME resolve?

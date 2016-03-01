@@ -382,7 +382,7 @@ public class DataManager
 		this.getUser();
 		this.getUserPreferences();
 		AppContentTemplate template = this.getAppContentTemplate();
-		this.appContentInstance = new AppContentInstance(template, true);
+		this.appContentInstance = new AppContentInstance(template);
 		this.registerActiveInstance(this.appContentInstance);
 		this.applicationReady = true;
 	}
@@ -824,7 +824,6 @@ public class DataManager
 					report_failure = report_failure == 2 ? 2 : 1;
 				}
 			}
-
 		}
 		finally {
 			this.databaseAdapter.close();

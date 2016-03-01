@@ -92,7 +92,8 @@ public class ProjectInstance extends AbstractInstance
 			this.dataContext.provideData(this.template.getData());
 		}
 		catch (FocusMissingResourceException ex) {
-			// FIXME LOG?
+			// should not happen, but let's continue silently
+			FocusApplication.reportError(ex);
 			return;
 		}
 
@@ -135,7 +136,8 @@ public class ProjectInstance extends AbstractInstance
 					);
 				}
 				catch (FocusMissingResourceException e) {
-					// FIXME LOG?
+					// should not happen, but let's continue silently
+					FocusApplication.reportError(e);
 					continue;
 				}
 				catch (FocusBadTypeException e) {
@@ -149,7 +151,8 @@ public class ProjectInstance extends AbstractInstance
 						new_page_ctx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
 					}
 					catch (FocusMissingResourceException ex) {
-						// FIXME LOG?
+						// should not happen, but let's continue silently
+						FocusApplication.reportError(ex);
 						continue;
 					}
 

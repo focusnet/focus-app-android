@@ -55,6 +55,8 @@ import eu.focusnet.app.ui.util.ViewUtil;
 /**
  * This fragment is the start point of the application
  * after the user logged in.
+ *
+ * FIXME YANDY - in all fragment codes, remove code in comments if they are  not used anymore
  */
 public class FocusFragment extends ListFragment
 {

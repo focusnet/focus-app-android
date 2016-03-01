@@ -50,17 +50,14 @@ public class DataContext extends HashMap<String, String>
 
 	/**
 	 * Default c'tor
-	 *
-	 * FIXME document optimistic fill mode
 	 */
-	public DataContext(boolean isOptimisticFillMode)
+	public DataContext()
 	{
 		this.dataManager = FocusApplication.getInstance().getDataManager();
 	}
 
 	/**
 	 * Construct a new DataContext from another one.
-	 * FIXME TODO check that the values are kept? shold they by string or FocusSamples?
 	 *
 	 * @param c
 	 */

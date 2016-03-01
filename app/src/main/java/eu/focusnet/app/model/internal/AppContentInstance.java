@@ -50,12 +50,12 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @param tpl
 	 */
-	public AppContentInstance(AppContentTemplate tpl, boolean isOptimisticFillMode)
+	public AppContentInstance(AppContentTemplate tpl)
 	{
 		this.appTemplate = tpl;
-		this.projects = new LinkedHashMap<String, ProjectInstance>();
+		this.projects = new LinkedHashMap<>();
 		this.dataManager = FocusApplication.getInstance().getDataManager();
-		this.dataContext = new DataContext(isOptimisticFillMode);
+		this.dataContext = new DataContext();
 		this.build();
 	}
 
@@ -111,12 +111,14 @@ public class AppContentInstance extends AbstractInstance
 					);
 				}
 				catch (FocusMissingResourceException e) {
-					// cannot resolve(),
-					// FIXME LOG?
+					// should not happen, but let's continue silently
+					FocusApplication.reportError(e);
 					continue;
 				}
 				catch (FocusBadTypeException e) {
 					// invalid iterator. survive by ignoring, but log the event
+					// should not happen, but let's continue silently
+					FocusApplication.reportError(e);
 					continue;
 				}
 
@@ -135,7 +137,8 @@ public class AppContentInstance extends AbstractInstance
 						new_ctx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					}
 					catch(FocusMissingResourceException ex) {
-// FIXME LOG?
+						// should not happen, but let's continue silently
+						FocusApplication.reportError(ex);
 						continue;
 					}
 					// the guid is adapted in the ProjectInstance constructor

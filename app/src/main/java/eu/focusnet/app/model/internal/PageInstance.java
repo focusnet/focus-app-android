@@ -24,6 +24,7 @@ package eu.focusnet.app.model.internal;
 
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
@@ -67,7 +68,8 @@ public class PageInstance extends AbstractInstance
 			this.dataContext.provideData(this.template.getData());
 		}
 		catch (FocusMissingResourceException ex) {
-// FIXME LOG?
+			// should not happen, but let's continue silently
+			FocusApplication.reportError(ex);
 			return;
 		}
 

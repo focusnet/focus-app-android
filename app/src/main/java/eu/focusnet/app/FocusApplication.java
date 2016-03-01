@@ -33,6 +33,7 @@ import org.acra.annotation.ReportsCrashes;
 
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.util.FocusApplicationActivityLifecycleHandler;
 
 /**
  * ACRA configuration
@@ -74,6 +75,7 @@ public class FocusApplication extends Application
 	 * DataManager
 	 */
 	private DataManager dataManager;
+	private FocusApplicationActivityLifecycleHandler activityHandler;
 
 	/**
 	 * Acquire the instance of this app
@@ -131,6 +133,9 @@ public class FocusApplication extends Application
 
 		super.onCreate();
 
+		this.activityHandler = new FocusApplicationActivityLifecycleHandler();
+		this.registerActivityLifecycleCallbacks(activityHandler);
+
 		// Safety checks in DEBUG mode
 		if (BuildConfig.DEBUG) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -179,5 +184,24 @@ public class FocusApplication extends Application
 		super.onTrimMemory(level);
 
 		this.dataManager.freeMemory();
+	}
+
+	/**
+	 * Replace the current data manager with a new one. The old one will therefore be
+	 * garbage collected.
+	 *
+	 * @param new_dm
+	 */
+	public void replaceDataManager(DataManager new_dm)
+	{
+		this.dataManager = new_dm;
+	}
+
+	/**
+	 * Use the registered FocusApplicationActivityLifecycleHandler to restart the current activity.
+	 */
+	public void restartCurrentActivity()
+	{
+		this.activityHandler.restartCurrentActivity();
 	}
 }

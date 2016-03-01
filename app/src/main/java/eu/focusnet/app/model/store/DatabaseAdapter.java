@@ -100,7 +100,7 @@ public class DatabaseAdapter
 		}
 
 		/**
-		 * When creating the database, add tables.
+		 * When creating the database, register tables.
 		 * @param db the object to work on
 		 */
 		@Override

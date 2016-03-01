@@ -37,17 +37,16 @@ import eu.focusnet.app.service.DataManager;
  * <p/>
  * TODO doc:
  * we always store FocusSamples, not actual scalar/leaf data
- * -> put() will retrieve a sample only
+ * -> register() will retrieve a sample only
  * -> get() retrieves samples
  * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
  * <p/>
  * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
  */
-public class DataContext extends HashMap<String, FocusSample>
+public class DataContext extends HashMap<String, String>
 {
 
 	private DataManager dataManager;
-	private boolean isOptimisticFillMode;
 
 	/**
 	 * Default c'tor
@@ -57,7 +56,6 @@ public class DataContext extends HashMap<String, FocusSample>
 	public DataContext(boolean isOptimisticFillMode)
 	{
 		this.dataManager = FocusApplication.getInstance().getDataManager();
-		this.isOptimisticFillMode = isOptimisticFillMode;
 	}
 
 	/**
@@ -70,11 +68,10 @@ public class DataContext extends HashMap<String, FocusSample>
 	{
 		super(c);
 		this.dataManager = FocusApplication.getInstance().getDataManager();
-		this.isOptimisticFillMode = c.isOptimisticFillMode();
 	}
 
 	/**
-	 * Add a new FocusSample entry in our current data context, based on a description of the
+	 * Add a new FocusSample's urls entry in our current data context, based on a description of the
 	 * new data to be included. These descriptions are the ones we can find in the 'data'
 	 * properties of the Application Content template JSON representation.
 	 * <p/>
@@ -100,10 +97,10 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
 	 *
-	 * FIXME FIXME TODO the value of the .put() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
+	 * FIXME FIXME TODO the value of the .register() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
 	 * for history / lookup, that's less easy (?)
 	 */
-	public FocusSample put(String key, String description) throws FocusMissingResourceException
+	public String register(String key, String description) throws FocusMissingResourceException
 	{
 		// what kind of data do we have?
 		FocusSample f;
@@ -117,17 +114,7 @@ public class DataContext extends HashMap<String, FocusSample>
 
 			if (description.startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 				String u = this.resolveReferencedUrl(description);
-				try {
-					if (this.isOptimisticFillMode) {
-						f = this.dataManager.getSample(u);
-					}
-					else {
-						f= this.dataManager.getSampleForSync(u);
-					}
-				}
-				catch (FocusMissingResourceException ex) {
-					return null;
-				}
+				f = this.dataManager.getSample(u);
 			}
 			else {
 				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_OUTER_PATTERN);
@@ -145,7 +132,7 @@ public class DataContext extends HashMap<String, FocusSample>
 					f = this.dataManager.getHistorySample(u, parts[2]);
 				}
 				else if (parts[0].equals(Constant.SELECTOR_SERVICE_LOOKUP)) {
-					String u = null;
+					String u;
 					if (parts[1].startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
 						u = this.resolveReferencedUrl(parts[1]);
 					}
@@ -161,20 +148,9 @@ public class DataContext extends HashMap<String, FocusSample>
 		}
 		else {
 			// simple URL
-			try {
-				if (this.isOptimisticFillMode) {
-					f = this.dataManager.getSample(description);
-				}
-				else {
-					f= this.dataManager.getSampleForSync(description);
-				}
-			}
-			catch (FocusMissingResourceException ex) {
-				return null;
-			}
+			f = this.dataManager.getSample(description);
 		}
-
-		return super.put(key, f); problem here. if we getSample() then cache will never be free -> do save url instead. and use that url on resolve() ////  TO CHECK logic / is that ok?
+		return super.put(key, f.getUrl());
 	}
 
 	/**
@@ -184,7 +160,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 * @param description
 	 * @return
 	 */
-	private String resolveReferencedUrl(String description)
+	private String resolveReferencedUrl(String description) throws FocusMissingResourceException
 	{
 		String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
 		if (parts.length != 3) {
@@ -195,7 +171,12 @@ public class DataContext extends HashMap<String, FocusSample>
 		if (this.get(ref) == null) {
 			throw new FocusInternalErrorException("no data reference found");
 		}
-		String res = this.get(ref).getString(parts[2]);
+		String res = this.get(ref);
+		if (res == null) {
+			throw new FocusInternalErrorException("invalid object reference");
+		}
+		FocusSample fs = FocusApplication.getInstance().getDataManager().getSample(res);
+		res = fs.getString(parts[2]);
 		if (res == null) {
 			throw new FocusInternalErrorException("Cannot find this field.");
 		}
@@ -215,7 +196,7 @@ public class DataContext extends HashMap<String, FocusSample>
 			return;
 		}
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			this.put(entry.getKey(), entry.getValue());
+			this.register(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -230,7 +211,7 @@ public class DataContext extends HashMap<String, FocusSample>
 	 *
 	 * @return
 	 */
-	public Object resolve(String request)
+	public Object resolve(String request) throws FocusMissingResourceException
 	{
 		if (!request.startsWith(Constant.SELECTOR_SERVICE_OPEN + Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)
 				|| !request.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
@@ -245,7 +226,8 @@ public class DataContext extends HashMap<String, FocusSample>
 			return null;
 		}
 
-		FocusSample fs = this.get(parts[1]); problem - if we store FocusSample, we will never free them. stupid. stupid stupid. we should store urls instead, and then getSample() them on request (which should be fast)
+		String url = this.get(parts[1]);
+		FocusSample fs = FocusApplication.getInstance().getDataManager().getSample(url);
 		if (parts.length > 2) {
 			if (fs == null) {
 				return null;
@@ -255,13 +237,4 @@ public class DataContext extends HashMap<String, FocusSample>
 		return fs;
 	}
 
-	public boolean isOptimisticFillMode()
-	{
-		return isOptimisticFillMode;
-	}
-
-	public void setIsOptimisticFillMode(boolean isOptimisticFillMode)
-	{
-		this.isOptimisticFillMode = isOptimisticFillMode;
-	}
 }

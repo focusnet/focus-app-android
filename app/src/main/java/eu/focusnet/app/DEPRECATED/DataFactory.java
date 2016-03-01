@@ -44,14 +44,14 @@ public class DataFactory
         // reached votes by participant y-axis
         ArrayList<Entry> yVals = new ArrayList<>();
 
-        // add colors
+        // register colors
         ArrayList<Integer> colors = new ArrayList<>();
 
         for(int i = 0; i < chartDatas.size(); i++) {
             ChartData chartData = chartDatas.get(i);
-            xVals.add(chartData.getName());
-            yVals.add(new Entry(chartData.getValue(), i));
-            colors.add(chartData.getColor());
+            xVals.register(chartData.getName());
+            yVals.register(new Entry(chartData.getValue(), i));
+            colors.register(chartData.getColor());
         }
 
         PieDataSet dataSet = new PieDataSet(yVals, description);
@@ -76,7 +76,7 @@ public class DataFactory
 		// y-axis values
 		ArrayList<BarEntry> yVals = new ArrayList<>();
 
-		// add colors
+		// register colors
 		ArrayList<Integer> colors = new ArrayList<Integer>();
 
 		for (int i = 0; i < chartDatas.size(); i++) {
@@ -137,7 +137,7 @@ public class DataFactory
 		// Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
 
 		ArrayList<LineDataSet> dataSets = new ArrayList<>();
-		dataSets.add(set1); // add the datasets
+		dataSets.add(set1); // register the datasets
 
 		// create a data object with the datasets
 		LineData data = new LineData(xVals, dataSets);

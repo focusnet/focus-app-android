@@ -140,8 +140,6 @@ public abstract class WidgetInstance extends AbstractInstance
 		catch (FocusBadTypeException e) {
 			this.title = "";
 		}
-
-		this.dataContext.setIsOptimisticFillMode(true);
 	}
 
 	/**
@@ -192,17 +190,6 @@ public abstract class WidgetInstance extends AbstractInstance
 		}
 		return tmp;
 	}
-
-	/**
-	 * Tells whether this object is valid.
-	 *
-	 * @return
-	 */
-	public boolean isValid()
-	{
-		return true;
-	}
-
 
 	/**
 	 * Set the collected data

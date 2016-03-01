@@ -102,16 +102,16 @@ public class BarChartWidgetFragment extends WidgetFragment
 //        // y-axis values
 //        ArrayList<BarEntry> yVals = new ArrayList<>();
 //
-//        // add colors
+//        // register colors
 //        ArrayList<Integer> colors = new ArrayList<Integer>();
 //
 //        ArrayList<ChartData> chartDatas = barChartWidgetInstance.getData();
 //
 //        for(int i = 0; i < chartDatas.size(); i++) {
 //            ChartData chartData = chartDatas.get(i);
-//            xVals.add(chartData.getName());
-//            yVals.add(new BarEntry(chartData.getValue(), i));
-//            colors.add(chartData.getColor());
+//            xVals.register(chartData.getName());
+//            yVals.register(new BarEntry(chartData.getValue(), i));
+//            colors.register(chartData.getColor());
 //        }
 //
 //        BarDataSet set1 = new BarDataSet(yVals, "Heat"); //TODO description
@@ -119,7 +119,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 //        set1.setColors(colors);
 //
 //        ArrayList<BarDataSet> dataSets = new ArrayList<>();
-//        dataSets.add(set1);
+//        dataSets.register(set1);
 //
 //
 //        BarData data = new BarData(xVals, dataSets);

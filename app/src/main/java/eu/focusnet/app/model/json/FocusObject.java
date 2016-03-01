@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.MissingResourceException;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
@@ -55,7 +56,7 @@ public class FocusObject implements Serializable
 
 		User user;
 		try {
-			user = DataManager.getInstance().getUser();
+			user = FocusApplication.getInstance().getDataManager().getUser();
 		}
 		catch (FocusMissingResourceException e) {
 			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
@@ -81,7 +82,7 @@ public class FocusObject implements Serializable
 	 */
 	public static FocusObject factory(String json, Class targetClass)
 	{
-		FocusObject fo = (FocusObject) DataManager.getInstance().getGson().fromJson(json, targetClass);
+		FocusObject fo = (FocusObject) FocusApplication.getInstance().getDataManager().getGson().fromJson(json, targetClass);
 		fo.setOriginalData(json);
 		return fo;
 	}
@@ -96,7 +97,7 @@ public class FocusObject implements Serializable
 		++this.version;
 		User user;
 		try {
-			user = DataManager.getInstance().getUser();
+			user = FocusApplication.getInstance().getDataManager().getUser();
 		}
 		catch (FocusMissingResourceException e) {
 			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
@@ -112,7 +113,7 @@ public class FocusObject implements Serializable
 	public void commit()
 	{
 		this.originalData = ""; // avoid to store useless data
-		this.originalData = DataManager.getInstance().getGson().toJson(this);
+		this.originalData = FocusApplication.getInstance().getDataManager().getGson().toJson(this);
 		return;
 	}
 

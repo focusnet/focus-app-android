@@ -28,7 +28,6 @@ package eu.focusnet.app.model.internal;
 abstract public class AbstractInstance
 {
 	protected DataContext dataContext;
-	protected boolean isValid;
 
 	public DataContext getDataContext()
 	{

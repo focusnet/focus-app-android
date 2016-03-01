@@ -97,13 +97,14 @@ public class DataManager
 	private boolean applicationReady;
 
 	/**
-	 * Initialize the Singleton.
+	 * Constructor
 	 */
 	public DataManager()
 	{
 		this.isInitialized = false;
 		this.init();
 	}
+
 
 	/**
 	 * Finish initializing the DataManager
@@ -241,7 +242,7 @@ public class DataManager
 	/**
 	 * Delete login information, and reset the content of the whole application
 	 * <p/>
-	 * FIXME FIXME TODO YANDY: add logout button in settings fragment that triggers this function and then
+	 * FIXME FIXME TODO YANDY: register logout button in settings fragment that triggers this function and then
 	 * redirects to the Entrypoint activity (user will redo the whole login process).
 	 */
 	public void logout()
@@ -408,44 +409,6 @@ public class DataManager
 		return fs;
 	}
 
-	/**
-	 * Get a FocusSample, but in synchronization context: we get it from the network and store it
-	 * in our local db, and in our cache. Normally when we consume data (in getSample), we would do
-	 * the oppostion (RAM > local db > Network)
-	 *
-	 * @param url
-	 * @return
-	 */
-	public FocusSample getSampleForSync(String url) throws FocusMissingResourceException
-	{
-		HttpResponse response;
-		try {
-			response = this.net.get(url);
-		}
-		catch (IOException e) {
-			throw new FocusMissingResourceException("Cannot retrieve resource (sync mode / network issue).");
-		}
-		if (response.isSuccessful()) {
-			String json = response.getData();
-			FocusSample fs = (FocusSample) FocusObject.factory(json, FocusSample.class);
-
-			// Convert into a sample and save it into the database
-			Sample sample = Sample.cloneFromFocusObject(fs);
-
-			try {
-				SampleDao dao = this.databaseAdapter.getSampleDao();
-				dao.create(sample);
-			}
-			finally {
-				this.databaseAdapter.close();
-			}
-
-			// add to cache
-			this.cache.put(url, fs);
-			return fs;
-		}
-		throw new FocusMissingResourceException("Cannot retrieve resource (sync mode / HTTP error code).");
-	}
 
 	/**
 	 * Retrieve a sample that is stored in the local database (or in the cache), but do not get it from the network
@@ -738,9 +701,9 @@ public class DataManager
 	{
 		Set<String> used_urls = new HashSet<>();
 		for (AbstractInstance ai : this.activeInstances) {
-			Map<String, FocusSample> m = ai.getDataContext();
-			for (Map.Entry<String, FocusSample> e : m.entrySet()) {
-				used_urls.add(e.getValue().getUrl());
+			Map<String, String> m = ai.getDataContext();
+			for (Map.Entry<String, String> e : m.entrySet()) {
+				used_urls.add(e.getValue());
 			}
 		}
 
@@ -774,18 +737,19 @@ public class DataManager
 	 * Sync data currently on the client side with the ones of the backends,
 	 * and then retrieve latest versions of resources.
 	 */
-	public void syncData() throws FocusMissingResourceException
+	public boolean syncData() throws FocusMissingResourceException
 	{
 		if (!this.isApplicationReady()) {
-			return;
+			return false;
 		}
 
 		if (!this.net.isNetworkAvailable()) {
-			return;
+			return false;
 		}
 
 		this.pushLocalModifications();
 		this.rebuildApplicationData();
+		return true;
 	}
 
 	/**
@@ -870,53 +834,22 @@ public class DataManager
 
 
 	/**
-	 * GET latest versions of all resources required for running the application
+	 * Get latest versions of all resources required for running the application, and replace the Application DataManager
+	 *
+	 * No need to take care of activeInstances. They will simply be rebuilt on next Activity loading.
 	 */
-	public void rebuildApplicationData() throws FocusMissingResourceException
+	public void rebuildApplicationData()
 	{
-
-		// FIXME FIXME now that we don't have a DataManager singleton anymore
-		// we can simply create
-		// 		a new DataManager();
-		(we may pass the old one as a parameter to copy some elements, such as the cache?)
-		// populate it
-		// and when we are ready, then FocusApplication.getInstance().replaceDataManager(new_dm);
-
-
-
-
-
-		// get all
-
-		/*
-			User u = this.getUser(); // no, use this.net.get() ... directly. // only for these three,
-			 and then replace existing object with the value that was obtained at the end of method (commit)
-
-			Preference p = this.getUserPreferences();
-			AppContentTemplate template = this.getAppContentTemplate();
-			AppContentInstance appi = new AppContentInstance(template);
-
-			this.registerActiveInstance(appi);
-
-
-			// FIXME no need to get urls -> no new login
-
-
-
-
-		// for samples
-		private HashMap<String, FocusObject> cache; // empty it. NO! just overwrite it, cannot hurt to have more recent version
-		// FIXME when syncing, NET -> DB -> RAM
-		// when using: RAM -> DB -> NET
-		-> getForSync(... they are all Samples);
-
-
-		private ArrayList<AbstractInstance> activeInstances; // only with appInstnace
-
-*/
-
-		// FIXME FIXME FIXME FIXME TODO
-		// we should get everything as local variables and once we have everything, copy them to the current object.
-		// FIXME FIXME FIXME FIXME TODO
+		boolean must_recover = false;
+		DataManager new_dm = new DataManager();
+		try {
+			new_dm.retrieveApplicationData();
+		}
+		catch (FocusMissingResourceException ex) {
+			must_recover = true;
+		}
+		if (!must_recover) {
+			FocusApplication.getInstance().replaceDataManager(new_dm);
+		}
 	}
 }

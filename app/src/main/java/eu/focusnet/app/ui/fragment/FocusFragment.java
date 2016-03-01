@@ -141,7 +141,7 @@ public class FocusFragment extends ListFragment
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 
-				//TODO add the bookmarks to the dataManager
+				//TODO register the bookmarks to the dataManager
 				int projectOrder = 0;
 				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString();
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
@@ -168,7 +168,7 @@ public class FocusFragment extends ListFragment
 //                    //The project Id is the same as the path
 //                    StandardListItem drawListItem = new StandardListItem(projectId, ViewUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
 //                            projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-//                    abstractItems.add(drawListItem);
+//                    abstractItems.register(drawListItem);
 //                }
 
 			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),

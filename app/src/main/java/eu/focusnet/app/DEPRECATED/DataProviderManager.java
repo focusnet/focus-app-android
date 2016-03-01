@@ -70,7 +70,7 @@ public class DataProviderManager
 			{
 			}.getType());
 			for (RefreshData rd : refreshData) {
-				//TODO add the code for the other status
+				//TODO register the code for the other status
 				if (rd.getStatus() == RefreshData.STATUS_CONTENT_DIFFERENT) {
 					String resource = rd.getResource();
 					int lastIndex = resource.lastIndexOf("/");
@@ -199,7 +199,7 @@ public class DataProviderManager
 	 */
 	public static class RefreshData
 	{
-		//TODO add the other status
+		//TODO register the other status
 		public static final int STATUS_CONTENT_DIFFERENT = 210;
 
 		private String resource;

@@ -121,7 +121,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		//xAxis.setXValueFormatter(new MyCustomXValueFormatter());
 		xAxis.setSpaceBetweenLabels(1);
-//        xAxis.addLimitLine(limitLineXAxis); // add x-axis limit line
+//        xAxis.addLimitLine(limitLineXAxis); // register x-axis limit line
 
 		LimitLine limitLineUpperYAxis = new LimitLine(limitLineUpperYAxisValue, limitLineUpperYAxisText);
 		limitLineUpperYAxis.setLineWidth(4f);
@@ -187,7 +187,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		// Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
 
 		ArrayList<LineDataSet> dataSets = new ArrayList<>();
-		dataSets.add(set1); // add the datasets
+		dataSets.add(set1); // register the datasets
 
 		// create a data object with the datasets
 		LineData data = new LineData(xVals, dataSets);

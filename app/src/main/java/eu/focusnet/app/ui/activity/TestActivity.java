@@ -331,13 +331,13 @@ public class TestActivity extends BaseActivity
 				List<FocusSample> fs = new ArrayList<>();
 				// FIXME FIXME FIXME FocusSample has chan
 			 /*   FocusSample focusSample = new FocusSample(KEY_NAME, FocusSample.Type.string, name);
-				fs.add(focusSample);
+				fs.register(focusSample);
                 focusSample = new FocusSample(KEY_EMAIL, FocusSample.Type.string, name);
-                fs.add(focusSample);
+                fs.register(focusSample);
                 focusSample = new FocusSample(KEY_NUMBER, FocusSample.Type.numeric, number);
-                fs.add(focusSample);
+                fs.register(focusSample);
                 focusSample = new FocusSample(KEY_DESCRIPTION, FocusSample.Type.string, description);
-                fs.add(focusSample);
+                fs.register(focusSample);
 */
 				Gson gson = new Gson();
 				String focusSamplesJson = gson.toJson(fs);

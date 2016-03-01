@@ -211,7 +211,7 @@ public class SampleDao
 	private ContentValues createContentValues(Sample sample)
 	{
 		ContentValues contentValues = new ContentValues();
-//		contentValues.put(Constant.ID, sample.getId());
+//		contentValues.register(Constant.ID, sample.getId());
 		contentValues.put(Constant.URL, sample.getUrl());
 		contentValues.put(Constant.CONTEXT, sample.getContext());
 		contentValues.put(Constant.VERSION, sample.getVersion());
@@ -233,12 +233,12 @@ public class SampleDao
 	 */
 	public void cleanTable()
 	{
-		DataManager dm = DataManager.getInstance();
+		DataManager dm = FocusApplication.getInstance().getDataManager();
 
 		// Build the list of URLs that we use in our data contexts
 		Set<String> used_urls = new HashSet<>();
 
-		// add our configuration URLs
+		// register our configuration URLs
 		try {
 			used_urls.add(dm.getUser().getUrl());
 			used_urls.add(dm.getUserPreferences().getUrl());
@@ -250,8 +250,8 @@ public class SampleDao
 		}
 
 		// populate the URLs set with the ones we have in the different DataContexts
-		for (Map.Entry<String, FocusSample> e : dm.getAppContentInstance().getDataContext().entrySet()) {
-			used_urls.add(e.getValue().getUrl());
+		for (Map.Entry<String, String> e : dm.getAppContentInstance().getDataContext().entrySet()) {
+			used_urls.add(e.getValue());
 		}
 
 		// foreach project
@@ -259,38 +259,38 @@ public class SampleDao
 			ProjectInstance pi = e_project.getValue();
 
 			// Project data context
-			for (Map.Entry<String, FocusSample> e_dc : pi.getDataContext().entrySet()) {
-				used_urls.add(e_dc.getValue().getUrl());
+			for (Map.Entry<String, String> e_dc : pi.getDataContext().entrySet()) {
+				used_urls.add(e_dc.getValue());
 			}
 
 			// foreach page
 			for (Map.Entry<String, PageInstance> e_page : pi.getDashboards().entrySet()) {
 				PageInstance page_instance = e_page.getValue();
 				// Dashboards data context
-				for (Map.Entry<String, FocusSample> e_dc : page_instance.getDataContext().entrySet()) {
-					used_urls.add(e_dc.getValue().getUrl());
+				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
+					used_urls.add(e_dc.getValue());
 				}
 
 				// foreach widget
 				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
 					WidgetInstance wi = e_widget.getValue();
-					for (Map.Entry<String, FocusSample> e_dc : wi.getDataContext().entrySet()) {
-						used_urls.add(e_dc.getValue().getUrl());
+					for (Map.Entry<String, String> e_dc : wi.getDataContext().entrySet()) {
+						used_urls.add(e_dc.getValue());
 					}
 				}
 			}
 			for (Map.Entry<String, PageInstance> e_page : pi.getTools().entrySet()) {
 				PageInstance page_instance = e_page.getValue();
 				// Tools data context
-				for (Map.Entry<String, FocusSample> e_dc : page_instance.getDataContext().entrySet()) {
-					used_urls.add(e_dc.getValue().getUrl());
+				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
+					used_urls.add(e_dc.getValue());
 				}
 
 				// foreach widget
 				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
 					WidgetInstance wi = e_widget.getValue();
-					for (Map.Entry<String, FocusSample> e_dc : wi.getDataContext().entrySet()) {
-						used_urls.add(e_dc.getValue().getUrl());
+					for (Map.Entry<String, String> e_dc : wi.getDataContext().entrySet()) {
+						used_urls.add(e_dc.getValue());
 					}
 				}
 			}
@@ -332,7 +332,7 @@ public class SampleDao
 				);
 		 */
 
-		// add quotes around urls
+		// register quotes around urls
 		String[] urls_list = (String[]) used_urls.toArray();
 		for (int i = 0; i < urls_list.length; ++i) {
 			urls_list[i] = "'" + urls_list[i] + "'";

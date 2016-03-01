@@ -91,7 +91,12 @@ public class AppContentInstance extends AbstractInstance
 	private void build()
 	{
 		// retrieve application-wide data
-		this.dataContext.provideData(this.appTemplate.getData());
+		try {
+			this.dataContext.provideData(this.appTemplate.getData());
+		}
+		catch (FocusMissingResourceException ex) {
+			return;
+		}
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
@@ -105,6 +110,11 @@ public class AppContentInstance extends AbstractInstance
 							this.dataContext.resolve(projTpl.getIterator())
 					);
 				}
+				catch (FocusMissingResourceException e) {
+					// cannot resolve(),
+					// FIXME LOG?
+					continue;
+				}
 				catch (FocusBadTypeException e) {
 					// invalid iterator. survive by ignoring, but log the event
 					continue;
@@ -113,12 +123,7 @@ public class AppContentInstance extends AbstractInstance
 				for (String url : urls) {
 					DataContext new_ctx = new DataContext(this.dataContext);
 					try {
-						if (new_ctx.isOptimisticFillMode()) {
-							this.dataManager.getSample(url);
-						}
-						else {
-							this.dataManager.getSampleForSync(url);
-						}
+						this.dataManager.getSample(url);
 					}
 					catch (FocusMissingResourceException ex) {
 						// should not happen, but let's continue silently
@@ -126,9 +131,13 @@ public class AppContentInstance extends AbstractInstance
 						continue;
 					}
 
-					TODO use missingresource to propagate isValid = false through instances.
-
-					new_ctx.put(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
+					try {
+						new_ctx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
+					}
+					catch(FocusMissingResourceException ex) {
+// FIXME LOG?
+						continue;
+					}
 					// the guid is adapted in the ProjectInstance constructor
 					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
 					this.projects.put(p.getGuid(), p);
@@ -140,9 +149,6 @@ public class AppContentInstance extends AbstractInstance
 				this.projects.put(p.getGuid(), p);
 			}
 		}
-
-		// eventually set the data context is optimistic mode
-		this.dataContext.setIsOptimisticFillMode(true);
 	}
 
 	/**

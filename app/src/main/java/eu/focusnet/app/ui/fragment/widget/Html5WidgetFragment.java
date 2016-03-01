@@ -176,7 +176,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		/**
 		 * PUT Focus data
 		 * <p/>
-		 * put data to local store (will later be pushed to server)
+		 * register data to local store (will later be pushed to server)
 		 */
 		@JavascriptInterface
 		public boolean putFocusData(String url, String data)

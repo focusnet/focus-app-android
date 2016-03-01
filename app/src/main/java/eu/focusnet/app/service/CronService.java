@@ -22,8 +22,11 @@
 
 package eu.focusnet.app.service;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import java.util.concurrent.Executors;
@@ -63,8 +66,8 @@ public class CronService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		periodicallySyncData();
-		periodicallyCleanDatabase();
+		this.periodicallySyncData();
+		this.periodicallyCleanDatabase();
 		return START_REDELIVER_INTENT;
 	}
 
@@ -78,8 +81,9 @@ public class CronService extends Service
 			@Override
 			public void run()
 			{
+				boolean success = false;
 				try {
-					FocusApplication.getInstance().getDataManager().syncData();
+					success = FocusApplication.getInstance().getDataManager().syncData();
 				}
 				catch (FocusMissingResourceException e) {
 					++failures;
@@ -87,6 +91,10 @@ public class CronService extends Service
 						// if too many failures, let's report them, just in case that may me a more important problem.
 						FocusApplication.reportError(e);
 					}
+				}
+				if (success) {
+					// restart current activity.
+					FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working?
 				}
 			}
 		}, 0, CRON_SERVICE_REFRESH_DATA_PERIOD, TimeUnit.MINUTES);
@@ -120,3 +128,6 @@ public class CronService extends Service
 		return null;
 	}
 }
+
+
+

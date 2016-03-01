@@ -29,7 +29,6 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.util.Constant;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.Linker;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
@@ -68,9 +67,8 @@ public class ProjectInstance extends AbstractInstance
 		this.guid = tpl.getGuid();
 		this.dashboards = new LinkedHashMap<String, PageInstance>();
 		this.tools = new LinkedHashMap<String, PageInstance>();
-		this.isValid = false;
 		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
-			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR).getUrl() + Constant.PATH_SELECTOR_CLOSE;
+			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
 
 		this.build();
@@ -89,14 +87,19 @@ public class ProjectInstance extends AbstractInstance
 	 */
 	private void build()
 	{
-		// add the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData());
+		// register the project-specific data to our data context
+		try {
+			this.dataContext.provideData(this.template.getData());
+		}
+		catch (FocusMissingResourceException ex) {
+			// FIXME LOG?
+			return;
+		}
 
 		// FIXME TODO special case ?: guid == __welcome__ == WELCOME_PROJECT_IDENTIFIER
 		if (this.getGuid().equals(WELCOME_PROJECT_IDENTIFIER)) {
 			this.title = ""; // FIXME i18n string
 			this.description = ""; // FIXME i18n string.
-			this.isValid = true;
 			return;
 		}
 
@@ -106,11 +109,6 @@ public class ProjectInstance extends AbstractInstance
 		if (this.template.getTools() != null) {
 			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
 		}
-		// FIXME should we add a 'hidden' category?
-
-		this.dataContext.setIsOptimisticFillMode(true);
-
-		this.isValid = true; // FIXME may not be true inthe end
 	}
 
 	/**
@@ -136,6 +134,10 @@ public class ProjectInstance extends AbstractInstance
 							this.dataContext.resolve(pageTpl.getIterator())
 					);
 				}
+				catch (FocusMissingResourceException e) {
+					// FIXME LOG?
+					continue;
+				}
 				catch (FocusBadTypeException e) {
 					// invalid iterator. survive by ignoring, but log the event
 					FocusApplication.reportError(e);
@@ -144,17 +146,13 @@ public class ProjectInstance extends AbstractInstance
 				for (String url : urls) {
 					DataContext new_page_ctx = new DataContext(this.dataContext);
 					try {
-						if (new_page_ctx.isOptimisticFillMode()) {
-							FocusApplication.getInstance().getDataManager().getSample(url);
-						}
-						else {
-							FocusApplication.getInstance().getDataManager().getSampleForSync(url);
-						}
+						new_page_ctx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
 					}
 					catch (FocusMissingResourceException ex) {
+						// FIXME LOG?
 						continue;
 					}
-					new_page_ctx.put(PageInstance.LABEL_PAGE_ITERATOR, url);
+
 					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
 					for (WidgetLinker wl : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
@@ -163,8 +161,9 @@ public class ProjectInstance extends AbstractInstance
 						widgets.put(wi.getGuid(), wi); // FIXME if widget-id is same as a previous widget, we won't have 2x the widget.
 					}
 					// the guid is adapted in the PageInstance constructor
-					PageInstance p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
-					new_page_ctx.setIsOptimisticFillMode(true);
+					PageInstance p;
+					p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
+
 					ret.put(p.getGuid(), p);
 				}
 			}
@@ -179,7 +178,6 @@ public class ProjectInstance extends AbstractInstance
 					widgets.put(wi.getGuid(), wi);
 				}
 				PageInstance p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
-				new_page_ctx.setIsOptimisticFillMode(true);
 				ret.put(p.getGuid(), p);
 			}
 		}
@@ -211,23 +209,13 @@ public class ProjectInstance extends AbstractInstance
 		return null;
 	}
 
-	/**
-	 * Tells whether this ProjectInstance is valid. Non-valid ones cannot be accessed by the
-	 * end-user.
-	 *
-	 * @return
-	 */
-	public boolean isValid()
-	{
-		return this.isValid;
-	}
 
 	/**
 	 * Retrieve data that are described in the 'data' property.
 	 */
 	private void retrieveData()
 	{
-		//this.dataContext.put(); // .. augment existing data context.
+		//this.dataContext.register(); // .. augment existing data context.
 
 		// if cannot retrieve, then set the current object to invalid. this will prevent from creating new objects.
 

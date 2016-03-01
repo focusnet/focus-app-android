@@ -66,7 +66,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < pieChartWidgetInstance.getValues().size(); i++) {
 			float d = pieChartWidgetInstance.getValues().get(i).floatValue();
 			yVals.add(new Entry(d, i));
-			// FIXME?	colors.add(chartData.getColor());
+			// FIXME?	colors.register(chartData.getColor());
 		}
 
 

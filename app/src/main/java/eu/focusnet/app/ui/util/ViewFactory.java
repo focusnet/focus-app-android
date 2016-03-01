@@ -397,7 +397,7 @@ public class ViewFactory
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		//xAxis.setXValueFormatter(new MyCustomXValueFormatter());
 		xAxis.setSpaceBetweenLabels(1);
-//        xAxis.addLimitLine(limitLineXAxis); // add x-axis limit line
+//        xAxis.addLimitLine(limitLineXAxis); // register x-axis limit line
 
 		LimitLine limitLineUpperYAxis = new LimitLine(limitLineUpperYAxisValue, limitLineUpperYAxisText);
 		limitLineUpperYAxis.setLineWidth(4f);

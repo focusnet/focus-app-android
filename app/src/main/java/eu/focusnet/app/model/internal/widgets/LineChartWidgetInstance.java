@@ -181,7 +181,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 	}
 
 
-	// FIXME TODO add documentation
+	// FIXME TODO register documentation
 	public String getCaption()
 	{
 		return this.caption;

@@ -24,6 +24,7 @@ package eu.focusnet.app.model.internal;
 
 import java.util.LinkedHashMap;
 
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.util.Constant;
@@ -55,15 +56,20 @@ public class PageInstance extends AbstractInstance
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
 		this.type = type;
-		this.isValid = false;
 		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
-			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR).getUrl() + Constant.PATH_SELECTOR_CLOSE;
+			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
 		this.widgets = widgets;
 		this.dataContext = dataCtx;
 
-		// add page-specific data to our current data context
-		this.dataContext.provideData(this.template.getData());
+		// register page-specific data to our current data context
+		try {
+			this.dataContext.provideData(this.template.getData());
+		}
+		catch (FocusMissingResourceException ex) {
+// FIXME LOG?
+			return;
+		}
 
 		this.title = pageTpl.getTitle(); // FIXME resolve?
 		this.description = pageTpl.getDescription(); // FIXME resolve?
@@ -112,17 +118,6 @@ public class PageInstance extends AbstractInstance
 	public String getDescription()
 	{
 		return description;
-	}
-
-	/**
-	 * Tells whether this PageInstance is valid. Non-valid ones cannot be accessed by the
-	 * end-user.
-	 *
-	 * @return
-	 */
-	public boolean isValid()
-	{
-		return this.isValid; // <=> all widgets are valid
 	}
 
 	public enum PageType

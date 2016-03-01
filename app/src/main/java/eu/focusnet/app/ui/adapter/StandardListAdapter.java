@@ -146,7 +146,7 @@ public class StandardListAdapter extends BaseAdapter
 								dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
 							}
 							else {
-								dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
+								dialogTitle.setText("Are you sure you want to register this context to the Bookmarks?");
 							}
 
 
@@ -182,7 +182,7 @@ public class StandardListAdapter extends BaseAdapter
 										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, false);
 									}
 									else {
-										//     dialogTitle.setText("Are you sure you want to add this context to the Bookmarks?");
+										//     dialogTitle.setText("Are you sure you want to register this context to the Bookmarks?");
 										standardListItem.setIsRightIconActive(true);
 										Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star);
 										standardListItem.setRightIcon(rightIcon);

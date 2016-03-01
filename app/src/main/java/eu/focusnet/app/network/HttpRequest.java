@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.service.DataManager;
@@ -76,7 +77,7 @@ public class HttpRequest
 	 */
 	public HttpRequest(String method, String url, FocusObject payload)
 	{
-		this(method, url, DataManager.getInstance().getGson().toJson(payload));
+		this(method, url, FocusApplication.getInstance().getDataManager().getGson().toJson(payload));
 	}
 
 	/**

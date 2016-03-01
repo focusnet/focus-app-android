@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
@@ -55,7 +56,7 @@ public class EntryPointActivity extends Activity
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
 		 * Otherwise, load the basic application configuration and redirect to FocusActivity
 		 */
-		if (DataManager.getInstance().hasLoginInformation()) {
+		if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
 
 			/*
 			 * This thread will retrieve the application configuration.
@@ -64,14 +65,14 @@ public class EntryPointActivity extends Activity
 			{
 				public void run()
 				{
-					DataManager dm = DataManager.getInstance();
 					try {
-						dm.retrieveApplicationData();
+						FocusApplication.getInstance().getDataManager().retrieveApplicationData();
 					}
 					catch (FocusMissingResourceException ex) {
-						// FIXME TODO what do we do? Toast + exit
-						// or redirect to new Activity that explains the problem and proposes to try again later (button)
 						// this may occur when no data has been previously loaded
+
+						// FIXME TODO YANDY what do we do? Toast-like message + exit
+						// or rather redirect to new Activity that explains the problem and proposes to try again later (button)
 					}
 				}
 			};

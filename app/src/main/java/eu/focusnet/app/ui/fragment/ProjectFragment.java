@@ -156,7 +156,7 @@ public class ProjectFragment extends ListFragment
 				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 				int dashboardOrder = 0;
 
-				//TODO add the bookmarks to the dataManager
+				//TODO register the bookmarks to the dataManager
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 				//END
@@ -177,7 +177,7 @@ public class ProjectFragment extends ListFragment
 				PageInstance tool = entry.getValue();
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-				//TODO add the bookmarks to the dataManager
+				//TODO register the bookmarks to the dataManager
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 				//END
@@ -204,7 +204,7 @@ public class ProjectFragment extends ListFragment
 //                }
 //                StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
 //                        toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
-//                abstractItems.add(drawListItem);
+//                abstractItems.register(drawListItem);
 //            }
 
 			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
@@ -222,7 +222,7 @@ public class ProjectFragment extends ListFragment
 
 //            for(Notification notification : notifications){
 //                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(0, -1)), notification.toString(), "Info notifications", null);
-//                abstractItems.add(drawListItem);
+//                abstractItems.register(drawListItem);
 //            }
 
 			// Recycle the typed array
@@ -248,7 +248,7 @@ public class ProjectFragment extends ListFragment
 //                        getString(R.string.cutting_header_dashboard),
 //                        null);
 //
-//                abstractItems.add(headerProjectsListItem);
+//                abstractItems.register(headerProjectsListItem);
 //
 //                ArrayList<Linker> dashboards = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
 //
@@ -267,14 +267,14 @@ public class ProjectFragment extends ListFragment
 //                    }
 //                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
 //                            page.getTitle(), page.getDescription(), dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-//                    abstractItems.add(drawListItem);
+//                    abstractItems.register(drawListItem);
 //                }
 //
 //                AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
 //                        getString(R.string.cutting_header_tool),
 //                        null);
 //
-//                abstractItems.add(headerToolListItem);
+//                abstractItems.register(headerToolListItem);
 //               // toolsHeaderPosition = abstractItems.size() - 1;
 //
 //                // load icons
@@ -295,13 +295,13 @@ public class ProjectFragment extends ListFragment
 //                    }
 //                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
 //                            toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
-//                    abstractItems.add(drawListItem);
+//                    abstractItems.register(drawListItem);
 //                }
 //
 //                AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
 //                        getString(R.string.cutting_header_notification),
 //                        ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-//                abstractItems.add(headerNotificationListItem);
+//                abstractItems.register(headerNotificationListItem);
 //
 //                notificationsHeaderPosition = abstractItems.size() - 1;
 //
@@ -313,7 +313,7 @@ public class ProjectFragment extends ListFragment
 
 //            for(Notification notification : notifications){
 //                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(0, -1)), notification.toString(), "Info notifications", null);
-//                abstractItems.add(drawListItem);
+//                abstractItems.register(drawListItem);
 //            }
 
 //                // Recycle the typed array

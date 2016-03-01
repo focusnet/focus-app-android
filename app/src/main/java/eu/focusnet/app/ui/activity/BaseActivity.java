@@ -35,7 +35,6 @@ import eu.focusnet.app.R;
 public abstract class BaseActivity extends AppCompatActivity
 {
 	protected Toolbar toolbar;
-	protected Intent cronServiceIntent;
 
 	/**
 	 * Override creation method. Add a toolbar.
@@ -81,6 +80,6 @@ public abstract class BaseActivity extends AppCompatActivity
 	}
 
 	//TODO starting an stoping the service in each activity is not a good idea
-	// NOTE: why? except the fact that this is a pain to maintain (easy to forget to add the service to an activity)
+	// NOTE: why? except the fact that this is a pain to maintain (easy to forget to register the service to an activity)
 
 }

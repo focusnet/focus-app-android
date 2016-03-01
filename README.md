@@ -4,6 +4,14 @@ FOCUS Android application
 
 (still in active development ... may not compile at all)
 
+## Warning
+
+The application silently sends error reports when it encounters errors. These reports may contain
+the content of the displayed dashboards and other sensitive information. If you do not agree
+with that, please do not use the application
+
+This feature will be disabled when the application enters production stage.
+
 ## License
 
 This software is released under the commercial-friendly and open-source MIT license.

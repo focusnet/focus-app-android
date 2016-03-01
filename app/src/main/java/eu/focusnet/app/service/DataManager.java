@@ -374,6 +374,8 @@ public class DataManager
 
 	/**
 	 * Get the three basic informations that are required to build the application UI
+	 *
+	 * When building the different instances (AppContent, Project, PAge, Widget), we silently ignore errors, but we log them, just in case.
 	 */
 	public void retrieveApplicationData() throws FocusMissingResourceException
 	{

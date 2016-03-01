@@ -81,9 +81,10 @@ public class CronService extends Service
 			@Override
 			public void run()
 			{
-				boolean success = false;
+				DataManager old_dm = FocusApplication.getInstance().getDataManager();
+
 				try {
-					success = FocusApplication.getInstance().getDataManager().syncData();
+					old_dm.syncData();
 				}
 				catch (FocusMissingResourceException e) {
 					++failures;
@@ -92,10 +93,11 @@ public class CronService extends Service
 						FocusApplication.reportError(e);
 					}
 				}
-				if (success) {
-					// restart current activity.
+
+				if (old_dm != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
 					FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working?
 				}
+
 			}
 		}, 0, CRON_SERVICE_REFRESH_DATA_PERIOD, TimeUnit.MINUTES);
 	}
@@ -115,6 +117,9 @@ public class CronService extends Service
 		}, 0, CRON_SERVICE_CLEAN_SQL_PERIOD, TimeUnit.MINUTES);
 	}
 
+	/**
+	 * Kill the scheduler on service destruction
+	 */
 	@Override
 	public void onDestroy()
 	{
@@ -122,6 +127,11 @@ public class CronService extends Service
 		scheduleTaskExecutor.shutdown();
 	}
 
+	/**
+	 * FIXME YANDY - useful? if not, let's remove this method (if possible)
+	 * @param intent
+	 * @return
+	 */
 	@Override
 	public IBinder onBind(Intent intent)
 	{

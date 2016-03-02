@@ -95,7 +95,7 @@ public class CronService extends Service
 				}
 
 				if (old_dm != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
-					FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working?
+					FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working? //Answer: I have to take a look at it in details
 				}
 
 			}
@@ -129,6 +129,7 @@ public class CronService extends Service
 
 	/**
 	 * FIXME YANDY - useful? if not, let's remove this method (if possible)
+	 * Answer: We don't need this method but the service must implement it
 	 * @param intent
 	 * @return
 	 */

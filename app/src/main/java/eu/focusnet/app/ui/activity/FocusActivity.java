@@ -69,31 +69,6 @@ public class FocusActivity extends BaseDrawerActivity
 		super.onCreate(savedInstanceState);
 
 		showView(Constant.UI_FRAGMENT_FOCUS);
-
-					/*
-							//TODO change this   //////////////////////////////////////////////////////////////////////////////////////////////
-							// FIXME TOOD YANDY what is the status of this code snippet? Can we simply remove this commented part? it looks so to me.
-					//        if (savedInstanceState == null) {
-					//            // on first time display view for first nav item
-							// 	showView(Constant.UI_FRAGMENT_FOCUS); // FIXME this one was enaabled
-					//                Util.displayToast(this, "First name: " + user.getFirstName() + ", last name :" + user.getLastName());
-					//        }
-					//
-							//TODO change this
-							//     else if(extras != null){
-					//            if(extras.get(Constant.USER_DATA) != null){
-					//                ArrayList<String> data = (ArrayList)extras.get(Constant.USER_DATA);
-					//                Log.d(TAG, data.get(0));
-					//                Util.displayToast(this, data.get(0));
-					//                showView(Constant.UI_FRAGMENT_FOCUS);
-					//            }
-					//            else {
-							//if started from a notification display the appropriate fragment
-							//              showView(extras.getInt(Constant.UI_EXTRA_NOTIFICATION_ID));
-					//            }
-					//        }
-							//////////////////////////////////////////////////////////////////////////////////////////////
-							*/
 	}
 
 	/**
@@ -191,7 +166,11 @@ public class FocusActivity extends BaseDrawerActivity
 	}
 
 
-// 	FIXME TODO YANDY document purpose of this method.
+	/**
+	 * Create the option menu of the app
+	 * @param menu the menu
+	 * @return true
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

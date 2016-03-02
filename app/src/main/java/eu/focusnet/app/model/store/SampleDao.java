@@ -86,6 +86,7 @@ public class SampleDao
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
 		if (cursor.getCount() == 0) {
+			cursor.close();
 			return null;
 		}
 		Sample sample = new Sample();

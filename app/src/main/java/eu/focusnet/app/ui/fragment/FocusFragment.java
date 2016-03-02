@@ -56,7 +56,6 @@ import eu.focusnet.app.ui.util.ViewUtil;
  * This fragment is the start point of the application
  * after the user logged in.
  *
- * FIXME YANDY - in all fragment codes, remove code in comments if they are  not used anymore
  */
 public class FocusFragment extends ListFragment
 {
@@ -124,16 +123,6 @@ public class FocusFragment extends ListFragment
 					ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
 
 			abstractItems.add(headerProjectsListItem);
-
-//            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-
-//            try {
-//                databaseAdapter.openWritableDatabase();
-//                SQLiteDatabase db = databaseAdapter.getDb();
-//                ProjectDao projectDao = new ProjectDao(db);
-//                ArrayList<ProjectTemplate> projects = projectDao.findAllProjects();
-//                BookmarkLinkDao bookmarkLinkManager = new BookmarkLinkDao(db);
-
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
 
@@ -156,23 +145,6 @@ public class FocusFragment extends ListFragment
 				abstractItems.add(drawListItem);
 			}
 
-//                for (ProjectTemplate p : projects) {
-//                    String projectId = p.getGuid();
-//                    String projectTitle = p.getTitle();
-//                    int projectOrder = p.getOrder();
-//                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-//                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
-//                    boolean isRightIconActive = true;
-//                    if (bookmarkLinkManager.findBookmarkLink(projectId, bookmarkLinkType) == null) {
-//                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-//                        isRightIconActive = false;
-//                    }
-//                    //The project Id is the same as the path
-//                    StandardListItem drawListItem = new StandardListItem(projectId, ViewUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, p.getDescription(),
-//                            projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-//                    abstractItems.register(drawListItem);
-//                }
-
 			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
 					ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
@@ -194,11 +166,6 @@ public class FocusFragment extends ListFragment
 			// Recycle the typed array
 			projectIcons.recycle();
 			notificationIcons.recycle();
-
-//            }
-//            finally {
-//              databaseAdapter.close();
-//            }
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

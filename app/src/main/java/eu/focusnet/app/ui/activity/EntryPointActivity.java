@@ -23,13 +23,17 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.util.ViewFactory;
 
 /**
  * Entry point activity
@@ -52,73 +56,77 @@ public class EntryPointActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 
+		Intent loader = null;
+
 		/*
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
 		 * Otherwise, load the basic application configuration and redirect to FocusActivity
 		 */
 		if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
-
-			/*
-			 * This thread will retrieve the application configuration.
-			 */
-			final Thread app_acquisition = new Thread()
-			{
-				public void run()
-				{
-					try {
-						FocusApplication.getInstance().getDataManager().retrieveApplicationData();
-					}
-					catch (FocusMissingResourceException ex) {
-						// this may occur when no data has been previously loaded
-
-						// FIXME TODO YANDY what do we do? Toast-like message + exit
-						// or rather redirect to new Activity that explains the problem and proposes to try again later (button)
-					}
-				}
-			};
-
-			/*
-			 * This thread will simply sleep for a minimum amount of time, waiting for the
-			 * app_acquisition Thread to complete.
-			 */
-			final Thread splash_screen = new Thread()
-			{
-				public void run()
-				{
-					try {
-						int min_splashscreen_display_time = 2000;
-						sleep(1000);
-						min_splashscreen_display_time -= 1000;
-						while (app_acquisition.isAlive() || min_splashscreen_display_time > 0) {
-							sleep(500);
-							min_splashscreen_display_time -= 500;
-						}
-						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
-					}
-					catch (InterruptedException ex) {
-						// empty, but that's ok.
-					}
-					finally {
-						finish();
-					}
-				}
-			};
-
-			// start threads
-			splash_screen.start();
-			app_acquisition.start();
-
+			new ConfigLoaderTask(this).execute();
+			loader = new Intent(new Intent(EntryPointActivity.this, FocusActivity.class));
 		}
 		else {
-			startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
-			finish();
+			loader = new Intent(EntryPointActivity.this, LoginActivity.class);
 		}
+
+		startActivity(loader);
+		finish();
 
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		// FIXME TODO YANDY: AppIndexing - is that useful? if so, let's do it properly (i.e. with real configuration).
+		//Answer: This is new for me, I think it could be interesting but we have to define for which uses cases we need that. I suggest you
+		//to let it there at the moment and when we are finish with the project(everything works good), we can take a look at it.
 		// FIXME TODO otherwise, let's completely remove it.
 		//	client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+	}
+
+	/*
+	* This thread will retrieve the application configuration.
+	*/
+	private class  ConfigLoaderTask extends AsyncTask<Void, Void, Void>{
+
+		private ProgressDialog progressDialog;
+		private Context context;
+
+		public ConfigLoaderTask(Context context){
+			this.context = context;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog = ViewFactory.createProgressDialog(context, "Loading app configuration", "Please wait..."); //TODO internationalize this message
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				FocusApplication.getInstance().getDataManager().retrieveApplicationData();
+			}
+			catch (FocusMissingResourceException e) {
+				// this may occur when no data has been previously loaded
+				// FIXME TODO YANDY what do we do? Toast-like message + exit
+				// or rather redirect to new Activity that explains the problem and proposes to try again later (button)
+				//Answer: What is exactly: no data has been previously loaded
+				/*
+		 		* If we don't have login information, yet, let's redirect to the LoginActivity.
+		 		* Otherwise, load the basic application configuration and redirect to FocusActivity
+		 		*/
+				//are you retrieving the login information from a database, config file or
+				// from an object in memory(this could bring some problems if the android OS needs this memory for something else, then the object will be destroyed ...)
+				// and after that making a call to the webservice to retrieve the data?
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			if(progressDialog.isShowing())
+				progressDialog.dismiss();
+		}
 	}
 
 /*

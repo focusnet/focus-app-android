@@ -51,7 +51,6 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 	/**
 	 * Create the Activity. Create the UI.
-	 *
 	 * @param savedInstanceState past state
 	 */
 	@Override
@@ -191,10 +190,8 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 	/**
 	 * Is the "up" affordance enabled?
-	 *
 	 * @return true if so, false otherwise
 	 *
-	 * // FIXME YANDY : can't we just use an instance variable for these flags? And set it into the onCreate() (or constructor)?
 	 */
 	@Override
 	protected boolean isDisplayHomeAsUpEnabled()

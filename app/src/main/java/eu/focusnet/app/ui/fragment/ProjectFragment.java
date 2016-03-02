@@ -144,6 +144,8 @@ public class ProjectFragment extends ListFragment
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
 			// FIXME FIXME TODO YANDY: check that you don't get NULL, if that's the case, go back to FocusActivity
+			//Answer: Why it's the projectInstance null, then if the project is showed in the FocusActivity, it can not be null, the user
+			//can select it and the information about it should be displayed or??
 			// FIXME FIXME TODO YANDY this is also true for other call such as this one (for page, widget, etc.)
 
 			// useful for our custom garbage collection in DataManager
@@ -189,23 +191,6 @@ public class ProjectFragment extends ListFragment
 				abstractItems.add(drawListItem);
 
 			}
-
-//            for (Linker tool : tools) {
-//                String pageId = tool.getPageid();
-//                int toolOrder = tool.getOrder();
-//                PageTemplate page = pageDao.findPage(pageId);
-//                String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
-//                Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
-//                boolean isRightIconActive = true;
-//                String path = projectId + "/" + pageId;
-//                if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
-//                    rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-//                    isRightIconActive = false;
-//                }
-//                StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
-//                        toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
-//                abstractItems.register(drawListItem);
-//            }
 
 			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.cutting_header_notification),

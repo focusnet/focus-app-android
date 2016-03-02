@@ -165,10 +165,6 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
 			adapter = new StandardListAdapter(getActivity(), abstractItems);
 
-//            } finally {
-//                databaseAdapter.close();
-//            }
-
 			return adapter;
 		}
 

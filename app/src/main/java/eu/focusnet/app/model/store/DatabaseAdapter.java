@@ -148,21 +148,5 @@ public class DatabaseAdapter
 		{
 
 		}
-
-
-		/*
-		// FIXME TODO YANDY: we now have a flat single table (samples), so ne need for constraints
-		// on foreign keys, right? if so, let's delete this commented part.
-		@Override
-		public void onOpen(SQLiteDatabase db)
-		{
-			super.onOpen(db);
-			if (!db.isReadOnly()) {
-				// Enable foreign key constraints
-				db.execSQL("PRAGMA foreign_keys=ON;"); // no need for foreign keys as our database is flat.
-			}
-		}
-		*/
-
 	}
 }

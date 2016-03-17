@@ -48,7 +48,9 @@ import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
- * Created by admin on 24.06.2015.
+ * List Adapter, used for
+ *
+ * FIXME TODO JULIEN TO BE REVIEWED
  */
 public class StandardListAdapter extends BaseAdapter
 {

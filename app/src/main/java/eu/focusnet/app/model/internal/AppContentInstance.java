@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.model.internal;
@@ -27,13 +25,14 @@ import java.util.LinkedHashMap;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.util.Constant;
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
-import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * An Application content instance, i.e. the application template has been resolved and real
@@ -136,7 +135,7 @@ public class AppContentInstance extends AbstractInstance
 					try {
 						new_ctx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					}
-					catch(FocusMissingResourceException ex) {
+					catch (FocusMissingResourceException ex) {
 						// should not happen, but let's continue silently
 						FocusApplication.reportError(ex);
 						continue;
@@ -179,7 +178,7 @@ public class AppContentInstance extends AbstractInstance
 		if (parts.length >= 1) {
 			return this.projects.get(parts[0]);
 		}
-		return null;// exception instead ?
+		throw new FocusInternalErrorException("Invalid project path");
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class AppContentInstance extends AbstractInstance
 		if (parts.length >= 3) {
 			return pr.getPageFromGuid(parts[2], parts[1]);
 		}
-		return null;// exception instead ?
+		throw new FocusInternalErrorException("Invalid page path");
 	}
 
 
@@ -227,7 +226,7 @@ public class AppContentInstance extends AbstractInstance
 		if (parts.length >= 4) {
 			return p.widgets.get(parts[3]);
 		}
-		return null; // exception instead ?
+		throw new FocusInternalErrorException("Invalid widget path");
 	}
 
 

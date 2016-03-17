@@ -150,12 +150,9 @@ public class FocusApplication extends Application
 
 		// setup DataManager
 		this.dataManager = new DataManager();
+		this.dataManager.init();
 
 		// start the CronService
-		// FIXME TODO YANDY: I moved the service creation here because it makes more sense (Service is relevant for whole app)
-		// Answer: It is ok, the principal thing is that we start the service only once and stop it when the app is closed or get on the background (this is not done here)
-		// but is that a problem regarding sleep/wake? we could detect the sleeping into the service itself (?)
-		//Answer: we can detect the sleep/wake with a broadcast receiver
 		this.startService(new Intent(this, CronService.class));
 		// setup ACRA, only in release mode
 		if (!BuildConfig.DEBUG) {

@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 
 /**
  * This class provides static methods for handling types and reporting inconsistencies
@@ -34,6 +35,13 @@ import eu.focusnet.app.exception.FocusBadTypeException;
 public class TypesHelper
 {
 
+	/**
+	 * Acquire object as string
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static String asString(Object obj) throws FocusBadTypeException
 	{
 		if (obj == null) {
@@ -48,6 +56,13 @@ public class TypesHelper
 		throw new FocusBadTypeException("Unsupported type");
 	}
 
+	/**
+	 * Acquire object as double
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static Double asDouble(Object obj) throws FocusBadTypeException
 	{
 		if (obj instanceof Double) {
@@ -67,11 +82,36 @@ public class TypesHelper
 		throw new FocusBadTypeException("Not a Double");
 	}
 
+	/**
+	 * Acquire object as integer
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static Integer asInteger(Object obj) throws FocusBadTypeException
 	{
-		return null;
+		if (obj instanceof Integer) {
+			return (Integer) obj;
+		}
+		if (obj instanceof String) {
+			try {
+				return Integer.parseInt((String) obj);
+			}
+			catch (NumberFormatException e) {
+				throw new FocusBadTypeException("not a valid integer string");
+			}
+		}
+		throw new FocusBadTypeException("Not an Integer");
 	}
 
+	/**
+	 * Acquire as an array of strings
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static ArrayList<String> asArrayOfStrings(Object obj) throws FocusBadTypeException
 	{
 		// obj should be an array list,
@@ -80,7 +120,7 @@ public class TypesHelper
 		if (!(obj instanceof ArrayList)) {
 			throw new FocusBadTypeException("Provided values are not an ArrayList");
 		}
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 		for (Object o2 : (ArrayList) obj) {
 			if (o2 instanceof String || o2 instanceof Double || o2 instanceof Integer) {
 				ret.add(o2.toString());
@@ -92,6 +132,13 @@ public class TypesHelper
 		return ret;
 	}
 
+	/**
+	 * Acquire as an array of integers
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws FocusBadTypeException
 	{
 		if (!(obj instanceof ArrayList)) {
@@ -112,6 +159,13 @@ public class TypesHelper
 		return ret;
 	}
 
+	/**
+	 * Acquire as an array of doubles
+	 *
+	 * @param obj
+	 * @return
+	 * @throws FocusBadTypeException
+	 */
 	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws FocusBadTypeException
 	{
 		if (!(obj instanceof ArrayList)) {
@@ -162,6 +216,10 @@ public class TypesHelper
 	}
 
 
+	/**
+	 * Types descriptions
+	 *
+	 */
 	public enum TargetType
 	{
 		STRING,

@@ -37,16 +37,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * DateTypeAdapter is used by the GSON parser to translate DateTime formats
+ */
 public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date>
 {
 	private final DateFormat dateFormat;
 
+	/**
+	 * C'tor
+	 */
 	public DateTypeAdapter()
 	{
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
+	/**
+	 * Serialization
+	 *
+	 * @param date
+	 * @param type
+	 * @param jsonSerializationContext
+	 * @return
+	 */
 	@Override
 	public synchronized JsonElement serialize(Date date, Type type,
 											  JsonSerializationContext jsonSerializationContext)
@@ -54,6 +68,14 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 		return new JsonPrimitive(dateFormat.format(date));
 	}
 
+	/**
+	 * Deserialization
+	 *
+	 * @param jsonElement
+	 * @param type
+	 * @param jsonDeserializationContext
+	 * @return
+	 */
 	@Override
 	public synchronized Date deserialize(JsonElement jsonElement, Type type,
 										 JsonDeserializationContext jsonDeserializationContext)

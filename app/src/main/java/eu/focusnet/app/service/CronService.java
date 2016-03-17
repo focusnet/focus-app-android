@@ -46,7 +46,9 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
  *
  * It must make sure not to consume too much battery (by waking up the device inappropriately)
  *
- * We save the times of last execution in the DataManager, as this is a Singleton and it never dies. FIXME is the service killed? I don't think so.
+ * FIXME TODO Detect the sleep/wake with a broadcast receiver
+ * -> shutdown and restart tasks (but save last time of execution to avoid too frequent tasks calls)
+ * This way the service is never killed, but it does not do anything if in sleep mode.
  */
 public class CronService extends Service
 {
@@ -128,8 +130,8 @@ public class CronService extends Service
 	}
 
 	/**
-	 * FIXME YANDY - useful? if not, let's remove this method (if possible)
-	 * Answer: We don't need this method but the service must implement it
+	 * Useless but required.
+	 *
 	 * @param intent
 	 * @return
 	 */

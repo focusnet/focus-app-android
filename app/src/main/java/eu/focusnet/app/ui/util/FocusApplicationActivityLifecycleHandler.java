@@ -29,7 +29,7 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 {
 
 	private Activity currentActivity;
-	private Bundle currentSavedInstanceState; // FIXME TODO YANDY do we need this?
+	private Bundle currentSavedInstanceState; // FIXME TODO YANDY do we need this? (if not, remove)
 
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState)

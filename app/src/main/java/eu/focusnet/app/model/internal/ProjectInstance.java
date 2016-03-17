@@ -224,18 +224,6 @@ public class ProjectInstance extends AbstractInstance
 		return null;
 	}
 
-
-	/**
-	 * Retrieve data that are described in the 'data' property.
-	 */
-	private void retrieveData()
-	{
-		//this.dataContext.register(); // .. augment existing data context.
-
-		// if cannot retrieve, then set the current object to invalid. this will prevent from creating new objects.
-
-	}
-
 	public String getTitle()
 	{
 		return title;

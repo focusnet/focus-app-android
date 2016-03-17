@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.service;
@@ -102,7 +100,24 @@ public class DataManager
 	public DataManager()
 	{
 		this.isInitialized = false;
-		this.init();
+
+		Context context = FocusApplication.getInstance().getContext();
+
+		this.activeInstances = new ArrayList<>();
+		this.applicationReady = false;
+
+		// setup GSON
+		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+
+		// setup network
+		this.net = new NetworkManager();
+
+		// setup cache
+		this.cache = new HashMap<>();
+
+		// setup database
+		this.databaseAdapter = new DatabaseAdapter(context);
+
 	}
 
 
@@ -116,23 +131,6 @@ public class DataManager
 			return;
 		}
 
-		Context context = FocusApplication.getInstance().getContext();
-
-		this.activeInstances = new ArrayList<>();
-		this.applicationReady = false;
-
-		// setup GSON
-		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
-
-		// setup network
-		this.net = new NetworkManager(context);
-
-		// setup cache
-		this.cache = new HashMap<>();
-
-		// setup database
-		this.databaseAdapter = new DatabaseAdapter(context);
-
 		// get login infos from local store, and use it as the default
 		FocusSample internal_config = null;
 		try {
@@ -141,7 +139,7 @@ public class DataManager
 		catch (IOException ex) {
 			// not a network resource, ok to ignore
 		}
-		// FIXME TODO YANDY: would that be better to use SharedPreferences? Or is that way of doing ok? Basically I store everything in an entry of our samples SQLlite table
+
 		if (internal_config != null) {
 			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
 			this.loginPassword = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD);
@@ -220,8 +218,7 @@ public class DataManager
 		this.loginPassword = password;
 		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
 		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
-		// this.appContentUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-content-definition";
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-3.json"; // FIXME hard-coded for testing.
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
@@ -231,6 +228,7 @@ public class DataManager
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS, this.userUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
+		fs.commit();
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
@@ -258,14 +256,9 @@ public class DataManager
 		this.appContentTemplate = null;
 		this.cache = new HashMap<>();
 
-		// delete SQL db
-		try {
-			this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
-		}
-		catch (IOException ex) {
-			// will not happen as this is local resource (internal)
-		}
-		// delete the whole database content FIXME TODO
+		// delete the whole database content
+		SampleDao dao = this.databaseAdapter.getSampleDao();
+		dao.deleteAll();
 	}
 
 

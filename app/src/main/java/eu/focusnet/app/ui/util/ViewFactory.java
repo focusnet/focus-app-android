@@ -24,6 +24,7 @@ package eu.focusnet.app.ui.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;

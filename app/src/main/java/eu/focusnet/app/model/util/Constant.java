@@ -23,7 +23,7 @@
 package eu.focusnet.app.model.util;
 
 /**
- * Created by julien on 2/12/16.
+ * Model-related constants
  */
 public class Constant
 {

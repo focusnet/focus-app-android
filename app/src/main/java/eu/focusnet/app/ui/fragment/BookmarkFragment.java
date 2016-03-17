@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.MissingFormatArgumentException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
@@ -41,7 +40,6 @@ import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
@@ -49,7 +47,6 @@ import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.service.util.EventBus;
-import eu.focusnet.app.ui.util.NavigationUtil;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 
@@ -94,11 +91,12 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 			StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
 
 			String path = selectedItem.getPath();
-			switch (NavigationUtil.checkPathType(path)) {
-				case PROJECT_ID:
+			String[] parts = path.split("\\|");
+			switch (parts.length) {
+				case 1:
 					intent = new Intent(getActivity(), ProjectActivity.class);
 					break;
-				case PROJECT_ID_PAGE_ID:
+				case 3:
 					intent = new Intent(getActivity(), PageActivity.class);
 					break;
 			}

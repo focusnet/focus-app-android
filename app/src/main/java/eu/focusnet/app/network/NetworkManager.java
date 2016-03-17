@@ -28,6 +28,7 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 
@@ -46,15 +47,16 @@ public class NetworkManager
 	// FIXME get the root of REST server on first request (such that we have the root of services)
 
 	/**
-	 * Dummy constructor for our Singleton.
+	 * C'tor.
 	 */
-	public NetworkManager(Context c)
+	public NetworkManager()
 	{
-		this.context = c;
+		this.context = FocusApplication.getInstance();
 	}
 
 
 	// FIXME TODO copy RefreshData service from Yandy's code
+	// FIXME useful in the end?
 
 
 	/**
@@ -66,9 +68,6 @@ public class NetworkManager
 	 */
 	public boolean isNetworkAvailable() throws RuntimeException
 	{
-		if (context == null) {
-			throw new FocusInternalErrorException("You must define a context!");
-		}
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		return netInfo != null && netInfo.isConnectedOrConnecting();

@@ -116,8 +116,6 @@ public class ProjectFragment extends ListFragment
 
 	/**
 	 * This class loads the project characteristics from the database
-	 *
-	 * FIXME TODO is that useful to have it in async now that we do things from RAM?
 	 */
 	private class ProjectBuilderTask extends AsyncTask<String, Void, StandardListAdapter>
 	{
@@ -125,8 +123,6 @@ public class ProjectFragment extends ListFragment
 		@Override
 		protected StandardListAdapter doInBackground(String... params)
 		{
-			DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-
 			// load icons
 			dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
 
@@ -143,10 +139,6 @@ public class ProjectFragment extends ListFragment
 
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
-			// FIXME FIXME TODO YANDY: check that you don't get NULL, if that's the case, go back to FocusActivity
-			//Answer: Why it's the projectInstance null, then if the project is showed in the FocusActivity, it can not be null, the user
-			//can select it and the information about it should be displayed or??
-			// FIXME FIXME TODO YANDY this is also true for other call such as this one (for page, widget, etc.)
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);
@@ -214,101 +206,6 @@ public class ProjectFragment extends ListFragment
 			dashboardsIcons.recycle();
 			toolsIcons.recycle();
 			notificationIcons.recycle();
-
-
-//            try {
-//                databaseAdapter.openWritableDatabase();
-//                SQLiteDatabase db = databaseAdapter.getDb();
-//
-//                BookmarkLinkDao bookmarkLinkDao = new BookmarkLinkDao(db);
-//                PageDao pageDao = new PageDao(db);
-//                LinkerDao linkerDao = new LinkerDao(db);
-//
-//                // load icons
-//                dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
-//
-//                abstractItems = new ArrayList<>();
-//
-//                AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
-//                        getString(R.string.cutting_header_dashboard),
-//                        null);
-//
-//                abstractItems.register(headerProjectsListItem);
-//
-//                ArrayList<Linker> dashboards = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.DASHBOARD);
-//
-//
-//                for (Linker dashboard : dashboards) {
-//                    String pageId = dashboard.getPageid();
-//                    int dashboardOrder = dashboard.getOrder();
-//                    PageTemplate page = pageDao.findPage(pageId);
-//                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.PAGE.toString();
-//                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
-//                    boolean isRightIconActive = true;
-//                    String path = projectId + "/" + pageId;
-//                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
-//                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-//                        isRightIconActive = false;
-//                    }
-//                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
-//                            page.getTitle(), page.getDescription(), dashboardOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
-//                    abstractItems.register(drawListItem);
-//                }
-//
-//                AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
-//                        getString(R.string.cutting_header_tool),
-//                        null);
-//
-//                abstractItems.register(headerToolListItem);
-//               // toolsHeaderPosition = abstractItems.size() - 1;
-//
-//                // load icons
-//                toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
-//
-//                ArrayList<Linker> tools = linkerDao.findLinkers(projectId, LinkerDao.LINKER_TYPE.TOOL);
-//                for (Linker tool : tools) {
-//                    String pageId = tool.getPageid();
-//                    int toolOrder = tool.getOrder();
-//                    PageTemplate page = pageDao.findPage(pageId);
-//                    String bookmarkLinkType = BOOKMARK_LINK_TYPE.TOOL.toString();
-//                    Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star);
-//                    boolean isRightIconActive = true;
-//                    String path = projectId + "/" + pageId;
-//                    if (bookmarkLinkDao.findBookmarkLink(path, bookmarkLinkType) == null) {
-//                        rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
-//                        isRightIconActive = false;
-//                    }
-//                    StandardListItem drawListItem = new StandardListItem(path, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), page.getTitle(), page.getDescription(),
-//                            toolOrder, rightIcon, isRightIconActive, BOOKMARK_LINK_TYPE.TOOL.toString());
-//                    abstractItems.register(drawListItem);
-//                }
-//
-//                AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
-//                        getString(R.string.cutting_header_notification),
-//                        ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
-//                abstractItems.register(headerNotificationListItem);
-//
-//                notificationsHeaderPosition = abstractItems.size() - 1;
-//
-//                // load icons
-//                notificationIcons = getResources().obtainTypedArray(R.array.cutting_notification_icons);
-
-			//TODO
-			//   ArrayList<Notification> notifications = notificationDao.findNotification(projectId) ;
-
-//            for(Notification notification : notifications){
-//                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(0, -1)), notification.toString(), "Info notifications", null);
-//                abstractItems.register(drawListItem);
-//            }
-
-//                // Recycle the typed array
-//                dashboardsIcons.recycle();
-//                toolsIcons.recycle();
-//                notificationIcons.recycle();
-//            }
-//            finally {
-//                databaseAdapter.close();
-//            }
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

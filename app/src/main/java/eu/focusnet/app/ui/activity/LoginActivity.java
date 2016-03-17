@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -72,7 +73,7 @@ public class LoginActivity extends Activity
 		if(hasInternetConnection()){
 			String username = ((EditText) findViewById(R.id.login_username_editText)).getText().toString();
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
-			String server =  ((EditText) findViewById(R.id.login_server_editText)).getText().toString();// "server";
+			String server =  ((EditText) findViewById(R.id.login_server_editText)).getText().toString();
 			new LoginTask(this).execute(username, password, server);
 		}
 		else {
@@ -114,7 +115,8 @@ public class LoginActivity extends Activity
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog = ViewFactory.createProgressDialog(context, "Authentication process running", "Please wait..."); //TODO internationalize this message
+			Resources res = getResources();
+			progressDialog = ViewFactory.createProgressDialog(context, res.getString(R.string.focus_login_progress_message), res.getString(R.string.progress_wait_message));
 			progressDialog.show();
 		}
 

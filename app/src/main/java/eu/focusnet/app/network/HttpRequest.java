@@ -161,7 +161,6 @@ public class HttpRequest
 			connection.disconnect();
 		}
 
-
 		return response;
 	}
 

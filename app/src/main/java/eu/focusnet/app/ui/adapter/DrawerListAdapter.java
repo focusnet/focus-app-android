@@ -38,7 +38,7 @@ import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 
 /**
- * Created by admin on 15.06.2015.
+ * FIXME TODO JULIEN To be reviewed
  */
 public class DrawerListAdapter extends BaseAdapter
 {

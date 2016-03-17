@@ -23,7 +23,7 @@
 package eu.focusnet.app.ui.util;
 
 /**
- * Created by julien on 2/14/16.
+ * UI-related constants
  */
 public class Constant
 {

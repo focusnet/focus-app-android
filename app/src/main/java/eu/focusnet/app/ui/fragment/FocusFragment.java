@@ -124,7 +124,7 @@ public class FocusFragment extends ListFragment
 
 			abstractItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
-			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
+			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects(); // FIXME TODO sporadic crashes  here
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
@@ -137,8 +137,6 @@ public class FocusFragment extends ListFragment
 				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString();
 				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
-
-				//END///
 
 				StandardListItem drawListItem = new StandardListItem(projectId, ViewUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
 						projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien

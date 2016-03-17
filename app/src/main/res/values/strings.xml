@@ -154,5 +154,9 @@
     <string name="focus_login_error_no_network">There is no internet connection. Please connect to the internet</string>
     <string name="focus_drawer_open_description">Open drawer</string>
     <string name="focus_drawer_close_description">Close drawer</string>
+    <string name="focus_error_no_configuration_available">Cannot access application content configuration. Exiting...</string>
+    <string name="focus_loading_app_content">Loading application content ...</string>
+    <string name="progress_wait_message">Please wait ...</string>
+    <string name="focus_login_progress_message">Logging in</string>
 
 </resources>

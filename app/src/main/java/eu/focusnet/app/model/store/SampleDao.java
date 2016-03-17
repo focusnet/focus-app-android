@@ -46,6 +46,8 @@ import eu.focusnet.app.service.DataManager;
 
 /**
  * SQL Sample Data Access Object
+ *
+ * FIXME TODO  --- parse datetime
  */
 public class SampleDao
 {
@@ -101,7 +103,7 @@ public class SampleDao
 
 		String creationDateTime = cursor.getString(cursor.getColumnIndex(Constant.CREATION_DATE_TIME));
 		String editionDateTime = cursor.getString(cursor.getColumnIndex(Constant.EDITION_DATE_TIME));
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // FIXME TODO date parsing not in correct format
 		Date creationDate = null;
 		Date editionDate = null;
 		try {
@@ -408,6 +410,15 @@ public class SampleDao
 	public String[] getAllMarkedForDeletion()
 	{
 		return this.getAllMarked(Constant.TO_DELETE);
+	}
+
+	/**
+	 * Delete all entries from the database
+	 */
+	public void deleteAll()
+	{
+		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES;
+		this.database.execSQL(sql);
 	}
 
 }

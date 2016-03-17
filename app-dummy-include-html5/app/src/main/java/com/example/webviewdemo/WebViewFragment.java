@@ -35,14 +35,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.example.webviewdemo.network.HttpResponse;
 import com.example.webviewdemo.network.NetworkManager;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 // FIXME should use DataManager instead of NetworkManager!
 public class WebViewFragment extends Fragment {

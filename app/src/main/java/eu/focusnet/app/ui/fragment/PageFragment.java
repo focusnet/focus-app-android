@@ -95,6 +95,8 @@ public class PageFragment extends Fragment
 	{
 		// useful for our custom garbage collection in DataManager
 		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.pageInstance);
+
+		super.onDestroyView();
 	}
 
 

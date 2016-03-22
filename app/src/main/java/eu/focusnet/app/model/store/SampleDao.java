@@ -34,13 +34,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
 
@@ -52,7 +52,7 @@ import eu.focusnet.app.service.DataManager;
 public class SampleDao
 {
 
-	private static final String SAMPLES_OUTDATED_AFTER = "1 week";
+	private static final int SAMPLES_OUTDATED_AFTER = 7*24*60*60; // seconds
 
 	private String[] columnsToRetrieve = {
 			Constant.ID,
@@ -61,8 +61,8 @@ public class SampleDao
 			Constant.VERSION,
 			Constant.TYPE,
 			Constant.OWNER,
-			Constant.CREATION_DATE_TIME,
-			Constant.EDITION_DATE_TIME,
+			Constant.CREATION_EPOCH,
+			Constant.EDITION_EPOCH,
 			Constant.EDITOR,
 			Constant.ACTIVE,
 			Constant.DATA,
@@ -88,7 +88,6 @@ public class SampleDao
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
 		if (cursor.getCount() == 0) {
-			cursor.close();
 			return null;
 		}
 		Sample sample = new Sample();
@@ -101,32 +100,18 @@ public class SampleDao
 		sample.setEditor(cursor.getString(cursor.getColumnIndex(Constant.EDITOR)));
 		sample.setData(cursor.getString(cursor.getColumnIndex(Constant.DATA)));
 
-		String creationDateTime = cursor.getString(cursor.getColumnIndex(Constant.CREATION_DATE_TIME));
-		String editionDateTime = cursor.getString(cursor.getColumnIndex(Constant.EDITION_DATE_TIME));
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // FIXME TODO date parsing not in correct format
-		Date creationDate = null;
-		Date editionDate = null;
-		try {
-			creationDate = dateFormat.parse(creationDateTime);
-			editionDate = dateFormat.parse(editionDateTime);
-		}
-		catch (ParseException e) {
-			// let's me consilient, and default these dates with the current timestamp
-			FocusApplication.reportError(e);
-			if (creationDate == null) {
-				creationDate = new Date();
-			}
-			if (editionDate == null) {
-				editionDate = new Date();
-			}
-		}
+		int creationDateTime = cursor.getInt(cursor.getColumnIndex(Constant.CREATION_EPOCH));
+		int editionDateTime = cursor.getInt(cursor.getColumnIndex(Constant.EDITION_EPOCH));
+
+		Date creationDate = new Date(creationDateTime * 1000L);
+		Date editionDate = new Date(editionDateTime * 1000L);
+
 		sample.setCreationDateTime(creationDate);
 		sample.setEditionDateTime(editionDate);
 
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
 		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_PUT)) > 0);
-		cursor.close();
 
 		return sample;
 	}
@@ -157,7 +142,9 @@ public class SampleDao
 				null,
 				Constant.VERSION + " DESC, " + Constant.ID + " DESC",
 				"1");
-		return SampleDao.buildSampleFromCursor(cursor);
+		Sample s = SampleDao.buildSampleFromCursor(cursor);
+		cursor.close();
+		return s;
 	}
 
 	/**
@@ -173,7 +160,7 @@ public class SampleDao
 		String where = Constant.URL + "= ?";
 		ContentValues updatedValues = new ContentValues();
 		updatedValues.put(Constant.TO_DELETE, true);
-		updatedValues.put(Constant.EDITION_DATE_TIME, new Date().toString());
+		updatedValues.put(Constant.EDITION_EPOCH, new Date().getTime()/1000L);
 		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
 
@@ -220,8 +207,8 @@ public class SampleDao
 		contentValues.put(Constant.VERSION, sample.getVersion());
 		contentValues.put(Constant.TYPE, sample.getType());
 		contentValues.put(Constant.OWNER, sample.getOwner());
-		contentValues.put(Constant.CREATION_DATE_TIME, sample.getCreationDateTime().toString());
-		contentValues.put(Constant.EDITION_DATE_TIME, sample.getEditionDateTime().toString());
+		contentValues.put(Constant.CREATION_EPOCH, (sample.getCreationDateTime().getTime()/1000L));
+		contentValues.put(Constant.EDITION_EPOCH, (sample.getEditionDateTime().getTime()/1000L));
 		contentValues.put(Constant.EDITOR, sample.getEditor());
 		contentValues.put(Constant.ACTIVE, sample.isActive());
 		contentValues.put(Constant.DATA, sample.getData());
@@ -341,6 +328,7 @@ public class SampleDao
 			urls_list[i] = "'" + urls_list[i] + "'";
 		}
 
+		// FIXME sprintf-like syntax would be better.
 		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
 				+ " WHERE "
 				+ Constant.URL + " NOT LIKE '" + DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "%'"
@@ -349,7 +337,8 @@ public class SampleDao
 				+ Constant.URL + " NOT IN (" + TextUtils.join(",", urls_list) + ") "
 				+ " OR "
 				+ " ( "
-				+ "   ( " + Constant.TO_PUT + " = 1 OR " + Constant.TO_POST + " = 1 OR " + Constant.TO_DELETE + " = 1 ) AND " + Constant.EDITION_DATE_TIME + " > date('now', '-" + SAMPLES_OUTDATED_AFTER + "');"
+				+ "   ( " + Constant.TO_PUT + " = 1 OR " + Constant.TO_POST + " = 1 OR " + Constant.TO_DELETE + " = 1 ) AND "
+				+ Constant.EDITION_EPOCH + " > (strftime('%s','now') - " + SAMPLES_OUTDATED_AFTER + ")"
 				+ " ) "
 				+ " OR "
 				+ " ( "
@@ -381,6 +370,7 @@ public class SampleDao
 		while (cursor.moveToNext()) {
 			result.add(cursor.getString(cursor.getColumnIndex(Constant.URL)));
 		}
+		cursor.close();
 
 		return (String[]) result.toArray();
 	}

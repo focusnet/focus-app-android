@@ -27,6 +27,7 @@ import android.os.Bundle;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * Entry point activity
@@ -52,21 +53,16 @@ public class EntryPointActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 
-		/*
-		 * If we don't have login information, yet, let's redirect to the LoginActivity.
-		 * Otherwise, load the basic application configuration and redirect to FocusActivity
-		 */
-		if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
 
-			/*
-			 * This thread will retrieve the application configuration.
-			 */
-			final Thread app_acquisition = new Thread()
+		final Thread init_thread = new Thread()
+		{
+			public void run()
 			{
-				public void run()
-				{
+				DataManager dm = FocusApplication.getInstance().getDataManager();
+				dm.init();
+				if (dm.hasLoginInformation()) {
 					try {
-						FocusApplication.getInstance().getDataManager().retrieveApplicationData();
+						dm.retrieveApplicationData();
 					}
 					catch (FocusMissingResourceException ex) {
 						// this may occur when no data has been previously loaded even though the login information are available
@@ -76,43 +72,54 @@ public class EntryPointActivity extends Activity
 
 					}
 				}
-			};
+			}
+		};
 
-			/*
+
+
+		/*
+		 * If we don't have login information, yet, let's redirect to the LoginActivity.
+		 * Otherwise, load the basic application configuration and redirect to FocusActivity
+		 */
+
+		// don't do anything while not init();
+
+		/*
 			 * This thread will simply sleep for a minimum amount of time, waiting for the
 			 * app_acquisition Thread to complete.
 			 */
-			final Thread splash_screen = new Thread()
+		final Thread splash_screen = new Thread()
+		{
+			public void run()
 			{
-				public void run()
-				{
-					try {
-						int min_splashscreen_display_time = 2000;
-						sleep(1000);
-						min_splashscreen_display_time -= 1000;
-						while (app_acquisition.isAlive() || min_splashscreen_display_time > 0) {
-							sleep(500);
-							min_splashscreen_display_time -= 500;
-						}
+				try {
+					int min_splashscreen_display_time = 2000;
+					sleep(1000);
+					min_splashscreen_display_time -= 1000;
+					while (init_thread.isAlive() || min_splashscreen_display_time > 0) {
+						sleep(500);
+						min_splashscreen_display_time -= 500;
+					}
+					if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
 						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
 					}
-					catch (InterruptedException ex) {
-						// empty, but that's ok. Ignore failure.
-					}
-					finally {
-						finish();
+					else {
+						startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
 					}
 				}
-			};
+				catch (InterruptedException ex) {
+					// empty, but that's ok. Ignore failure.
+				}
+				finally {
+					finish();
+				}
+			}
+		};
 
-			// start threads
-			splash_screen.start();
-		 	app_acquisition.start();
-		}
-		else {
-			startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
-			finish();
-		}
+		// start threads
+		init_thread.start();
+		splash_screen.start();
+
 	}
 
 }

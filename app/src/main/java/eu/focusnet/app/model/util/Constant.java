@@ -28,6 +28,8 @@ package eu.focusnet.app.model.util;
 public class Constant
 {
 
+	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"; // ISO 8601
+
 	public static final String DATABASE_NAME = "Focus_DB";
 
 	public static final String DATABASE_TABLE_SAMPLES = "samples";
@@ -38,8 +40,8 @@ public class Constant
 			CONTEXT = "context",
 			OWNER = "owner",
 			EDITOR = "editor",
-			CREATION_DATE_TIME = "creation_date_time",
-			EDITION_DATE_TIME = "edition_date_time",
+			CREATION_EPOCH = "creation_date_time",
+			EDITION_EPOCH = "edition_date_time",
 			VERSION = "version",
 			ACTIVE = "active",
 			DATA = "data",
@@ -54,8 +56,8 @@ public class Constant
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +
-			CREATION_DATE_TIME + " DATETIME , " +
-			EDITION_DATE_TIME + " DATETIME ," +
+			CREATION_EPOCH + " INTEGER , " +
+			EDITION_EPOCH + " INTEGER ," +
 			EDITOR + " TEXT, " +
 			DATA + " TEXT, " +
 			TO_DELETE + " BOOL, " +

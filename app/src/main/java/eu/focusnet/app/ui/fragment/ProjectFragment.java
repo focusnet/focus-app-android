@@ -88,6 +88,8 @@ public class ProjectFragment extends ListFragment
 	{
 		// useful for our custom garbage collection in DataManager
 		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.projectInstance);
+
+		super.onDestroyView();
 	}
 
 

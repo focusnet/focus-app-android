@@ -150,7 +150,6 @@ public class FocusApplication extends Application
 
 		// setup DataManager
 		this.dataManager = new DataManager();
-		this.dataManager.init();
 
 		// start the CronService
 		this.startService(new Intent(this, CronService.class));

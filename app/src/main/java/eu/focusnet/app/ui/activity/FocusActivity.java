@@ -111,9 +111,9 @@ public class FocusActivity extends BaseDrawerActivity
 			String menuTitle = navMenuTitles[i];
 			DrawerListItem drawListItem = new DrawerListItem(ViewUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
 			//find out the synchronize menu
-			if (menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) {
+			if (menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) { // FIXME do we keep that?
 				//TODO FIXME YANDY set the synchronized info
-				String lastUpdate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+				String lastUpdate = new SimpleDateFormat(eu.focusnet.app.model.util.Constant.DATE_FORMAT).format(new Date());
 				drawListItem.setInfo(getResources().getString(R.string.drawer_menu_update) + " " + lastUpdate);
 			}
 			drawerItems.add(drawListItem);

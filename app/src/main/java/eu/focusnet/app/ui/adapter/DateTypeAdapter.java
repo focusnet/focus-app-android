@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import eu.focusnet.app.model.util.Constant;
+
 /**
  * DateTypeAdapter is used by the GSON parser to translate DateTime formats
  */
@@ -49,8 +51,8 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	 */
 	public DateTypeAdapter()
 	{
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
+	// 	dateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME TODO check - we use the timezone provided in the string.
 	}
 
 	/**

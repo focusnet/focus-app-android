@@ -46,7 +46,7 @@ public class ProjectInstance extends AbstractInstance
 	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
 
 	private String guid;
-	private String title; // should be SmartString -> resolved on toString() call
+	private String title;
 	private String description;
 
 	private LinkedHashMap<String, PageInstance> dashboards;
@@ -64,6 +64,9 @@ public class ProjectInstance extends AbstractInstance
 	{
 		this.template = tpl;
 		this.dataContext = dataContext;
+		if (this.dataContext == null) {
+			this.dataContext = new DataContext();
+		}
 		this.guid = tpl.getGuid();
 		this.dashboards = new LinkedHashMap<String, PageInstance>();
 		this.tools = new LinkedHashMap<String, PageInstance>();
@@ -107,6 +110,7 @@ public class ProjectInstance extends AbstractInstance
 		if (this.template.getDashboards() != null) {
 			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
 		}
+
 		if (this.template.getTools() != null) {
 			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
 		}
@@ -121,6 +125,23 @@ public class ProjectInstance extends AbstractInstance
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<Linker> source, PageInstance.PageType type)
 	{
 		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<>();
+
+		try {
+			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
+			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
+		}
+		catch (FocusMissingResourceException ex) {
+			FocusApplication.reportError(ex);
+			return null;
+		}
+		catch (FocusBadTypeException ex) {
+			FocusApplication.reportError(ex);
+			return null;
+		}
+
+		if (this.description == null) {
+			this.description = "";
+		}
 
 		for (Linker s : source) {
 			String page_id = s.getPageid();
@@ -226,7 +247,7 @@ public class ProjectInstance extends AbstractInstance
 
 	public String getTitle()
 	{
-		return title;
+		return this.title;
 	}
 
 	public String getDescription()

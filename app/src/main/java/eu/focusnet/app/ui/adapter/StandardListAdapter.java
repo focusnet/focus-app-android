@@ -45,6 +45,7 @@ import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.service.BookmarkService;
 import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -178,7 +179,7 @@ public class StandardListAdapter extends BaseAdapter
 									if (isRightIconActive) {
 										//   dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
 										standardListItem.setIsRightIconActive(false);
-										Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star_o);
+										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.ic_star_o);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, false);
@@ -186,7 +187,7 @@ public class StandardListAdapter extends BaseAdapter
 									else {
 										//     dialogTitle.setText("Are you sure you want to register this context to the Bookmarks?");
 										standardListItem.setIsRightIconActive(true);
-										Bitmap rightIcon = ViewUtil.getBitmap(context, R.drawable.ic_star);
+										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.ic_star);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, true);

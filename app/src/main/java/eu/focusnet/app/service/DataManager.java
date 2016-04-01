@@ -697,6 +697,9 @@ public class DataManager
 		Set<String> used_urls = new HashSet<>();
 		for (AbstractInstance ai : this.activeInstances) {
 			Map<String, String> m = ai.getDataContext();
+			if (m == null) {
+				continue;
+			}
 			for (Map.Entry<String, String> e : m.entrySet()) {
 				used_urls.add(e.getValue());
 			}

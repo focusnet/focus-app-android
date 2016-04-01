@@ -25,10 +25,12 @@ package eu.focusnet.app.model.internal;
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.model.util.TypesHelper;
 
 /**
  * Created by julien on 12.01.16.
@@ -62,12 +64,29 @@ public class PageInstance extends AbstractInstance
 		}
 		this.widgets = widgets;
 		this.dataContext = dataCtx;
+		if (this.dataContext == null) {
+			this.dataContext = new DataContext();
+		}
 
 		// register page-specific data to our current data context
 		this.dataContext.provideData(this.template.getData());
 
-		this.title = pageTpl.getTitle(); // FIXME resolve?
-		this.description = pageTpl.getDescription(); // FIXME resolve?
+		try {
+			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
+			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
+		}
+		catch (FocusMissingResourceException ex) {
+			FocusApplication.reportError(ex);
+			return;
+		}
+		catch (FocusBadTypeException ex) {
+			FocusApplication.reportError(ex);
+			return;
+		}
+
+		if (this.description == null) {
+			this.description = "";
+		}
 	}
 
 	/**

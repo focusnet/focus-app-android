@@ -51,6 +51,7 @@ import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -98,7 +99,7 @@ public class ProjectFragment extends ListFragment
 	{
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 			if (position > notificationsHeaderPosition) {
-				ViewUtil.displayToast(getActivity(), "Notification selected");
+				UiHelpers.displayToast(getActivity(), "Notification selected");
 			}
 //            else if(position > toolsHeaderPosition){
 //                GuiUtil.displayToast(getActivity(), "Tools selected");
@@ -130,7 +131,7 @@ public class ProjectFragment extends ListFragment
 
 			abstractItems = new ArrayList<>();
 
-			AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
 					getString(R.string.cutting_header_dashboard),
 					null);
 
@@ -153,16 +154,16 @@ public class ProjectFragment extends ListFragment
 				int dashboardOrder = 0;
 
 				//TODO register the bookmarks to the dataManager
-				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 				//END
 
-				StandardListItem drawListItem = new StandardListItem(dashboardId, ViewUtil.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
+				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
 						dashboard.getTitle(), dashboard.getDescription(), dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 			}
 
-			AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
+			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
 					getString(R.string.cutting_header_tool),
 					null);
 
@@ -174,21 +175,21 @@ public class ProjectFragment extends ListFragment
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
 				//TODO register the bookmarks to the dataManager
-				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 				//END
 
 				int dashboardOrder = 0;
 
-				StandardListItem drawListItem = new StandardListItem(toolId, ViewUtil.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
 						dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 
 			}
 
-			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.cutting_header_notification),
-					ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+					UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
 			abstractItems.add(headerNotificationListItem);
 
 			notificationsHeaderPosition = abstractItems.size() - 1;

@@ -49,6 +49,7 @@ import eu.focusnet.app.ui.fragment.SynchronizeFragment;
 import eu.focusnet.app.ui.fragment.UserManualFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -106,10 +107,10 @@ public class FocusActivity extends BaseDrawerActivity
 			throw new FocusInternalErrorException("User object cannot be accessed.");
 		}
 
-		drawerItems.add(new HeaderDrawerListItem(ViewUtil.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+		drawerItems.add(new HeaderDrawerListItem(UiHelpers.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
-			DrawerListItem drawListItem = new DrawerListItem(ViewUtil.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
+			DrawerListItem drawListItem = new DrawerListItem(UiHelpers.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
 			//find out the synchronize menu
 			if (menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) { // FIXME do we keep that?
 				//TODO FIXME YANDY set the synchronized info

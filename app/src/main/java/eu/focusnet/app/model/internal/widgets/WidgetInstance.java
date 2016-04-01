@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.FocusSample;
@@ -60,7 +61,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	private static HashMap<String, String> layoutConfigDefaults = null;
 
 	static {
-		layoutConfigDefaults = new HashMap<String, String>();
+		layoutConfigDefaults = new HashMap<>();
 		layoutConfigDefaults.put(WIDGET_LAYOUT_WIDTH_LABEL, WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE);
 	}
 
@@ -68,7 +69,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	protected DataContext dataContext;
 	private String guid;
 	private String title;
-	private String type = null;
+	private String type;
 	private WidgetTemplate template;
 	private Map<String, String> layoutConfig;
 
@@ -86,6 +87,9 @@ public abstract class WidgetInstance extends AbstractInstance
 		this.template = wTpl;
 		this.layoutConfig = (layoutConfig == null ? this.layoutConfigDefaults : layoutConfig);
 		this.dataContext = dataCtx;
+		if (this.dataContext == null) {
+			this.dataContext = new DataContext();
+		}
 
 		//	this.title = wTpl.getTitle(); // FIXME
 		// 	this.description = wTpl.getDescription();
@@ -135,7 +139,10 @@ public abstract class WidgetInstance extends AbstractInstance
 	private void processCommonConfig()
 	{
 		try {
-			this.title = TypesHelper.asString(this.template.getTitle());
+			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
+		}
+		catch (FocusMissingResourceException ex) {
+			this.title = "";
 		}
 		catch (FocusBadTypeException e) {
 			this.title = "";

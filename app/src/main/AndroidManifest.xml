@@ -44,7 +44,7 @@
             android:parentActivityName=".ui.activity.ProjectActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".ui.activity.TestActivity"
+            android:name=".DEPRECATED.TestActivity"
             android:label="@string/title_activity_test"
             android:parentActivityName=".ui.activity.FocusActivity"
             android:screenOrientation="landscape"/>

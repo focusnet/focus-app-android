@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment.widget;
@@ -44,13 +42,13 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
-import eu.focusnet.app.DEPRECATED.ChartData;
 
 /**
  * Created by yandypiedra on 13.01.16.
- *
- * FIXME TODO use accessor functions that are in the LineChartWidgetInstance to create the UI.
+ * <p/>
  * We may need to adapt these functions, though.
+ *
+ * NOTE: the caption is not rendered. We use this UI location to display the x-axis label instead.
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {
@@ -62,147 +60,111 @@ public class LineChartWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-		LineChartWidgetInstance lineChartWidgetInstance = (LineChartWidgetInstance) getWidgetInstance();
+		LineChartWidgetInstance linechart_widget_instance = (LineChartWidgetInstance) getWidgetInstance();
 
-
+		// set widget title
 		TextView lineChartTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
-		lineChartTitle.setText(lineChartWidgetInstance.getTitle());
+		lineChartTitle.setText(linechart_widget_instance.getTitle());
 
 		LineChart lineChart = (LineChart) viewRoot.findViewById(R.id.line_chart);
 
-		float yAxisMinValue = -35;
-		float yAxisMaxValue = 50;
-		float limitLineLowerYAxisValue = -27f;
-		String limitLineLowerYAxisText = "Lower Limit";
-		float limitLineUpperYAxisValue = 37f;
-		String limitLineUpperYAxisText = "Upper Limit";
+		// Caption
+		lineChart.setDescription(linechart_widget_instance.getxAxisLabel()); // we use the caption location to display the x-axis label
 
-
+		// chart configuration
 		lineChart.setDrawGridBackground(false);
-
-		// no description text
-		lineChart.setDescription("");
-		//lineChart.setNoDataTextDescription("You need to provide data for the chart.");
-
-		// enable value highlighting
 		lineChart.setHighlightEnabled(true);
-
-		// enable touch gestures
 		lineChart.setTouchEnabled(true);
-
-		// enable scaling and dragging
 		lineChart.setDragEnabled(true);
 		lineChart.setScaleEnabled(true);
-//        lineChart.setScaleXEnabled(true);
-//         lineChart.setScaleYEnabled(true);
-
-		// if disabled, scaling can be done on x- and y-axis separately
 		lineChart.setPinchZoom(true);
+		lineChart.getAxisRight().setEnabled(false);
 
-		// set an alternative background color
-		// mChart.setBackgroundColor(Color.GRAY);
+		// x-axis configuration
+		XAxis x_axis = lineChart.getXAxis();
+		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+		x_axis.setSpaceBetweenLabels(1);
+		ArrayList<String> x_vals = linechart_widget_instance.getxAxisValues();
 
-//        // create a custom MarkerView (extend MarkerView) and specify the layout
-//        // to use for it
-//        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-//
-//        // set the marker to the chart
-//        lineChart.setMarkerView(mv);
+		// limits
+		float yAxisMinValue = 0;
+		float yAxisMaxValue = 0;
 
-		// x-axis limit line
-//        LimitLine limitLineXAxis = new LimitLine(3f, "Index 10");
-//        limitLineXAxis.setLineWidth(4f);
-//        limitLineXAxis.enableDashedLine(10f, 10f, 0f);
-//        // llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-//        limitLineXAxis.setTextSize(10f);
+		// series
+		ArrayList<LineDataSet> datasets = new ArrayList<>();
+		for (int i = 0; i < linechart_widget_instance.getNumberOfSeries(); ++i) {
+			ArrayList<Double> values = linechart_widget_instance.getSerieValues(i);
+			ArrayList<Entry> vals = new ArrayList<>();
+			for (int j = 0; j < values.size(); ++j) {
+				// BarEntry(value, position on x axis)
+				// we have made sure that the number of entries in xAxis and on values of series
+				// are the same in the WidgetInstance implementation
+				float v = values.get(j).floatValue();
+				if (v < yAxisMinValue) {
+					yAxisMinValue = v;
+				}
+				if (v > yAxisMaxValue) {
+					yAxisMaxValue = v;
+				}
+				vals.add(new BarEntry(v, j));
+			}
+			LineDataSet set = new LineDataSet(vals, linechart_widget_instance.getSerieLabel(i));
 
+			// FIXME make colors vary
+			set.enableDashedLine(10f, 5f, 0f);
+			set.setColor(Color.BLACK);
+			set.setCircleColor(Color.BLACK);
+			set.setLineWidth(1f);
+			set.setCircleSize(3f);
+			set.setDrawCircleHole(false);
+			set.setValueTextSize(9f);
+			set.setFillAlpha(65);
+			set.setFillColor(Color.BLACK);
+			set.setDrawValues(false);
 
-		XAxis xAxis = lineChart.getXAxis();
-		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		//xAxis.setXValueFormatter(new MyCustomXValueFormatter());
-		xAxis.setSpaceBetweenLabels(1);
-//        xAxis.addLimitLine(limitLineXAxis); // register x-axis limit line
+			datasets.add(set);
+		}
 
-		LimitLine limitLineUpperYAxis = new LimitLine(limitLineUpperYAxisValue, limitLineUpperYAxisText);
-		limitLineUpperYAxis.setLineWidth(4f);
-		limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
-		//   ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-		limitLineUpperYAxis.setTextSize(10f);
-
-		LimitLine limitLineLowerYAxis = new LimitLine(limitLineLowerYAxisValue, limitLineLowerYAxisText);
-		limitLineLowerYAxis.setLineWidth(4f);
-		limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
-		//   ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-		limitLineLowerYAxis.setTextSize(10f);
-
+		// Yaxis and limits
 		YAxis leftAxis = lineChart.getAxisLeft();
-		leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-		leftAxis.addLimitLine(limitLineUpperYAxis);
-		leftAxis.addLimitLine(limitLineLowerYAxis);
+		leftAxis.removeAllLimitLines();
 		leftAxis.setAxisMaxValue(yAxisMaxValue);
-		leftAxis.setYOffset(10);
+		leftAxis.setYOffset(20);
 		leftAxis.setStartAtZero(false);
 		leftAxis.setAxisMinValue(yAxisMinValue);
 		leftAxis.enableGridDashedLine(10f, 10f, 0f);
-
-		// limit lines are drawn behind data (and not on top)
 		leftAxis.setDrawLimitLinesBehindData(true);
 
-		lineChart.getAxisRight().setEnabled(false);
-
-//        lineChart.getViewPortHandler().setMaximumScaleY(2f);
-//        lineChart.getViewPortHandler().setMaximumScaleX(2f);
-
-		ArrayList<ChartData> lineChartData = new ArrayList<ChartData>();// FIXME use available functions ... lineChartWidgetInstance.getData();
-
-		//x-axis
-		ArrayList<String> xVals = new ArrayList<>();
-		// y-axis values
-		ArrayList<Entry> yVals = new ArrayList<>();
-
-		for (int i = 0; i < lineChartData.size(); i++) {
-			ChartData chartData = lineChartData.get(i);
-			xVals.add(chartData.getName());
-			yVals.add(new BarEntry(chartData.getValue(), i));
+		for (int i = 0; i < linechart_widget_instance.getNumberOfMinLimits(); ++i) {
+			LimitLine limitLineLowerYAxis = new LimitLine(linechart_widget_instance.getMinLimitValue(i).floatValue(), linechart_widget_instance.getMinLimitLabel(i));
+			limitLineLowerYAxis.setLineWidth(4f);
+			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
+			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
+			limitLineLowerYAxis.setTextSize(10f);
+			leftAxis.addLimitLine(limitLineLowerYAxis);
 		}
 
-		// create a dataset and give it a type
-		LineDataSet set1 = new LineDataSet(yVals, "Heat"); //TODO description
-		// set1.setFillAlpha(110);
-		// set1.setFillColor(Color.RED);
-
-		// set the line to be drawn like this "- - - - - -"
-		set1.enableDashedLine(10f, 5f, 0f);
-		//  set1.enableDashedHighlightLine(10f, 5f, 0f);
-		set1.setColor(Color.BLACK);
-		set1.setCircleColor(Color.BLACK);
-		set1.setLineWidth(1f);
-		set1.setCircleSize(3f);
-		set1.setDrawCircleHole(false);
-		set1.setValueTextSize(9f);
-		set1.setFillAlpha(65);
-		set1.setFillColor(Color.BLACK);
-//        set1.setDrawFilled(true);
-		// set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
-		// Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
-
-		ArrayList<LineDataSet> dataSets = new ArrayList<>();
-		dataSets.add(set1); // register the datasets
+		for (int i = 0; i < linechart_widget_instance.getNumberOfMaxLimits(); ++i) {
+			LimitLine limitLineUpperYAxis = new LimitLine(linechart_widget_instance.getMaxLimitValue(i).floatValue(), linechart_widget_instance.getMaxLimitLabel(i));
+			limitLineUpperYAxis.setLineWidth(4f);
+			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
+			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
+			limitLineUpperYAxis.setTextSize(10f);
+			leftAxis.addLimitLine(limitLineUpperYAxis);
+		}
 
 		// create a data object with the datasets
-		LineData data = new LineData(xVals, dataSets);
-
+		LineData data = new LineData(x_vals, datasets);
 		lineChart.setData(data);
 
 		lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-//        mChart.invalidate();
 
 		// get the legend (only possible after setting data)
-		Legend legend1 = lineChart.getLegend();
+		Legend legend = lineChart.getLegend();
 
 		// modify the legend ...
-		legend1.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-		legend1.setForm(Legend.LegendForm.LINE);
+		legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+		legend.setForm(Legend.LegendForm.LINE);
 
 		return viewRoot;
 	}

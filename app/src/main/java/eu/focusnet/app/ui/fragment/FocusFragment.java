@@ -49,6 +49,7 @@ import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 
@@ -118,9 +119,9 @@ public class FocusFragment extends ListFragment
 			projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
 
 			abstractItems = new ArrayList<AbstractListItem>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
 					getString(R.string.focus_header_project),
-					ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+					null); // filter icon: ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter)
 
 			abstractItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
@@ -128,6 +129,12 @@ public class FocusFragment extends ListFragment
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
+
+				// FIXME for now simply ignore the special __welcome__ project that may contain tool-pages.
+				if (p.getGuid().equals(ProjectInstance.WELCOME_PROJECT_IDENTIFIER)) {
+					continue;
+				}
+
 				String projectId = dm.getAppContentInstance().buildPath(p);
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
@@ -135,17 +142,23 @@ public class FocusFragment extends ListFragment
 				//TODO register the bookmarks to the dataManager
 				int projectOrder = 0;
 				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString();
-				Bitmap rightIcon = ViewUtil.getBitmap(getActivity(), R.drawable.ic_star_o);
+				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
 				boolean isRightIconActive = false;
 
-				StandardListItem drawListItem = new StandardListItem(projectId, ViewUtil.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
+				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
 						projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
 				abstractItems.add(drawListItem);
 			}
 
-			AbstractListItem headerNotificationListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_notification),
+			// FIXME TOOLS should come here, from __welcome__ project ; for now not implemented.
+
+
+			/*
+			FIXME TODO notifications
+			*/
+			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
-					ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+					null);
 			abstractItems.add(headerNotificationListItem);
 
 			notifHeaderPosition = abstractItems.size() - 1;
@@ -157,7 +170,7 @@ public class FocusFragment extends ListFragment
 			for (int i = 0; i < notificationTitels.length; i++) {
 				String notifTitle = notificationTitels[i];
 				//TODO set correct path (for now the title is set as the path)
-				StandardListItem drawListItem = new StandardListItem(notifTitle, ViewUtil.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "Info notifications");
+				StandardListItem drawListItem = new StandardListItem(notifTitle, UiHelpers.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "N/A");
 				abstractItems.add(drawListItem);
 			}
 

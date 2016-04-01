@@ -46,7 +46,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.TestActivity"/>
+        className = "eu.focusnet.app.DEPRECATED.TestActivity"/>
       <point      
         x = "52"      
         y = "120"/>

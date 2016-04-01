@@ -27,6 +27,7 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
@@ -88,7 +89,28 @@ public class TableWidgetInstance extends WidgetInstance
 				continue;
 			}
 
-// FIXME TODO resolve data
+			// resolve() header and values
+			try {
+				header = TypesHelper.asString(this.dataContext.resolve(header));
+			}
+			catch (FocusMissingResourceException ex) {
+				header = ""; // FIXME something more verbose?
+			}
+			catch (FocusBadTypeException ex) {
+				header = ""; // FIXME something more verbose?
+			}
+
+			for (int i = 0; i < values.size(); ++i) {
+				try {
+					values.set(i, TypesHelper.asString(this.dataContext.resolve(values.get(i))));
+				}
+				catch (FocusMissingResourceException ex) {
+					values.set(i, ""); // FIXME something more verbose?
+				}
+				catch (FocusBadTypeException ex) {
+					values.set(i, ""); // FIXME something more verbose?
+				}
+			}
 
 			tmp_headers.add(header);
 			tmp_values.add(values);

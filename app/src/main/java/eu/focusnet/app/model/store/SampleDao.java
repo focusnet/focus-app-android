@@ -38,6 +38,7 @@ import java.util.TimeZone;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
@@ -264,7 +265,11 @@ public class SampleDao
 				// foreach widget
 				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
 					WidgetInstance wi = e_widget.getValue();
-					for (Map.Entry<String, String> e_dc : wi.getDataContext().entrySet()) {
+					DataContext dc = wi.getDataContext();
+					if (dc == null) {
+						continue;
+					}
+					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
 						used_urls.add(e_dc.getValue());
 					}
 				}
@@ -279,7 +284,11 @@ public class SampleDao
 				// foreach widget
 				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
 					WidgetInstance wi = e_widget.getValue();
-					for (Map.Entry<String, String> e_dc : wi.getDataContext().entrySet()) {
+					DataContext dc = wi.getDataContext();
+					if (dc == null) {
+						continue;
+					}
+					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
 						used_urls.add(e_dc.getValue());
 					}
 				}

@@ -30,8 +30,6 @@ import eu.focusnet.app.model.internal.DataContext;
 /**
  * Created by admin on 28.01.2016.
  */
-
-//TODO implement this class with its methods
 public class GPSWidgetInstance extends WidgetInstance
 {
 	/**

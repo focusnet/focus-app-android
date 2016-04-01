@@ -39,6 +39,7 @@ import android.widget.TextView;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
@@ -90,7 +91,7 @@ public class CameraWidgetFragment extends WidgetFragment
 											@Override
 											public void onClick(View v)
 											{
-												imageView.setImageBitmap(ViewUtil.getBitmap(getActivity(), R.drawable.focus_logo));
+												imageView.setImageBitmap(UiHelpers.getBitmap(getActivity(), R.drawable.focus_logo));
 												deleteButton.setEnabled(false);
 												viewButton.setEnabled(false);
 												takePictureButton.setText("Take a Picture");

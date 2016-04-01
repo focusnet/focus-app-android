@@ -59,7 +59,9 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 
 		drawerLayout = (DrawerLayout) findViewById(getDrawerLayout());
+		drawerLayout.bringToFront(); // FIXME YANDY drawer is below the top toolbar. Wasn't always the case.
 		drawerListMenu = (ListView) findViewById(getDrawerList());
+		drawerListMenu.bringToFront();
 		drawerItems = getDrawerItems();
 		drawerListMenu.setOnItemClickListener(getOnClickListener());
 
@@ -105,6 +107,8 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 		// Set the drawer toggle as the DrawerListener
 		drawerLayout.setDrawerListener(drawerToggle);
+
+
 	}
 
 	/**
@@ -124,22 +128,20 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		// Handle action bar actions click
 		//TODO YANDY analyze this
 		switch (item.getItemId()) {
-			case R.id.action_settings:
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	/**
-	 *  Called whenever we call invalidateOptionsMenu()
-	 */
+	//
+	 //  Called whenever we call invalidateOptionsMenu()
+	 //
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		// if nav drawer is opened, hide the action items
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListMenu);
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+	//	menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 

@@ -67,8 +67,7 @@
 
     <!-- Notification Items -->
     <string-array name="focus_notification_items">
-        <item>Cutting of stand #412 / Delay announce (2 days)</item>
-        <item>Cutting of stand #412 / Fowarder in maintenance on 23.12.2014</item>
+        <item>N/A</item>
     </string-array>
 
     <!-- Notification Item Icons -->

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
@@ -48,14 +49,14 @@ public class LineChartWidgetInstance extends WidgetInstance
 	private int numberOfSeries;
 	private int numberOfMaxLimits;
 	private int numberOfMinLimits;
-	private ArrayList<String> series_labels;
-	private ArrayList<ArrayList<Double>> series_values;
-	private ArrayList<String> limits_max_labels;
-	private ArrayList<Double> limits_max_values;
-	private ArrayList<String> limits_min_labels;
-	private ArrayList<Double> limits_min_values;
-	private String xAxis_label;
-	private ArrayList<String> xAxis_values;
+	private ArrayList<String> seriesLabels;
+	private ArrayList<ArrayList<Double>> seriesValues;
+	private ArrayList<String> limitsMaxLabels;
+	private ArrayList<Double> limitsMaxValues;
+	private ArrayList<String> limitsMinLabels;
+	private ArrayList<Double> limitsMinValues;
+	private String xAxisLabel;
+	private ArrayList<String> xAxisValues;
 
 	/**
 	 * C'tor
@@ -82,20 +83,26 @@ public class LineChartWidgetInstance extends WidgetInstance
 		this.numberOfMinLimits = 0;
 
 		this.caption = "";
-		this.series_labels = new ArrayList<>();
-		this.series_values = new ArrayList<>();
-		this.limits_max_labels = new ArrayList<>();
-		this.limits_min_labels = new ArrayList<>();
-		this.limits_max_values = new ArrayList<>();
-		this.limits_min_values = new ArrayList<>();
-		this.xAxis_label = "";
-		this.xAxis_values = new ArrayList<>();
+		this.seriesLabels = new ArrayList<>();
+		this.seriesValues = new ArrayList<>();
+		this.limitsMaxLabels = new ArrayList<>();
+		this.limitsMinLabels = new ArrayList<>();
+		this.limitsMaxValues = new ArrayList<>();
+		this.limitsMinValues = new ArrayList<>();
+		this.xAxisLabel = "";
+		this.xAxisValues = new ArrayList<>();
 
 
 		// caption
 		try {
-			// caption
-			this.caption = TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION));
+			this.caption = TypesHelper.asString(
+					this.dataContext.resolve(
+							TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION))
+					)
+			);
+		}
+		catch (FocusMissingResourceException ex) {
+			this.caption = "";
 		}
 		catch (FocusBadTypeException e) {
 			this.caption = "";
@@ -104,8 +111,18 @@ public class LineChartWidgetInstance extends WidgetInstance
 		// x-axis
 		try {
 			Map xMap = (Map<String, Object>) this.config.get(CONFIG_LABEL_X_AXIS);
-			this.xAxis_label = TypesHelper.asString(xMap.get(CONFIG_LABEL_LABEL));
-			this.xAxis_values = TypesHelper.asArrayOfStrings(xMap.get(CONFIG_LABEL_VALUES));
+			this.xAxisLabel = TypesHelper.asString(
+					this.dataContext.resolve(
+							TypesHelper.asString(xMap.get(CONFIG_LABEL_LABEL))
+					)
+			);
+			this.xAxisValues = TypesHelper.asArrayOfStrings(xMap.get(CONFIG_LABEL_VALUES));
+			for (int i=0; i<this.xAxisValues.size(); ++i) {
+				this.xAxisValues.set(i, TypesHelper.asString(this.dataContext.resolve(this.xAxisValues.get(i))));
+			}
+		}
+		catch (FocusMissingResourceException ex) {
+			return;
 		}
 		catch (FocusBadTypeException e) {
 			// not safe to continue without label or values for x-axis
@@ -113,18 +130,46 @@ public class LineChartWidgetInstance extends WidgetInstance
 		}
 
 		// series and limits
-		ArrayList<Map> a = (ArrayList<Map>) this.config.get(CONFIG_LABEL_SERIES);
-		for (Map m : a) {
+		ArrayList<Map> series = (ArrayList<Map>) this.config.get(CONFIG_LABEL_SERIES);
+		for (Map m : series) {
 
 			String new_label;
 			ArrayList<Double> values;
 
 			try {
-				new_label = TypesHelper.asString(m.get(CONFIG_LABEL_LABEL));
-				values = TypesHelper.asArrayOfDoubles(m.get(CONFIG_LABEL_VALUES));
+				new_label = TypesHelper.asString(
+						this.dataContext.resolve(
+								TypesHelper.asString(m.get(CONFIG_LABEL_LABEL))
+						)
+				);
+			}
+			catch (FocusMissingResourceException ex) {
+				// ignore this serie
+				continue;
 			}
 			catch (FocusBadTypeException e) {
 				// ignore this serie
+				continue;
+			}
+
+			Object values_tmp;
+			try {
+				String values_descr = TypesHelper.asString(m.get(CONFIG_LABEL_VALUES));
+				values_tmp = this.dataContext.resolve(values_descr);
+			}
+			catch (FocusBadTypeException ex) {
+				// good, this means we have an array of double and nothing to resolve()
+				values_tmp = m.get(CONFIG_LABEL_VALUES);
+			}
+			catch (FocusMissingResourceException ex) {
+				// cannot resolve, ignore series
+				continue;
+			}
+			try {
+				values = TypesHelper.asArrayOfDoubles(values_tmp);
+			}
+			catch (FocusBadTypeException ex) {
+				// bad values, ignore series
 				continue;
 			}
 
@@ -132,7 +177,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 			// xAxis size, then fill/remove elements. We always keep the first elements and fill/
 			// remove last elements
 			int vsize = values.size();
-			int xsize = xAxis_values.size();
+			int xsize = xAxisValues.size();
 			if (vsize < xsize) {
 				for (int i = vsize; i < xsize; ++i) {
 					values.add(0.0);
@@ -142,7 +187,6 @@ public class LineChartWidgetInstance extends WidgetInstance
 				values = new ArrayList<>(values.subList(0, xsize));
 			}
 
-
 			ArrayList<Map> limits = (ArrayList<Map>) m.get(CONFIG_LABEL_LIMITS);
 			if (limits != null) {
 				for (Map m2 : limits) {
@@ -150,9 +194,13 @@ public class LineChartWidgetInstance extends WidgetInstance
 					Double value;
 					String type;
 					try {
-						label = TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL));
-						value = TypesHelper.asDouble(m2.get(CONFIG_LABEL_VALUE));
+						label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL))));
+						value = TypesHelper.asDouble(this.dataContext.resolve(TypesHelper.asString(m2.get(CONFIG_LABEL_VALUE))));
 						type = TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE));
+					}
+					catch (FocusMissingResourceException ex) {
+						// ignore this limit as a whole
+						continue;
 					}
 					catch (FocusBadTypeException e) {
 						// ignore this limit as a whole
@@ -160,20 +208,20 @@ public class LineChartWidgetInstance extends WidgetInstance
 					}
 
 					if (type != null && type.equals("max")) {
-						this.limits_max_labels.add(label);
-						this.limits_max_values.add(value);
+						this.limitsMaxLabels.add(label);
+						this.limitsMaxValues.add(value);
 						++this.numberOfMaxLimits;
 					}
 					else {
-						this.limits_min_labels.add(label);
-						this.limits_min_values.add(value);
+						this.limitsMinLabels.add(label);
+						this.limitsMinValues.add(value);
 						++this.numberOfMinLimits;
 					}
 				}
 			}
 
-			this.series_labels.add(new_label);
-			this.series_values.add(values);
+			this.seriesLabels.add(new_label);
+			this.seriesValues.add(values);
 
 			++this.numberOfSeries;
 		}
@@ -181,7 +229,6 @@ public class LineChartWidgetInstance extends WidgetInstance
 	}
 
 
-	// FIXME TODO register documentation
 	public String getCaption()
 	{
 		return this.caption;
@@ -189,12 +236,12 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	public String getxAxisLabel()
 	{
-		return this.xAxis_label;
+		return this.xAxisLabel;
 	}
 
-	public ArrayList<String> getxAxisValue()
+	public ArrayList<String> getxAxisValues()
 	{
-		return this.xAxis_values;
+		return this.xAxisValues;
 	}
 
 	public int getNumberOfSeries()
@@ -214,32 +261,32 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	public String getSerieLabel(int i)
 	{
-		return this.series_labels.get(i);
+		return this.seriesLabels.get(i);
 	}
 
 	public ArrayList<Double> getSerieValues(int i)
 	{
-		return this.series_values.get(i);
+		return this.seriesValues.get(i);
 	}
 
 	public String getMaxLimitLabel(int i)
 	{
-		return this.limits_max_labels.get(i);
+		return this.limitsMaxLabels.get(i);
 	}
 
-	public double getMaxLimitValue(int i)
+	public Double getMaxLimitValue(int i)
 	{
-		return this.limits_max_values.get(i);
+		return this.limitsMaxValues.get(i);
 	}
 
 	public String getMinLimitLabel(int i)
 	{
-		return this.limits_min_labels.get(i);
+		return this.limitsMinLabels.get(i);
 	}
 
-	public double getMinLimitValue(int i)
+	public Double getMinLimitValue(int i)
 	{
-		return this.limits_min_values.get(i);
+		return this.limitsMinValues.get(i);
 	}
 
 }

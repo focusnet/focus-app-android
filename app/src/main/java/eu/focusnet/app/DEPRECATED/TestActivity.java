@@ -22,7 +22,7 @@
 
 // FIXME TODO deprecated. kept for reference.
 
-package eu.focusnet.app.ui.activity;
+package eu.focusnet.app.DEPRECATED;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.ui.activity.BaseActivity;
 import eu.focusnet.app.ui.fragment.widget.BarChartWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.CameraWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.GPSWidgetFragment;
@@ -57,6 +58,7 @@ import eu.focusnet.app.ui.fragment.widget.TableWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.TextWidgetFragment;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.model.json.FocusSample;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewFactory;
 import eu.focusnet.app.ui.util.ViewUtil;
 
@@ -341,7 +343,7 @@ public class TestActivity extends BaseActivity
 */
 				Gson gson = new Gson();
 				String focusSamplesJson = gson.toJson(fs);
-				ViewUtil.displayToast(TestActivity.this, focusSamplesJson);
+				UiHelpers.displayToast(TestActivity.this, focusSamplesJson);
 
 				Intent intent = new Intent(EXAMPLE_APP_ACTION);
 				if (isActivityAvailable(intent)) {
@@ -349,7 +351,7 @@ public class TestActivity extends BaseActivity
 					startActivityForResult(intent, EXAMPLE_APP_REQUEST);
 				}
 				else {
-					ViewUtil.displayToast(TestActivity.this, "The is no available activity for the following action: " + EXAMPLE_APP_ACTION);
+					UiHelpers.displayToast(TestActivity.this, "The is no available activity for the following action: " + EXAMPLE_APP_ACTION);
 				}
 			}
 		});
@@ -384,7 +386,7 @@ public class TestActivity extends BaseActivity
 		if (requestCode == EXAMPLE_APP_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				String response = data.getStringExtra(FOCUS_OUTPUT_EXTRA);
-				ViewUtil.displayToast(this, "The response obtained from EXAMPLE_APP was: " + response);
+				UiHelpers.displayToast(this, "The response obtained from EXAMPLE_APP was: " + response);
 			}
 		}
 
@@ -407,9 +409,9 @@ public class TestActivity extends BaseActivity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		// if (id == R.id.action_settings) {
+		// 	return true;
+		// }
 
 		return super.onOptionsItemSelected(item);
 	}

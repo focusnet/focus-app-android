@@ -53,7 +53,6 @@ public class EntryPointActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 
-
 		final Thread init_thread = new Thread()
 		{
 			public void run()

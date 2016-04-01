@@ -31,9 +31,10 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -79,27 +80,6 @@ public class ViewUtil
 	private static final String TYPE_SUBMIT = "#/definitions/widget/collect/submit";
 	private static final String TYPE_HTML5 = "#/definitions/widget/visualize/html5-widget";
 
-	/**
-	 * Displays a toast
-	 *
-	 * @param context the context
-	 * @param msg     the message in the toast
-	 */
-	public static void displayToast(Context context, CharSequence msg)
-	{
-		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-	}
-
-	/**
-	 * Displays a toast
-	 *
-	 * @param context the context
-	 * @param msg     the message in the toast as integer
-	 */
-	public static void displayToast(Context context, int msg)
-	{
-		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-	}
 
 	/**
 	 * Displays a notification
@@ -135,13 +115,13 @@ public class ViewUtil
 		notifMng.notify(notificationId, notif);
 	}
 
-	//TODO find a good place for this method
-	public static Bitmap getBitmap(Context context, int image)
-	{
-		return BitmapFactory.decodeResource(context.getResources(), image);
-	}
 
-
+	/**
+	 * Get the WidgetFragment subtype depending on the input parameter
+	 *
+	 * @param type
+	 * @return
+	 */
 	public static WidgetFragment getWidgetFragmentByType(String type)
 	{
 		WidgetFragment widgetFragment = null;
@@ -183,6 +163,14 @@ public class ViewUtil
 		return widgetFragment;
 	}
 
+	/**
+	 * Build a page consisting of widgets
+	 *
+	 * @param projectInstance
+	 * @param pageInstance
+	 * @param linearLayoutPageInfo
+	 * @param activity
+	 */
 	public static void buildPageView(ProjectInstance projectInstance, PageInstance pageInstance, LinearLayout linearLayoutPageInfo, Activity activity)
 	{
 
@@ -226,8 +214,6 @@ public class ViewUtil
 			}
 
 			sizeLeft = Math.abs((lastSizeLeft - weight) % screenSize);
-			Log.d(TAG, "The weight: " + weight);
-			Log.d(TAG, "The size left: " + sizeLeft);
 
 			int linearLayoutWidth = LinearLayout.LayoutParams.MATCH_PARENT;
 
@@ -253,7 +239,9 @@ public class ViewUtil
 			// access the instance, that may contain information about the height: widgetInstance.getHeightAdvice() = small | full | medium
 			// TODO TODO
 			// or another strategy: height is ALWAYS 90% of viewport height, execpt if TEXT / TABLE ?
-			if (widgetFragment instanceof TableWidgetFragment || widgetFragment instanceof PieChartWidgetFragment) // FIXME FIXME height may depend on widget type and content !
+			if (widgetFragment instanceof TableWidgetFragment
+					|| widgetFragment instanceof PieChartWidgetFragment
+					|| widgetFragment instanceof LineChartWidgetFragment) // FIXME FIXME height may depend on widget type and content !
 			{
 				widgetBundle.putInt(LAYOUT_HEIGHT, 500);
 			}

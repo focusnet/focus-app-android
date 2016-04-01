@@ -47,6 +47,7 @@ import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.service.util.EventBus;
+import eu.focusnet.app.ui.util.UiHelpers;
 import eu.focusnet.app.ui.util.ViewUtil;
 
 
@@ -140,23 +141,23 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 			ArrayList<BookmarkLink> tools = bookmark.getTools();
 
 			abstractItems = new ArrayList<AbstractListItem>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_file),
-					getResources().getString(R.string.bookmark_header_dashboard), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
+					getResources().getString(R.string.bookmark_header_dashboard), UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
 			abstractItems.add(headerProjectsListItem);
 
 			for (BookmarkLink bl : pages) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
 						bl.getName(), bl.getPath());
 				abstractItems.add(drawListItem);
 			}
 
-			AbstractListItem headerToolListItem = new HeaderListItem(ViewUtil.getBitmap(getActivity(), R.drawable.ic_tool),
-					getString(R.string.bookmark_header_tool), ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter));
+			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
+					getString(R.string.bookmark_header_tool), UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
 			abstractItems.add(headerToolListItem);
 
 
 			for (BookmarkLink bl : tools) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), ViewUtil.getBitmap(getActivity(), R.drawable.ic_clock_o),
+				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_clock_o),
 						bl.getName(), bl.getPath());
 				abstractItems.add(drawListItem);
 			}

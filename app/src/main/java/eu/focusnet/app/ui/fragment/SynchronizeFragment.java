@@ -23,8 +23,13 @@
 package eu.focusnet.app.ui.fragment;
 
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.DEPRECATED.DataProviderManager;
@@ -64,6 +70,9 @@ public class SynchronizeFragment extends Fragment
 	private static final String CHECK_FRESHNESS_PATH = "http://focus.yatt.ch/resources-server/services/check-freshness";
 	private TableLayout tableLayout;
 
+	private CronService cronService;
+	private boolean boundService;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState)
@@ -75,9 +84,55 @@ public class SynchronizeFragment extends Fragment
 		return viewRoot;
 	}
 
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		Intent intent = new Intent(this.getActivity(), CronService.class);
+		this.getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		boundService = false;
+	}
+
+
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// Unbind from the service
+		if (boundService) {
+			this.getActivity().unbindService(mConnection);
+			boundService = false;
+		}
+	}
+
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className,
+									   IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get LocalService instance
+			CronService.CronBinder binder = (CronService.CronBinder) service;
+			cronService = binder.getService();
+			boundService = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			boundService = false;
+		}
+	};
+
+
+// FIXME FIXME TODO TO BE TESTED
+
+
 	private class SynchronizeDataTask extends AsyncTask<Void, String, ArrayList<String>>
 	{
-
+// FIXME TODO - do execute the cron service method.
+		// bind to cron service
 		@Override
 		protected ArrayList<String> doInBackground(Void... params)
 		{

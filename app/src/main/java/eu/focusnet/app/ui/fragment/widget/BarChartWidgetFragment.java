@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment.widget;
@@ -26,14 +24,33 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
 public class BarChartWidgetFragment extends WidgetFragment
 {
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -42,99 +59,120 @@ public class BarChartWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-//        BarChartWidgetInstance barChartWidgetInstance = (BarChartWidgetInstance) getWidgetInstance();
-//
-//        TextView barChartTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
-//        barChartTitle.setText(barChartWidgetInstance.getTitle());
-//
-//        BarChart barChart = (BarChart) viewRoot.findViewById(R.id.bar_chart);
-//
-//        barChart.setDrawBarShadow(false);
-//        barChart.setDrawValueAboveBar(true);
-//        barChart.setDescription("");
-//
-//        // if more than 40 entries are displayed in the chart, no values will be
-//        // drawn
-//        barChart.setMaxVisibleValueCount(40);
-//
-//        // scaling can now only be done on x- and y-axis separately
-//        barChart.setPinchZoom(false);
-//
-//        // draw shadows for each bar that show the maximum value
-//        barChart.setDrawBarShadow(true);
-//
-//        // barChart.setDrawXLabels(false);
-//
-//        barChart.setDrawGridBackground(false);
-//        // barChart.setDrawYLabels(false);
-//
-//        // mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf")
-//
-//        XAxis xAxis = barChart.getXAxis();
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setSpaceBetweenLabels(2);
-//
-//        YAxis yAxis = barChart.getAxisLeft();
-//        //leftAxis.setTypeface(mTf);
-//        yAxis.setLabelCount(8, false);
-//        //leftAxis.setValueFormatter(custom);
-//        yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-//        yAxis.setSpaceTop(15f);
-//
-//        barChart.animateY(2500);
-//
-//        yAxis.setStartAtZero(false);
-//        float yAxisMinValue = -15f;
-//        yAxis.setAxisMinValue(yAxisMinValue);
-//
-//        barChart.getAxisRight().setEnabled(false);
-////        YAxis rightAxis = mChart.getAxisRight();
-////        rightAxis.setDrawGridLines(false);
-////       // rightAxis.setTypeface(mTf);
-////        rightAxis.setLabelCount(8, false);
-////        //rightAxis.setValueFormatter(custom);
-////        rightAxis.setSpaceTop(15f);
-//
-//
-//        ////x-axis
-//        ArrayList<String> xVals = new ArrayList<>();
-//        // y-axis values
-//        ArrayList<BarEntry> yVals = new ArrayList<>();
-//
-//        // register colors
-//        ArrayList<Integer> colors = new ArrayList<Integer>();
-//
-//        ArrayList<ChartData> chartDatas = barChartWidgetInstance.getData();
-//
-//        for(int i = 0; i < chartDatas.size(); i++) {
-//            ChartData chartData = chartDatas.get(i);
-//            xVals.register(chartData.getName());
-//            yVals.register(new BarEntry(chartData.getValue(), i));
-//            colors.register(chartData.getColor());
-//        }
-//
-//        BarDataSet set1 = new BarDataSet(yVals, "Heat"); //TODO description
-//        set1.setBarSpacePercent(35f);
-//        set1.setColors(colors);
-//
-//        ArrayList<BarDataSet> dataSets = new ArrayList<>();
-//        dataSets.register(set1);
-//
-//
-//        BarData data = new BarData(xVals, dataSets);
-//        // data.setValueFormatter(new MyValueFormatter());
-//        data.setValueTextSize(10f);
-//        //data.setValueTypeface(mTf);
-//
-//        barChart.setContext(data);
-//
-//        Legend legend = barChart.getLegend();
-//        legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-//        legend.setForm(Legend.LegendForm.SQUARE);
-//        legend.setFormSize(9f);
-//        legend.setTextSize(11f);
-//        legend.setXEntrySpace(4f);
+		this.widgetInstance = getWidgetInstance();
+
+		TextView barChartTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
+		barChartTitle.setText(this.widgetInstance.getTitle());
+
+		BarChart mChart = (BarChart) viewRoot.findViewById(R.id.bar_chart);
+
+		mChart.setDrawBarShadow(false);
+		mChart.setDrawValueAboveBar(true);
+
+		// We use the description location for displaying the x-axis label
+		mChart.setDescription(((BarChartWidgetInstance) this.widgetInstance).getxAxisLabel());
+
+		// if more than 60 entries are displayed in the chart, no values will be drawn
+		mChart.setMaxVisibleValueCount(60);
+
+		// scaling can now only be done on x- and y-axis separately
+		mChart.setPinchZoom(false);
+		mChart.setDrawGridBackground(true);
+
+		XAxis xAxis = mChart.getXAxis();
+		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+		xAxis.setDrawGridLines(false);
+		xAxis.setSpaceBetweenLabels(2);
+
+		YAxis leftAxis = mChart.getAxisLeft();
+		leftAxis.setLabelCount(8, false);
+		leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+		leftAxis.setSpaceTop(15f);
+		leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+
+		mChart.getAxisRight().setEnabled(false);
+
+		Legend l = mChart.getLegend();
+		l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+		l.setForm(Legend.LegendForm.SQUARE);
+		l.setFormSize(9f);
+		l.setTextSize(11f);
+		l.setXEntrySpace(4f);
+
+		// x-axis configuration
+		XAxis x_axis = mChart.getXAxis();
+		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+		x_axis.setSpaceBetweenLabels(1);
+		ArrayList<String> x_vals = ((BarChartWidgetInstance)this.widgetInstance).getxAxisValues();
+
+		// limits
+		float yAxisMinValue = 0;
+		float yAxisMaxValue = 0;
+
+		int[] rainbow = ColorTemplate.COLORFUL_COLORS;
+		int current_color = 0;
+
+		// series
+		ArrayList<BarDataSet> datasets = new ArrayList<>();
+		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfSeries(); ++i) {
+			ArrayList<Double> values = ((BarChartWidgetInstance)this.widgetInstance).getSerieValues(i);
+			ArrayList<BarEntry> vals = new ArrayList<>();
+			for (int j = 0; j < values.size(); ++j) {
+				// BarEntry(value, position on x axis)
+				// we have made sure that the number of entries in xAxis and on values of series
+				// are the same in the WidgetInstance implementation
+				float v = values.get(j).floatValue();
+				if (v < yAxisMinValue) {
+					yAxisMinValue = v;
+				}
+				if (v > yAxisMaxValue) {
+					yAxisMaxValue = v;
+				}
+				vals.add(new BarEntry(v, j));
+			}
+			BarDataSet set = new BarDataSet(vals, ((BarChartWidgetInstance)this.widgetInstance).getSerieLabel(i));
+
+			set.setColor(rainbow[current_color]);
+			set.setValueTextSize(9f);
+			set.setDrawValues(true);
+			datasets.add(set);
+
+			current_color = (current_color + 1) % rainbow.length;
+		}
+
+
+		// Yaxis and limits
+		leftAxis.removeAllLimitLines();
+		// leftAxis.setAxisMaxValue(yAxisMaxValue);
+		// leftAxis.setAxisMinValue(yAxisMinValue);
+		leftAxis.setYOffset(20);
+		leftAxis.setStartAtZero(false);
+		leftAxis.enableGridDashedLine(10f, 10f, 0f);
+		leftAxis.setDrawLimitLinesBehindData(true);
+
+		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfMinLimits(); ++i) {
+			LimitLine limitLineLowerYAxis = new LimitLine(((BarChartWidgetInstance)this.widgetInstance).getMinLimitValue(i).floatValue(), ((BarChartWidgetInstance)this.widgetInstance).getMinLimitLabel(i));
+			limitLineLowerYAxis.setLineWidth(4f);
+			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
+			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
+			limitLineLowerYAxis.setTextSize(10f);
+			leftAxis.addLimitLine(limitLineLowerYAxis);
+		}
+
+		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfMaxLimits(); ++i) {
+			LimitLine limitLineUpperYAxis = new LimitLine(((BarChartWidgetInstance)this.widgetInstance).getMaxLimitValue(i).floatValue(), ((BarChartWidgetInstance)this.widgetInstance).getMaxLimitLabel(i));
+			limitLineUpperYAxis.setLineWidth(4f);
+			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
+			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
+			limitLineUpperYAxis.setTextSize(10f);
+			leftAxis.addLimitLine(limitLineUpperYAxis);
+		}
+
+		// create a data object with the datasets
+		BarData data = new BarData(x_vals, datasets);
+		mChart.setData(data);
+
+	//	mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 
 		return viewRoot;
 	}

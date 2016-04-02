@@ -98,7 +98,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace / 2, takeAllRow));
 
 
-		LinearLayout linearLayoutVertical = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+		LinearLayout linearLayoutVertical = ViewUtil.createLinearLayout(this, LinearLayout.VERTICAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 //        TextView title = ViewFactory.createTextView(this, R.style.TitleAppearance,
@@ -116,14 +116,14 @@ public class TestActivity extends BaseActivity
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
 
-		LinearLayout linearLayoutHorizontalPieChartTitle = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontalPieChartTitle = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
 		linearLayoutHorizontalPieChartTitle.addView(ViewFactory.createEmptyView(this, verticalSpace, LinearLayout.LayoutParams.MATCH_PARENT, treeQuarters));
 
 		linearLayoutPageInfo.addView(linearLayoutHorizontalPieChartTitle);
 
-		LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
 		linearLayoutHorizontal.setId(9381651);
 		FragmentManager.addFragment(linearLayoutHorizontal.getId(), new PieChartWidgetFragment(), getFragmentManager());
@@ -132,7 +132,7 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
-		LinearLayout linearLayoutHorizontal2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+		LinearLayout linearLayoutHorizontal2 = ViewUtil.createLinearLayout(this, LinearLayout.VERTICAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1100));
 		linearLayoutHorizontal2.setId(111567811);
 		FragmentManager.addFragment(linearLayoutHorizontal2.getId(), new BarChartWidgetFragment(), getFragmentManager());
@@ -141,7 +141,7 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
-		LinearLayout linearLayoutVertical2 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+		LinearLayout linearLayoutVertical2 = ViewUtil.createLinearLayout(this, LinearLayout.VERTICAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 		linearLayoutVertical2.setId(111529861);
 		FragmentManager.addFragment(linearLayoutVertical2.getId(), new GPSWidgetFragment(), getFragmentManager());
@@ -149,7 +149,7 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
-		LinearLayout linearLayoutVertical3 = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+		LinearLayout linearLayoutVertical3 = ViewUtil.createLinearLayout(this, LinearLayout.VERTICAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 		linearLayoutVertical3.setId(123423547);
 		FragmentManager.addFragment(linearLayoutVertical3.getId(), new CameraWidgetFragment(), getFragmentManager());
@@ -157,7 +157,22 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutPageInfo.addView(ViewFactory.createEmptyView(this, LinearLayout.LayoutParams.MATCH_PARENT, verticalSpace, takeAllRow));
 
-		LinearLayout linearLayoutVerticalForm = ViewFactory.createLinearLayout(this, LinearLayout.VERTICAL,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		 // FORM ------------------------------------------------------
+		LinearLayout linearLayoutVerticalForm = ViewUtil.createLinearLayout(this, LinearLayout.VERTICAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 
@@ -166,7 +181,7 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutVerticalForm.addView(form);
 
-		LinearLayout linearLayoutHorizontalName = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontalName = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelName = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -180,7 +195,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontalName);
 
 
-		LinearLayout linearLayoutHorizontalEmail = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontalEmail = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelEmail = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -195,7 +210,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontalEmail);
 
 
-		LinearLayout linearLayoutHorizontalNumber = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontalNumber = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelNumber = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -210,7 +225,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontalNumber);
 
 
-		LinearLayout linearLayoutHorizontalDescription = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontalDescription = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelDescription = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -230,7 +245,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontalDescription);
 
 
-//        LinearLayout linearLayoutHorizontalDatePicker = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+//        LinearLayout linearLayoutHorizontalDatePicker = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 //                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 //
 //        TextView labelDatePicker = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -245,7 +260,7 @@ public class TestActivity extends BaseActivity
 		//   linearLayoutVerticalForm.addView(linearLayoutHorizontalDatePicker);
 
 
-		LinearLayout linearLayoutHorizontal5 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal5 = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelC = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -268,7 +283,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontal5);
 
 
-		LinearLayout linearLayoutHorizontal6 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal6 = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelD = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -288,7 +303,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutVerticalForm.addView(linearLayoutHorizontal6);
 
 
-		LinearLayout linearLayoutHorizontal7 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal7 = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		TextView labelE = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
@@ -310,7 +325,7 @@ public class TestActivity extends BaseActivity
 		linearLayoutHorizontal7.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
 		linearLayoutVerticalForm.addView(linearLayoutHorizontal7);
 
-		LinearLayout linearLayoutHorizontal8 = ViewFactory.createLinearLayout(this, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal8 = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		Button submitButton = ViewFactory.createButton(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half), "Submit");
@@ -365,6 +380,7 @@ public class TestActivity extends BaseActivity
 
 		linearLayoutPageInfo.addView(linearLayoutVerticalForm);
 
+		// ENDO OF FORM --------------------------------------------------------
 
 	}
 

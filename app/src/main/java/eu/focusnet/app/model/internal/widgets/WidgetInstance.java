@@ -34,6 +34,7 @@ import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * Created by julien on 12.01.16.
@@ -41,23 +42,21 @@ import eu.focusnet.app.model.util.TypesHelper;
 public abstract class WidgetInstance extends AbstractInstance
 {
 
-	/* widget types */
-	private static final String WIDGET_TYPE_TEXT = "#/definitions/widget/visualize/text";
-	private static final String WIDGET_TYPE_TABLE = "#/definitions/widget/visualize/table";
-	private static final String WIDGET_TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
-	private static final String WIDGET_TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
-	private static final String WIDGET_TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-	private static final String WIDGET_TYPE_CAMERA = "#/definitions/widget/collect/camera";
-	private static final String WIDGET_TYPE_GPS = "#/definitions/widget/collect/gps";
-	private static final String WIDGET_TYPE_FORM = "#/definitions/widget/collect/form";
-	private static final String WIDGET_TYPE_EXTERNAL_APP = "#/definitions/widget/collect/external-app"; // FIXME TODO
-	private static final String WIDGET_TYPE_HTML5_WEBAPP = "#/definitions/widget/visualize/html5-widget";
-	private static final String WIDGET_TYPE_SUBMIT = "#/definitions/widget/collect/submit";
-
-
-	private static final String WIDGET_LAYOUT_WIDTH_LABEL = "width";
-	private static final String WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE = "4of4";
-
+	public static final String WIDGET_TYPE_TEXT = "#/definitions/widget/visualize/text";
+	public static final String WIDGET_TYPE_TABLE = "#/definitions/widget/visualize/table";
+	public static final String WIDGET_TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
+	public static final String WIDGET_TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
+	public static final String WIDGET_TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
+	public static final String WIDGET_TYPE_CAMERA = "#/definitions/widget/collect/camera";
+	public static final String WIDGET_TYPE_GPS = "#/definitions/widget/collect/gps";
+	public static final String WIDGET_TYPE_FORM = "#/definitions/widget/collect/form";
+	public static final String WIDGET_TYPE_EXTERNAL_APP = "#/definitions/widget/collect/external-app";
+	public static final String WIDGET_TYPE_HTML5_WEBAPP = "#/definitions/widget/visualize/html5-widget";
+	public static final String WIDGET_TYPE_SUBMIT = "#/definitions/widget/collect/submit";
+	
+	public static final String WIDGET_LAYOUT_WIDTH_LABEL = "width";
+	public static final String WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE = "4of4";
+	
 	private static HashMap<String, String> layoutConfigDefaults = null;
 
 	static {
@@ -70,7 +69,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	private String guid;
 	private String title;
 	private String type;
-	private WidgetTemplate template;
+	protected WidgetTemplate template;
 	private Map<String, String> layoutConfig;
 
 	/**
@@ -95,7 +94,7 @@ public abstract class WidgetInstance extends AbstractInstance
 		// 	this.description = wTpl.getDescription();
 		Object cfg = wTpl.getConfig();
 		if (cfg != null) {
-			this.config = (LinkedTreeMap<String, Object>) cfg; // FIXME resolve content right away?
+			this.config = (LinkedTreeMap<String, Object>) cfg;
 		}
 
 		this.processSpecificConfig();
@@ -112,9 +111,7 @@ public abstract class WidgetInstance extends AbstractInstance
 			case WIDGET_TYPE_PIE_CHART:
 				return new PieChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_BAR_CHART:
-				//	return new BarChartWidgetInstance(template, layoutConfig, newCtx);
-				// FIXME TODO
-				return new LineChartWidgetInstance(template, layoutConfig, newCtx); // FIXME FIXME should be BarChartWidget
+				return new BarChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_LINE_CHART:
 				return new LineChartWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_CAMERA:
@@ -124,7 +121,7 @@ public abstract class WidgetInstance extends AbstractInstance
 			case WIDGET_TYPE_FORM:
 				return new FormWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_EXTERNAL_APP:
-				//	return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
+				return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_SUBMIT:
 				return new SubmitWidgetInstance(template, layoutConfig, newCtx);
 			case WIDGET_TYPE_HTML5_WEBAPP:
@@ -136,7 +133,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Process configuration elements that are common to all widget types.
 	 */
-	private void processCommonConfig()
+	protected void processCommonConfig()
 	{
 		try {
 			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
@@ -152,7 +149,10 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Acquire the configuration of the widget
 	 */
-	abstract protected void processSpecificConfig();
+	protected void processSpecificConfig()
+	{
+
+	}
 
 	/**
 	 * Return this WidgetInstance's guid.
@@ -196,15 +196,5 @@ public abstract class WidgetInstance extends AbstractInstance
 			return this.layoutConfigDefaults.get(attribute);
 		}
 		return tmp;
-	}
-
-	/**
-	 * Set the collected data
-	 *
-	 * @param focusSample
-	 */
-	public void setCollectedData(FocusSample focusSample)
-	{
-		//TODO implement this method
 	}
 }

@@ -44,13 +44,13 @@ public class TextWidgetFragment extends WidgetFragment
 		View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
 		setWidgetLayout(viewRoot);
 
-		TextWidgetInstance textWidgetInstance = (TextWidgetInstance) getWidgetInstance();
+		this.widgetInstance = getWidgetInstance();
 
 		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title);
-		textTitle.setText(textWidgetInstance.getTitle());
+		textTitle.setText(this.widgetInstance.getTitle());
 
 		TextView textContent = (TextView) viewRoot.findViewById(R.id.text_content);
-		textContent.setText(textWidgetInstance.getContent());
+		textContent.setText(((TextWidgetInstance)this.widgetInstance).getContent());
 
 		return viewRoot;
 	}

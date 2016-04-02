@@ -47,9 +47,6 @@ public class TypesHelper
 		if (obj == null) {
 			return "";
 		}
-		if (obj instanceof ArrayList) {
-			throw new FocusBadTypeException("Array cannot be converted to string.");
-		}
 		if (obj instanceof String || obj instanceof Double || obj instanceof Integer) {
 			return obj.toString();
 		}

@@ -35,6 +35,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.PercentFormatter;
 
 import java.util.ArrayList;
@@ -56,27 +57,24 @@ public class PieChartWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-		PieChartWidgetInstance pieChartWidgetInstance = (PieChartWidgetInstance) getWidgetInstance();
+		this.widgetInstance =  getWidgetInstance();
 
 		TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
-		piechartTitle.setText(pieChartWidgetInstance.getTitle());
+		piechartTitle.setText(((PieChartWidgetInstance)this.widgetInstance).getTitle());
 
 		ArrayList<Entry> yVals = new ArrayList<>();
 
-		for (int i = 0; i < pieChartWidgetInstance.getValues().size(); i++) {
-			float d = pieChartWidgetInstance.getValues().get(i).floatValue();
+		for (int i = 0; i < ((PieChartWidgetInstance)this.widgetInstance).getValues().size(); i++) {
+			float d = ((PieChartWidgetInstance)this.widgetInstance).getValues().get(i).floatValue();
 			yVals.add(new Entry(d, i));
-			// FIXME?	colors.register(chartData.getColor());
 		}
 
-
-		PieDataSet dataSet = new PieDataSet(yVals, pieChartWidgetInstance.getCaption());
+		PieDataSet dataSet = new PieDataSet(yVals, "");
 		dataSet.setSliceSpace(3f);
 		dataSet.setSelectionShift(5f);
+		dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
-		// FIXME?	dataSet.setColors(colors);
-
-		PieData data = new PieData(pieChartWidgetInstance.getLabels(), dataSet); // names, values=new PieDataSet(values, legend)
+		PieData data = new PieData(((PieChartWidgetInstance)this.widgetInstance).getLabels(), dataSet);
 		data.setValueFormatter(new PercentFormatter());
 		data.setValueTextSize(11f);
 		data.setValueTextColor(Color.WHITE);
@@ -85,9 +83,9 @@ public class PieChartWidgetFragment extends WidgetFragment
 		PieChart pieChart = (PieChart) viewRoot.findViewById(R.id.pie_chart);
 
 		pieChart.setUsePercentValues(true);
-		pieChart.setDescription("");
+		pieChart.setDescription(((PieChartWidgetInstance)this.widgetInstance).getCaption());
 		pieChart.setDragDecelerationFrictionCoef(0.95f);
-		pieChart.setDrawHoleEnabled(true);
+		pieChart.setDrawHoleEnabled(false);
 		pieChart.setHoleColorTransparent(true);
 		pieChart.setHoleRadius(58f);
 		pieChart.setTransparentCircleColor(Color.WHITE);
@@ -95,13 +93,13 @@ public class PieChartWidgetFragment extends WidgetFragment
 		pieChart.setTransparentCircleRadius(61f);
 		pieChart.setRotationAngle(0);
 		// enable rotation of the chart by touch
-		pieChart.setRotationEnabled(true);
-		pieChart.setDrawCenterText(true);
-		pieChart.setCenterText("This is the center text");
+		pieChart.setRotationEnabled(false);
+		pieChart.setDrawCenterText(false);
+		// pieChart.setCenterText("This is the center text");
 		// undo all highlights
 		pieChart.highlightValues(null);
 		pieChart.invalidate();
-		pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
+	//	pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
 
 		pieChart.setData(data);
 

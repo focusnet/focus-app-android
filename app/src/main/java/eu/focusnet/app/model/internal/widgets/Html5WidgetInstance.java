@@ -32,7 +32,7 @@ import eu.focusnet.app.model.internal.DataContext;
  */
 
 //TODO implement this class with its methods
-public class Html5WidgetInstance extends WidgetInstance
+public class Html5WidgetInstance extends DataCollectionWidgetInstance
 {
 	/**
 	 * C'tor

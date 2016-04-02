@@ -177,7 +177,7 @@ public class ProjectInstance extends AbstractInstance
 						continue;
 					}
 
-					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
+					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<>();
 					for (WidgetLinker wl : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
 						DataContext new_widget_ctx = new DataContext(new_page_ctx);

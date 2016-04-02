@@ -45,16 +45,17 @@ public class SubmitWidgetFragment extends WidgetFragment
 		View viewRoot = inflater.inflate(R.layout.fragment_submit, container, false);
 		setWidgetLayout(viewRoot);
 
-		SubmitWidgetInstance submitWidgetInstance = (SubmitWidgetInstance) getWidgetInstance();
-		//TODO make something this the submitWidgetInstance
+		this.widgetInstance = getWidgetInstance();
 
 		Button button = (Button) viewRoot.findViewById(R.id.submit_button);
+		button.setText(((SubmitWidgetInstance)this.widgetInstance).getSubmitLabel());
+
 		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				//TODO
+				//TODO FIXME depends on ACTION configuration
 				UiHelpers.displayToast(getActivity(), "Submit button clicked");
 			}
 		});

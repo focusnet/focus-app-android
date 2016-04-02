@@ -30,7 +30,6 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,22 +38,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.CronService;
-import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.model.store.DatabaseAdapter;
-import eu.focusnet.app.DEPRECATED.DataProviderManager;
-import eu.focusnet.app.DEPRECATED.DataProviderManager.RequestData;
-import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.ui.util.ViewFactory;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * The synchronized fragment is used to refresh the data
@@ -137,17 +126,18 @@ public class SynchronizeFragment extends Fragment
 		protected ArrayList<String> doInBackground(Void... params)
 		{
 			ArrayList<String> resourcesToRefresh = null;
-			try {
+		/*	try {
 				ArrayList<RequestData> requestDatas = new ArrayList<>();
 				//TODO hold the url for the resource and the version
 				final String version = "/v1";
 				RequestData requestData = new RequestData("http://focus.yatt.ch/resources-server/data/user/123/app-content-definition" + version);
 				requestDatas.add(requestData);
 				resourcesToRefresh = DataProviderManager.checkDataFreshness(CHECK_FRESHNESS_PATH, requestDatas);
+
 			}
 			catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 
 			return resourcesToRefresh;
 		}

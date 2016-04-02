@@ -29,13 +29,11 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 {
 
 	private Activity currentActivity;
-	private Bundle currentSavedInstanceState; // FIXME TODO YANDY do we need this? (if not, remove)
 
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState)
 	{
 		this.currentActivity = activity;
-		this.currentSavedInstanceState = savedInstanceState;
 	}
 
 	@Override
@@ -74,7 +72,6 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 	public void onActivityDestroyed(Activity activity)
 	{
 		this.currentActivity = null;
-		this.currentSavedInstanceState = null;
 	}
 
 	/**

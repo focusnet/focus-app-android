@@ -26,15 +26,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,6 +37,17 @@ import java.util.Map;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
+import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.GPSWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
+import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.ui.fragment.widget.BarChartWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.CameraWidgetFragment;
@@ -62,24 +68,27 @@ import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 public class ViewUtil
 {
 
-	public static final String WIDTH = "width";
-	public static final String OF = "of";
+	public static final String WIDGET_LAYOUT_OF = "of";
 	public static final String LAYOUT_WIDTH = "layoutWidth";
 	public static final String LAYOUT_HEIGHT = "layoutHeight";
 	public static final String LAYOUT_WEIGHT = "layoutWeight";
-	private static final String TAG = ViewUtil.class.getName();
-	private static final String TYPE_TEXT = "#/definitions/widget/visualize/text";
-	private static final String TYPE_TABLE = "#/definitions/widget/visualize/table";
-	private static final String TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
-	private static final String TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
-	private static final String TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-	private static final String TYPE_CAMERA = "#/definitions/widget/collect/camera";
-	private static final String TYPE_GPS = "#/definitions/widget/collect/gps";
-	private static final String TYPE_FORM = "#/definitions/widget/collect/form";
-	private static final String TYPE_EXTERNAL_APP = "#/definitions/widget/visualize/external-app";
-	private static final String TYPE_SUBMIT = "#/definitions/widget/collect/submit";
-	private static final String TYPE_HTML5 = "#/definitions/widget/visualize/html5-widget";
 
+
+
+
+	/**
+	 * @param context
+	 * @param orientation
+	 * @param layoutParams
+	 * @return
+	 */
+	public static LinearLayout createLinearLayout(Context context, int orientation, LinearLayout.LayoutParams layoutParams)
+	{
+		LinearLayout layout = new LinearLayout(context);
+		layout.setOrientation(orientation);
+		layout.setLayoutParams(layoutParams);
+		return layout;
+	}
 
 	/**
 	 * Displays a notification
@@ -118,49 +127,43 @@ public class ViewUtil
 
 	/**
 	 * Get the WidgetFragment subtype depending on the input parameter
-	 *
-	 * @param type
-	 * @return
 	 */
-	public static WidgetFragment getWidgetFragmentByType(String type)
+	public static WidgetFragment getWidgetFragmentByType(WidgetInstance wi)
 	{
-		WidgetFragment widgetFragment = null;
-		switch (type) {
-			case TYPE_TEXT:
-				widgetFragment = new TextWidgetFragment();
-				break;
-			case TYPE_TABLE:
-				widgetFragment = new TableWidgetFragment();
-				break;
-			case TYPE_PIE_CHART:
-				widgetFragment = new PieChartWidgetFragment();
-				break;
-			case TYPE_BAR_CHART:
-				widgetFragment = new BarChartWidgetFragment();
-				break;
-			case TYPE_LINE_CHART:
-				widgetFragment = new LineChartWidgetFragment();
-				break;
-			case TYPE_CAMERA:
-				widgetFragment = new CameraWidgetFragment();
-				break;
-			case TYPE_GPS:
-				widgetFragment = new GPSWidgetFragment();
-				break;
-			case TYPE_FORM:
-				widgetFragment = new FormWidgetFragment();
-				break;
-			case TYPE_EXTERNAL_APP:
-				//TODO
-				break;
-			case TYPE_SUBMIT:
-				widgetFragment = new SubmitWidgetFragment();
-				break;
-			case TYPE_HTML5:
-				widgetFragment = new Html5WidgetFragment();
-				break;
+		if (wi instanceof TextWidgetInstance) {
+			return new TextWidgetFragment();
 		}
-		return widgetFragment;
+		else if (wi instanceof TableWidgetInstance) {
+			return new TableWidgetFragment();
+		}
+		else if (wi instanceof PieChartWidgetInstance) {
+			return new PieChartWidgetFragment();
+		}
+		else if (wi instanceof BarChartWidgetInstance) {
+			return new BarChartWidgetFragment();
+		}
+		else if (wi instanceof LineChartWidgetInstance) {
+			return new LineChartWidgetFragment();
+		}
+		else if (wi instanceof CameraWidgetInstance) {
+			return new CameraWidgetFragment();
+		}
+		else if (wi instanceof GPSWidgetInstance) {
+			return new GPSWidgetFragment();
+		}
+		else if (wi instanceof FormWidgetInstance) {
+			return new FormWidgetFragment();
+		}
+		else if (wi instanceof ExternalAppWidgetInstance) {
+			return null;
+		}
+		else if (wi instanceof SubmitWidgetInstance) {
+			return new SubmitWidgetFragment();
+		}
+		else if (wi instanceof Html5WidgetInstance) {
+			return new Html5WidgetFragment();
+		}
+		return null;
 	}
 
 	/**
@@ -183,7 +186,7 @@ public class ViewUtil
 		LinkedHashMap<String, WidgetInstance> widgetInstances = pageInstance.getWidgets();
 
 		//Create layout horizontal
-		LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(activity, LinearLayout.HORIZONTAL,
+		LinearLayout linearLayoutHorizontal = ViewUtil.createLinearLayout(activity, LinearLayout.HORIZONTAL,
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 		linearLayoutHorizontal.setId(layoutID);
 
@@ -193,8 +196,8 @@ public class ViewUtil
 			int weight = 0;
 
 			//Get the width of the widget (e.g. 2of4)
-			String width = widgetInstance.getLayoutAttribute(WIDTH);
-			int indexOf = width.indexOf(OF);
+			String width = widgetInstance.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
+			int indexOf = width.indexOf(WIDGET_LAYOUT_OF);
 			weight = Integer.valueOf(width.substring(0, indexOf).trim());
 
 			int tempLastSizeLeft = lastSizeLeft;
@@ -222,7 +225,7 @@ public class ViewUtil
 			}
 
 			if (lastSizeLeft == 0 || lastSizeLeft == screenSize) {
-				linearLayoutHorizontal = ViewFactory.createLinearLayout(activity, LinearLayout.HORIZONTAL,
+				linearLayoutHorizontal = ViewUtil.createLinearLayout(activity, LinearLayout.HORIZONTAL,
 						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 				linearLayoutHorizontal.setId(++layoutID);
 			}
@@ -230,7 +233,7 @@ public class ViewUtil
 			linearLayoutPageInfo.removeView(linearLayoutHorizontal);
 
 
-			WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
+			WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
 			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(projectInstance, pageInstance, widgetInstance));
 			widgetBundle.putInt(LAYOUT_WIDTH, linearLayoutWidth);
@@ -241,6 +244,7 @@ public class ViewUtil
 			// or another strategy: height is ALWAYS 90% of viewport height, execpt if TEXT / TABLE ?
 			if (widgetFragment instanceof TableWidgetFragment
 					|| widgetFragment instanceof PieChartWidgetFragment
+					|| widgetFragment instanceof BarChartWidgetFragment
 					|| widgetFragment instanceof LineChartWidgetFragment) // FIXME FIXME height may depend on widget type and content !
 			{
 				widgetBundle.putInt(LAYOUT_HEIGHT, 500);

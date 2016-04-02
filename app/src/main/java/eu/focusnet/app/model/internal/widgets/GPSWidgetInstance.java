@@ -30,7 +30,7 @@ import eu.focusnet.app.model.internal.DataContext;
 /**
  * Created by admin on 28.01.2016.
  */
-public class GPSWidgetInstance extends WidgetInstance
+public class GPSWidgetInstance extends DataCollectionWidgetInstance
 {
 	/**
 	 * C'tor
@@ -43,6 +43,7 @@ public class GPSWidgetInstance extends WidgetInstance
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
+
 
 	@Override
 	protected void processSpecificConfig()

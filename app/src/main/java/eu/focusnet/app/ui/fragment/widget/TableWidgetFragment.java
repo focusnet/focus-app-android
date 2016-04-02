@@ -48,16 +48,16 @@ public class TableWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-		TableWidgetInstance tableInstance = (TableWidgetInstance) getWidgetInstance();
+		this.widgetInstance = (TableWidgetInstance) getWidgetInstance();
 
 		TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
-		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), tableInstance.getTableHeaders());
+		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance)this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);
 		adapter.setTextColor(getResources().getColor(R.color.table_header_text));
 		tableView.setHeaderAdapter(adapter);
 		tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
-		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), tableInstance.getTableData()));
+		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance)this.widgetInstance).getTableData()));
 		int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
 		int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
 		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));

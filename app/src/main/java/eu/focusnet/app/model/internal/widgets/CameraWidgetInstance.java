@@ -36,7 +36,7 @@ import eu.focusnet.app.model.internal.DataContext;
  */
 
 //TODO implement this class with its methods
-public class CameraWidgetInstance extends WidgetInstance
+public class CameraWidgetInstance extends DataCollectionWidgetInstance
 {
 
 	private String savedImage;
@@ -53,11 +53,13 @@ public class CameraWidgetInstance extends WidgetInstance
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
+
 	@Override
 	protected void processSpecificConfig()
 	{
 
 	}
+
 
 	/**
 	 * Save the image being captured as a base64-encoded string.

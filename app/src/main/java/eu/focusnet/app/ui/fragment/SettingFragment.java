@@ -38,8 +38,6 @@ import android.widget.TextView;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.activity.FocusActivity;
-import eu.focusnet.app.DEPRECATED.DataProviderManager;
-import eu.focusnet.app.DEPRECATED.DataProviderManager.ResponseData;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.ViewFactory;
 import eu.focusnet.app.ui.util.ViewUtil;
@@ -113,7 +111,7 @@ public class SettingFragment extends Fragment
 		protected String doInBackground(String... urls)
 		{
 			String data = null;
-			try {
+	/*		try {
 				ResponseData responseData = DataProviderManager.retrieveData(urls[0]);
 				if (responseData != null) {
 					data = responseData.getData();
@@ -122,7 +120,7 @@ public class SettingFragment extends Fragment
 			catch (Exception ex) {
 
 			}
-
+*/
 			return data;
 		}
 

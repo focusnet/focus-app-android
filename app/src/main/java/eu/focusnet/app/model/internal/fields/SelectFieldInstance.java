@@ -108,6 +108,14 @@ public class SelectFieldInstance extends FieldInstance
 				// ignore, keep the current text (=value)
 			}
 		}
+
+		if (!this.isMandatory()) {
+			this.texts.add(0, "-- Select --");
+			this.values.add(0, "");
+		}
+
+
+
 	}
 
 	public ArrayList<String> getValues()

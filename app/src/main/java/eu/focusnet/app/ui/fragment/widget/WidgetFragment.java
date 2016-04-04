@@ -24,25 +24,35 @@ package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.GPSWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
+import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.ViewUtil;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
 public abstract class WidgetFragment extends Fragment
 {
-	//TODO
 	WidgetInstance widgetInstance;
+	protected int reference_height;
 
 	@Override
 	public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
@@ -55,13 +65,19 @@ public abstract class WidgetFragment extends Fragment
 		super.onDestroyView();
 	}
 
-	public void setWidgetLayout(View viewRoot)
+	protected void setWidgetLayout(View viewRoot)
 	{
 		Bundle arguments = getArguments();
-		int linearLayoutWidth = arguments.getInt(ViewUtil.LAYOUT_WIDTH);
-		int linearLayoutHeight = arguments.getInt(ViewUtil.LAYOUT_HEIGHT);
-		int linearLayoutWeight = arguments.getInt(ViewUtil.LAYOUT_WEIGHT);
+		int linearLayoutWidth = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WIDTH);
+		int linearLayoutHeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
+		int linearLayoutWeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
 		viewRoot.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));
+
+		if (this.reference_height != 0) {
+			ViewGroup.LayoutParams l = viewRoot.getLayoutParams();
+			l.height = UiHelpers.dp_to_pixels(this.reference_height, this.getActivity());
+			viewRoot.setLayoutParams(l);
+		}
 	}
 
 	public WidgetInstance getWidgetInstance()
@@ -72,6 +88,50 @@ public abstract class WidgetFragment extends Fragment
 		this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
 		dm.registerActiveInstance(this.widgetInstance);
 		return this.widgetInstance;
+	}
+
+
+
+
+	/**
+	 * Get the WidgetFragment subtype depending on the input parameter
+	 */
+	public static WidgetFragment getWidgetFragmentByType(WidgetInstance wi)
+	{
+		if (wi instanceof TextWidgetInstance) {
+			return new TextWidgetFragment();
+		}
+		else if (wi instanceof TableWidgetInstance) {
+			return new TableWidgetFragment();
+		}
+		else if (wi instanceof PieChartWidgetInstance) {
+			return new PieChartWidgetFragment();
+		}
+		else if (wi instanceof BarChartWidgetInstance) {
+			return new BarChartWidgetFragment();
+		}
+		else if (wi instanceof LineChartWidgetInstance) {
+			return new LineChartWidgetFragment();
+		}
+		else if (wi instanceof CameraWidgetInstance) {
+			return new CameraWidgetFragment();
+		}
+		else if (wi instanceof GPSWidgetInstance) {
+			return new GPSWidgetFragment();
+		}
+		else if (wi instanceof FormWidgetInstance) {
+			return new FormWidgetFragment();
+		}
+		else if (wi instanceof ExternalAppWidgetInstance) {
+			return null;
+		}
+		else if (wi instanceof SubmitWidgetInstance) {
+			return new SubmitWidgetFragment();
+		}
+		else if (wi instanceof Html5WidgetInstance) {
+			return new Html5WidgetFragment();
+		}
+		return null;
 	}
 
 }

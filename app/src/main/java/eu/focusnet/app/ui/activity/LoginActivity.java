@@ -33,15 +33,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewFactory;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * Login Activity: this activity displays the login screen
@@ -117,7 +114,9 @@ public class LoginActivity extends Activity
 		@Override
 		protected void onPreExecute() {
 			Resources res = getResources();
-			progressDialog = ViewFactory.createProgressDialog(context, res.getString(R.string.focus_login_progress_message), res.getString(R.string.progress_wait_message));
+			progressDialog = new ProgressDialog(this.context);
+			progressDialog.setTitle(res.getString(R.string.focus_login_progress_message));
+			progressDialog.setMessage(res.getString(R.string.progress_wait_message));
 			progressDialog.show();
 		}
 

@@ -40,7 +40,6 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * Created by yandypiedra on 13.01.16.

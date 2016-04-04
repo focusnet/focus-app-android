@@ -27,23 +27,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.CronService;
-import eu.focusnet.app.ui.util.ViewFactory;
 
 /**
  * The synchronized fragment is used to refresh the data
@@ -69,7 +61,7 @@ public class SynchronizeFragment extends Fragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_synchronize, container, false);
 		tableLayout = (TableLayout) viewRoot.findViewById(R.id.synchronize_paths);
-		new SynchronizeDataTask().execute();
+	// FIXME	new SynchronizeDataTask().execute();
 		return viewRoot;
 	}
 
@@ -117,7 +109,7 @@ public class SynchronizeFragment extends Fragment
 
 // FIXME FIXME TODO TO BE TESTED
 
-
+/*
 	private class SynchronizeDataTask extends AsyncTask<Void, String, ArrayList<String>>
 	{
 // FIXME TODO - do execute the cron service method.
@@ -126,7 +118,7 @@ public class SynchronizeFragment extends Fragment
 		protected ArrayList<String> doInBackground(Void... params)
 		{
 			ArrayList<String> resourcesToRefresh = null;
-		/*	try {
+			try {
 				ArrayList<RequestData> requestDatas = new ArrayList<>();
 				//TODO hold the url for the resource and the version
 				final String version = "/v1";
@@ -137,7 +129,7 @@ public class SynchronizeFragment extends Fragment
 			}
 			catch (IOException e) {
 				e.printStackTrace();
-			}*/
+			}
 
 			return resourcesToRefresh;
 		}
@@ -177,7 +169,7 @@ public class SynchronizeFragment extends Fragment
 												  // FIXME FIXME FIXME TODO will be done in bg.
 												  // no need to access the database anymore.
 
-/*
+
 												  DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
 												  try {
 													  databaseAdapter.openWritableDatabase();
@@ -206,7 +198,7 @@ public class SynchronizeFragment extends Fragment
 												  finally {
 													  databaseAdapter.close();
 												  }
-												  */
+
 											  }
 										  }
 
@@ -214,6 +206,6 @@ public class SynchronizeFragment extends Fragment
 				tableLayout.addView(button);
 			}
 		}
-	}
+	}*/
 
 }

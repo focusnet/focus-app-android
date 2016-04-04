@@ -44,7 +44,6 @@ import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
@@ -52,7 +51,6 @@ import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * This fragment will be loaded from the ProjectActivity and displays

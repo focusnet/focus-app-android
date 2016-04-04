@@ -27,6 +27,8 @@ import eu.focusnet.app.R;
 
 /**
  * Manage fragments
+ *
+ * FIXME i don't understand the purpose of this class YANDY -- ?
  */
 public class FragmentManager
 {

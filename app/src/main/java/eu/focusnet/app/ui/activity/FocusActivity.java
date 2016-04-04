@@ -50,7 +50,6 @@ import eu.focusnet.app.ui.fragment.UserManualFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * This Activity contains the list of available projects.
@@ -188,15 +187,15 @@ public class FocusActivity extends BaseDrawerActivity
 	public void onBackPressed()
 	{
 		//Navigate back to the last Fragment or exit the application
-		android.app.FragmentManager fragmentMng = getFragmentManager();
-		int fragmentBackStackNumber = fragmentMng.getBackStackEntryCount();
+		android.app.FragmentManager fragmentManager = getFragmentManager();
+		int fragmentBackStackNumber = fragmentManager.getBackStackEntryCount();
 		// If we have more than one fragments in the stack remove the last inserted
 		if (fragmentBackStackNumber > 1) {
 			//remove the last inserted fragment from the stack
-			fragmentMng.popBackStackImmediate();
+			fragmentManager.popBackStackImmediate();
 
 			//Get the current fragment
-			Fragment fragment = FragmentManager.getCurrentFragment(fragmentMng);
+			Fragment fragment = FragmentManager.getCurrentFragment(fragmentManager);
 			Bundle bundle = fragment.getArguments();
 
 			// Set title

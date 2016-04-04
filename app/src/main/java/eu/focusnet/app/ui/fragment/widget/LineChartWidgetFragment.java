@@ -59,6 +59,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_linechart, container, false);
 
+		this.reference_height = 800;
 		setWidgetLayout(viewRoot);
 
 		this.widgetInstance = getWidgetInstance();

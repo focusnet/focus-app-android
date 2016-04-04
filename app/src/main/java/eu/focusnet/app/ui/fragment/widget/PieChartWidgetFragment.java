@@ -55,7 +55,10 @@ public class PieChartWidgetFragment extends WidgetFragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
 
+		this.reference_height = 500;
+
 		setWidgetLayout(viewRoot);
+
 
 		this.widgetInstance =  getWidgetInstance();
 

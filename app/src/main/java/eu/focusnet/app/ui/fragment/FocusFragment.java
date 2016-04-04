@@ -40,7 +40,6 @@ import java.util.Map;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.json.BookmarkLink;
-import eu.focusnet.app.ui.activity.FocusActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
@@ -50,7 +49,6 @@ import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 
 /**

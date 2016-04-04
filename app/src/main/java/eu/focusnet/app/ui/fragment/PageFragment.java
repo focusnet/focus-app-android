@@ -1,44 +1,52 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.ui.activity.FocusActivity;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.fragment.widget.BarChartWidgetFragment;
+import eu.focusnet.app.ui.fragment.widget.EmptyWidgetFragment;
+import eu.focusnet.app.ui.fragment.widget.LineChartWidgetFragment;
+import eu.focusnet.app.ui.fragment.widget.PieChartWidgetFragment;
+import eu.focusnet.app.ui.fragment.widget.TableWidgetFragment;
+import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.ViewUtil;
+import eu.focusnet.app.ui.util.FragmentManager;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
@@ -48,6 +56,9 @@ public class PageFragment extends Fragment
 {
 
 	private PageInstance pageInstance;
+	private ProjectInstance projectInstance;
+	private View viewRoot;
+	private int currentayoutId;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,37 +66,22 @@ public class PageFragment extends Fragment
 	{
 
 		// Inflate the layout for this fragment
-		View viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
+		this.viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
 		Bundle bundle = getArguments();
 		String projectPath = (String) bundle.get(Constant.UI_EXTRA_PROJECT_PATH);
 		String pagePath = (String) bundle.get(Constant.UI_EXTRA_PAGE_PATH);
 
-//        new PageBuilderTask().execute(projectPath, pagePath);
-
 		DataManager dm = FocusApplication.getInstance().getDataManager();
 		AppContentInstance appContentInstance = dm.getAppContentInstance();
-		ProjectInstance projectInstance = appContentInstance.getProjectFromPath(projectPath);
+		this.projectInstance = appContentInstance.getProjectFromPath(projectPath);
 		this.pageInstance = appContentInstance.getPageFromPath(pagePath);
 
 		// useful for our custom garbage collection in DataManager
 		dm.registerActiveInstance(this.pageInstance);
 
-		LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
 
-		ViewUtil.buildPageView(projectInstance, pageInstance, linearLayoutPageInfo, getActivity());
-
-//        LinkedHashMap<String, WidgetInstance> widgetInstances = pageInstance.getWidgets();
-
-//        for(Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()){
-//            WidgetInstance widgetInstance = entry.getValue();
-//            WidgetFragment widgetFragment = ViewUtil.getWidgetFragmentByType(widgetInstance.getType());
-//            Bundle widgetBundle = new Bundle();
-//            widgetBundle.putString(Constant.UI_EXTRA_PATH, appContentInstance.buildPath(projectInstance, pageInstance, widgetInstance));
-//            widgetFragment.setArguments(widgetBundle);
-//            //Test
-//            LinearLayout linearLayoutPageInfo = (LinearLayout) viewRoot.findViewById(R.id.pageInfo);
-//            FragmentManager.addFragment(linearLayoutPageInfo.getId(), widgetFragment, getFragmentManager());
-//        }
+		//	ViewUtil.buildPageView(this.projectInstance, this.pageInstance, linearLayoutPageInfo, getActivity());
+		this.buildPage();
 
 		return viewRoot;
 	}
@@ -100,152 +96,88 @@ public class PageFragment extends Fragment
 	}
 
 
-//    /**
-//     * This class loads the page characteristics from the database
-//     */
-//    private class PageBuilderTask extends AsyncTask<String, Void, PageInstance> {
-//
-//        @Override
-//        protected PageInstance doInBackground(String... config) {
-//            DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-//            String projectPath = config[0];
-//            String pagePath = config[1];
-//
-////           String pageId = path.substring(path.indexOf("/") + 1, path.length());
-//
-//            PageInstance pageInstance  = DataManager.getInstance().getAppContentInstance().getPageFromPath(pagePath);
-//
-//
-//
-////            PageTemplate page = null;
-////            try {
-////                databaseAdapter.openWritableDatabase();
-////                SQLiteDatabase db = databaseAdapter.getDb();
-////                PageDao pageDao = new PageDao(db);
-////                page = pageDao.findPage(pageId);
-////            }
-////            finally {
-////                databaseAdapter.close();
-////            }
-////
-////            return page;
-//            return  pageInstance;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(PageInstance page) {
-//
-//            LinkedHashMap<String, WidgetInstance> widgetInstances = page.getWidgets();
-//
-//            for(Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()){
-//                WidgetInstance widgetInstance = entry.getValue();
-//
-//                WidgetFragment widgetFragment = NavigationUtil.checkWidgetType(widgetInstance.getType());
-//                Bundle bundle = new Bundle();
-//                bundle.putString(Constant.UI_EXTRA_PATH, DataManager.getInstance().getAppContentInstance().buildPath(project , page, widgetInstance));
-//
-//            }
-//
-//
-//            if (page != null) {
-//                LinearLayout linearLayoutPageInfo = (LinearLayout) getView().findViewById(R.id.pageInfo);
-//                DatabaseAdapter databaseAdapter = new DatabaseAdapter(getActivity());
-//
-//                try {
-//                    databaseAdapter.openWritableDatabase();
-//                    WidgetDao widgetDao = new WidgetDao(databaseAdapter.getDb());
-//                    ArrayList<WidgetLinker> widgetLinkers = page.getWidgets();
-//
-//                    final int screenSize = 4;
-//                    int sizeLeft = screenSize;
-//                    int lastSizeLeft = sizeLeft;
-//
-//
-//                    LinearLayout linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
-//                            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//
-//                    for (WidgetLinker widgetLinker : widgetLinkers) {
-//                        WidgetTemplate widget = widgetDao.findWidget(widgetLinker.getWidgetid());
-//                        int weight = 0;
-//                        Map<String, String> layouts = widgetLinker.getLayout();
-//
-//                        if (widgetLinker.getLayout() != null) {
-//                            String width = layouts.get("width"); //TODO create a constant
-//                            int indexOf = width.indexOf("of");
-//                            weight = Integer.valueOf(width.substring(0, indexOf).trim());
-//
-//                            int tempLastSizeLeft = lastSizeLeft;
-//                            if(lastSizeLeft == 0)
-//                                lastSizeLeft = screenSize;
-//
-//                            if((screenSize - lastSizeLeft) + weight > screenSize){
-//                                final TextView emptyText = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
-//                                        new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, tempLastSizeLeft),
-//                                        null);
-////                                emptyText.setBackgroundColor(new Random().nextInt());
-//                                linearLayoutHorizontal.addView(emptyText);
-//                                lastSizeLeft = screenSize;
-//                            }
-//
-//                            sizeLeft = (lastSizeLeft - weight) % screenSize;
-//                            Log.d(TAG, "The weight: " + weight);
-//                        }
-//                        else {
-//                            sizeLeft = (lastSizeLeft - screenSize) % screenSize;
-//                        }
-//
-//                        sizeLeft = Math.abs(sizeLeft);
-//
-//
-//                        int linearLayoutWidth = LinearLayout.LayoutParams.MATCH_PARENT;
-//                        if (weight != 0 && weight != screenSize)
-//                              linearLayoutWidth = 0;
-//
-//
-//                        if (lastSizeLeft == 0 || lastSizeLeft == screenSize) {
-//                            linearLayoutHorizontal = ViewFactory.createLinearLayout(getActivity(), LinearLayout.HORIZONTAL,
-//                                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//
-//
-//                        }
-//
-//                        linearLayoutPageInfo.removeView(linearLayoutHorizontal); //TODO do this in a better way
-//                        linearLayoutPageInfo.addView(linearLayoutHorizontal);
-//
-//
-//                        final TextView widgetParam = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
-//                                new LinearLayout.LayoutParams(linearLayoutWidth, LinearLayout.LayoutParams.WRAP_CONTENT, weight),
-//                                null);
-//                        widgetParam.setBackgroundColor(new Random().nextInt());
-//                        FocusSampleDataMap config = widget.getConfig();
-//
-//                        if (config != null) {
-//                            String text = null;
-//                            for (Map.Entry<String, Object> entry : config.entrySet()) {
-//                                text = entry.getValue().toString();
-//                            }
-//                            widgetParam.setText(text);
-//                        }
-//
-//                        linearLayoutHorizontal.addView(widgetParam);
-//
-//                        lastSizeLeft = sizeLeft;
-//
-//                    }
-//
-//                    if (lastSizeLeft != 0) {
-//                            final TextView emptyText = ViewFactory.createTextView(getActivity(), R.style.Base_TextAppearance_AppCompat,
-//                                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, lastSizeLeft),
-//                                    null);
-////                            emptyText.setBackgroundColor(new Random().nextInt());
-//                            linearLayoutHorizontal.addView(emptyText);
-//
-//                    }
-//                }
-//                finally {
-//                    databaseAdapter.close();
-//                }
-//            }
-//        }
-//    }
+	/**
+	 * Setup the horizontal layout containers that contain the different widgets for this page.
+	 */
+	private void buildPage()
+	{
+		LinkedHashMap<String, WidgetInstance> widgetInstances = this.pageInstance.getWidgets();
+
+		this.currentayoutId = View.generateViewId();
+
+		LinearLayout verticalContainerLayout = (LinearLayout) this.viewRoot.findViewById(R.id.pageInfo);
+
+		LinearLayout containerLayout = new LinearLayout(this.getActivity());
+		containerLayout.setId(this.currentayoutId);
+		containerLayout.setOrientation(LinearLayout.HORIZONTAL);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(0, 0, 0, UiHelpers.dp_to_pixels(50, this.getActivity()));
+		containerLayout.setLayoutParams(layoutParams);
+
+		int spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
+
+		for (Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()) {
+			WidgetInstance widgetInstance = entry.getValue();
+
+			//Get the width of the widget (e.g. 2of4)
+			String width = widgetInstance.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
+			int indexOf = width.indexOf(Constant.WIDGET_LAYOUT_OF);
+			int requiredSpace = Integer.valueOf(width.substring(0, indexOf).trim());
+
+			if (requiredSpace > spaceLeft) {
+
+				// Fill remaining space with empty fragment
+				if (spaceLeft != 0) {
+					WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
+					Bundle widgetBundle = new Bundle();
+					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
+					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, spaceLeft);
+					emptyWidgetFragment.setArguments(widgetBundle);
+					FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
+					//	containerLayout.addView(emptyWidgetFragment.getView()); // FIXME??
+				}
+
+				// commit the current line
+				verticalContainerLayout.addView(containerLayout);
+
+				// and create a new container line
+				containerLayout = new LinearLayout(this.getActivity());
+				containerLayout.setOrientation(LinearLayout.HORIZONTAL);
+				containerLayout.setId(++this.currentayoutId);
+				containerLayout.setLayoutParams(layoutParams);
+				spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
+			}
+
+			// add the new widget fragment
+			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
+			Bundle widgetBundle = new Bundle();
+			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(this.projectInstance, this.pageInstance, widgetInstance));
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, requiredSpace);
+			widgetFragment.setArguments(widgetBundle);
+
+			FragmentManager.addFragment(containerLayout.getId(), widgetFragment, this.getActivity().getFragmentManager());
+
+			spaceLeft -= requiredSpace;
+		}
+
+		// fill remaining space with empty fragment
+		if (spaceLeft != 0) {
+			WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
+			Bundle widgetBundle = new Bundle();
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, spaceLeft);
+			emptyWidgetFragment.setArguments(widgetBundle);
+			FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
+			//	containerLayout.addView(emptyWidgetFragment.getView()); // FIXME??
+		}
+
+		verticalContainerLayout.addView(containerLayout);
+
+
+	}
+
 }

@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
@@ -46,9 +47,13 @@ public class TableWidgetFragment extends WidgetFragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_table, container, false);
 
+		this.reference_height = 500;
 		setWidgetLayout(viewRoot);
 
-		this.widgetInstance = (TableWidgetInstance) getWidgetInstance();
+		this.widgetInstance = getWidgetInstance();
+
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title);
+	 	textTitle.setText(this.widgetInstance.getTitle());
 
 		TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance)this.widgetInstance).getTableHeaders());

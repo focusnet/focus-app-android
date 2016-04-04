@@ -1,6 +1,10 @@
 package eu.focusnet.app.DEPRECATED;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,5 +62,48 @@ public class RandomPiecesOfCode
 
 		return resourcesToRefresh;
 	}
+	*/
+
+	/*
+
+
+	public static RadioGroup createRadioGroup(Context context, LinearLayout.LayoutParams layoutParams)
+	{
+		RadioGroup radioGroup = new RadioGroup(context);
+		radioGroup.setLayoutParams(layoutParams);
+		return radioGroup;
+	}
+
+
+	public static RadioButton createRadioButton(Context context, LinearLayout.LayoutParams layoutParams)
+	{
+		RadioButton radioButton = new RadioButton(context);
+		radioButton.setLayoutParams(layoutParams);
+		return radioButton;
+	}
+
+	LinearLayout linearLayoutHorizontal5 = ViewUtil.createLinearLayout(this, LinearLayout.HORIZONTAL,
+				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+		TextView labelC = ViewFactory.createTextView(this, R.style.Base_TextAppearance_AppCompat,
+				new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter), "Label C");
+
+
+		RadioGroup radioGroup = ViewFactory.createRadioGroup(this, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, half));
+		radioGroup.setOrientation(LinearLayout.HORIZONTAL);
+		RadioButton radioButton1 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		radioButton1.setText("Radio Button 1");
+		RadioButton radioButton2 = ViewFactory.createRadioButton(this, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		radioButton2.setText("Radio Button 2");
+		radioGroup.addView(radioButton1);
+		radioGroup.addView(radioButton2);
+
+		linearLayoutHorizontal5.addView(labelC);
+		linearLayoutHorizontal5.addView(radioGroup);
+		linearLayoutHorizontal5.addView(ViewFactory.createEmptyView(this, 0, LinearLayout.LayoutParams.WRAP_CONTENT, quarter));
+
+		linearLayoutVerticalForm.addView(linearLayoutHorizontal5);
+
+
 	*/
 }

@@ -20,15 +20,22 @@
 
 package eu.focusnet.app.ui.fragment.widget;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Map;
 
 import eu.focusnet.app.R;
@@ -38,83 +45,219 @@ import eu.focusnet.app.model.internal.fields.SelectFieldInstance;
 import eu.focusnet.app.model.internal.fields.TextareaFieldInstance;
 import eu.focusnet.app.model.internal.fields.TextfieldFieldInstance;
 import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * Created by yandypiedra on 14.01.16.
  */
 public class FormWidgetFragment extends WidgetFragment
 {
+	private static final int TEXTAREA_MAX_NUM_OF_LINES = 10;
+	Context context;
 
 
-	private static TableRow generateFieldUI(FieldInstance f)
+	private void addFieldToUI(FieldInstance f, TableLayout tl)
 	{
 		if (f instanceof TextfieldFieldInstance) {
-			return FormWidgetFragment.generateTextfieldUI(f);
+			this.addTextfieldToUI(f, tl);
 		}
 		else if (f instanceof TextareaFieldInstance) {
-			return FormWidgetFragment.generateTextareaUI(f);
+			this.addTextareaToUI(f, tl);
 		}
 		else if (f instanceof CheckboxFieldInstance) {
-			return FormWidgetFragment.generateCheckboxUI(f);
+			this.addCheckboxToUI(f, tl);
 		}
 		else if (f instanceof SelectFieldInstance) {
-			return FormWidgetFragment.generateSelectUI(f);
+			this.addSelectToUI(f, tl);
 		}
-		return null;
 	}
 
-	private static TableRow generateTextfieldUI(FieldInstance f)
+
+	private void addSelectToUI(FieldInstance f, TableLayout tl)
 	{
-		return null;
+		TableRow tr = new TableRow(this.context);
+
+		boolean no_label = false;
+		String label_txt = f.getLabel();
+		if (!label_txt.equals("")) {
+			TextView label = new TextView(this.context);
+			label.setText(label_txt);
+			label.setGravity(Gravity.TOP);
+
+			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
+			layoutLabel.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+			label.setLayoutParams(layoutLabel);
+
+			tr.addView(label);
+		}
+		else {
+			no_label = true;
+		}
+
+		Spinner spinner = new Spinner(this.context);
+		List<String> list = ((SelectFieldInstance) f).getTexts();
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this.context, android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(dataAdapter);
+
+		// select the appropriate element
+		spinner.setSelection(((SelectFieldInstance)f).getValues().indexOf(f.getDefaultValue()));
+
+		if (no_label) {
+			TableRow.LayoutParams layoutSpinner = new TableRow.LayoutParams();
+			layoutSpinner.column = 1;
+			spinner.setLayoutParams(layoutSpinner);
+		}
+
+		if (f.isReadOnly()) {
+			spinner.setEnabled(false);
+		}
+
+		tr.addView(spinner);
+		tl.addView(tr);
 	}
-	private static TableRow generateTextareaUI(FieldInstance f)
+
+	private void addCheckboxToUI(FieldInstance f, TableLayout tl)
 	{
-		return null;
+		TableRow tr = new TableRow(this.context);
+
+		boolean no_label = false;
+		String label_txt = f.getLabel();
+		if (!label_txt.equals("")) {
+			TextView label = new TextView(this.context);
+			label.setText(label_txt);
+			label.setGravity(Gravity.TOP);
+
+			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
+			layoutLabel.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+			label.setLayoutParams(layoutLabel);
+
+			tr.addView(label);
+		}
+		else {
+			no_label = true;
+		}
+
+		CheckBox checkBox = new CheckBox(this.context);
+		checkBox.setText(((CheckboxFieldInstance) f).getCheckboxLabel());
+		checkBox.setGravity(Gravity.TOP);
+
+		if (((CheckboxFieldInstance) f).isDefaultChecked()) {
+			checkBox.setChecked(true);
+		}
+
+		if (f.isReadOnly()) {
+			checkBox.setEnabled(false);
+		}
+
+		if (no_label) {
+			TableRow.LayoutParams layoutCheckbox = new TableRow.LayoutParams();
+			layoutCheckbox.column = 1;
+			checkBox.setLayoutParams(layoutCheckbox);
+		}
+
+		tr.addView(checkBox);
+		tl.addView(tr);
 	}
-	private static TableRow generateCheckboxUI(FieldInstance f)
+
+	private void addTextareaToUI(FieldInstance f, TableLayout tl)
 	{
-		return null;
+		TableRow.LayoutParams layout = new TableRow.LayoutParams();
+		layout.span = 2;
+
+		TableRow tr = new TableRow(this.context);
+		TableRow tr2 = new TableRow(this.context);
+
+		TextView label = new TextView(this.context);
+		label.setText(f.getLabel());
+		label.setGravity(Gravity.TOP);
+		label.setLayoutParams(layout);
+
+		EditText textfield = new EditText(this.context);
+		textfield.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE | EditorInfo.TYPE_TEXT_FLAG_AUTO_CORRECT);
+		textfield.setText(f.getDefaultValue());
+		textfield.setLines(TEXTAREA_MAX_NUM_OF_LINES);
+		textfield.setMaxLines(TEXTAREA_MAX_NUM_OF_LINES);
+		textfield.setGravity(Gravity.TOP);
+		textfield.setLayoutParams(layout);
+		if (f.isReadOnly()) {
+			textfield.setEnabled(false);
+		}
+
+		tr.addView(label);
+		tr2.addView(textfield);
+
+		tl.addView(tr);
+		tl.addView(tr2);
 	}
-	private static TableRow generateSelectUI(FieldInstance f)
+
+	private void addTextfieldToUI(FieldInstance f, TableLayout tl)
 	{
-		return null;
+		TableRow tr = new TableRow(this.context);
+
+		TextView label = new TextView(this.context);
+		label.setText(f.getLabel());
+		label.setGravity(Gravity.TOP);
+		TableRow.LayoutParams layout = new TableRow.LayoutParams();
+		layout.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+		label.setLayoutParams(layout);
+
+		EditText textfield = new EditText(this.context);
+
+		// type of input
+		TextfieldFieldInstance.ValidType type = ((TextfieldFieldInstance) f).getInputType();
+		int editor_type;
+		switch (type) {
+			case TEXTFIELD_TYPE_DECIMAL:
+				editor_type = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_DECIMAL | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
+				break;
+			case TEXTFIELD_TYPE_EMAIL:
+				editor_type = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS; // FIXME NOT SURE IT WORKS
+				break;
+			case TEXTFIELD_TYPE_NUMBER:
+				editor_type = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
+				break;
+			case TEXTFIELD_TYPE_PHONE:
+				editor_type = EditorInfo.TYPE_CLASS_PHONE;
+				break;
+			case TEXTFIELD_TYPE_TEXT:
+			default:
+				editor_type = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_AUTO_CORRECT;
+				break;
+		}
+		textfield.setInputType(editor_type);
+		textfield.setMaxLines(1);
+		textfield.setText(f.getDefaultValue());
+		textfield.setGravity(Gravity.TOP);
+
+		if (f.isReadOnly()) {
+			textfield.setEnabled(false);
+		}
+
+		tr.addView(label);
+		tr.addView(textfield);
+
+		tl.addView(tr);
 	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_form, container, false);
+		this.context = viewRoot.getContext();
 		setWidgetLayout(viewRoot);
 
-		this.widgetInstance = (FormWidgetInstance) getWidgetInstance();
+		this.widgetInstance = getWidgetInstance();
 
 		TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
 		title.setText(this.widgetInstance.getTitle());
 
 		TableLayout tl = (TableLayout) viewRoot.findViewById(R.id.formTableLayout);
-
-
-		TableRow tr = new TableRow(viewRoot.getContext());
-		tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-/* Create a Button to be the row-content. */
-		Button b = new Button(viewRoot.getContext());
-		b.setText("Dynamic Button");
-		b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-/* Add Button to row. */
-		tr.addView(b);
-/* Add row to TableLayout. */
-//tr.setBackgroundResource(R.drawable.sf_gradient_03);
-		tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-
-
-
-
-
 		for (Map.Entry e : ((FormWidgetInstance) this.widgetInstance).getFields().entrySet()) {
 			FieldInstance f = (FieldInstance) e.getValue();
-			tr = FormWidgetFragment.generateFieldUI(f);
-			tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+			this.addFieldToUI(f, tl);
 		}
 		return viewRoot;
 	}

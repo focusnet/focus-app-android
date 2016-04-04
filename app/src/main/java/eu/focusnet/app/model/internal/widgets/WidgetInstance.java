@@ -31,10 +31,8 @@ import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
-import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * Created by julien on 12.01.16.

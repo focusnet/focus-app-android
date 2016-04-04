@@ -24,6 +24,7 @@ package eu.focusnet.app.ui.fragment;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,8 +40,7 @@ import android.widget.TextView;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.activity.FocusActivity;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.ViewFactory;
-import eu.focusnet.app.ui.util.ViewUtil;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 
 /**
@@ -103,7 +103,10 @@ public class SettingFragment extends Fragment
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = ViewFactory.createProgressDialog(getActivity(), "Retrieving the data", "Please wait...");
+			Resources res = getResources();
+			progressDialog = new ProgressDialog(getActivity());
+			progressDialog.setTitle("Retrieving the data");
+			progressDialog.setMessage(res.getString(R.string.progress_wait_message));
 			progressDialog.show();
 		}
 
@@ -130,7 +133,7 @@ public class SettingFragment extends Fragment
 			int id = Constant.UI_FRAGMENT_SYNCHRONIZE; //The id of the notification and the navigation id to display the appropriate fragment ()
 			TextView prefTextView = (TextView) getView().findViewById(R.id.settings);
 			prefTextView.setText(result);
-			ViewUtil.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
+			UiHelpers.displayNotification(getActivity(), FocusActivity.class, R.drawable.ic_tree, "Title", "Content", id);
 			if (progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}

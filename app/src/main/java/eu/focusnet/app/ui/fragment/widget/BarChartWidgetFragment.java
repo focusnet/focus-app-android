@@ -57,6 +57,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
 
+		this.reference_height = 500;
 		setWidgetLayout(viewRoot);
 
 		this.widgetInstance = getWidgetInstance();

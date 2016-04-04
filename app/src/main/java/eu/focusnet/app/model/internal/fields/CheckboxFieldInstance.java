@@ -30,6 +30,7 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class CheckboxFieldInstance extends FieldInstance
 {
 
+	private final String CHECKBOX_LABEL_CHECKBOX_LABEL = "checkbox-label";
 	private final String CHECKBOX_LABEL_CHECKED_VALUE = "checked-value";
 	private final String CHECKBOX_LABEL_UNCHECKED_VALUE = "unchecked-value";
 	private final String CHECKBOX_CHECKED_DEFAULT_VALUE = "1";
@@ -37,9 +38,11 @@ public class CheckboxFieldInstance extends FieldInstance
 	private final String CHECKBOX_DEFAULT_IS_CHECKED = "checked";
 	private final String CHECKBOX_DEFAULT_IS_UNCHECKED = "unchecked";
 
+
 	private boolean defaultChecked;
 	private String checkedValue;
 	private String uncheckedValue;
+	private String checkboxLabel;
 
 	public CheckboxFieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
@@ -49,6 +52,16 @@ public class CheckboxFieldInstance extends FieldInstance
 	@Override
 	protected void processSpecificConfig()
 	{
+		try {
+			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_CHECKBOX_LABEL))));
+		}
+		catch (FocusMissingResourceException ex) {
+			throw new FocusInternalErrorException("Cannot resolve field checkbox-label");
+		}
+		catch (FocusBadTypeException ex) {
+			throw new FocusInternalErrorException("Cannot cast field checkbox-label");
+		}
+
 		this.checkedValue = CHECKBOX_CHECKED_DEFAULT_VALUE;
 		this.uncheckedValue = CHECKBOX_UNCHECKED_DEFAULT_VALUE;
 
@@ -91,5 +104,10 @@ public class CheckboxFieldInstance extends FieldInstance
 	public String getUncheckedValue()
 	{
 		return uncheckedValue;
+	}
+
+	public String getCheckboxLabel()
+	{
+		return checkboxLabel;
 	}
 }

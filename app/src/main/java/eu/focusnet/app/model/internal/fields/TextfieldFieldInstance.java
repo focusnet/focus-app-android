@@ -64,7 +64,6 @@ public class TextfieldFieldInstance extends FieldInstance
 			// fallback to generic type
 			return TEXTFIELD_TYPE_TEXT;
 		}
-
 	}
 	
 

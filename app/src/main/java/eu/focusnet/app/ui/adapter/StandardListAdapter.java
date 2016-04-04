@@ -46,7 +46,6 @@ import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.service.BookmarkService;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
-import eu.focusnet.app.ui.util.ViewUtil;
 
 /**
  * List Adapter, used for

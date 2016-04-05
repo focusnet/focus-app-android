@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment.widget;
@@ -53,16 +51,16 @@ public class TableWidgetFragment extends WidgetFragment
 		this.widgetInstance = getWidgetInstance();
 
 		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title);
-	 	textTitle.setText(this.widgetInstance.getTitle());
+		textTitle.setText(this.widgetInstance.getTitle());
 
 		TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
-		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance)this.widgetInstance).getTableHeaders());
+		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);
 		adapter.setTextColor(getResources().getColor(R.color.table_header_text));
 		tableView.setHeaderAdapter(adapter);
 		tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
-		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance)this.widgetInstance).getTableData()));
+		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableData()));
 		int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
 		int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
 		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));

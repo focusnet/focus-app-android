@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment;
@@ -53,6 +51,26 @@ public class SynchronizeFragment extends Fragment
 
 	private CronService cronService;
 	private boolean boundService;
+	/** Defines callbacks for service binding, passed to bindService() */
+	private ServiceConnection mConnection = new ServiceConnection()
+	{
+
+		@Override
+		public void onServiceConnected(ComponentName className,
+									   IBinder service)
+		{
+			// We've bound to LocalService, cast the IBinder and get LocalService instance
+			CronService.CronBinder binder = (CronService.CronBinder) service;
+			cronService = binder.getService();
+			boundService = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0)
+		{
+			boundService = false;
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +79,7 @@ public class SynchronizeFragment extends Fragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_synchronize, container, false);
 		tableLayout = (TableLayout) viewRoot.findViewById(R.id.synchronize_paths);
-	// FIXME	new SynchronizeDataTask().execute();
+		// FIXME	new SynchronizeDataTask().execute();
 		return viewRoot;
 	}
 
@@ -75,10 +93,9 @@ public class SynchronizeFragment extends Fragment
 		boundService = false;
 	}
 
-
-
 	@Override
-	public void onStop() {
+	public void onStop()
+	{
 		super.onStop();
 		// Unbind from the service
 		if (boundService) {
@@ -86,25 +103,6 @@ public class SynchronizeFragment extends Fragment
 			boundService = false;
 		}
 	}
-
-
-	/** Defines callbacks for service binding, passed to bindService() */
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName className,
-									   IBinder service) {
-			// We've bound to LocalService, cast the IBinder and get LocalService instance
-			CronService.CronBinder binder = (CronService.CronBinder) service;
-			cronService = binder.getService();
-			boundService = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			boundService = false;
-		}
-	};
 
 
 // FIXME FIXME TODO TO BE TESTED

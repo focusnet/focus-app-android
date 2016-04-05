@@ -1,23 +1,21 @@
 /**
- *
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package eu.focusnet.app.ui.fragment.widget;
@@ -60,15 +58,15 @@ public class PieChartWidgetFragment extends WidgetFragment
 		setWidgetLayout(viewRoot);
 
 
-		this.widgetInstance =  getWidgetInstance();
+		this.widgetInstance = getWidgetInstance();
 
 		TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
-		piechartTitle.setText(((PieChartWidgetInstance)this.widgetInstance).getTitle());
+		piechartTitle.setText(((PieChartWidgetInstance) this.widgetInstance).getTitle());
 
 		ArrayList<Entry> yVals = new ArrayList<>();
 
-		for (int i = 0; i < ((PieChartWidgetInstance)this.widgetInstance).getValues().size(); i++) {
-			float d = ((PieChartWidgetInstance)this.widgetInstance).getValues().get(i).floatValue();
+		for (int i = 0; i < ((PieChartWidgetInstance) this.widgetInstance).getValues().size(); i++) {
+			float d = ((PieChartWidgetInstance) this.widgetInstance).getValues().get(i).floatValue();
 			yVals.add(new Entry(d, i));
 		}
 
@@ -77,7 +75,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 		dataSet.setSelectionShift(5f);
 		dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
-		PieData data = new PieData(((PieChartWidgetInstance)this.widgetInstance).getLabels(), dataSet);
+		PieData data = new PieData(((PieChartWidgetInstance) this.widgetInstance).getLabels(), dataSet);
 		data.setValueFormatter(new PercentFormatter());
 		data.setValueTextSize(11f);
 		data.setValueTextColor(Color.WHITE);
@@ -86,7 +84,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 		PieChart pieChart = (PieChart) viewRoot.findViewById(R.id.pie_chart);
 
 		pieChart.setUsePercentValues(true);
-		pieChart.setDescription(((PieChartWidgetInstance)this.widgetInstance).getCaption());
+		pieChart.setDescription(((PieChartWidgetInstance) this.widgetInstance).getCaption());
 		pieChart.setDragDecelerationFrictionCoef(0.95f);
 		pieChart.setDrawHoleEnabled(false);
 		pieChart.setHoleColorTransparent(true);
@@ -102,7 +100,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 		// undo all highlights
 		pieChart.highlightValues(null);
 		pieChart.invalidate();
-	//	pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
+		//	pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
 
 		pieChart.setData(data);
 

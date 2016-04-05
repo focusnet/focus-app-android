@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -104,7 +104,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		XAxis x_axis = mChart.getXAxis();
 		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		x_axis.setSpaceBetweenLabels(1);
-		ArrayList<String> x_vals = ((BarChartWidgetInstance)this.widgetInstance).getxAxisValues();
+		ArrayList<String> x_vals = ((BarChartWidgetInstance) this.widgetInstance).getxAxisValues();
 
 		// limits
 		float yAxisMinValue = 0;
@@ -115,8 +115,8 @@ public class BarChartWidgetFragment extends WidgetFragment
 
 		// series
 		ArrayList<BarDataSet> datasets = new ArrayList<>();
-		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfSeries(); ++i) {
-			ArrayList<Double> values = ((BarChartWidgetInstance)this.widgetInstance).getSerieValues(i);
+		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfSeries(); ++i) {
+			ArrayList<Double> values = ((BarChartWidgetInstance) this.widgetInstance).getSerieValues(i);
 			ArrayList<BarEntry> vals = new ArrayList<>();
 			for (int j = 0; j < values.size(); ++j) {
 				// BarEntry(value, position on x axis)
@@ -131,7 +131,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 				}
 				vals.add(new BarEntry(v, j));
 			}
-			BarDataSet set = new BarDataSet(vals, ((BarChartWidgetInstance)this.widgetInstance).getSerieLabel(i));
+			BarDataSet set = new BarDataSet(vals, ((BarChartWidgetInstance) this.widgetInstance).getSerieLabel(i));
 
 			set.setColor(rainbow[current_color]);
 			set.setValueTextSize(9f);
@@ -151,8 +151,8 @@ public class BarChartWidgetFragment extends WidgetFragment
 		leftAxis.enableGridDashedLine(10f, 10f, 0f);
 		leftAxis.setDrawLimitLinesBehindData(true);
 
-		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfMinLimits(); ++i) {
-			LimitLine limitLineLowerYAxis = new LimitLine(((BarChartWidgetInstance)this.widgetInstance).getMinLimitValue(i).floatValue(), ((BarChartWidgetInstance)this.widgetInstance).getMinLimitLabel(i));
+		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMinLimits(); ++i) {
+			LimitLine limitLineLowerYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMinLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMinLimitLabel(i));
 			limitLineLowerYAxis.setLineWidth(4f);
 			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
 			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
@@ -160,8 +160,8 @@ public class BarChartWidgetFragment extends WidgetFragment
 			leftAxis.addLimitLine(limitLineLowerYAxis);
 		}
 
-		for (int i = 0; i < ((BarChartWidgetInstance)this.widgetInstance).getNumberOfMaxLimits(); ++i) {
-			LimitLine limitLineUpperYAxis = new LimitLine(((BarChartWidgetInstance)this.widgetInstance).getMaxLimitValue(i).floatValue(), ((BarChartWidgetInstance)this.widgetInstance).getMaxLimitLabel(i));
+		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMaxLimits(); ++i) {
+			LimitLine limitLineUpperYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMaxLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMaxLimitLabel(i));
 			limitLineUpperYAxis.setLineWidth(4f);
 			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
 			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
@@ -173,7 +173,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		BarData data = new BarData(x_vals, datasets);
 		mChart.setData(data);
 
-	//	mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+		//	mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 
 		return viewRoot;
 	}

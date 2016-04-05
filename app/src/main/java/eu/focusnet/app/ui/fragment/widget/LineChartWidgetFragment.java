@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -86,7 +86,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		XAxis x_axis = lineChart.getXAxis();
 		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		x_axis.setSpaceBetweenLabels(1);
-		ArrayList<String> x_vals = ((LineChartWidgetInstance)this.widgetInstance).getxAxisValues();
+		ArrayList<String> x_vals = ((LineChartWidgetInstance) this.widgetInstance).getxAxisValues();
 
 		// limits
 		float yAxisMinValue = 0;
@@ -97,8 +97,8 @@ public class LineChartWidgetFragment extends WidgetFragment
 
 		// series
 		ArrayList<LineDataSet> datasets = new ArrayList<>();
-		for (int i = 0; i < ((LineChartWidgetInstance)this.widgetInstance).getNumberOfSeries(); ++i) {
-			ArrayList<Double> values = ((LineChartWidgetInstance)this.widgetInstance).getSerieValues(i);
+		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfSeries(); ++i) {
+			ArrayList<Double> values = ((LineChartWidgetInstance) this.widgetInstance).getSerieValues(i);
 			ArrayList<Entry> vals = new ArrayList<>();
 			for (int j = 0; j < values.size(); ++j) {
 				// BarEntry(value, position on x axis)
@@ -113,7 +113,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 				}
 				vals.add(new BarEntry(v, j));
 			}
-			LineDataSet set = new LineDataSet(vals, ((LineChartWidgetInstance)this.widgetInstance).getSerieLabel(i));
+			LineDataSet set = new LineDataSet(vals, ((LineChartWidgetInstance) this.widgetInstance).getSerieLabel(i));
 
 			set.enableDashedLine(10f, 5f, 0f);
 			set.setColor(rainbow[current_color]);
@@ -140,8 +140,8 @@ public class LineChartWidgetFragment extends WidgetFragment
 		leftAxis.enableGridDashedLine(10f, 10f, 0f);
 		leftAxis.setDrawLimitLinesBehindData(true);
 
-		for (int i = 0; i < ((LineChartWidgetInstance)this.widgetInstance).getNumberOfMinLimits(); ++i) {
-			LimitLine limitLineLowerYAxis = new LimitLine(((LineChartWidgetInstance)this.widgetInstance).getMinLimitValue(i).floatValue(), ((LineChartWidgetInstance)this.widgetInstance).getMinLimitLabel(i));
+		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfMinLimits(); ++i) {
+			LimitLine limitLineLowerYAxis = new LimitLine(((LineChartWidgetInstance) this.widgetInstance).getMinLimitValue(i).floatValue(), ((LineChartWidgetInstance) this.widgetInstance).getMinLimitLabel(i));
 			limitLineLowerYAxis.setLineWidth(4f);
 			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
 			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
@@ -149,8 +149,8 @@ public class LineChartWidgetFragment extends WidgetFragment
 			leftAxis.addLimitLine(limitLineLowerYAxis);
 		}
 
-		for (int i = 0; i < ((LineChartWidgetInstance)this.widgetInstance).getNumberOfMaxLimits(); ++i) {
-			LimitLine limitLineUpperYAxis = new LimitLine(((LineChartWidgetInstance)this.widgetInstance).getMaxLimitValue(i).floatValue(), ((LineChartWidgetInstance)this.widgetInstance).getMaxLimitLabel(i));
+		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfMaxLimits(); ++i) {
+			LimitLine limitLineUpperYAxis = new LimitLine(((LineChartWidgetInstance) this.widgetInstance).getMaxLimitValue(i).floatValue(), ((LineChartWidgetInstance) this.widgetInstance).getMaxLimitLabel(i));
 			limitLineUpperYAxis.setLineWidth(4f);
 			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
 			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
@@ -162,7 +162,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		LineData data = new LineData(x_vals, datasets);
 		lineChart.setData(data);
 
-	//	lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+		//	lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 
 		// get the legend (only possible after setting data)
 		Legend legend = lineChart.getLegend();

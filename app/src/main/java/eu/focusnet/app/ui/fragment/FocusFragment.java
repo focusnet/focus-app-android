@@ -37,7 +37,9 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.BookmarkLink;
+import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
@@ -82,16 +84,9 @@ public class FocusFragment extends ListFragment
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 			if (position > notifHeaderPosition) {
 				//TODO navigate to notifications ...
-		/*		Intent cronServiceIntent = new Intent(getActivity(), WebViewTestActivity.class);
-				if (position - 1 == notifHeaderPosition) {
-					cronServiceIntent = new Intent(getActivity(), TestActivity.class);
-				}
-				startActivity(cronServiceIntent);
-				*/
 			}
 			else {
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
-				//cronServiceIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
 				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
 				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
@@ -121,7 +116,17 @@ public class FocusFragment extends ListFragment
 
 			abstractItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
+			Preference preference = null;
+			try {
+				preference = dm.getUserPreferences();
+			}
+			catch (FocusMissingResourceException ex) {
+				// ignore? or crash? FIXME TODO
+			}
+
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects(); // FIXME TODO sporadic crashes  here
+			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
+			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
@@ -135,23 +140,21 @@ public class FocusFragment extends ListFragment
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 
-				//TODO register the bookmarks to the dataManager
 				int projectOrder = 0;
-				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString();
-				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
-				boolean isRightIconActive = false;
+				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
-						projectOrder, rightIcon, isRightIconActive, bookmarkLinkType); //TODO see this BOOKMARK_LINK_TYPE.PAGE with Julien
+						projectOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
 				abstractItems.add(drawListItem);
 			}
 
 			// FIXME TOOLS should come here, from __welcome__ project ; for now not implemented.
 
-
 			/*
 			FIXME TODO notifications
 			*/
+			
 			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
 					null);

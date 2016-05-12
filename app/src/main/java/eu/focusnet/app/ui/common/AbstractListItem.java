@@ -23,7 +23,6 @@ package eu.focusnet.app.ui.common;
 import android.graphics.Bitmap;
 
 /**
- * Created by admin on 17.06.2015.
  */
 public abstract class AbstractListItem
 {

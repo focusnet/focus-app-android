@@ -30,6 +30,12 @@ import eu.focusnet.app.model.internal.DataContext;
  */
 public class GPSWidgetInstance extends DataCollectionWidgetInstance
 {
+
+	private double latitude;
+	private double longitude;
+	private double altitude;
+	private float accuracy;
+
 	/**
 	 * C'tor
 	 *
@@ -47,5 +53,16 @@ public class GPSWidgetInstance extends DataCollectionWidgetInstance
 	protected void processSpecificConfig()
 	{
 
+	}
+
+	/**
+	 * Save a new sample
+	 */
+	public void saveSample(double latitude, double longitude, double altitude, float accuracy)
+	{
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.altitude = altitude;
+		this.accuracy = accuracy;
 	}
 }

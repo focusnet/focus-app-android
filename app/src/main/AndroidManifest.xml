@@ -58,11 +58,6 @@
             tools:replace="android:theme"/>
 
         <service
-            android:name=".service.BookmarkService"
-            android:exported="false"
-            android:screenOrientation="landscape"/>
-
-        <service
             android:name="org.acra.sender.SenderService"
             android:exported="false"
             android:process=":acra"/>

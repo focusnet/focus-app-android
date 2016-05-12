@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -80,7 +80,7 @@ public class Preference extends FocusObject
 
 	public void addBookmarkLink(BookmarkLink bookmarkLink, String bookmarkType)
 	{
-		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE)) {
+		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
 			bookmarks.getPages().add(bookmarkLink);
 		}
 		else {
@@ -88,20 +88,24 @@ public class Preference extends FocusObject
 		}
 	}
 
-	public void removeBookmarkLink(String path, String title, String bookmarkType)
+	/**
+	 * Find where the bookmark link is in one of the 2 specific sets (PAGE / TOOL)
+	 *
+	 * @param path
+	 * @param title
+	 * @param bookmarkType
+	 * @return
+	 */
+	public int findBookmarkLinkInSpecificSet(String path, String title, String bookmarkType)
 	{
-		int indexToRemove = -1;
-		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE)) {
+		int foundIndex = -1;
+		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
 			ArrayList<BookmarkLink> pages = bookmarks.getPages();
 			for (int i = 0; i < pages.size(); i++) {
 				BookmarkLink page = pages.get(i);
 				if (page.getPath().equals(path) && page.getName().equals(title)) {
-					indexToRemove = i;
-					break;
+					return i;
 				}
-			}
-			if (indexToRemove != -1) {
-				pages.remove(indexToRemove);
 			}
 		}
 		else {
@@ -109,14 +113,27 @@ public class Preference extends FocusObject
 			for (int i = 0; i < tools.size(); i++) {
 				BookmarkLink tool = tools.get(i);
 				if (tool.getPath().equals(path) && tool.getName().equals(title)) {
-					indexToRemove = i;
-					break;
+					return i;
 				}
 			}
-			if (indexToRemove != -1) {
-				tools.remove(indexToRemove);
+		}
+		return foundIndex;
+	}
+
+	public void removeBookmarkLink(String path, String title, String bookmarkType)
+	{
+		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
+			if (found != -1) {
+				bookmarks.getPages().remove(found);
 			}
 		}
-
+		else {
+			ArrayList<BookmarkLink> tools = bookmarks.getTools();
+			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
+			if (found != -1) {
+				bookmarks.getTools().remove(found);
+			}
+		}
 	}
 }

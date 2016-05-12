@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -37,14 +37,16 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
+import eu.focusnet.app.model.internal.PageInstance;
+import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.BookmarkLink;
+import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.model.internal.PageInstance;
-import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
@@ -122,42 +124,45 @@ public class ProjectFragment extends ListFragment
 		@Override
 		protected StandardListAdapter doInBackground(String... params)
 		{
-			// load icons
 			dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
-
-			abstractItems = new ArrayList<>();
-
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
-					getString(R.string.cutting_header_dashboard),
-					null);
-
-			abstractItems.add(headerProjectsListItem);
-
-			// load icons
 			toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
-
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);
+			Preference preference = null;
+			try {
+				preference = dm.getUserPreferences();
+			}
+			catch (FocusMissingResourceException ex) {
+				// ignore? or crash? FIXME TODO
+			}
+			abstractItems = new ArrayList<>();
+
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
+					getString(R.string.cutting_header_dashboard),
+					null);
+			abstractItems.add(headerProjectsListItem);
 
 			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
+
+			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
+			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
 
 			for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 				PageInstance dashboard = entry.getValue();
 				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 				int dashboardOrder = 0;
 
-				//TODO register the bookmarks to the dataManager
-				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
-				boolean isRightIconActive = false;
-				//END
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)),
-						dashboard.getTitle(), dashboard.getDescription(), dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getTitle(), dashboard.getDescription(),
+						dashboardOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
+
 			}
+
 
 			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
 					getString(R.string.cutting_header_tool),
@@ -170,19 +175,16 @@ public class ProjectFragment extends ListFragment
 				PageInstance tool = entry.getValue();
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-				//TODO register the bookmarks to the dataManager
-				Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
-				boolean isRightIconActive = false;
-				//END
-
 				int dashboardOrder = 0;
 
-				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), toolsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
-						dashboardOrder, rightIcon, isRightIconActive, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
-				abstractItems.add(drawListItem);
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
+				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
+						dashboardOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+				abstractItems.add(drawListItem);
 			}
 
+			/* FIXME notifications to be added later. */
 			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.cutting_header_notification),
 					UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
@@ -200,11 +202,12 @@ public class ProjectFragment extends ListFragment
 //                StandardListItem drawListItem = new StandardListItem(Util.getBitmap(getActivity(), notificationIcons.getResourceId(0, -1)), notification.toString(), "Info notifications", null);
 //                abstractItems.register(drawListItem);
 //            }
+			notificationIcons.recycle();
+
 
 			// Recycle the typed array
 			dashboardsIcons.recycle();
 			toolsIcons.recycle();
-			notificationIcons.recycle();
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

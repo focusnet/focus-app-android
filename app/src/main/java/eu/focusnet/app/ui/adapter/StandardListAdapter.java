@@ -22,10 +22,8 @@ package eu.focusnet.app.ui.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +35,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.json.BookmarkLink;
+import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
-import eu.focusnet.app.service.BookmarkService;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
@@ -52,9 +52,6 @@ import eu.focusnet.app.ui.util.UiHelpers;
  */
 public class StandardListAdapter extends BaseAdapter
 {
-
-	private static final String TAG = StandardListAdapter.class.getName();
-
 	private Context context;
 	private LayoutInflater inflater;
 	private ArrayList<AbstractListItem> abstractListItems;
@@ -140,7 +137,6 @@ public class StandardListAdapter extends BaseAdapter
 							selectedContext.setText(standardListItem.getTitle());
 
 							final boolean isRightIconActive = standardListItem.isRightIconActive();
-							Log.d(TAG, "Is right icon active: " + isRightIconActive);
 
 							if (isRightIconActive) {
 								dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
@@ -157,40 +153,45 @@ public class StandardListAdapter extends BaseAdapter
 								@Override
 								public void onClick(View v)
 								{
-									Log.d(TAG, "Cancel clicked");
-									//Do nothing
 									dialog.dismiss();
 								}
 							});
 
+
+
+							// FIXME here we update the Preference object by removing/adding bookrmarks!!
+							// FIXME FIXME TODO
 							ok.setOnClickListener(new View.OnClickListener()
 							{
 								@Override
 								public void onClick(View view)
 								{
-									final Intent intent = new Intent(context, BookmarkService.class);
-									intent.putExtra(Constant.UI_EXTRA_PATH, standardListItem.getPath());
-//                                    cronServiceIntent.putExtra(Constant.ORDER, standardListItem.getOrder());
-									intent.putExtra(Constant.UI_EXTRA_BOOKMARK_TYPE, standardListItem.getTypeOfBookmark());
+									Preference userPreference = null;
+									try {
+										userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
+									}
+									catch (FocusMissingResourceException ex) {
+										// FIXME FIXME TODO
+										// create a new one? or crash
+									}
 
 									if (isRightIconActive) {
-										//   dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
 										standardListItem.setIsRightIconActive(false);
 										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.ic_star_o);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, false);
+
+										userPreference.removeBookmarkLink(standardListItem.getPath(), standardListItem.getTitle(), standardListItem.getTypeOfBookmark());
 									}
 									else {
-										//     dialogTitle.setText("Are you sure you want to register this context to the Bookmarks?");
 										standardListItem.setIsRightIconActive(true);
 										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.ic_star);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										intent.putExtra(Constant.UI_EXTRA_IS_TO_SAVE, true);
+
+										BookmarkLink bookmarkLink = new BookmarkLink(standardListItem.getTitle(), standardListItem.getPath(), 0);
+										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
-									intent.putExtra(Constant.UI_EXTRA_NAME, selectedContext.getText().toString());
-									context.startService(intent);
 									dialog.dismiss();
 								}
 							});

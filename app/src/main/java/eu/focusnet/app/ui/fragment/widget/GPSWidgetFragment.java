@@ -20,7 +20,9 @@
 
 package eu.focusnet.app.ui.fragment.widget;
 
+import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +40,8 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.GPSWidgetInstance;
 
 /**
- * Created by yandypiedra on 14.01.16.
  */
-public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,  LocationListener
 {
 
 	private volatile boolean positionAsked;
@@ -55,15 +56,19 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 
 		setWidgetLayout(viewRoot);
 
-		GPSWidgetInstance gpsWidgetInstance = (GPSWidgetInstance) getWidgetInstance();
+		// --------------------------------- debug FIXME DEBUG TODO
+		LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+		boolean gps_enabled	= lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		boolean network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+
+		this.widgetInstance = this.getWidgetInstance();
 
 		TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
-		title.setText(gpsWidgetInstance.getTitle());
+		title.setText(this.widgetInstance.getTitle());
 
 		longitudeValue = (TextView) viewRoot.findViewById(R.id.text_longitude_value);
-
 		latitudeValue = (TextView) viewRoot.findViewById(R.id.text_latitude_value);
-
 		accuracyValue = (TextView) viewRoot.findViewById(R.id.text_accuracy_value);
 
 		Button gpsPosition = (Button) viewRoot.findViewById(R.id.button_gps_position);
@@ -130,13 +135,19 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 	@Override
 	public void onConnectionSuspended(int i)
 	{
-
 	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult)
+	{
+	}
+
 
 	@Override
 	public void onLocationChanged(Location location)
 	{
 		if (positionAsked) {
+			((GPSWidgetInstance) this.widgetInstance).saveSample(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy());
 			longitudeValue.setText("" + location.getLongitude());
 			latitudeValue.setText("" + location.getLatitude());
 			accuracyValue.setText("" + location.getAccuracy());
@@ -144,8 +155,5 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 		}
 	}
 
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult)
-	{
-	}
+
 }

@@ -694,6 +694,10 @@ public class DataManager
 	 */
 	public void freeMemory()
 	{
+		// FIXME FIXME FIXME TODO
+		if (1 == 1) {
+			return;
+		}
 		Set<String> used_urls = new HashSet<>();
 		for (AbstractInstance ai : this.activeInstances) {
 			Map<String, String> m = ai.getDataContext();
@@ -718,6 +722,10 @@ public class DataManager
 	 */
 	public void cleanDataStore()
 	{
+		// FIXME FIXME FIXME TODO
+		if (1 == 1) {
+			return;
+		}
 		if (!this.isApplicationReady()) {
 			return;
 		}
@@ -737,6 +745,10 @@ public class DataManager
 	 */
 	public boolean syncData() throws FocusMissingResourceException
 	{
+		// FIXME FIXME FIXME TODO
+		if (1 == 1) {
+			return false;
+		}
 		if (!this.isApplicationReady()) {
 			return false;
 		}
@@ -755,6 +767,11 @@ public class DataManager
 	 */
 	private void pushLocalModifications() throws FocusMissingResourceException
 	{
+		// FIXME FIXME FIXME TODO
+		if (1 == 1) {
+			return;
+		}
+
 		// POST
 		String[] to_post_urls;
 		int report_failure = 0; // 1 = network failure only, 2 = at some point a HTTP request had a failed status
@@ -837,6 +854,11 @@ public class DataManager
 	 */
 	public void rebuildApplicationData()
 	{
+		// FIXME FIXME FIXME TODO
+		if (1 == 1) {
+			return;
+		}
+
 		boolean must_recover = false;
 		DataManager new_dm = new DataManager();
 		try {

@@ -34,9 +34,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
@@ -45,7 +52,7 @@ import eu.focusnet.app.ui.util.UiHelpers;
 public class CameraWidgetFragment extends WidgetFragment
 {
 
-	private final int PICTURE_REQUEST = 1;
+	private final int CAMERA_REQUEST = 1;
 	private Uri imageUri;
 	private ImageView imageView;
 	private CameraWidgetInstance cameraWidgetInstance;
@@ -75,7 +82,7 @@ public class CameraWidgetFragment extends WidgetFragment
 										  public void onClick(View v)
 										  {
 											  Intent intent = new Intent(getActivity(), ImageActivity.class);
-											  intent.putExtra("imageUri", imageUri);
+											  intent.putExtra(Constant.UI_EXTRA_IMAGE_URI, imageUri);
 											  startActivity(intent);
 										  }
 									  }
@@ -106,13 +113,13 @@ public class CameraWidgetFragment extends WidgetFragment
 												 @Override
 												 public void onClick(View v)
 												 {
+													 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 													 ContentValues values = new ContentValues();
 													 values.put(MediaStore.Images.Media.TITLE, "New Picture");
 													 values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
 													 imageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-													 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-													 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-													 startActivityForResult(intent, PICTURE_REQUEST);
+													 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+													 startActivityForResult(cameraIntent, CAMERA_REQUEST);
 												 }
 											 }
 
@@ -124,20 +131,20 @@ public class CameraWidgetFragment extends WidgetFragment
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == PICTURE_REQUEST) {
-			if (resultCode == Activity.RESULT_OK) {
-
-				//  ImageView imageView = (ImageView) findViewById(R.id.imageView);
-				// imageView.setImageBitmap(tookPicture);
-// FIXME required
-
-				this.cameraWidgetInstance.saveImage((Bitmap) data.getExtras().get("data"));
-
-				imageView.setImageURI(imageUri);
-				deleteButton.setEnabled(true);
-				viewButton.setEnabled(true);
-				takePictureButton.setText("Replace Picture");
+		if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+			// get a bitmap from imageuri and save it
+			try {
+				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+				imageView.setImageBitmap(bitmap);
+				this.cameraWidgetInstance.saveImage(bitmap);
 			}
+			catch (IOException ex) {
+				throw new FocusInternalErrorException("Cannot retrieve bitmap from file.");
+			}
+
+			deleteButton.setEnabled(true);
+			viewButton.setEnabled(true);
+			takePictureButton.setText("Replace Picture");
 		}
 	}
 

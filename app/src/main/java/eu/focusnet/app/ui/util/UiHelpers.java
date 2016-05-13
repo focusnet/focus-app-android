@@ -10,7 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.Toast;
+
+import eu.focusnet.app.FocusApplication;
 
 /**
  * The MIT License (MIT)
@@ -71,6 +75,7 @@ public class UiHelpers
 		}
 		return (int) ((float) dp * scale);
 	}
+
 
 	/**
 	 * Displays a notification

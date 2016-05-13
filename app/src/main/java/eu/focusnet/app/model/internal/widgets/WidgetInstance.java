@@ -31,6 +31,7 @@ import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.ui.util.Constant;
 
 /**
  * Created by julien on 12.01.16.
@@ -52,6 +53,7 @@ public abstract class WidgetInstance extends AbstractInstance
 
 	public static final String WIDGET_LAYOUT_WIDTH_LABEL = "width";
 	public static final String WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE = "4of4";
+	public static final int WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS = 4;
 
 	private static HashMap<String, String> layoutConfigDefaults = null;
 
@@ -192,5 +194,15 @@ public abstract class WidgetInstance extends AbstractInstance
 			return this.layoutConfigDefaults.get(attribute);
 		}
 		return tmp;
+	}
+
+	/**
+	 * Return an integer that represents the number of columsn covered by the widget.
+	 */
+	public int getNumberOfColumnsInUi()
+	{
+		String width = this.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
+		int indexOf = width.indexOf(Constant.WIDGET_LAYOUT_OF);
+		return Integer.valueOf(width.substring(0, indexOf).trim());
 	}
 }

@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 
 /**
  * Created by yandypiedra on 13.01.16.
@@ -47,18 +48,21 @@ import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
 public class PieChartWidgetFragment extends WidgetFragment
 {
 
+	private static int HEIGHT_DP_FOR_FULL_WIDTH = 800;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
 
-		this.reference_height = 500;
+		this.widgetInstance = getWidgetInstance();
+
+		// Update the reference height of the widget
+		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.reference_height = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
 
 		setWidgetLayout(viewRoot);
-
-
-		this.widgetInstance = getWidgetInstance();
 
 		TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
 		piechartTitle.setText(((PieChartWidgetInstance) this.widgetInstance).getTitle());

@@ -44,12 +44,14 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
+import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
 public class BarChartWidgetFragment extends WidgetFragment
 {
+	private static int HEIGHT_DP_FOR_FULL_WIDTH = 600;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -57,10 +59,15 @@ public class BarChartWidgetFragment extends WidgetFragment
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
 
-		this.reference_height = 500;
+		this.widgetInstance = getWidgetInstance();
+
+		// Update the reference height of the widget
+		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.reference_height = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
+
 		setWidgetLayout(viewRoot);
 
-		this.widgetInstance = getWidgetInstance();
+
 
 		TextView barChartTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
 		barChartTitle.setText(this.widgetInstance.getTitle());

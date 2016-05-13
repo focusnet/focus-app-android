@@ -120,9 +120,7 @@ public class PageFragment extends Fragment
 			WidgetInstance widgetInstance = entry.getValue();
 
 			//Get the width of the widget (e.g. 2of4)
-			String width = widgetInstance.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
-			int indexOf = width.indexOf(Constant.WIDGET_LAYOUT_OF);
-			int requiredSpace = Integer.valueOf(width.substring(0, indexOf).trim());
+			int requiredSpace = widgetInstance.getNumberOfColumnsInUi();
 
 			if (requiredSpace > spaceLeft) {
 

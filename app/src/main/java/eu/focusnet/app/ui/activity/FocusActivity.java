@@ -23,6 +23,8 @@ package eu.focusnet.app.ui.activity;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;

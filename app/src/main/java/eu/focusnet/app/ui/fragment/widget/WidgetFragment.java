@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -22,6 +22,8 @@ package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +41,8 @@ import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
 
@@ -49,7 +51,12 @@ import eu.focusnet.app.ui.util.UiHelpers;
  */
 public abstract class WidgetFragment extends Fragment
 {
+	/**
+	 * Reference height: if not 0, the widget will be set to this number of dp.
+	 * This allows us to adapt the height depending on the content of the widget.
+	 */
 	protected int reference_height;
+
 	WidgetInstance widgetInstance;
 
 	/**
@@ -127,6 +134,20 @@ public abstract class WidgetFragment extends Fragment
 		this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
 		dm.registerActiveInstance(this.widgetInstance);
 		return this.widgetInstance;
+	}
+
+	public float getDisplayHeightInDp()
+	{
+
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		DisplayMetrics outMetrics = new DisplayMetrics ();
+		display.getMetrics(outMetrics);
+
+		float density  = getResources().getDisplayMetrics().density;
+		float dpHeight = outMetrics.heightPixels / density;
+		return dpHeight;
+		// float dpWidth  = outMetrics.widthPixels / density;
+
 	}
 
 }

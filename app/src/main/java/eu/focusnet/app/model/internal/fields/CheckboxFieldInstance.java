@@ -30,13 +30,13 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class CheckboxFieldInstance extends FieldInstance
 {
 
-	private final String CHECKBOX_LABEL_CHECKBOX_LABEL = "checkbox-label";
-	private final String CHECKBOX_LABEL_CHECKED_VALUE = "checked-value";
-	private final String CHECKBOX_LABEL_UNCHECKED_VALUE = "unchecked-value";
-	private final String CHECKBOX_CHECKED_DEFAULT_VALUE = "1";
-	private final String CHECKBOX_UNCHECKED_DEFAULT_VALUE = "0";
-	private final String CHECKBOX_DEFAULT_IS_CHECKED = "checked";
-	private final String CHECKBOX_DEFAULT_IS_UNCHECKED = "unchecked";
+	private final static String CHECKBOX_LABEL_CHECKBOX_LABEL = "checkbox-label";
+	private final static String CHECKBOX_LABEL_CHECKED_VALUE = "checked-value";
+	private final static String CHECKBOX_LABEL_UNCHECKED_VALUE = "unchecked-value";
+	private final static String CHECKBOX_CHECKED_DEFAULT_VALUE = "1";
+	private final static String CHECKBOX_UNCHECKED_DEFAULT_VALUE = "0";
+	private final static String CHECKBOX_DEFAULT_IS_CHECKED = "checked";
+	private final static String CHECKBOX_DEFAULT_IS_UNCHECKED = "unchecked";
 
 
 	private boolean defaultChecked;
@@ -69,10 +69,7 @@ public class CheckboxFieldInstance extends FieldInstance
 			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_CHECKED_VALUE))));
 			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_UNCHECKED_VALUE))));
 		}
-		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Invalid value of (un)checked box");
-		}
-		catch (FocusMissingResourceException ex) {
+		catch (FocusBadTypeException | FocusMissingResourceException ex) {
 			throw new FocusInternalErrorException("Invalid value of (un)checked box");
 		}
 

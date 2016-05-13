@@ -89,7 +89,7 @@ public abstract class WidgetFragment extends Fragment
 			return new FormWidgetFragment();
 		}
 		else if (wi instanceof ExternalAppWidgetInstance) {
-			return null;
+			return new ExternalAppFragment();
 		}
 		else if (wi instanceof SubmitWidgetInstance) {
 			return new SubmitWidgetFragment();

@@ -40,6 +40,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
@@ -139,10 +140,10 @@ public class StandardListAdapter extends BaseAdapter
 							final boolean isRightIconActive = standardListItem.isRightIconActive();
 
 							if (isRightIconActive) {
-								dialogTitle.setText("Are you sure you want to remove this context from the Bookmarks?"); //TODO internationalize all these message
+								dialogTitle.setText(R.string.focus_remove_bookmark_question);
 							}
 							else {
-								dialogTitle.setText("Are you sure you want to register this context to the Bookmarks?");
+								dialogTitle.setText(R.string.focus_add_bookmark_question);
 							}
 
 
@@ -158,9 +159,6 @@ public class StandardListAdapter extends BaseAdapter
 							});
 
 
-
-							// FIXME here we update the Preference object by removing/adding bookrmarks!!
-							// FIXME FIXME TODO
 							ok.setOnClickListener(new View.OnClickListener()
 							{
 								@Override
@@ -189,9 +187,19 @@ public class StandardListAdapter extends BaseAdapter
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 
-										BookmarkLink bookmarkLink = new BookmarkLink(standardListItem.getTitle(), standardListItem.getPath(), 0);
+										BookmarkLink bookmarkLink = new BookmarkLink(selectedContext.getText().toString(), standardListItem.getPath(), 0);
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
+
+									// permanently save
+									final Thread save_user_preferences_thread = new Thread()
+									{
+										public void run()
+										{
+											FocusApplication.getInstance().getDataManager().saveUserPreferences();
+										}
+									};
+									save_user_preferences_thread.start();
 									dialog.dismiss();
 								}
 							});

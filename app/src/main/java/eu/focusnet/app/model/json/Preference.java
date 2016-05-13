@@ -103,7 +103,7 @@ public class Preference extends FocusObject
 			ArrayList<BookmarkLink> pages = bookmarks.getPages();
 			for (int i = 0; i < pages.size(); i++) {
 				BookmarkLink page = pages.get(i);
-				if (page.getPath().equals(path) && page.getName().equals(title)) {
+				if (page.getPath().equals(path)) {
 					return i;
 				}
 			}
@@ -112,7 +112,7 @@ public class Preference extends FocusObject
 			ArrayList<BookmarkLink> tools = bookmarks.getTools();
 			for (int i = 0; i < tools.size(); i++) {
 				BookmarkLink tool = tools.get(i);
-				if (tool.getPath().equals(path) && tool.getName().equals(title)) {
+				if (tool.getPath().equals(path)) {
 					return i;
 				}
 			}

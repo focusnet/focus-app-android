@@ -48,8 +48,8 @@ public class Constant
 			TO_POST = "toPost";
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
-			"(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			URL + " TEXT, " +
+			"(" + ID + " INTEGER AUTO INCREMENT," +
+			URL + " TEXT PRIMARY KEY, " +
 			CONTEXT + " TEXT, " +
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +

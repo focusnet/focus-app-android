@@ -82,16 +82,17 @@ public class FocusFragment extends ListFragment
 	{
 		//Test where the user has clicked and navigate to this project or notifications
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
-			if (position > notifHeaderPosition) {
+			/* if (position > notifHeaderPosition) {
 				//TODO navigate to notifications ...
 			}
-			else {
+
+			else {*/
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
 				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
 				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 				startActivity(intent);
-			}
+			// }
 		}
 	}
 
@@ -154,7 +155,7 @@ public class FocusFragment extends ListFragment
 			/*
 			FIXME TODO notifications
 			*/
-			
+			/*
 			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
 					null);
@@ -173,9 +174,10 @@ public class FocusFragment extends ListFragment
 				abstractItems.add(drawListItem);
 			}
 
+*/
 			// Recycle the typed array
 			projectIcons.recycle();
-			notificationIcons.recycle();
+//			notificationIcons.recycle();
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

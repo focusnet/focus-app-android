@@ -133,12 +133,7 @@ public class DataManager
 
 		// get login infos from local store, and use it as the default
 		FocusSample internal_config = null;
-		try {
-			internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
-		}
-		catch (IOException ex) {
-			// not a network resource, ok to ignore
-		}
+		internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
 
 		if (internal_config != null) {
 			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
@@ -290,12 +285,8 @@ public class DataManager
 		if (this.user != null) {
 			return this.user;
 		}
-		try {
 			this.user = (User) (this.get(this.userUrl, User.class));
-		}
-		catch (IOException ex) {
-			throw new FocusMissingResourceException("Cannot retrieve User object (network problem).");
-		}
+
 		if (this.user == null) {
 			throw new FocusMissingResourceException("Cannot retrieve User object.");
 		}
@@ -316,12 +307,7 @@ public class DataManager
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		try {
-			this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
-		}
-		catch (IOException ex) {
-			throw new FocusMissingResourceException("Cannot retrieve Preference object (network problem).");
-		}
+		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
 		if (this.userPreferences == null) {
 			throw new FocusMissingResourceException("Cannot retrieve Preference object.");
 		}
@@ -342,12 +328,7 @@ public class DataManager
 		if (this.appContentTemplate != null) {
 			return this.appContentTemplate;
 		}
-		try {
-			this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
-		}
-		catch (IOException ex) {
-			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object (network problem).");
-		}
+		this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
 		if (this.appContentTemplate == null) {
 			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
 		}
@@ -391,16 +372,11 @@ public class DataManager
 		if (!this.hasLoginInformation()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
-		FocusSample fs;
-		try {
-			fs = (FocusSample) (this.get(url, FocusSample.class));
-			if (fs == null) {
-				throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.");
-			}
+		FocusSample fs = (FocusSample) (this.get(url, FocusSample.class));
+		if (fs == null) {
+			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.");
 		}
-		catch (IOException ex) {
-			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample (network problem).");
-		}
+
 		return fs;
 	}
 
@@ -438,7 +414,7 @@ public class DataManager
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
 	 */
-	private FocusObject get(String url, Class targetClass) throws IOException
+	private FocusObject get(String url, Class targetClass)
 	{
 		// do we have it in the cache?
 		if (this.cache.get(url) != null) {
@@ -467,7 +443,13 @@ public class DataManager
 
 			// try to get it from the network
 			if (this.net.isNetworkAvailable()) {
-				HttpResponse response = this.net.get(url);
+				HttpResponse response;
+				try {
+					response = this.net.get(url);
+				}
+				catch (IOException ex) {
+					return null;
+				}
 				if (response.isSuccessful()) {
 					String json = response.getData();
 					result = FocusObject.factory(json, targetClass);
@@ -504,7 +486,7 @@ public class DataManager
 	 * @param url  The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
-	public void post(String url, FocusObject data) throws IOException
+	public void post(String url, FocusObject data)
 	{
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
@@ -531,7 +513,18 @@ public class DataManager
 			return;
 		}
 
-		if (this.net.post(url, data).isSuccessful()) { // if POST on network, also remove POST flag in local db copy
+		if (!this.net.isNetworkAvailable()) {
+			return;
+		}
+
+		boolean net_success = false;
+		try {
+			net_success = this.net.post(url, data).isSuccessful();
+		}
+		catch (IOException ex) {
+			net_success = false;
+		}
+		if (net_success) { // if POST on network, also remove POST flag in local db copy
 			sample.setToPost(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
@@ -559,7 +552,7 @@ public class DataManager
 	 * @param url  The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
-	public void put(String url, FocusObject data) throws IOException
+	public void put(String url, FocusObject data)
 	{
 		// special internal data are NOT to be PUT, ever.
 		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
@@ -574,7 +567,7 @@ public class DataManager
 		sample.setToPut(true);
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
-			dao.create(sample); // we create a new sample of the object identified by url, and this is ok
+			dao.update(sample);
 		}
 		finally {
 			this.databaseAdapter.close();
@@ -585,13 +578,22 @@ public class DataManager
 		data.commit();
 
 		// network PUT
-		if (this.net.put(url, data).isSuccessful()) { // if PUT on network, also remove PUT flag in local db copy
+		if (!this.net.isNetworkAvailable()) {
+			return;
+		}
+
+		boolean net_success = false;
+		try {
+			net_success = this.net.put(url, data).isSuccessful();
+		}
+		catch (IOException ex) {
+			net_success = false;
+		}
+		if (net_success) { // if PUT on network, also remove PUT flag in local db copy
 			sample.setToPut(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
 				dao.update(sample);
-
-				// FIXME TODO we should delete the old versions of the resource
 			}
 			finally {
 				this.databaseAdapter.close();
@@ -604,7 +606,7 @@ public class DataManager
 	 *
 	 * @param url The URL identifying the resource to DELETE.
 	 */
-	public void delete(String url) throws IOException
+	public void delete(String url)
 	{
 		// remove from RAM cache
 		this.cache.remove(url);
@@ -622,7 +624,19 @@ public class DataManager
 			dao.markForDeletion(url);
 
 			// remove from network server
-			if (this.net.delete(url).isSuccessful()) { // if remove on network, also remove copy in local db
+			if (!this.net.isNetworkAvailable()) {
+				return;
+			}
+
+			boolean net_success = false;
+			try {
+				net_success = this.net.delete(url).isSuccessful();
+			}
+			catch (IOException ex) {
+				net_success = false;
+			}
+
+			if (net_success) { // if remove on network, also remove copy in local db
 				dao.delete(url);
 			}
 		}
@@ -666,7 +680,7 @@ public class DataManager
 	 */
 	public void saveUserPreferences()
 	{
-		throw new FocusNotImplementedException("saveuserpref");
+		this.put(this.prefUrl, this.userPreferences);
 	}
 
 	/**

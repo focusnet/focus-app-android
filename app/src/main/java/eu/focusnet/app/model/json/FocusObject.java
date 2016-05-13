@@ -104,6 +104,7 @@ public class FocusObject implements Serializable
 		}
 		this.editor = user.toString();
 		this.editionDateTime = new Date();
+		this.commit();
 	}
 
 	/**
@@ -114,7 +115,6 @@ public class FocusObject implements Serializable
 	{
 		this.originalData = ""; // avoid to store useless data
 		this.originalData = FocusApplication.getInstance().getDataManager().getGson().toJson(this);
-		return;
 	}
 
 	public String getType()

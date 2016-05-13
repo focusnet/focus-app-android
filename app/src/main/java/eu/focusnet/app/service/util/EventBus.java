@@ -28,6 +28,8 @@ import eu.focusnet.app.ui.fragment.BookmarkFragment;
 /**
  * Event bus class which reacts to bookmark's update in the application. When a bookmark is
  * updated the {@link #fireBookmarksUpdate} will be called updating so the {@link BookmarkFragment}
+ *
+ * FIXME TODO check if this mechanism is still usefull
  */
 public class EventBus
 {

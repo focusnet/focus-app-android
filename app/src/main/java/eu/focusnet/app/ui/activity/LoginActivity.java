@@ -124,7 +124,7 @@ public class LoginActivity extends Activity
 		}
 
 		@Override
-		protected Boolean doInBackground(String... data)
+		protected Boolean doInBackground(String ... data)
 		{
 			String username = data[0];
 			String password = data[1];

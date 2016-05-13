@@ -157,5 +157,9 @@
     <string name="focus_loading_app_content">Loading application content ...</string>
     <string name="progress_wait_message">Please wait ...</string>
     <string name="focus_login_progress_message">Logging in</string>
+    <string name="focus_save_user_pref_before">Saving user preferences ...</string>
+    <string name="focus_save_user_pref_after">User preferences saved.</string>
+    <string name="focus_remove_bookmark_question">Are you sure you want to remove this context from the Bookmarks?</string>
+    <string name="focus_add_bookmark_question">Are you sure you want to register this context to the Bookmarks?</string>
 
 </resources>

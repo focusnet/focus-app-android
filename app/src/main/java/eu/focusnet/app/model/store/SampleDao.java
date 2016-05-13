@@ -54,7 +54,6 @@ public class SampleDao
 	private static final int SAMPLES_OUTDATED_AFTER = 7 * 24 * 60 * 60; // seconds
 
 	private String[] columnsToRetrieve = {
-			Constant.ID,
 			Constant.URL,
 			Constant.CONTEXT,
 			Constant.VERSION,
@@ -91,7 +90,6 @@ public class SampleDao
 		}
 		Sample sample = new Sample();
 		cursor.moveToFirst();
-		sample.setId(cursor.getLong(cursor.getColumnIndex(Constant.ID)));
 		sample.setUrl(cursor.getString(cursor.getColumnIndex(Constant.URL)));
 		sample.setVersion(cursor.getInt(cursor.getColumnIndex(Constant.VERSION)));
 		sample.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
@@ -139,7 +137,7 @@ public class SampleDao
 				params,
 				null,
 				null,
-				Constant.VERSION + " DESC, " + Constant.ID + " DESC",
+				Constant.VERSION + " DESC, " + Constant.EDITION_EPOCH + " DESC",
 				"1");
 		Sample s = SampleDao.buildSampleFromCursor(cursor);
 		cursor.close();
@@ -184,13 +182,10 @@ public class SampleDao
 	public void update(Sample sample)
 	{
 		String[] params = {
-				sample.getId().toString()
+				sample.getUrl()
 		};
-		String where = Constant.ID + "=?";
+		String where = Constant.URL + "=?";
 		ContentValues updatedValues = this.createContentValues(sample);
-		//TODO this call may be needed
-		//updatedValues.remove(Constant.ID);
-		//
 		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
 
@@ -349,8 +344,8 @@ public class SampleDao
 				+ " ) "
 				+ " OR "
 				+ " ( "
-				+ Constant.ID + " NOT IN ("
-				+ "  SELECT " + Constant.ID + " FROM " + Constant.DATABASE_TABLE_SAMPLES + " GROUP BY " + Constant.URL + " ORDER BY MAX(" + Constant.VERSION + ")"
+				+ Constant.URL + " NOT IN ("
+				+ "  SELECT " + Constant.URL + " FROM " + Constant.DATABASE_TABLE_SAMPLES + " GROUP BY " + Constant.URL + " ORDER BY MAX(" + Constant.VERSION + ")"
 				+ " ) ";
 		this.database.execSQL(sql);
 	}

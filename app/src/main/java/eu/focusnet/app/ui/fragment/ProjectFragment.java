@@ -96,14 +96,15 @@ public class ProjectFragment extends ListFragment
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
-			if (position > notificationsHeaderPosition) {
+		/*	if (position > notificationsHeaderPosition) {
 				UiHelpers.displayToast(getActivity(), "Notification selected");
 			}
+			*/
 //            else if(position > toolsHeaderPosition){
 //                GuiUtil.displayToast(getActivity(), "Tools selected");
 //            }
 			//User has selected either Tools or Dashboard
-			else {
+			// else {
 				// GuiUtil.displayToast(getActivity(), "Dashboard selected");
 				Intent intent = new Intent(getActivity(), PageActivity.class);
 				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
@@ -111,7 +112,7 @@ public class ProjectFragment extends ListFragment
 				intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
 				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 				startActivity(intent);
-			}
+			// }
 		}
 	}
 
@@ -185,6 +186,7 @@ public class ProjectFragment extends ListFragment
 			}
 
 			/* FIXME notifications to be added later. */
+			/*
 			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.cutting_header_notification),
 					UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
@@ -203,7 +205,7 @@ public class ProjectFragment extends ListFragment
 //                abstractItems.register(drawListItem);
 //            }
 			notificationIcons.recycle();
-
+*/
 
 			// Recycle the typed array
 			dashboardsIcons.recycle();

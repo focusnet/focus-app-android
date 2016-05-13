@@ -21,8 +21,13 @@
 package eu.focusnet.app.ui.adapter;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,14 +38,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.activity.EntryPointActivity;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
@@ -191,15 +199,19 @@ public class StandardListAdapter extends BaseAdapter
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 
+									new SaveUserPreferencesTask(context).execute();
+/*
 									// permanently save
 									final Thread save_user_preferences_thread = new Thread()
 									{
 										public void run()
 										{
+											UiHelpers.displayToast(context, "raaaaa");
 											FocusApplication.getInstance().getDataManager().saveUserPreferences();
 										}
 									};
-									save_user_preferences_thread.start();
+									save_user_preferences_thread.start();*/
+
 									dialog.dismiss();
 								}
 							});
@@ -240,5 +252,39 @@ public class StandardListAdapter extends BaseAdapter
 		public TextView title;
 		public TextView info;
 		public ImageView rightIcon;
+	}
+
+	/**
+	 * This class is used for testing if the given credential are correct
+	 */
+	private class SaveUserPreferencesTask extends AsyncTask<String, Void, Boolean>
+	{
+
+		private ProgressDialog progressDialog;
+		private Context context;
+
+		public SaveUserPreferencesTask(Context context)
+		{
+			this.context = context;
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			UiHelpers.displayToast(this.context, R.string.focus_save_user_pref_before);
+		}
+
+		@Override
+		protected Boolean doInBackground(String ... args)
+		{
+			FocusApplication.getInstance().getDataManager().saveUserPreferences();
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result)
+		{
+			UiHelpers.displayToast(this.context, R.string.focus_save_user_pref_after);
+		}
 	}
 }

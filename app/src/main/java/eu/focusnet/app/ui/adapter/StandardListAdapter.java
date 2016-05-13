@@ -142,8 +142,7 @@ public class StandardListAdapter extends BaseAdapter
 							final Dialog dialog = builder.create();
 
 							TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-							final EditText selectedContext = (EditText) dialogView.findViewById(R.id.edit_text_name);
-							selectedContext.setText(standardListItem.getTitle());
+
 
 							final boolean isRightIconActive = standardListItem.isRightIconActive();
 
@@ -166,6 +165,11 @@ public class StandardListAdapter extends BaseAdapter
 								}
 							});
 
+							final EditText selectedContext = (EditText) dialogView.findViewById(R.id.edit_text_name);
+							selectedContext.setText(standardListItem.getTitle());
+							if (isRightIconActive) {
+								selectedContext.setEnabled(false);
+							}
 
 							ok.setOnClickListener(new View.OnClickListener()
 							{
@@ -186,6 +190,7 @@ public class StandardListAdapter extends BaseAdapter
 										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.ic_star_o);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
+										selectedContext.setEnabled(false);
 
 										userPreference.removeBookmarkLink(standardListItem.getPath(), standardListItem.getTitle(), standardListItem.getTypeOfBookmark());
 									}
@@ -257,10 +262,8 @@ public class StandardListAdapter extends BaseAdapter
 	/**
 	 * This class is used for testing if the given credential are correct
 	 */
-	private class SaveUserPreferencesTask extends AsyncTask<String, Void, Boolean>
+	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>
 	{
-
-		private ProgressDialog progressDialog;
 		private Context context;
 
 		public SaveUserPreferencesTask(Context context)
@@ -275,14 +278,14 @@ public class StandardListAdapter extends BaseAdapter
 		}
 
 		@Override
-		protected Boolean doInBackground(String ... args)
+		protected Void doInBackground(Void ... nil)
 		{
 			FocusApplication.getInstance().getDataManager().saveUserPreferences();
-			return true;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result)
+		protected void onPostExecute(Void nil)
 		{
 			UiHelpers.displayToast(this.context, R.string.focus_save_user_pref_after);
 		}

@@ -200,22 +200,11 @@ public class StandardListAdapter extends BaseAdapter
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 
-										BookmarkLink bookmarkLink = new BookmarkLink(selectedContext.getText().toString(), standardListItem.getPath(), 0);
+										BookmarkLink bookmarkLink = new BookmarkLink(selectedContext.getText().toString(), standardListItem.getPath());
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 
 									new SaveUserPreferencesTask(context).execute();
-/*
-									// permanently save
-									final Thread save_user_preferences_thread = new Thread()
-									{
-										public void run()
-										{
-											UiHelpers.displayToast(context, "raaaaa");
-											FocusApplication.getInstance().getDataManager().saveUserPreferences();
-										}
-									};
-									save_user_preferences_thread.start();*/
 
 									dialog.dismiss();
 								}

@@ -29,13 +29,11 @@ public class WidgetLinker
 {
 
 	private String widgetid;
-	private int order;
 	private Map<String, String> layout;
 
-	public WidgetLinker(String widgetid, int order, Map<String, String> layout)
+	public WidgetLinker(String widgetid, Map<String, String> layout)
 	{
 		this.widgetid = widgetid;
-		this.order = order;
 		this.layout = layout;
 	}
 
@@ -51,16 +49,6 @@ public class WidgetLinker
 	public void setWidgetid(String widgetid)
 	{
 		this.widgetid = widgetid;
-	}
-
-	public int getOrder()
-	{
-		return order;
-	}
-
-	public void setOrder(int order)
-	{
-		this.order = order;
 	}
 
 	public Map<String, String> getLayout()

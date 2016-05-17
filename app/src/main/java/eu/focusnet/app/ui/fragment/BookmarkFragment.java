@@ -142,7 +142,7 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
 			for (BookmarkLink bl : pages) {
 				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(),	0, rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+						bl.getName(), bl.getPath(),	rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 			}
 
@@ -153,7 +153,7 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 
 			for (BookmarkLink bl : tools) {
 				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(),	0, rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
+						bl.getName(), bl.getPath(),rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 			}
 

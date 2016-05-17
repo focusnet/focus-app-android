@@ -37,8 +37,6 @@ public class ProjectTemplate implements Serializable
 
 	private LinkedHashMap<String, String> data = null;
 
-	private int order;
-
 	private ArrayList<WidgetTemplate> widgets;
 	private ArrayList<PageTemplate> pages;
 
@@ -85,16 +83,6 @@ public class ProjectTemplate implements Serializable
 	public void setDescription(String description)
 	{
 		this.description = description;
-	}
-
-	public int getOrder()
-	{
-		return order;
-	}
-
-	public void setOrder(int order)
-	{
-		this.order = order;
 	}
 
 	public ArrayList<WidgetTemplate> getWidgets()

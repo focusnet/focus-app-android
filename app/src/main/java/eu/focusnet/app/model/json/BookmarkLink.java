@@ -35,16 +35,8 @@ public class BookmarkLink
 	private String name,
 			path;
 
-	private int order;
-
 	public BookmarkLink()
 	{
-	}
-
-	public BookmarkLink(String name, String path, int order)
-	{
-		this(name, path);
-		this.order = order;
 	}
 
 	public BookmarkLink(String name, String path)
@@ -83,13 +75,4 @@ public class BookmarkLink
 		this.path = path;
 	}
 
-	public int getOrder()
-	{
-		return order;
-	}
-
-	public void setOrder(int order)
-	{
-		this.order = order;
-	}
 }

@@ -39,6 +39,11 @@ public class Constant
 			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.extra.NOTIFICATION_ID",
 			UI_EXTRA_IMAGE_URI = "eu.focusnet.extra.IMAGE_URI";
 
+	// Extra for external app
+	private static final String
+			UI_EXTRA_EXTERNAL_APP_INPUT = "FOCUS_INPUT",
+			UI_EXTRA_EXTERNAL_APP_OUTPUT = "FOCUS_OUTPUT"; // FIXME follow above convention !!
+
 	// and bundle
 	public static final String UI_BUNDLE_FRAGMENT_TITLE = "eu.focusnet.bundle.FRAGMENT_TITLE",
 			UI_BUNDLE_FRAGMENT_POSITION = "eu.focusnet.bundle.FRAGMENT_POSITION",

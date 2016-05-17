@@ -1,9 +1,18 @@
 package eu.focusnet.app.model.internal.widgets;
 
-import java.util.Map;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 
+import java.util.Map;
+import java.util.Random;
+
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
+import eu.focusnet.app.model.util.TypesHelper;
 
 /**
  * The MIT License (MIT)
@@ -26,6 +35,18 @@ import eu.focusnet.app.model.json.WidgetTemplate;
  */
 public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 {
+	private static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
+	private static String CONFIG_LABEL_BUTTON_LABEL = "Submit";
+	private static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
+
+
+
+	private String buttonLabel;
+	private String appIdentifier;
+	private String inputObject;
+	private boolean appAvailable;
+	private int requestCode;
+
 	public ExternalAppWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
@@ -34,6 +55,67 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	@Override
 	protected void processSpecificConfig()
 	{
+		/*
 
+	"app-identifier": "ch.moti.app.test",
+					"launcher-button-label": "My launcher label | Launch",
+					"input-object": "URI of source object. If set, this FocusSample is used as input. Otherwise, there is no input param to pass."
+	 */
+
+		// button label
+		try {
+			this.buttonLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_BUTTON_LABEL))));
+		}
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.buttonLabel = FocusApplication.getInstance().getResources().getString(R.string.focus_external_app_button_label_default);
+		}
+
+		// app identifier
+		this.appAvailable = false;
+		this.appIdentifier = null;
+		try {
+			this.appIdentifier = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_APP_IDENTIFIER))));
+			this.appAvailable = true;
+			// check that the app is indeed available
+			Intent intent = new Intent(this.appIdentifier);
+			this.appAvailable = FocusApplication.getInstance().getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null;
+		}
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			// ok, but app is not available and the UI will reflect that.
+		}
+
+		// app identifier
+		try {
+			this.inputObject = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_INPUT_OBJECT))));
+		}
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			// ok, input object not mandatory.
+			this.inputObject = null;
+		}
+
+		// set requestCode
+		// only can use 16-bit for calls to external apps
+		// FIXME this may not be unique. But risks are low, let's accept it for this prototype.
+		this.requestCode = new Random().nextInt(0xfffff);
+	}
+
+	public String getButtonLabel()
+	{
+		return this.buttonLabel;
+	}
+
+	public String getAppIdentifier()
+	{
+		return appIdentifier;
+	}
+
+	public String getInputObject()
+	{
+		return inputObject;
+	}
+
+	public boolean isAppAvailable()
+	{
+		return appAvailable;
 	}
 }

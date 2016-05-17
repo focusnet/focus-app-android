@@ -27,15 +27,13 @@ public class Linker
 {
 
 	private String pageid;
-	private int order;
 
 	public Linker()
 	{
 	}
 
-	public Linker(int order, String pageid)
+	public Linker(String pageid)
 	{
-		this.order = order;
 		this.pageid = pageid;
 	}
 
@@ -49,13 +47,4 @@ public class Linker
 		this.pageid = pageid;
 	}
 
-	public int getOrder()
-	{
-		return order;
-	}
-
-	public void setOrder(int order)
-	{
-		this.order = order;
-	}
 }

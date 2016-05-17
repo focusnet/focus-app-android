@@ -141,12 +141,11 @@ public class FocusFragment extends ListFragment
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 
-				int projectOrder = 0;
 				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
-						projectOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
 				abstractItems.add(drawListItem);
 			}
 
@@ -156,7 +155,7 @@ public class FocusFragment extends ListFragment
 			FIXME TODO notifications
 			*/
 			/*
-			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
+			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitm(ap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
 					null);
 			abstractItems.add(headerNotificationListItem);

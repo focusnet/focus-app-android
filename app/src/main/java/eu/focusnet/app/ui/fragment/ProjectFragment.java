@@ -154,12 +154,11 @@ public class ProjectFragment extends ListFragment
 			for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 				PageInstance dashboard = entry.getValue();
 				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
-				int dashboardOrder = 0;
 
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getTitle(), dashboard.getDescription(),
-						dashboardOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 
 			}
@@ -176,12 +175,10 @@ public class ProjectFragment extends ListFragment
 				PageInstance tool = entry.getValue();
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-				int dashboardOrder = 0;
-
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
-						dashboardOrder, checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 			}
 

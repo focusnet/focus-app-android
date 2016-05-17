@@ -36,10 +36,8 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 {
 	private static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
-	private static String CONFIG_LABEL_BUTTON_LABEL = "Submit";
+	private static String CONFIG_LABEL_BUTTON_LABEL = "launcher-button-label";
 	private static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
-
-
 
 	private String buttonLabel;
 	private String appIdentifier;
@@ -86,10 +84,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 			this.inputObject = null;
 		}
 
-		// set requestCode
-		// only can use 16-bit for calls to external apps
-		// FIXME this may not be unique. But risks are low, let's accept it for this prototype.
-		this.requestCode = new Random().nextInt(0xfffff);
+		this.refreshRequestCode();
 	}
 
 	public String getButtonLabel()
@@ -110,5 +105,19 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	public boolean isAppAvailable()
 	{
 		return appAvailable;
+	}
+
+	public int getRequestCode()
+	{
+		return requestCode;
+	}
+
+	// set requestCode
+	// only can use 16-bit for calls to external apps
+	// FIXME this may not be unique. But risks are low, let's accept it for this prototype.
+	public int refreshRequestCode()
+	{
+		this.requestCode = new Random().nextInt(0xffff);
+		return this.requestCode;
 	}
 }

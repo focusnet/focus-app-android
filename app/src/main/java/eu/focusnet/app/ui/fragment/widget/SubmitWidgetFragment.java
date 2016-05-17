@@ -44,7 +44,7 @@ public class SubmitWidgetFragment extends WidgetFragment
 
 		this.widgetInstance = getWidgetInstance();
 
-		Button button = (Button) viewRoot.findViewById(R.id.submit_button);
+		Button button = (Button) viewRoot.findViewById(R.id.launch_button);
 		button.setText(((SubmitWidgetInstance) this.widgetInstance).getSubmitLabel());
 
 		button.setOnClickListener(new View.OnClickListener()

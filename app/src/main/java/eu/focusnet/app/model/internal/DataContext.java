@@ -222,6 +222,9 @@ public class DataContext extends HashMap<String, String>
 		}
 
 		String url = this.get(parts[1]);
+		if (url == null) {
+			throw new FocusMissingResourceException("Impossible to resolve |" + request + "| in the current data context.");
+		}
 		FocusSample fs = FocusApplication.getInstance().getDataManager().getSample(url);
 		if (parts.length > 2) {
 			if (fs == null) {

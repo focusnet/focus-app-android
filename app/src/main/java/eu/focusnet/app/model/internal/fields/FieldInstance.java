@@ -93,11 +93,8 @@ abstract public class FieldInstance
 		try {
 			this.defaultValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(FIELD_LABEL_DEFAULT_VALUE))));
 		}
-		catch (FocusMissingResourceException ex) {
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			// fallback to not value.
-		}
-		catch (FocusBadTypeException ex) {
-			// fallback to no value
 		}
 
 		// and run specific configuration

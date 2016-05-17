@@ -54,18 +54,17 @@ public class PageInstance extends AbstractInstance
 	 * C'tor
 	 *
 	 * @param pageTpl
-	 * @param widgets
 	 * @param dataCtx
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, LinkedHashMap<String, WidgetInstance> widgets, DataContext dataCtx) throws FocusMissingResourceException
+	public PageInstance(PageTemplate pageTpl, PageType type, DataContext dataCtx) throws FocusMissingResourceException
 	{
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
 		this.type = type;
+		this.widgets = new LinkedHashMap<>();
 		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
 			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
-		this.widgets = widgets;
 		this.dataContext = dataCtx;
 		if (this.dataContext == null) {
 			this.dataContext = new DataContext();
@@ -137,4 +136,8 @@ public class PageInstance extends AbstractInstance
 		return description;
 	}
 
+	public void addWidget(String guid, WidgetInstance wi)
+	{
+		this.widgets.put(guid, wi);
+	}
 }

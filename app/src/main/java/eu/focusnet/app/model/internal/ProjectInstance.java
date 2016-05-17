@@ -175,43 +175,45 @@ public class ProjectInstance extends AbstractInstance
 						continue;
 					}
 
-					LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<>();
-					for (WidgetLinker wl : pageTpl.getWidgets()) {
-						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-						DataContext new_widget_ctx = new DataContext(new_page_ctx);
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx); // FIXME TODO will throw exception if misconfiguration of widget -> do not include in widgets list -> do not include PageInstance at all
-						widgets.put(wi.getGuid(), wi); // FIXME if widget-id is same as a previous widget, we won't have 2x the widget.
-					}
 					// the guid is adapted in the PageInstance constructor
 					PageInstance p;
 					try {
-						p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
+						p = new PageInstance(pageTpl, type, new_page_ctx);
 					}
 					catch (FocusMissingResourceException ex) {
 						FocusApplication.reportError(ex);
 						continue;
 					}
+
+					for (WidgetLinker wl : pageTpl.getWidgets()) {
+						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+						DataContext new_widget_ctx = new DataContext(p.getDataContext());
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx); // FIXME TODO will throw exception if misconfiguration of widget -> do not include in widgets list -> do not include PageInstance at all
+						p.addWidget(wi.getGuid(), wi);  // FIXME if widget-id is same as a previous widget, we won't have 2x the widget. -> widget-id must be unique
+					}
+
 					ret.put(p.getGuid(), p);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
-				DataContext new_page_ctx = new DataContext(this.dataContext);
-				LinkedHashMap<String, WidgetInstance> widgets = new LinkedHashMap<String, WidgetInstance>();
-				for (WidgetLinker wl : pageTpl.getWidgets()) {
-					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
-					DataContext new_widget_ctx = new DataContext(new_page_ctx);
-					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
-					widgets.put(wi.getGuid(), wi);
-				}
 				PageInstance p;
+				DataContext new_page_ctx = new DataContext(this.dataContext);
 				try {
-					p = new PageInstance(pageTpl, type, widgets, new_page_ctx);
+					p = new PageInstance(pageTpl, type, new_page_ctx);
 				}
 				catch (FocusMissingResourceException ex) {
 					FocusApplication.reportError(ex);
 					continue;
 				}
+
+				for (WidgetLinker wl : pageTpl.getWidgets()) {
+					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+					DataContext new_widget_ctx = new DataContext(p.getDataContext());
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
+					p.addWidget(wi.getGuid(), wi);
+				}
+
 				ret.put(p.getGuid(), p);
 			}
 		}

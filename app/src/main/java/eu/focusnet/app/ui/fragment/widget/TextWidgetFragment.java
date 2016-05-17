@@ -44,7 +44,7 @@ public class TextWidgetFragment extends WidgetFragment
 
 		this.widgetInstance = getWidgetInstance();
 
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title);
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_text);
 		textTitle.setText(this.widgetInstance.getTitle());
 
 		TextView textContent = (TextView) viewRoot.findViewById(R.id.text_content);

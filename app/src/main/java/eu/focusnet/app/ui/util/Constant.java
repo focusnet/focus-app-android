@@ -40,7 +40,7 @@ public class Constant
 			UI_EXTRA_IMAGE_URI = "eu.focusnet.extra.IMAGE_URI";
 
 	// Extra for external app
-	private static final String
+	public static final String
 			UI_EXTRA_EXTERNAL_APP_INPUT = "FOCUS_INPUT",
 			UI_EXTRA_EXTERNAL_APP_OUTPUT = "FOCUS_OUTPUT"; // FIXME follow above convention !!
 

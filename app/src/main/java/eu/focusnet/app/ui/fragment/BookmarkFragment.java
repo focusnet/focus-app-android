@@ -38,7 +38,6 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
-import eu.focusnet.app.service.util.EventBus;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -50,12 +49,10 @@ import eu.focusnet.app.ui.util.UiHelpers;
 
 
 /**
- * Created by admin on 15.06.2015.
  */
-public class BookmarkFragment extends ListFragment implements EventBus.IEventListener
+public class BookmarkFragment extends ListFragment
 {
 
-	private static final String TAG = BookmarkFragment.class.getName();
 	private ArrayList<AbstractListItem> abstractItems;
 
 	@Override
@@ -70,15 +67,7 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 	public void onStart()
 	{
 		super.onStart();
-		EventBus.registerIEventListener(this);
-		onBookmarksUpdated();
-	}
-
-	@Override
-	public void onStop()
-	{
-		EventBus.unregisterIEventListener(this);
-		super.onStop();
+		this.updateListAdapter();
 	}
 
 	@Override
@@ -107,66 +96,52 @@ public class BookmarkFragment extends ListFragment implements EventBus.IEventLis
 		}
 	}
 
-	@Override
-	public void onBookmarksUpdated()
+
+	/**
+	 * Update the current bookmark list with data from the User Preferences
+	 */
+	private void updateListAdapter()
 	{
-		new BookmarkBuilderTask().execute();
-	}
-
-	private class BookmarkBuilderTask extends AsyncTask<Void, Void, StandardListAdapter>
-	{
-
-		@Override
-		protected StandardListAdapter doInBackground(Void... voids)
-		{
-			StandardListAdapter adapter = null;
-			Preference preference = null;
-			try {
-				preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
-			}
-			catch (FocusMissingResourceException ex) {
-				// FIXME TODO do something smart.
-				// create a default object?
-			}
-
-			Bookmark bookmark = preference.getBookmarks();
-			ArrayList<BookmarkLink> pages = bookmark.getPages();
-			ArrayList<BookmarkLink> tools = bookmark.getTools();
-
-			abstractItems = new ArrayList<>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
-					getResources().getString(R.string.bookmark_header_dashboard), null);
-			abstractItems.add(headerProjectsListItem);
-
-			Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
-
-			for (BookmarkLink bl : pages) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(),	rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
-				abstractItems.add(drawListItem);
-			}
-
-			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
-					getString(R.string.bookmark_header_tool), null);
-			abstractItems.add(headerToolListItem);
-
-
-			for (BookmarkLink bl : tools) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(),rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
-				abstractItems.add(drawListItem);
-			}
-
-			adapter = new StandardListAdapter(getActivity(), abstractItems);
-
-			return adapter;
+		Preference preference = null;
+		try {
+			preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
+		}
+		catch (FocusMissingResourceException ex) {
+			// FIXME TODO do something smart.
+			// create a default object?
 		}
 
-		@Override
-		protected void onPostExecute(StandardListAdapter adapter)
-		{
-			setListAdapter(adapter);
+		Bookmark bookmark = preference.getBookmarks();
+		ArrayList<BookmarkLink> pages = bookmark.getPages();
+		ArrayList<BookmarkLink> tools = bookmark.getTools();
+
+		abstractItems = new ArrayList<>();
+		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
+				getResources().getString(R.string.bookmark_header_dashboard), null);
+		abstractItems.add(headerProjectsListItem);
+
+		Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
+
+		for (BookmarkLink bl : pages) {
+			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+					bl.getName(), bl.getPath(),	rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+			abstractItems.add(drawListItem);
 		}
+
+		AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
+				getString(R.string.bookmark_header_tool), null);
+		abstractItems.add(headerToolListItem);
+
+
+		for (BookmarkLink bl : tools) {
+			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+					bl.getName(), bl.getPath(),rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
+			abstractItems.add(drawListItem);
+		}
+
+		StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
+
+		setListAdapter(adapter);
 	}
 }
 

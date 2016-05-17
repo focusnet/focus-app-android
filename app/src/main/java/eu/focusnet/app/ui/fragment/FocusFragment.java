@@ -142,6 +142,7 @@ public class FocusFragment extends ListFragment
 				String projectDesc = p.getDescription();
 
 				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
+				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,

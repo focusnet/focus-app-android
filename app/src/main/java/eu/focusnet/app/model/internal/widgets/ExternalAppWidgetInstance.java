@@ -55,13 +55,6 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	@Override
 	protected void processSpecificConfig()
 	{
-		/*
-
-	"app-identifier": "ch.moti.app.test",
-					"launcher-button-label": "My launcher label | Launch",
-					"input-object": "URI of source object. If set, this FocusSample is used as input. Otherwise, there is no input param to pass."
-	 */
-
 		// button label
 		try {
 			this.buttonLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_BUTTON_LABEL))));

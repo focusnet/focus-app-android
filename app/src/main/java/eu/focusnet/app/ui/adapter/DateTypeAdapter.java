@@ -50,7 +50,6 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	public DateTypeAdapter()
 	{
 		dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
-		// 	dateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME TODO check - we use the timezone provided in the string.
 	}
 
 	/**

@@ -153,7 +153,6 @@ public class StandardListAdapter extends BaseAdapter
 								dialogTitle.setText(R.string.focus_add_bookmark_question);
 							}
 
-
 							Button ok = (Button) dialogView.findViewById(R.id.ok);
 							Button cancel = (Button) dialogView.findViewById(R.id.cancel);
 							cancel.setOnClickListener(new View.OnClickListener()

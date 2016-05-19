@@ -12,6 +12,50 @@
         android:text="Text Title"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/external_app_label_identifier"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_identifier"
+            android:layout_weight="0.7"/>
+
+        <TextView
+            android:id="@+id/external_app_value_identifier"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/not_acquired_yet"
+            android:layout_weight="0.3"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/external_app_label_status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/status"
+            android:layout_weight="0.7"/>
+
+        <TextView
+            android:id="@+id/external_app_value_status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/n_a"
+            android:layout_weight="0.3"/>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/launch_button"
         android:layout_width="match_parent"

@@ -41,8 +41,8 @@ public class Constant
 
 	// Extra for external app
 	public static final String
-			UI_EXTRA_EXTERNAL_APP_INPUT = "FOCUS_INPUT",
-			UI_EXTRA_EXTERNAL_APP_OUTPUT = "FOCUS_OUTPUT"; // FIXME follow above convention !!
+			UI_EXTRA_EXTERNAL_APP_INPUT = "FOCUS_INPUT", // "eu.focusnet.extra.EXTERNAL_APP_INPUT",
+			UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.extra.EXTERNAL_APP_OUTPUT";
 
 	// and bundle
 	public static final String UI_BUNDLE_FRAGMENT_TITLE = "eu.focusnet.bundle.FRAGMENT_TITLE",
@@ -51,7 +51,6 @@ public class Constant
 			UI_BUNDLE_LAYOUT_HEIGHT = "eu.focusnet.bundle.LAYOUT_HEIGHT",
 			UI_BUNDLE_LAYOUT_WEIGHT = "eu.focusnet.bundle.LAYOUT_WEIGHT";
 	;
-
 	// fragments identifiers
 	public static final int UI_FRAGMENT_FOCUS = 1,
 			UI_FRAGMENT_BOOKMARK = 2,

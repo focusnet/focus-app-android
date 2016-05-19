@@ -187,9 +187,10 @@ public class ProjectInstance extends AbstractInstance
 
 					for (WidgetLinker wl : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+
 						DataContext new_widget_ctx = new DataContext(p.getDataContext());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx); // FIXME TODO will throw exception if misconfiguration of widget -> do not include in widgets list -> do not include PageInstance at all
-						p.addWidget(wi.getGuid(), wi);  // FIXME if widget-id is same as a previous widget, we won't have 2x the widget. -> widget-id must be unique
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx); // FIXME what if misconfigured widget?
+						p.addWidget(wi.getGuid(), wi);
 					}
 
 					ret.put(p.getGuid(), p);

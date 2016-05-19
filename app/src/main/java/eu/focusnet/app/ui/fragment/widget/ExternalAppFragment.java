@@ -20,7 +20,10 @@ package eu.focusnet.app.ui.fragment.widget;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,8 +32,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
+import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
 
@@ -50,37 +55,71 @@ public class ExternalAppFragment extends WidgetFragment
 		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_external_app);
 		textTitle.setText(this.widgetInstance.getTitle());
 
+		TextView textIdentifier = (TextView) viewRoot.findViewById(R.id.external_app_value_identifier);
+		textIdentifier.setText(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
+
+		TextView textStatus = (TextView) viewRoot.findViewById(R.id.external_app_value_status);
+
 		Button button = (Button) viewRoot.findViewById(R.id.launch_button);
-		if (((ExternalAppWidgetInstance) widgetInstance).isAppAvailable()) {
+		if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
+			textStatus.setText(R.string.installed_ready_to_be_used);
 			button.setText(((ExternalAppWidgetInstance) this.widgetInstance).getButtonLabel());
 		}
 		else {
-			button.setText("Install " + ((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier()); // FIXME request to install
+			textStatus.setText(R.string.not_installed);
+			button.setText(R.string.install_via_google_play);
 		}
 
-		// FIXME TODO
-
+		/**
+		 * When the action button is clicked, do launch the app or redirect to Google Play
+		 */
 		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-
-				if (((ExternalAppWidgetInstance) widgetInstance).isAppAvailable()) {
+				Resources r = getActivity().getResources();
+				if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
 					Intent intent = new Intent(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
-					intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, "FIXME");
+
+					FocusSample input_object = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
+					if(input_object != null) {
+						String json_input = FocusApplication.getInstance().getDataManager().getGson().toJson(input_object);
+						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, json_input);
+					}
+					UiHelpers.displayToast(getActivity(), r.getString(R.string.launching_ext_app));
 					startActivityForResult(intent, ((ExternalAppWidgetInstance) widgetInstance).getRequestCode());
 				}
 				else {
-					Intent intent = new Intent(Intent.ACTION_VIEW)
-							.setData(Uri.parse("market://details?id=" + ((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier()));
-					startActivity(intent);
+					Uri uri = Uri.parse("market://details?id=" + ((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
+					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+					try {
+						startActivity(intent);
+					} catch (ActivityNotFoundException ex) {
+						// market is not installed
+						UiHelpers.displayToast(getActivity(), r.getString(R.string.market_not_installed));
+					}
 				}
 
-				UiHelpers.displayToast(getActivity(), "Button clicked" + ((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
+				
 			}
 		});
 
 		return viewRoot;
 	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == ((ExternalAppWidgetInstance) widgetInstance).getRequestCode()) {
+			if (resultCode == Activity.RESULT_OK) {
+				String response = data.getStringExtra(Constant.UI_EXTRA_EXTERNAL_APP_OUTPUT);
+				if (response != null && !response.equals("")) {
+					((ExternalAppWidgetInstance) widgetInstance).saveResponse(response);
+				}
+				UiHelpers.displayToast(getActivity(), getActivity().getResources().getString(R.string.appreturned));
+			}
+		}
+	}
+
 }

@@ -199,6 +199,9 @@ public class DataContext extends HashMap<String, String>
 	 * Resolve the provided request considering the present data context. e.g.
 	 * <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
 	 * data being stored under the simple-example entry.
+	 * <ctx/simple-example> -> will return the url of the context identfied by simlpe-example (a FocusSample)
+	 *
+	 * It is then the responsibility of the caller to create FocusSample's when appropriate.
 	 * <p/>
 	 * If the request format is not recognized, return it as-is.
 	 * <p/>
@@ -232,7 +235,7 @@ public class DataContext extends HashMap<String, String>
 			}
 			return fs.get(parts[2]);
 		}
-		return fs;
+		return fs.getUrl();
 	}
 
 }

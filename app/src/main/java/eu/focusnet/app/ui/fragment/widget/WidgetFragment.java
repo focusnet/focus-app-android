@@ -114,7 +114,7 @@ public abstract class WidgetFragment extends Fragment
 	protected void setWidgetLayout(View viewRoot)
 	{
 		Bundle arguments = getArguments();
-		int linearLayoutWidth = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WIDTH);
+		int linearLayoutWidth = 0; // width is determined by the weight only
 		int linearLayoutHeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
 		int linearLayoutWeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
 		viewRoot.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));

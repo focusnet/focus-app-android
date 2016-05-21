@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.ui.fragment;
+package eu.focusnet.app.DEPRECATED;
 
 import android.app.Fragment;
 import android.content.ComponentName;

@@ -19,7 +19,6 @@
         android:scaleType="fitCenter"
         android:maxHeight="250dp"
         />
-    <!-- android:src="@drawable/focus_logo" -->
 
     <LinearLayout
         android:layout_width="match_parent"

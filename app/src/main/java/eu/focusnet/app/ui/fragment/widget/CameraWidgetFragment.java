@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -34,17 +34,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
+import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * Created by yandypiedra on 13.01.16.
@@ -52,8 +48,9 @@ import eu.focusnet.app.ui.util.UiHelpers;
 public class CameraWidgetFragment extends WidgetFragment
 {
 
-	private final int CAMERA_REQUEST = 1;
+	private final int CAMERA_REQUEST = 19432;
 	private Uri imageUri;
+	private Uri tmpImageUri;
 	private ImageView imageView;
 	private CameraWidgetInstance cameraWidgetInstance;
 
@@ -95,10 +92,10 @@ public class CameraWidgetFragment extends WidgetFragment
 											@Override
 											public void onClick(View v)
 											{
-												imageView.setImageBitmap(UiHelpers.getBitmap(getActivity(), R.drawable.focus_logo));
+												imageView.setImageBitmap(null);
 												deleteButton.setEnabled(false);
 												viewButton.setEnabled(false);
-												takePictureButton.setText("Take a Picture");
+												takePictureButton.setText(R.string.take_a_picture);
 												imageUri = null;
 												cameraWidgetInstance.saveImage(null);
 											}
@@ -108,17 +105,14 @@ public class CameraWidgetFragment extends WidgetFragment
 
 		takePictureButton = (Button) viewRoot.findViewById(R.id.button_take_picture);
 		takePictureButton.setOnClickListener(new View.OnClickListener()
-
 											 {
 												 @Override
 												 public void onClick(View v)
 												 {
 													 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 													 ContentValues values = new ContentValues();
-													 values.put(MediaStore.Images.Media.TITLE, "New Picture");
-													 values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-													 imageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-													 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+													 tmpImageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+													 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tmpImageUri);
 													 startActivityForResult(cameraIntent, CAMERA_REQUEST);
 												 }
 											 }
@@ -134,7 +128,7 @@ public class CameraWidgetFragment extends WidgetFragment
 		if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
 			// get a bitmap from imageuri and save it
 			try {
-				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), tmpImageUri);
 				imageView.setImageBitmap(bitmap);
 				this.cameraWidgetInstance.saveImage(bitmap);
 			}
@@ -142,9 +136,11 @@ public class CameraWidgetFragment extends WidgetFragment
 				throw new FocusInternalErrorException("Cannot retrieve bitmap from file.");
 			}
 
+			imageUri = tmpImageUri;
+
 			deleteButton.setEnabled(true);
 			viewButton.setEnabled(true);
-			takePictureButton.setText("Replace Picture");
+			takePictureButton.setText(R.string.replace_picture);
 		}
 	}
 

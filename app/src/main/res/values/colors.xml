@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="focus_text">#004812</color>
     <color name="colorPrimary">#88CC88</color>
     <color name="colorPrimaryDark">#3aa170</color>
     <color name="view_pressed_color">#00703c</color>

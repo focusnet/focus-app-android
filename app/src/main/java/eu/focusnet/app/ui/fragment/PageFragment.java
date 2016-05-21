@@ -128,7 +128,6 @@ public class PageFragment extends Fragment
 				if (spaceLeft != 0) {
 					WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 					Bundle widgetBundle = new Bundle();
-					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
 					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, spaceLeft);
 					emptyWidgetFragment.setArguments(widgetBundle);
@@ -151,7 +150,6 @@ public class PageFragment extends Fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
 			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(this.projectInstance, this.pageInstance, widgetInstance));
-			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, requiredSpace);
 			widgetFragment.setArguments(widgetBundle);
@@ -165,7 +163,6 @@ public class PageFragment extends Fragment
 		if (spaceLeft != 0) {
 			WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WIDTH, 0);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, spaceLeft);
 			emptyWidgetFragment.setArguments(widgetBundle);

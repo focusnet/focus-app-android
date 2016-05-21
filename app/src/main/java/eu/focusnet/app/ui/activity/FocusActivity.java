@@ -23,8 +23,6 @@ package eu.focusnet.app.ui.activity;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,9 +42,6 @@ import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.FocusFragment;
-import eu.focusnet.app.ui.fragment.SettingFragment;
-import eu.focusnet.app.ui.fragment.SynchronizeFragment;
-import eu.focusnet.app.ui.fragment.UserManualFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelpers;
@@ -230,15 +225,6 @@ public class FocusActivity extends BaseDrawerActivity
 				break;
 			case Constant.UI_FRAGMENT_BOOKMARK:
 				fragment = new BookmarkFragment();
-				break;
-			case Constant.UI_FRAGMENT_SYNCHRONIZE:
-				fragment = new SynchronizeFragment();
-				break;
-			case Constant.UI_FRAGMENT_SETTINGS:
-				fragment = new SettingFragment();
-				break;
-			case Constant.UI_FRAGMENT_USER_MANUAL:
-				fragment = new UserManualFragment();
 				break;
 			default:
 				break;

@@ -172,5 +172,15 @@ public class FocusObject implements Serializable
 		this.originalData = original_data;
 	}
 
+	@Override
+	public String toString()
+	{
+		// avoid to store useless data
+		String tmp = this.originalData;
+		this.originalData = "";
+		String ret = FocusApplication.getInstance().getDataManager().getGson().toJson(this);
+		this.originalData = tmp;
+		return ret;
+	}
 
 }

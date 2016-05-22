@@ -37,11 +37,11 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpResponse;
-import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.DataManager;
 
 // FIXME should use DataManager instead of NetworkManager!
@@ -50,22 +50,23 @@ import eu.focusnet.app.service.DataManager;
 public class Html5WidgetFragment extends WidgetFragment
 {
 
+	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
+
 	private WebView myWebView;
+	private DataManager dataManager;
 	private String context;
-	private NetworkManager net;
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		// assign network manager with the one of the application
-		this.net = FocusApplication.getInstance().getDataManager().getNetworkManager();
+		this.dataManager = FocusApplication.getInstance().getDataManager();
 
 		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
 		setWidgetLayout(viewRoot);
 
-		Html5WidgetInstance html5WidgetInstance = (Html5WidgetInstance) getWidgetInstance();
-		//TODO do something with this
+		this.widgetInstance = getWidgetInstance();
 
 		myWebView = (WebView) viewRoot.findViewById(R.id.webview);
 
@@ -76,20 +77,19 @@ public class Html5WidgetFragment extends WidgetFragment
 		settings.setDatabaseEnabled(true);
 		settings.setDomStorageEnabled(true);
 		settings.setGeolocationEnabled(true);
-		// TODO should we activate more features?
 
 		// Enable app-js communication
-		myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), "FocusApp");
+		myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
 		myWebView.setWebChromeClient(new WebChromeClient());
+
+		// and load the actual page in the browser
+
+		this.context = ((Html5WidgetInstance)this.widgetInstance).getContext();
+		myWebView.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance)this.widgetInstance).getWebAppIdentifier() + "/index.html");
 
 		return viewRoot;
 	}
 
-	public void loadWebView(String assetName, String context)
-	{
-		this.context = context;
-		myWebView.loadUrl("file:///android_asset/www/" + assetName + "/index.html");
-	}
 
 	/**
 	 * Create a web client, which loads internal html pages with the Webview(pages saved in the app, the url has not host)
@@ -97,6 +97,7 @@ public class Html5WidgetFragment extends WidgetFragment
 	 */
 	private class FocusAppWebViewClient extends WebViewClient
 	{
+
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
@@ -121,16 +122,21 @@ public class Html5WidgetFragment extends WidgetFragment
 		}
 	}
 
+	/**
+	 * JavaScript interface definition
+	 */
 	private class WebAppInterface
 	{
-		Context mContext;
+		Context context;
+		DataManager dm;
 
 		/**
 		 * Instantiate the interface and set the context
 		 */
 		WebAppInterface(Context c)
 		{
-			mContext = c;
+			this.dm = FocusApplication.getInstance().getDataManager();
+			this.context = c;
 		}
 
 		/**
@@ -148,10 +154,10 @@ public class Html5WidgetFragment extends WidgetFragment
 		public String getFocusData(String url)
 		{
 			try {
-				HttpResponse response = net.get(url);
-				return response.getData();
+				FocusSample fs = this.dm.getSample(url);
+				return fs.toString();
 			}
-			catch (IOException e) {
+			catch (FocusMissingResourceException ex) {
 				return null;
 			}
 		}
@@ -162,15 +168,10 @@ public class Html5WidgetFragment extends WidgetFragment
 		 * post data to localstore (will later be pushed to server)
 		 */
 		@JavascriptInterface
-		public boolean postFocusData(String url, String data)
+		public DataManager.ResourceOperationStatus postFocusData(String url, String data)
 		{
-			try {
-				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-				return net.post(url, fs).isSuccessful();
-			}
-			catch (IOException e) {
-				return false;
-			}
+			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
+			return this.dm.post(url, fs);
 		}
 
 		/**
@@ -179,15 +180,10 @@ public class Html5WidgetFragment extends WidgetFragment
 		 * register data to local store (will later be pushed to server)
 		 */
 		@JavascriptInterface
-		public boolean putFocusData(String url, String data)
+		public DataManager.ResourceOperationStatus putFocusData(String url, String data)
 		{
-			try {
-				FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-				return net.put(url, fs).isSuccessful();
-			}
-			catch (IOException e) {
-				return false;
-			}
+			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
+			return this.dm.put(url, fs);
 		}
 
 		/**
@@ -196,14 +192,9 @@ public class Html5WidgetFragment extends WidgetFragment
 		 * announce deletion in local store (will later be deleted on server)
 		 */
 		@JavascriptInterface
-		public boolean deleteFocusData(String url)
+		public DataManager.ResourceOperationStatus deleteFocusData(String url)
 		{
-			try {
-				return net.delete(url).isSuccessful();
-			}
-			catch (IOException e) {
-				return false;
-			}
+			return this.dm.delete(url);
 		}
 
 		/**
@@ -216,13 +207,16 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getResource(String url)
 		{
+			/*
 			try {
-				HttpResponse response = net.get(url);
+				HttpResponse response = this.dm.get(url);
 				return response.getData();
 			}
 			catch (IOException e) {
 				return null;
 			}
+			*/
+			return "bb";
 
 			//      return "{\"mimetype\": \"image/png\", \"data\":\"base64encodeddata\"}"; // or exception
 		}

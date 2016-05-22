@@ -83,6 +83,12 @@ public class DataManager
 	private AppContentTemplate appContentTemplate;
 	private AppContentInstance appContentInstance;
 
+	public enum ResourceOperationStatus
+	{
+		SUCCESS, // resource altered directly
+		PENDING, // pending network operation
+		ERROR // permanent error
+	}
 
 	// for samples
 	private HashMap<String, FocusObject> cache;
@@ -486,7 +492,7 @@ public class DataManager
 	 * @param url  The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
-	public void post(String url, FocusObject data)
+	public ResourceOperationStatus post(String url, FocusObject data)
 	{
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
@@ -510,11 +516,11 @@ public class DataManager
 
 		// push on the network
 		if (is_special_url) {
-			return;
+			return ResourceOperationStatus.SUCCESS;
 		}
 
 		if (!this.net.isNetworkAvailable()) {
-			return;
+			return ResourceOperationStatus.PENDING;
 		}
 
 		boolean net_success = false;
@@ -529,11 +535,13 @@ public class DataManager
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
 				dao.update(sample);
+				return ResourceOperationStatus.SUCCESS;
 			}
 			finally {
 				this.databaseAdapter.close();
 			}
 		}
+		return ResourceOperationStatus.ERROR;
 	}
 
 	/**
@@ -552,7 +560,7 @@ public class DataManager
 	 * @param url  The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
-	public void put(String url, FocusObject data)
+	public ResourceOperationStatus put(String url, FocusObject data)
 	{
 		// special internal data are NOT to be PUT, ever.
 		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
@@ -579,7 +587,7 @@ public class DataManager
 
 		// network PUT
 		if (!this.net.isNetworkAvailable()) {
-			return;
+			return ResourceOperationStatus.PENDING;
 		}
 
 		boolean net_success = false;
@@ -594,11 +602,13 @@ public class DataManager
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
 				dao.update(sample);
+				return ResourceOperationStatus.SUCCESS;
 			}
 			finally {
 				this.databaseAdapter.close();
 			}
 		}
+		return ResourceOperationStatus.ERROR;
 	}
 
 	/**
@@ -606,7 +616,7 @@ public class DataManager
 	 *
 	 * @param url The URL identifying the resource to DELETE.
 	 */
-	public void delete(String url)
+	public ResourceOperationStatus delete(String url)
 	{
 		// remove from RAM cache
 		this.cache.remove(url);
@@ -618,14 +628,15 @@ public class DataManager
 			// no network for special urls
 			if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
 				dao.delete(url);
-				return;
+				return ResourceOperationStatus.SUCCESS;
+
 			}
 
 			dao.markForDeletion(url);
 
 			// remove from network server
 			if (!this.net.isNetworkAvailable()) {
-				return;
+				return ResourceOperationStatus.PENDING;
 			}
 
 			boolean net_success = false;
@@ -638,11 +649,13 @@ public class DataManager
 
 			if (net_success) { // if remove on network, also remove copy in local db
 				dao.delete(url);
+				return ResourceOperationStatus.SUCCESS;
 			}
 		}
 		finally {
 			this.databaseAdapter.close();
 		}
+		return ResourceOperationStatus.ERROR;
 	}
 
 	/**

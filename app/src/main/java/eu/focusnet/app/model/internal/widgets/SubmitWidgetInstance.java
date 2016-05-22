@@ -59,10 +59,7 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 		try {
 			this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_LABEL))));
 		}
-		catch (FocusMissingResourceException ex) {
-			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
-		}
-		catch (FocusBadTypeException ex) {
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
 		}
 
@@ -71,6 +68,6 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 
 	public String getSubmitLabel()
 	{
-		return submitLabel;
+		return this.submitLabel;
 	}
 }

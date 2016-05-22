@@ -20,18 +20,34 @@
 
 package eu.focusnet.app.model.internal.widgets;
 
+import android.content.res.AssetManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.internal.DataContext;
+import eu.focusnet.app.model.util.TypesHelper;
 
 /**
  * Created by admin on 28.01.2016.
  */
 
-//TODO implement this class with its methods
 public class Html5WidgetInstance extends DataCollectionWidgetInstance
 {
+	private static final String CONFIG_WEB_APP_IDENTIFIER_FIELD = "webapp-identifier";
+	private static final String CONFIG_CONTEXT_FIELD = "context";
+
+	private String webAppIdentifier;
+	private String context;
+
 	/**
 	 * C'tor
 	 *
@@ -47,6 +63,50 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 	@Override
 	protected void processSpecificConfig()
 	{
+		// webapp identifier
+		try {
+			this.webAppIdentifier = TypesHelper.asString(this.config.get(CONFIG_WEB_APP_IDENTIFIER_FIELD));
+		}
+		catch (FocusBadTypeException ex) {
+			throw new FocusInternalErrorException("Invalid webapp identifier");
+		}
 
+		// check that the asset exists
+		boolean asset_found = false;
+		try {
+			AssetManager am = FocusApplication.getInstance().getAssets();
+			asset_found = Arrays.asList(am.list("webapps/" + this.webAppIdentifier)).contains("index.html");
+		}
+		catch (IOException ex) {
+			// ok, asset_found defaults to false.
+		}
+		if (!asset_found) {
+			throw new FocusInternalErrorException("Webapp does not exist in application assets.");
+		}
+
+		// context
+		// the context can basically be any string, but is likely to be a unique identifier such as a URI
+		try {
+			this.context = TypesHelper.asString(
+					this.dataContext.resolve(
+							TypesHelper.asString(this.config.get(CONFIG_CONTEXT_FIELD)
+							)
+					)
+			);
+		}
+		catch (FocusBadTypeException | FocusMissingResourceException ex) {
+			this.context = "";
+			// silently ignore problem? FIXME no, we should do something.
+		}
+	}
+
+	public String getWebAppIdentifier()
+	{
+		return this.webAppIdentifier;
+	}
+
+	public String getContext()
+	{
+		return this.context;
 	}
 }

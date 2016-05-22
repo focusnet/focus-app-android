@@ -46,7 +46,6 @@ import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 
 /**
- * Created by yandypiedra on 13.01.16.
  * <p/>
  * We may need to adapt these functions, though.
  *

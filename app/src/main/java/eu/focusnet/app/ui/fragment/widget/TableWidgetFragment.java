@@ -54,7 +54,12 @@ public class TableWidgetFragment extends WidgetFragment
 		setWidgetLayout(viewRoot);
 
 		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_table);
-		textTitle.setText(this.widgetInstance.getTitle());
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());

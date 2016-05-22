@@ -250,8 +250,14 @@ public class FormWidgetFragment extends WidgetFragment
 
 		this.widgetInstance = getWidgetInstance();
 
-		TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
-		title.setText(this.widgetInstance.getTitle());
+		// set widget title
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.textTitle);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		TableLayout tl = (TableLayout) viewRoot.findViewById(R.id.formTableLayout);
 		for (Map.Entry e : ((FormWidgetInstance) this.widgetInstance).getFields().entrySet()) {

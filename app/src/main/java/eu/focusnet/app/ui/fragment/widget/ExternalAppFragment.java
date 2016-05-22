@@ -52,8 +52,15 @@ public class ExternalAppFragment extends WidgetFragment
 
 		this.widgetInstance = getWidgetInstance();
 
+		// set widget title
 		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_external_app);
-		textTitle.setText(this.widgetInstance.getTitle());
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
+
 
 		TextView textIdentifier = (TextView) viewRoot.findViewById(R.id.external_app_value_identifier);
 		textIdentifier.setText(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());

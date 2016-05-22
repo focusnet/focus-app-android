@@ -28,8 +28,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
@@ -107,9 +109,6 @@ public abstract class WidgetFragment extends Fragment
 	public void onDestroyView()
 	{
 		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.widgetInstance);
-		this.widgetInstance = getWidgetInstance();
-
-
 		super.onDestroyView();
 	}
 

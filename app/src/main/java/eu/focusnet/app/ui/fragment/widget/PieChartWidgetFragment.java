@@ -64,8 +64,13 @@ public class PieChartWidgetFragment extends WidgetFragment
 
 		setWidgetLayout(viewRoot);
 
-		TextView piechartTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
-		piechartTitle.setText(((PieChartWidgetInstance) this.widgetInstance).getTitle());
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		ArrayList<Entry> yVals = new ArrayList<>();
 

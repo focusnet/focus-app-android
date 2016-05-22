@@ -66,8 +66,14 @@ public class CameraWidgetFragment extends WidgetFragment
 
 		cameraWidgetInstance = (CameraWidgetInstance) getWidgetInstance();
 
-		TextView title = (TextView) viewRoot.findViewById(R.id.title);
-		title.setText(cameraWidgetInstance.getTitle());
+		// set widget title
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.title);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		imageView = (ImageView) viewRoot.findViewById(R.id.picture);
 

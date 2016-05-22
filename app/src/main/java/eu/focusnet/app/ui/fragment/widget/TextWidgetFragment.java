@@ -30,7 +30,6 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 
 /**
- * Created by admin on 18.01.2016.
  */
 public class TextWidgetFragment extends WidgetFragment
 {
@@ -39,13 +38,19 @@ public class TextWidgetFragment extends WidgetFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
-		setWidgetLayout(viewRoot);
 
 		this.widgetInstance = getWidgetInstance();
 
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.widget_title);
-		textTitle.setText(this.widgetInstance.getTitle());
+		View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
+		setWidgetLayout(viewRoot);
+
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.title_text_widget);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		TextView textContent = (TextView) viewRoot.findViewById(R.id.text_content);
 		textContent.setText(((TextWidgetInstance) this.widgetInstance).getContent());

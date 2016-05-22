@@ -68,9 +68,14 @@ public class BarChartWidgetFragment extends WidgetFragment
 		setWidgetLayout(viewRoot);
 
 
-
-		TextView barChartTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
-		barChartTitle.setText(this.widgetInstance.getTitle());
+		// set widget title
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		BarChart mChart = (BarChart) viewRoot.findViewById(R.id.bar_chart);
 

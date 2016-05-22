@@ -71,8 +71,13 @@ public class LineChartWidgetFragment extends WidgetFragment
 		setWidgetLayout(viewRoot);
 
 		// set widget title
-		TextView lineChartTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
-		lineChartTitle.setText(this.widgetInstance.getTitle());
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		LineChart lineChart = (LineChart) viewRoot.findViewById(R.id.line_chart);
 

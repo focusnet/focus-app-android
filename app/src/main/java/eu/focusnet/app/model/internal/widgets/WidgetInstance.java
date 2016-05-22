@@ -134,17 +134,15 @@ public abstract class WidgetInstance extends AbstractInstance
 	protected void processCommonConfig()
 	{
 		String title = this.template.getTitle();
-		if (title == null) {
-			title = "";
-		}
-		else {
+		if (title != null) {
 			try {
-				this.title = TypesHelper.asString(this.dataContext.resolve(title));
+				title = TypesHelper.asString(this.dataContext.resolve(title));
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
-				this.title = "";
+				title = null;
 			}
 		}
+		this.title = title;
 	}
 
 	/**

@@ -64,8 +64,14 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 
 		this.widgetInstance = this.getWidgetInstance();
 
-		TextView title = (TextView) viewRoot.findViewById(R.id.textTitle);
-		title.setText(this.widgetInstance.getTitle());
+		// set widget title
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.textTitle);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		longitudeValue = (TextView) viewRoot.findViewById(R.id.text_longitude_value);
 		latitudeValue = (TextView) viewRoot.findViewById(R.id.text_latitude_value);

@@ -65,15 +65,21 @@ public class Html5WidgetFragment extends WidgetFragment
 		// assign network manager with the one of the application
 		this.dataManager = FocusApplication.getInstance().getDataManager();
 
-
+		this.widgetInstance = getWidgetInstance();
 
 		//this.reference_height = 500; // FIXME not ideal at all
 
 		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
 		setWidgetLayout(viewRoot);
 
-		TextView title = (TextView) viewRoot.findViewById(R.id.text_title_webapp);
-		title.setText(this.widgetInstance.getTitle());
+		// set widget title
+		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_webapp);
+		if (this.widgetInstance.getTitle() == null) {
+			((ViewGroup) textTitle.getParent()).removeView(textTitle);
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
 
 		myWebView = (WebView) viewRoot.findViewById(R.id.webview);
 

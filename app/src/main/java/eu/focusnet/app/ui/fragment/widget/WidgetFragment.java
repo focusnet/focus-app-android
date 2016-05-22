@@ -107,6 +107,8 @@ public abstract class WidgetFragment extends Fragment
 	public void onDestroyView()
 	{
 		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.widgetInstance);
+		this.widgetInstance = getWidgetInstance();
+
 
 		super.onDestroyView();
 	}

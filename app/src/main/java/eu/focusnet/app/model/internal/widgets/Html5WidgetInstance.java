@@ -37,7 +37,6 @@ import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by admin on 28.01.2016.
  */
 
 public class Html5WidgetInstance extends DataCollectionWidgetInstance

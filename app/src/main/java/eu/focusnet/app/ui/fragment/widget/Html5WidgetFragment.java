@@ -32,6 +32,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -51,6 +52,7 @@ public class Html5WidgetFragment extends WidgetFragment
 {
 
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
+	private static final String JAVASCRIPT_INIT_FUNCTION = "init";
 
 	private WebView myWebView;
 	private DataManager dataManager;
@@ -63,10 +65,15 @@ public class Html5WidgetFragment extends WidgetFragment
 		// assign network manager with the one of the application
 		this.dataManager = FocusApplication.getInstance().getDataManager();
 
+
+
+		//this.reference_height = 500; // FIXME not ideal at all
+
 		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
 		setWidgetLayout(viewRoot);
 
-		this.widgetInstance = getWidgetInstance();
+		TextView title = (TextView) viewRoot.findViewById(R.id.text_title_webapp);
+		title.setText(this.widgetInstance.getTitle());
 
 		myWebView = (WebView) viewRoot.findViewById(R.id.webview);
 
@@ -118,7 +125,7 @@ public class Html5WidgetFragment extends WidgetFragment
 			// On page loaded call this javascript function to pass
 			// data to the loaded page
 			// pass some param to init the HTML5 app here, eg. data
-			view.loadUrl("javascript:init('" + context + "')");
+			view.loadUrl(String.format("javascript: %s = %s || function(ctx) { }; %s(\"%s\");", JAVASCRIPT_INIT_FUNCTION, JAVASCRIPT_INIT_FUNCTION, JAVASCRIPT_INIT_FUNCTION, context));
 		}
 	}
 

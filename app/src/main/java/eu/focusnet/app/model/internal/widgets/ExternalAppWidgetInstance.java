@@ -45,6 +45,10 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	private String buttonLabel;
 	private String appIdentifier;
+
+	/**
+	 * Always an URL pointing to a FocusSample
+	 */
 	private FocusSample inputObject;
 	private boolean appAvailable;
 	private int requestCode;
@@ -82,13 +86,13 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		// update app availability
 		this.updateAppAvailability();
 
-		// app identifier
+		// input object
 		String url;
 		try {
 			url = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_INPUT_OBJECT))));
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			// ok, input object not mandatory.
+			// ok, input object not mandatory. FIXME but if something is set, it should be valid.
 			this.inputObject = null;
 			url = "";
 		}

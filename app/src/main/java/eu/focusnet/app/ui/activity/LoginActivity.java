@@ -66,7 +66,8 @@ public class LoginActivity extends Activity
 	{
 		//test If the device is connected to the internet, if true
 		// test then the given credentials otherwise display an error message(toast) to the user
-		if (hasInternetConnection()) {
+
+		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
 			String username = ((EditText) findViewById(R.id.login_username_editText)).getText().toString();
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
 			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();
@@ -75,28 +76,6 @@ public class LoginActivity extends Activity
 		else {
 			UiHelpers.displayToast(this, R.string.focus_login_error_no_network);
 		}
-	}
-
-	/**
-	 * Test if the device is connected to the internet
-	 * @return true if connected otherwise false
-	 */
-	private boolean hasInternetConnection()
-	{
-		ConnectivityManager connMgr = (ConnectivityManager)
-				getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		boolean isWifiConn = networkInfo.isConnected();
-
-		//Falls the app run on a mobile phone (I think, this is not needed because this app will be only installed in tables or???)
-		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		boolean isMobileConn = false;
-		if (networkInfo != null) {
-			isMobileConn = networkInfo.isConnected();
-		}
-		//End
-
-		return isWifiConn || isMobileConn;
 	}
 
 	/**
@@ -132,10 +111,10 @@ public class LoginActivity extends Activity
 
 			Boolean hasAccess;
 			try {
-				hasAccess = new Boolean(FocusApplication.getInstance().getDataManager().login(username, password, server));
+				hasAccess = FocusApplication.getInstance().getDataManager().login(username, password, server);
 			}
 			catch (IOException ex) {
-				hasAccess = new Boolean(false);
+				hasAccess = false;
 			}
 			return hasAccess;
 		}

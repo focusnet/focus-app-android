@@ -34,15 +34,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.service.DataManager;
 
 // FIXME should use DataManager instead of NetworkManager!
@@ -55,19 +52,16 @@ public class Html5WidgetFragment extends WidgetFragment
 	private static final String JAVASCRIPT_INIT_FUNCTION = "init";
 
 	private WebView myWebView;
-	private DataManager dataManager;
 	private String context;
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		// assign network manager with the one of the application
-		this.dataManager = FocusApplication.getInstance().getDataManager();
-
 		this.widgetInstance = getWidgetInstance();
 
-		//this.reference_height = 500; // FIXME not ideal at all
+		// FIXME better to let the webapp take the space it wants.
+		// this.reference_height= 200;
 
 		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
 		setWidgetLayout(viewRoot);
@@ -90,6 +84,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		settings.setDatabaseEnabled(true);
 		settings.setDomStorageEnabled(true);
 		settings.setGeolocationEnabled(true);
+		settings.setUseWideViewPort(true);
 
 		// Enable app-js communication
 		myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
@@ -97,8 +92,8 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		// and load the actual page in the browser
 
-		this.context = ((Html5WidgetInstance)this.widgetInstance).getContext();
-		myWebView.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance)this.widgetInstance).getWebAppIdentifier() + "/index.html");
+		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
+		myWebView.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/index.html");
 
 		return viewRoot;
 	}
@@ -131,7 +126,15 @@ public class Html5WidgetFragment extends WidgetFragment
 			// On page loaded call this javascript function to pass
 			// data to the loaded page
 			// pass some param to init the HTML5 app here, eg. data
-			view.loadUrl(String.format("javascript: %s = %s || function(ctx) { }; %s(\"%s\");", JAVASCRIPT_INIT_FUNCTION, JAVASCRIPT_INIT_FUNCTION, JAVASCRIPT_INIT_FUNCTION, context));
+			view.loadUrl(
+					String.format("javascript: %s = (typeof %s !== 'undefined') ? %s : function(ctx) { }; %s(\"%s\");",
+							JAVASCRIPT_INIT_FUNCTION,
+							JAVASCRIPT_INIT_FUNCTION,
+							JAVASCRIPT_INIT_FUNCTION,
+							JAVASCRIPT_INIT_FUNCTION,
+							context
+					)
+			);
 		}
 	}
 
@@ -154,12 +157,12 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * Get FOCUS data
-		 * <p/>
+		 * <p>
 		 * advantages of going through app:
 		 * - take benefit of auth/access control
 		 * - permanent storage of accessed data
 		 * - not relying on buggy/unstable local storage
-		 * <p/>
+		 * <p>
 		 * disadvantages:
 		 * - no browser security (e.g. CORS) - but we only consume data, no scripts.
 		 */
@@ -177,7 +180,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * POST Focus data
-		 * <p/>
+		 * <p>
 		 * post data to localstore (will later be pushed to server)
 		 */
 		@JavascriptInterface
@@ -189,7 +192,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * PUT Focus data
-		 * <p/>
+		 * <p>
 		 * register data to local store (will later be pushed to server)
 		 */
 		@JavascriptInterface
@@ -201,7 +204,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * DELETE Focus data
-		 * <p/>
+		 * <p>
 		 * announce deletion in local store (will later be deleted on server)
 		 */
 		@JavascriptInterface
@@ -212,7 +215,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * GET a non-FOCUS resource
-		 * <p/>
+		 * <p>
 		 * get from local resources store
 		 * otherwise from network
 		 * if no network -> FALSE (should have been detected by HTML5)

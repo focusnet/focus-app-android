@@ -66,9 +66,24 @@ public class NetworkManager
 	 */
 	public boolean isNetworkAvailable() throws RuntimeException
 	{
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		return netInfo != null && netInfo.isConnectedOrConnecting();
+		ConnectivityManager connMgr = (ConnectivityManager)
+				FocusApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		// wifi
+		boolean isWifiConn = false;
+		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (networkInfo != null) {
+			isWifiConn = networkInfo.isConnected();
+		}
+
+		// mobile
+		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		boolean isMobileConn = false;
+		if (networkInfo != null) {
+			isMobileConn = networkInfo.isConnected();
+		}
+
+		return isWifiConn || isMobileConn;
 	}
 
 

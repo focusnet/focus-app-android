@@ -60,12 +60,14 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 		if (label == null) {
 			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
 		}
-		try {
-			this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(label)));
-		}
-		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			this.markAsInvalid();
-			return;
+		else {
+			try {
+				this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(label)));
+			}
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
+			}
 		}
 
 		// reset button, actions

@@ -64,6 +64,7 @@ public class TextfieldFieldInstance extends FieldInstance
 			return this.text;
 		}
 	}
+
 	private static final String TEXTFIELD_LABEL_INPUT_TYPE = "input-type";
 	protected ValidType inputType;
 
@@ -77,11 +78,18 @@ public class TextfieldFieldInstance extends FieldInstance
 	{
 		this.inputType = ValidType.TEXTFIELD_TYPE_TEXT;
 
-		try {
-			this.inputType = ValidType.fromString(TypesHelper.asString(this.config.get(TEXTFIELD_LABEL_INPUT_TYPE)));
+		Object raw_input_type = this.config.get(TEXTFIELD_LABEL_INPUT_TYPE);
+		if (raw_input_type == null) {
+			this.inputType = ValidType.TEXTFIELD_TYPE_TEXT;
 		}
-		catch (FocusBadTypeException ex) {
-			// ok, will fallback to TEXT
+		else {
+			try {
+				this.inputType = ValidType.fromString(TypesHelper.asString(raw_input_type));
+			}
+			catch (FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
+			}
 		}
 	}
 

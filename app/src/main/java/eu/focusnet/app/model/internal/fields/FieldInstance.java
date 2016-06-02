@@ -51,18 +51,26 @@ abstract public class FieldInstance
 	private String fieldName;
 	private String type;
 	private boolean isMandatory;
+	private boolean valid;
 
 	public FieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
+		this.valid = true;
 		this.fieldName = field_name;
 		this.config = config;
 		this.dataContext = dataContext;
 
+		Object raw_type = this.config.get(FIELD_LABEL_TYPE);
+		if (raw_type == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			this.type = TypesHelper.asString(this.config.get(FIELD_LABEL_TYPE));
+			this.type = TypesHelper.asString(raw_type);
 		}
 		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Invalid type of field.");
+			this.markAsInvalid();
+			return;
 		}
 
 		// some common attributes
@@ -79,22 +87,28 @@ abstract public class FieldInstance
 			this.isReadOnly = false;
 		}
 
+		Object raw_label = this.config.get(FIELD_LABEL_LABEL);
 		try {
-			this.label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(FIELD_LABEL_LABEL))));
+			this.label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_label)));
 		}
-		catch (FocusMissingResourceException ex) {
-			throw new FocusInternalErrorException("Cannot resolve field label");
-		}
-		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Cannot cast field label");
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.markAsInvalid();
+			return;
 		}
 
 		this.defaultValue = "";
-		try {
-			this.defaultValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(FIELD_LABEL_DEFAULT_VALUE))));
+		Object raw_default_value = this.config.get(FIELD_LABEL_DEFAULT_VALUE);
+		if (raw_default_value == null) {
+			this.defaultValue = "";
 		}
-		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			// fallback to not value.
+		else {
+			try {
+				this.defaultValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_default_value)));
+			}
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
+			}
 		}
 
 		// and run specific configuration
@@ -135,5 +149,20 @@ abstract public class FieldInstance
 	public boolean isReadOnly()
 	{
 		return isReadOnly;
+	}
+
+	public boolean isValid()
+	{
+		return this.valid;
+	}
+
+	protected void markAsInvalid()
+	{
+		this.valid = false;
+	}
+
+	protected void markAsInvalid(String why)
+	{
+		this.markAsInvalid();
 	}
 }

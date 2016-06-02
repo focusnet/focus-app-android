@@ -52,25 +52,35 @@ public class CheckboxFieldInstance extends FieldInstance
 	@Override
 	protected void processSpecificConfig()
 	{
+		Object raw_label = this.config.get(CHECKBOX_LABEL_CHECKBOX_LABEL);
+		if (raw_label == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_CHECKBOX_LABEL))));
+			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_label)));
 		}
-		catch (FocusMissingResourceException ex) {
-			throw new FocusInternalErrorException("Cannot resolve field checkbox-label");
-		}
-		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Cannot cast field checkbox-label");
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.markAsInvalid();
+			return;
 		}
 
 		this.checkedValue = CHECKBOX_CHECKED_DEFAULT_VALUE;
 		this.uncheckedValue = CHECKBOX_UNCHECKED_DEFAULT_VALUE;
 
+		Object raw_checked = this.config.get(CHECKBOX_LABEL_CHECKED_VALUE);
+		Object raw_unchecked = this.config.get(CHECKBOX_LABEL_UNCHECKED_VALUE);
+		if (raw_checked == null || raw_unchecked == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_CHECKED_VALUE))));
-			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CHECKBOX_LABEL_UNCHECKED_VALUE))));
+			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_checked)));
+			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_unchecked)));
 		}
 		catch (FocusBadTypeException | FocusMissingResourceException ex) {
-			throw new FocusInternalErrorException("Invalid value of (un)checked box");
+			this.markAsInvalid();
+			return;
 		}
 
 		// should we initially check or uncheck the box?
@@ -83,7 +93,8 @@ public class CheckboxFieldInstance extends FieldInstance
 			this.defaultChecked = false;
 		}
 		else {
-			throw new FocusInternalErrorException("Invalid default value for checkbox.");
+			this.markAsInvalid();
+			return;
 		}
 
 	}

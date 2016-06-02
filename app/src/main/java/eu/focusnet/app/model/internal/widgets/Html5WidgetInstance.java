@@ -63,11 +63,17 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 	protected void processSpecificConfig()
 	{
 		// webapp identifier
+		Object raw_identifier = this.config.get(CONFIG_WEB_APP_IDENTIFIER_FIELD);
+		if (raw_identifier == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			this.webAppIdentifier = TypesHelper.asString(this.config.get(CONFIG_WEB_APP_IDENTIFIER_FIELD));
+			this.webAppIdentifier = TypesHelper.asString(raw_identifier);
 		}
 		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Invalid webapp identifier");
+			this.markAsInvalid();
+			return;
 		}
 
 		// check that the asset exists
@@ -80,22 +86,28 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 			// ok, asset_found defaults to false.
 		}
 		if (!asset_found) {
-			throw new FocusInternalErrorException("Webapp does not exist in application assets.");
+			this.markAsInvalid();
+			return;
 		}
 
 		// context
 		// the context can basically be any string, but is likely to be a unique identifier such as a URI
-		try {
-			this.context = TypesHelper.asString(
-					this.dataContext.resolve(
-							TypesHelper.asString(this.config.get(CONFIG_CONTEXT_FIELD)
-							)
-					)
-			);
-		}
-		catch (FocusBadTypeException | FocusMissingResourceException ex) {
+		Object raw_context = this.config.get(CONFIG_CONTEXT_FIELD);
+		if (raw_context == null) {
 			this.context = "";
-			// silently ignore problem? FIXME no, we should do something.
+		}
+		else {
+			try {
+				this.context = TypesHelper.asString(
+						this.dataContext.resolve(
+								TypesHelper.asString(raw_context)
+						)
+				);
+			}
+			catch (FocusBadTypeException | FocusMissingResourceException ex) {
+				this.markAsInvalid();
+				return;
+			}
 		}
 	}
 

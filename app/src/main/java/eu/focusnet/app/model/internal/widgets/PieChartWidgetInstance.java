@@ -87,22 +87,28 @@ public class PieChartWidgetInstance extends WidgetInstance
 			Double value;
 			String label;
 			try {
-				Object label_raw = m.get(CONFIG_LABEL_LABEL);
-				if (label_raw == null) {
-					label = "";
-				}
 				Object value_raw = m.get(CONFIG_LABEL_VALUE);
-				label = TypesHelper.asString(
-						this.dataContext.resolve(
-								TypesHelper.asString(label_raw)
-						)
-				);
-
+				if (value_raw == null) {
+					this.markAsInvalid();
+					return;
+				}
 				value = TypesHelper.asDouble(
 						this.dataContext.resolve(
 								TypesHelper.asString(value_raw)
 						)
 				);
+
+				Object label_raw = m.get(CONFIG_LABEL_LABEL);
+				if (label_raw == null) {
+					label = "";
+				}
+				else {
+					label = TypesHelper.asString(
+							this.dataContext.resolve(
+									TypesHelper.asString(label_raw)
+							)
+					);
+				}
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();

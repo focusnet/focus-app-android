@@ -254,6 +254,11 @@ public abstract class WidgetInstance extends AbstractInstance
 		this.valid = false;
 	}
 
+	protected void markAsInvalid(String why)
+	{
+		this.markAsInvalid();
+	}
+
 	/**
 	 * Tells whether this widget instance is valid
 	 */

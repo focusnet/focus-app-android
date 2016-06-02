@@ -50,8 +50,13 @@ public class SelectFieldInstance extends FieldInstance
 	{
 
 		// first handle values of SELECT
+		Object raw_values = this.config.get(SELECT_LABEL_OPTIONS_VALUES);
+		if (raw_values == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			this.values = TypesHelper.asArrayOfStrings(this.config.get(SELECT_LABEL_OPTIONS_VALUES));
+			this.values = TypesHelper.asArrayOfStrings(raw_values);
 		}
 		catch (FocusBadTypeException ex) {
 			throw new FocusInternalErrorException("Invalid values in select");
@@ -61,15 +66,18 @@ public class SelectFieldInstance extends FieldInstance
 		this.texts = new ArrayList<>();
 		for (int i = 0; i < this.values.size(); ++i) {
 			String new_val;
+			String raw_v = this.values.get(i);
+			if (raw_v == null) {
+				this.markAsInvalid();
+				return;
+			}
 			try {
-				new_val = TypesHelper.asString(this.dataContext.resolve(this.values.get(i)));
+				new_val = TypesHelper.asString(this.dataContext.resolve(raw_v));
 				this.values.set(i, new_val);
 			}
-			catch (FocusMissingResourceException ex) {
-				throw new FocusInternalErrorException("Invalid value resolution in select");
-			}
-			catch (FocusBadTypeException ex) {
-				throw new FocusInternalErrorException("Invalid value type in select");
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
 			}
 
 			// let's add a default user-friendly text
@@ -79,32 +87,38 @@ public class SelectFieldInstance extends FieldInstance
 		// check if default value is in array of values
 		if (!this.getDefaultValue().equals("")) {
 			if (!this.values.contains(this.getDefaultValue())) {
-				throw new FocusInternalErrorException("Default value is not valid");
+				this.markAsInvalid();
+				return;
 			}
 		}
 
 		// Then user-friendly texts
 		ArrayList<String> tmp_texts;
+		Object raw_texts = this.config.get(SELECT_LABEL_OPTIONS_TEXTS);
+		if (raw_texts == null) {
+			this.markAsInvalid();
+			return;
+		}
 		try {
-			tmp_texts = TypesHelper.asArrayOfStrings(this.config.get(SELECT_LABEL_OPTIONS_TEXTS));
+			tmp_texts = TypesHelper.asArrayOfStrings(raw_texts);
 		}
 		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Invalid values in select");
+			this.markAsInvalid();
+			return;
 		}
 
 		if (tmp_texts.size() > this.values.size()) {
-			throw new FocusInternalErrorException("Too many values in texts array");
+			this.markAsInvalid("Too many values in texts array");
+			return;
 		}
 
 		for (int i = 0; i < this.texts.size(); ++i) {
+			String raw_t = tmp_texts.get(i);
 			try {
-				String v = TypesHelper.asString(this.dataContext.resolve(tmp_texts.get(i)));
+				String v = TypesHelper.asString(this.dataContext.resolve(raw_t));
 				this.texts.set(i, v);
 			}
-			catch (FocusMissingResourceException ex) {
-				// ignore, keep the current text (=value)
-			}
-			catch (FocusBadTypeException ex) {
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				// ignore, keep the current text (=value)
 			}
 		}

@@ -37,7 +37,8 @@ abstract public class DataCollectionWidgetInstance extends WidgetInstance
 	{
 		super(wTpl, layoutConfig, dataCtx);
 		if (this.fieldName == null) {
-			throw new FocusInternalErrorException("No field name set.");
+			this.markAsInvalid("No field name has been set.");
+			return;
 		}
 	}
 

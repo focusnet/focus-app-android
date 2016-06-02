@@ -77,9 +77,15 @@ public class TableWidgetInstance extends WidgetInstance
 			String header;
 			ArrayList<String> values;
 
+			Object raw_header = m.get(CONFIG_LABEL_HEADER);
+			Object raw_values = m.get(CONFIG_LABEL_VALUES);
+			if (raw_header == null || raw_values == null) {
+				this.markAsInvalid();
+				return;
+			}
 			try {
-				header = TypesHelper.asString(m.get(CONFIG_LABEL_HEADER));
-				values = TypesHelper.asArrayOfStrings(m.get(CONFIG_LABEL_VALUES));
+				header = TypesHelper.asString(raw_header);
+				values = TypesHelper.asArrayOfStrings(raw_values);
 			}
 			catch (FocusBadTypeException e) {
 				this.markAsInvalid();

@@ -92,83 +92,109 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 
 		// caption
-		try {
-			this.caption = TypesHelper.asString(
-					this.dataContext.resolve(
-							TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION))
-					)
-			);
-		}
-		catch (FocusMissingResourceException ex) {
+		Object raw_caption = this.config.get(CONFIG_LABEL_CAPTION);
+		if (raw_caption == null) {
 			this.caption = "";
 		}
-		catch (FocusBadTypeException e) {
-			this.caption = "";
+		else {
+			try {
+				this.caption = TypesHelper.asString(
+						this.dataContext.resolve(
+								TypesHelper.asString(raw_caption)
+						)
+				);
+			}
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
+			}
 		}
 
 		// x-axis
 		try {
 			Map xMap = (Map<String, Object>) this.config.get(CONFIG_LABEL_X_AXIS);
+			if (xMap == null) {
+				this.markAsInvalid();
+				return;
+			}
+			Object raw_label = xMap.get(CONFIG_LABEL_LABEL);
+			if (raw_label == null) {
+				this.markAsInvalid();
+				return;
+			}
 			this.xAxisLabel = TypesHelper.asString(
 					this.dataContext.resolve(
-							TypesHelper.asString(xMap.get(CONFIG_LABEL_LABEL))
+							TypesHelper.asString(raw_label)
 					)
 			);
-			this.xAxisValues = TypesHelper.asArrayOfStrings(xMap.get(CONFIG_LABEL_VALUES));
+			Object raw_values = xMap.get(CONFIG_LABEL_VALUES);
+			if (raw_values == null) {
+				this.markAsInvalid();
+				return;
+			}
+			this.xAxisValues = TypesHelper.asArrayOfStrings(raw_values);
 			for (int i = 0; i < this.xAxisValues.size(); ++i) {
 				this.xAxisValues.set(i, TypesHelper.asString(this.dataContext.resolve(this.xAxisValues.get(i))));
 			}
 		}
-		catch (FocusMissingResourceException ex) {
-			return;
-		}
-		catch (FocusBadTypeException e) {
-			// not safe to continue without label or values for x-axis
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.markAsInvalid();
 			return;
 		}
 
 		// series and limits
 		ArrayList<Map> series = (ArrayList<Map>) this.config.get(CONFIG_LABEL_SERIES);
+		if (series == null) {
+			this.markAsInvalid();
+			return;
+		}
 		for (Map m : series) {
 
 			String new_label;
 			ArrayList<Double> values;
 
+			Object raw_label = m.get(CONFIG_LABEL_LABEL);
+			if (raw_label == null) {
+				this.markAsInvalid();
+				return;
+			}
 			try {
 				new_label = TypesHelper.asString(
 						this.dataContext.resolve(
-								TypesHelper.asString(m.get(CONFIG_LABEL_LABEL))
+								TypesHelper.asString(raw_label)
 						)
 				);
 			}
-			catch (FocusMissingResourceException ex) {
-				// ignore this serie
-				continue;
-			}
-			catch (FocusBadTypeException e) {
-				// ignore this serie
-				continue;
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
 			}
 
 			Object values_tmp;
+			Object raw_values = m.get(CONFIG_LABEL_VALUES);
+			if (raw_values == null) {
+				this.markAsInvalid();
+				return;
+			}
 			try {
-				String values_descr = TypesHelper.asString(m.get(CONFIG_LABEL_VALUES));
+				String values_descr = TypesHelper.asString(raw_values);
 				values_tmp = this.dataContext.resolve(values_descr);
 			}
 			catch (FocusBadTypeException ex) {
 				// good, this means we have an array of double and nothing to resolve()
-				values_tmp = m.get(CONFIG_LABEL_VALUES);
+				values_tmp = raw_values;
 			}
 			catch (FocusMissingResourceException ex) {
-				// cannot resolve, ignore series
-				continue;
+				this.markAsInvalid();
+				return;
 			}
 			try {
 				values = TypesHelper.asArrayOfDoubles(values_tmp);
 			}
 			catch (FocusBadTypeException ex) {
 				// bad values, ignore series
-				continue;
+				this.markAsInvalid();
+				return;
 			}
 
 			// if the array of values does not match the number of values that is expecteed, e.g.
@@ -191,29 +217,42 @@ public class LineChartWidgetInstance extends WidgetInstance
 					String label;
 					Double value;
 					String type;
+					Object raw_limit_label = m2.get(CONFIG_LABEL_LABEL);
+					Object raw_limit_value = m2.get(CONFIG_LABEL_VALUE);
+					if (raw_limit_label == null || raw_limit_value == null) {
+						this.markAsInvalid();
+						return;
+					}
 					try {
-						label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(m2.get(CONFIG_LABEL_LABEL))));
-						value = TypesHelper.asDouble(this.dataContext.resolve(TypesHelper.asString(m2.get(CONFIG_LABEL_VALUE))));
-						type = TypesHelper.asString(m2.get(CONFIG_LABEL_LIMIT_TYPE));
+						label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_limit_label)));
+						value = TypesHelper.asDouble(this.dataContext.resolve(TypesHelper.asString(raw_limit_value)));
+						Object raw_type = m2.get(CONFIG_LABEL_LIMIT_TYPE);
+						if (raw_type == null) {
+							// default is "min"
+							type = "min";
+						}
+						else {
+							type = TypesHelper.asString(raw_type);
+						}
 					}
-					catch (FocusMissingResourceException ex) {
-						// ignore this limit as a whole
-						continue;
-					}
-					catch (FocusBadTypeException e) {
-						// ignore this limit as a whole
-						continue;
+					catch (FocusMissingResourceException | FocusBadTypeException ex) {
+						this.markAsInvalid();
+						return;
 					}
 
-					if (type != null && type.equals("max")) {
+					if (type.equals("max")) {
 						this.limitsMaxLabels.add(label);
 						this.limitsMaxValues.add(value);
 						++this.numberOfMaxLimits;
 					}
-					else {
+					else if(type.equals("min")) {
 						this.limitsMinLabels.add(label);
 						this.limitsMinValues.add(value);
 						++this.numberOfMinLimits;
+					}
+					else {
+						this.markAsInvalid();
+						return;
 					}
 				}
 			}

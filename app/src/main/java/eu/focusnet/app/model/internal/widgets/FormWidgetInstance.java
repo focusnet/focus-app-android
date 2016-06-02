@@ -65,14 +65,23 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 		for (Map.Entry e : this.config.entrySet()) {
 			String field_name = (String) e.getKey();
 			LinkedTreeMap<String, Object> field_config = (LinkedTreeMap<String, Object>) e.getValue();
+			if (field_config == null) {
+				this.markAsInvalid();
+				return;
+			}
 			FieldInstance new_field = null;
 			String type;
+			Object raw_type = field_config.get(FieldInstance.FIELD_LABEL_TYPE);
+			if (raw_type == null) {
+				markAsInvalid();
+				return;
+			}
 			try {
-				type = TypesHelper.asString(field_config.get(FieldInstance.FIELD_LABEL_TYPE));
+				type = TypesHelper.asString(raw_type);
 			}
 			catch (FocusBadTypeException ex) {
-				// invalid type
-				throw new FocusInternalErrorException("Invalid type of field #1");
+				this.markAsInvalid();
+				return;
 			}
 			switch (type) {
 				case FieldInstance.FIELD_TYPE_TEXTFIELD:
@@ -88,10 +97,14 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 					new_field = new SelectFieldInstance(field_name, field_config, this.dataContext);
 					break;
 				default:
-					throw new FocusInternalErrorException("Invalid type of field #2");
+					this.markAsInvalid();
+					return;
 			}
 
 			this.fields.put(field_name, new_field);
+			if (!new_field.isValid()) {
+				this.markAsInvalid();
+			}
 		}
 	}
 

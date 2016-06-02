@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
@@ -69,9 +70,13 @@ public abstract class WidgetInstance extends AbstractInstance
 	private String title;
 	private String type;
 	private Map<String, String> layoutConfig;
+	private boolean valid;
+
+
+
 
 	/**
-	 * C'tor
+	 * C'tor for instantiating real widget instances
 	 *
 	 * @param wTpl
 	 * @param layoutConfig
@@ -79,6 +84,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	 */
 	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
+		this.valid = true;
 		this.guid = wTpl.getGuid();
 		this.type = wTpl.getType();
 		this.template = wTpl;
@@ -88,8 +94,6 @@ public abstract class WidgetInstance extends AbstractInstance
 			this.dataContext = new DataContext();
 		}
 
-		//	this.title = wTpl.getTitle(); // FIXME
-		// 	this.description = wTpl.getDescription();
 		Object cfg = wTpl.getConfig();
 		if (cfg != null) {
 			this.config = (LinkedTreeMap<String, Object>) cfg;
@@ -99,33 +103,59 @@ public abstract class WidgetInstance extends AbstractInstance
 		this.processCommonConfig();
 	}
 
+	/**
+	 * Dummy c'tor for InvalidWidgetInstance
+	 */
+	public WidgetInstance(Map<String, String> layoutConfig)
+	{
+		this.valid = true;
+		this.layoutConfig = (layoutConfig == null ? this.layoutConfigDefaults : layoutConfig);
+	}
+
 	public static WidgetInstance factory(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
+		WidgetInstance w = null;
 		switch (template.getType()) {
 			case WIDGET_TYPE_TEXT:
-				return new TextWidgetInstance(template, layoutConfig, newCtx);
+				w = new TextWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_TABLE:
-				return new TableWidgetInstance(template, layoutConfig, newCtx);
+				w = new TableWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_PIE_CHART:
-				return new PieChartWidgetInstance(template, layoutConfig, newCtx);
+				w = new PieChartWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_BAR_CHART:
-				return new BarChartWidgetInstance(template, layoutConfig, newCtx);
+				w = new BarChartWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_LINE_CHART:
-				return new LineChartWidgetInstance(template, layoutConfig, newCtx);
+				w = new LineChartWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_CAMERA:
-				return new CameraWidgetInstance(template, layoutConfig, newCtx);
+				w = new CameraWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_GPS:
-				return new GPSWidgetInstance(template, layoutConfig, newCtx);
+				w = new GPSWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_FORM:
-				return new FormWidgetInstance(template, layoutConfig, newCtx);
+				w = new FormWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_EXTERNAL_APP:
-				return new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
+				w = new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_SUBMIT:
-				return new SubmitWidgetInstance(template, layoutConfig, newCtx);
+				w = new SubmitWidgetInstance(template, layoutConfig, newCtx);
+				break;
 			case WIDGET_TYPE_HTML5_WEBAPP:
-				return new Html5WidgetInstance(template, layoutConfig, newCtx);
+				w = new Html5WidgetInstance(template, layoutConfig, newCtx);
+				break;
+			default:
+				throw new FocusInternalErrorException("Instance type does not exist.");
 		}
-		return null;
+		if (!w.isValid()) {
+			w = new InvalidWidgetInstance(layoutConfig, w);
+		}
+		return w;
 	}
 
 	/**
@@ -139,7 +169,8 @@ public abstract class WidgetInstance extends AbstractInstance
 				title = TypesHelper.asString(this.dataContext.resolve(title));
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
-				title = null;
+				title = "Error in fetching title";
+				this.valid = false;
 			}
 		}
 		this.title = title;
@@ -161,6 +192,14 @@ public abstract class WidgetInstance extends AbstractInstance
 	public String getGuid()
 	{
 		return this.guid;
+	}
+
+	/**
+	 * Set the guid
+	 */
+	protected void setGuid(String guid)
+	{
+		this.guid = guid;
 	}
 
 	/**
@@ -205,5 +244,21 @@ public abstract class WidgetInstance extends AbstractInstance
 		String width = this.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
 		int indexOf = width.indexOf(Constant.WIDGET_LAYOUT_OF);
 		return Integer.valueOf(width.substring(0, indexOf).trim());
+	}
+
+	/**
+	 * Mark this widget as invalid
+	 */
+	protected void markAsInvalid()
+	{
+		this.valid = false;
+	}
+
+	/**
+	 * Tells whether this widget instance is valid
+	 */
+	public boolean isValid()
+	{
+		return this.valid;
 	}
 }

@@ -56,14 +56,20 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 	@Override
 	protected void processSpecificConfig()
 	{
+		Object label = this.config.get(CONFIG_LABEL_LABEL);
+		if (label == null) {
+			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
+		}
 		try {
-			this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(this.config.get(CONFIG_LABEL_LABEL))));
+			this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(label)));
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
+			this.markAsInvalid();
+			return;
 		}
 
 		// reset button, actions
+		// FIXME TODO
 	}
 
 	public String getSubmitLabel()

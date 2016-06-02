@@ -38,6 +38,7 @@ import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.GPSWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
+import eu.focusnet.app.model.internal.widgets.InvalidWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
@@ -98,6 +99,9 @@ public abstract class WidgetFragment extends Fragment
 		}
 		else if (wi instanceof Html5WidgetInstance) {
 			return new Html5WidgetFragment();
+		}
+		else if (wi instanceof InvalidWidgetInstance) {
+			return new InvalidWidgetFragment();
 		}
 		return null;
 	}

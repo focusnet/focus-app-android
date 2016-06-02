@@ -175,5 +175,7 @@
     <string name="focus_slogan"><![CDATA[Advances in Forestry Control &\nAutomation Systems in Europe]]></string>
     <string name="take_a_picture">Take a Picture</string>
     <string name="replace_picture">Replace Picture</string>
+    <string name="invalid_configuration_for_widget">Invalid configuration for widget</string>
+    <string name="unknown_path">Unknown path</string>
 
 </resources>

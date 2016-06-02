@@ -59,11 +59,8 @@ public class TextWidgetInstance extends WidgetInstance
 					)
 			);
 		}
-		catch (FocusMissingResourceException ex) {
-			this.content = "";
-		}
-		catch (FocusBadTypeException e) {
-			this.content = "";
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.markAsInvalid();
 		}
 	}
 

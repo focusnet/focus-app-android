@@ -82,31 +82,26 @@ public class TableWidgetInstance extends WidgetInstance
 				values = TypesHelper.asArrayOfStrings(m.get(CONFIG_LABEL_VALUES));
 			}
 			catch (FocusBadTypeException e) {
-				// ignore this column
-				FocusApplication.reportError(e);
-				continue;
+				this.markAsInvalid();
+				return;
 			}
 
 			// resolve() header and values
 			try {
 				header = TypesHelper.asString(this.dataContext.resolve(header));
 			}
-			catch (FocusMissingResourceException ex) {
-				header = ""; // FIXME something more verbose?
-			}
-			catch (FocusBadTypeException ex) {
-				header = ""; // FIXME something more verbose?
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
 			}
 
 			for (int i = 0; i < values.size(); ++i) {
 				try {
 					values.set(i, TypesHelper.asString(this.dataContext.resolve(values.get(i))));
 				}
-				catch (FocusMissingResourceException ex) {
-					values.set(i, ""); // FIXME something more verbose?
-				}
-				catch (FocusBadTypeException ex) {
-					values.set(i, ""); // FIXME something more verbose?
+				catch (FocusMissingResourceException | FocusBadTypeException ex) {
+					this.markAsInvalid();
+					return;
 				}
 			}
 

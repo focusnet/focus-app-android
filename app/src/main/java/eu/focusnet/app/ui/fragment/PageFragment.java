@@ -132,7 +132,6 @@ public class PageFragment extends Fragment
 					widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, spaceLeft);
 					emptyWidgetFragment.setArguments(widgetBundle);
 					FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
-					//	containerLayout.addView(emptyWidgetFragment.getView()); // FIXME??
 				}
 
 				// commit the current line

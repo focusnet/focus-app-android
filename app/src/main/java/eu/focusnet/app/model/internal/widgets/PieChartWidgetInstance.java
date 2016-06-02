@@ -65,44 +65,48 @@ public class PieChartWidgetInstance extends WidgetInstance
 		this.labels = new ArrayList<>();
 		this.values = new ArrayList<>();
 
+		Object caption = this.config.get(CONFIG_LABEL_CAPTION);
+		if (caption == null) {
+			this.caption = "";
+		}
+
 		try {
 			this.caption = TypesHelper.asString(
 					this.dataContext.resolve(
-							TypesHelper.asString(this.config.get(CONFIG_LABEL_CAPTION))
+							TypesHelper.asString(caption)
 					)
 			);
 		}
-		catch (FocusMissingResourceException ex) {
-			this.caption = "";
-		}
-		catch (FocusBadTypeException e) {
-			this.caption = "";
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			this.markAsInvalid();
+			return;
 		}
 
 		ArrayList<Map> parts = (ArrayList<Map>) this.config.get(CONFIG_LABEL_PARTS);
 		for (Map m : parts) {
-			String label;
 			Double value;
+			String label;
 			try {
+				Object label_raw = m.get(CONFIG_LABEL_LABEL);
+				if (label_raw == null) {
+					label = "";
+				}
+				Object value_raw = m.get(CONFIG_LABEL_VALUE);
 				label = TypesHelper.asString(
 						this.dataContext.resolve(
-								TypesHelper.asString(m.get(CONFIG_LABEL_LABEL)
-								)
+								TypesHelper.asString(label_raw)
 						)
 				);
 
 				value = TypesHelper.asDouble(
 						this.dataContext.resolve(
-								TypesHelper.asString(m.get(CONFIG_LABEL_VALUE)
-								)
+								TypesHelper.asString(value_raw)
 						)
 				);
 			}
-			catch (FocusMissingResourceException ex) {
-				continue;
-			}
-			catch (FocusBadTypeException e) {
-				continue;
+			catch (FocusMissingResourceException | FocusBadTypeException ex) {
+				this.markAsInvalid();
+				return;
 			}
 
 			this.labels.add(label);

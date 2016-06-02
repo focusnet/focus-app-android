@@ -123,9 +123,7 @@ public class DataManager
 
 		// setup database
 		this.databaseAdapter = new DatabaseAdapter(context);
-
 	}
-
 
 	/**
 	 * Finish initializing the DataManager

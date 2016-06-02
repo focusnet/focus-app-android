@@ -41,6 +41,7 @@ import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.common.TouchWebView;
 
 // FIXME should use DataManager instead of NetworkManager!
 // FIXME FIXME FIXME TODO
@@ -51,7 +52,7 @@ public class Html5WidgetFragment extends WidgetFragment
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
 	private static final String JAVASCRIPT_INIT_FUNCTION = JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME + ".init";
 
-	private WebView myWebView;
+	private TouchWebView webview;
 	private String context;
 
 
@@ -75,11 +76,11 @@ public class Html5WidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		myWebView = (WebView) viewRoot.findViewById(R.id.webview);
+		webview = (TouchWebView) viewRoot.findViewById(R.id.webview);
 
 		// configure the WebView
-		myWebView.setWebViewClient(new FocusAppWebViewClient());
-		WebSettings settings = myWebView.getSettings();
+		webview.setWebViewClient(new FocusAppWebViewClient());
+		WebSettings settings = webview.getSettings();
 		settings.setJavaScriptEnabled(true);
 		settings.setDatabaseEnabled(true);
 		settings.setDomStorageEnabled(true);
@@ -87,13 +88,13 @@ public class Html5WidgetFragment extends WidgetFragment
 		settings.setUseWideViewPort(true);
 
 		// Enable app-js communication
-		myWebView.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
-		myWebView.setWebChromeClient(new WebChromeClient());
+		webview.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
+		webview.setWebChromeClient(new WebChromeClient());
 
 		// and load the actual page in the browser
 
 		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
-		myWebView.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/index.html");
+		webview.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/index.html");
 
 		return viewRoot;
 	}

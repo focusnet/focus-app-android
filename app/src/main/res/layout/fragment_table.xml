@@ -12,7 +12,7 @@
         android:text="Text Title"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <de.codecrafters.tableview.TableView
+    <eu.focusnet.app.ui.common.TouchTableView
         android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

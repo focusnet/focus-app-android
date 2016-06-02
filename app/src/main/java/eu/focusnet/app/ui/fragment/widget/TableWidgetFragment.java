@@ -32,9 +32,10 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
+import eu.focusnet.app.ui.common.TouchTableView;
 
 /**
- * Created by yandypiedra on 13.01.16.
+ * Uses TouchTableView instead of TableView to overcome scrolling issues
  */
 public class TableWidgetFragment extends WidgetFragment
 {
@@ -61,7 +62,7 @@ public class TableWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		TableView tableView = (TableView) viewRoot.findViewById(R.id.tableView);
+		TableView tableView = (TouchTableView) viewRoot.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);

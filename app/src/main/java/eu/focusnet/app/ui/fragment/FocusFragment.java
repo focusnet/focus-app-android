@@ -38,6 +38,7 @@ import java.util.Map;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.ui.activity.ProjectActivity;
@@ -125,7 +126,7 @@ public class FocusFragment extends ListFragment
 				// ignore? or crash? FIXME TODO
 			}
 
-			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects(); // FIXME TODO sporadic crashes  here
+			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects(); // FIXME crash if no network here !!!!
 			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
 			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
 
@@ -137,7 +138,7 @@ public class FocusFragment extends ListFragment
 					continue;
 				}
 
-				String projectId = dm.getAppContentInstance().buildPath(p);
+				String projectId = AppContentInstance.buildPath(p);
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 

@@ -39,9 +39,9 @@ import eu.focusnet.app.model.util.TypesHelper;
  */
 public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 {
-	private static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
-	private static String CONFIG_LABEL_BUTTON_LABEL = "launcher-button-label";
-	private static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
+	private final static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
+	private final static String CONFIG_LABEL_BUTTON_LABEL = "launcher-button-label";
+	private final static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
 
 	private String buttonLabel;
 	private String appIdentifier;

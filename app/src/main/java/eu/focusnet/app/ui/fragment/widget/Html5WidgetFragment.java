@@ -49,7 +49,7 @@ public class Html5WidgetFragment extends WidgetFragment
 {
 
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
-	private static final String JAVASCRIPT_INIT_FUNCTION = "init";
+	private static final String JAVASCRIPT_INIT_FUNCTION = JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME + ".init";
 
 	private WebView myWebView;
 	private String context;
@@ -127,7 +127,8 @@ public class Html5WidgetFragment extends WidgetFragment
 			// data to the loaded page
 			// pass some param to init the HTML5 app here, eg. data
 			view.loadUrl(
-					String.format("javascript: %s = (typeof %s !== 'undefined') ? %s : function(ctx) { }; %s(\"%s\");",
+					String.format("javascript: %s = (typeof %s !== 'undefined') ? %s : function(ctx) { console.log('No %s implemented.'); }; %s(\"%s\");",
+							JAVASCRIPT_INIT_FUNCTION,
 							JAVASCRIPT_INIT_FUNCTION,
 							JAVASCRIPT_INIT_FUNCTION,
 							JAVASCRIPT_INIT_FUNCTION,

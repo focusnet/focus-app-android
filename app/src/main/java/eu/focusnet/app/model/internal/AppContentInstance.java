@@ -51,6 +51,8 @@ public class AppContentInstance extends AbstractInstance
 	 */
 	public AppContentInstance(AppContentTemplate tpl)
 	{
+		super();
+
 		this.appTemplate = tpl;
 		this.projects = new LinkedHashMap<>();
 		this.dataManager = FocusApplication.getInstance().getDataManager();
@@ -142,12 +144,18 @@ public class AppContentInstance extends AbstractInstance
 					}
 					// the guid is adapted in the ProjectInstance constructor
 					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
+					if (!p.isValid()) {
+						this.markAsInvalid();
+					}
 					this.projects.put(p.getGuid(), p);
 				}
 			}
 			else {
 				DataContext new_ctx = new DataContext(this.dataContext);
 				ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
+				if (!p.isValid()) {
+					this.markAsInvalid();
+				}
 				this.projects.put(p.getGuid(), p);
 			}
 		}

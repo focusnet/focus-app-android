@@ -37,9 +37,4 @@ public class InvalidWidgetInstance extends WidgetInstance
 		// set the guid, for keeping track of paths
 		this.setGuid(w.getGuid());
 	}
-
-	public String getOriginalWidgetInstanceTitle()
-	{
-		return this.originalWidgetInstance.getTitle();
-	}
 }

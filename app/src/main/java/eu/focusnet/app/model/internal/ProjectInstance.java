@@ -60,6 +60,8 @@ public class ProjectInstance extends AbstractInstance
 	 */
 	public ProjectInstance(ProjectTemplate tpl, DataContext dataContext)
 	{
+		super();
+
 		this.template = tpl;
 		this.dataContext = dataContext;
 		if (this.dataContext == null) {
@@ -107,10 +109,26 @@ public class ProjectInstance extends AbstractInstance
 
 		if (this.template.getDashboards() != null) {
 			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
+			// if any page is invalid, mark this project as invalid.
+			for (LinkedHashMap.Entry<String, PageInstance> entry : this.dashboards.entrySet()) {
+				if (!entry.getValue().isValid()) {
+					this.markAsInvalid();
+					break;
+				}
+			}
 		}
 
 		if (this.template.getTools() != null) {
 			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
+			// if any page is invalid, mark this project as invalid.
+			if (this.isValid()) {
+				for (LinkedHashMap.Entry<String, PageInstance> entry : this.tools.entrySet()) {
+					if (!entry.getValue().isValid()) {
+						this.markAsInvalid();
+						break;
+					}
+				}
+			}
 		}
 	}
 

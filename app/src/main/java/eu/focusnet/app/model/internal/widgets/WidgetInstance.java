@@ -70,7 +70,6 @@ public abstract class WidgetInstance extends AbstractInstance
 	private String title;
 	private String type;
 	private Map<String, String> layoutConfig;
-	private boolean valid;
 
 
 
@@ -84,7 +83,8 @@ public abstract class WidgetInstance extends AbstractInstance
 	 */
 	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
-		this.valid = true;
+		super();
+
 		this.guid = wTpl.getGuid();
 		this.type = wTpl.getType();
 		this.template = wTpl;
@@ -108,7 +108,8 @@ public abstract class WidgetInstance extends AbstractInstance
 	 */
 	public WidgetInstance(Map<String, String> layoutConfig)
 	{
-		this.valid = true;
+		super();
+
 		this.layoutConfig = (layoutConfig == null ? this.layoutConfigDefaults : layoutConfig);
 	}
 
@@ -170,7 +171,7 @@ public abstract class WidgetInstance extends AbstractInstance
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				title = "Error in fetching title";
-				this.valid = false;
+				this.markAsInvalid();
 			}
 		}
 		this.title = title;
@@ -246,24 +247,5 @@ public abstract class WidgetInstance extends AbstractInstance
 		return Integer.valueOf(width.substring(0, indexOf).trim());
 	}
 
-	/**
-	 * Mark this widget as invalid
-	 */
-	protected void markAsInvalid()
-	{
-		this.valid = false;
-	}
 
-	protected void markAsInvalid(String why)
-	{
-		this.markAsInvalid();
-	}
-
-	/**
-	 * Tells whether this widget instance is valid
-	 */
-	public boolean isValid()
-	{
-		return this.valid;
-	}
 }

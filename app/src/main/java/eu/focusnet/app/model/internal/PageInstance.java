@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.internal.widgets.InvalidWidgetInstance;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.util.Constant;
@@ -58,6 +59,8 @@ public class PageInstance extends AbstractInstance
 	 */
 	public PageInstance(PageTemplate pageTpl, PageType type, DataContext dataCtx) throws FocusMissingResourceException
 	{
+		super();
+
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
 		this.type = type;
@@ -136,8 +139,23 @@ public class PageInstance extends AbstractInstance
 		return description;
 	}
 
+	/**
+	 * Add a widget instance to the current page
+	 *
+	 * If any of the widget instances is not valid, then the page is considered as not valid
+	 * (but it will still be displayed anyway). FIXME we may want to change this behavior
+	 *
+	 * We never pass invalid widgets to a PageIntance. Instead, we pass an InvalidWidgetInstance
+	 * that contains a reference to the invalid widget instance.
+	 *
+	 * @param guid
+	 * @param wi
+	 */
 	public void addWidget(String guid, WidgetInstance wi)
 	{
+		if (wi instanceof InvalidWidgetInstance) {
+			this.markAsInvalid();
+		}
 		this.widgets.put(guid, wi);
 	}
 }

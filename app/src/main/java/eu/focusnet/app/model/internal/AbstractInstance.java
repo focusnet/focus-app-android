@@ -25,11 +25,44 @@ package eu.focusnet.app.model.internal;
  */
 abstract public class AbstractInstance
 {
+	private boolean valid;
 	protected DataContext dataContext;
+
+	public AbstractInstance()
+	{
+		this.valid = true;
+	}
 
 	public DataContext getDataContext()
 	{
 		return this.dataContext;
 	}
+
+
+
+
+
+
+	/**
+	 * Mark this widget as invalid
+	 */
+	protected void markAsInvalid()
+	{
+		this.valid = false;
+	}
+
+	protected void markAsInvalid(String why)
+	{
+		this.markAsInvalid();
+	}
+
+	/**
+	 * Tells whether this widget instance is valid
+	 */
+	public boolean isValid()
+	{
+		return this.valid;
+	}
+
 
 }

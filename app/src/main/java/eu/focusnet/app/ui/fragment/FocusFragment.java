@@ -60,10 +60,6 @@ import eu.focusnet.app.ui.util.UiHelpers;
 public class FocusFragment extends ListFragment
 {
 
-	private TypedArray projectIcons;
-	private String[] notificationTitels;
-	private TypedArray notificationIcons;
-	private int notifHeaderPosition;
 	private ArrayList<AbstractListItem> abstractItems;
 
 
@@ -108,10 +104,7 @@ public class FocusFragment extends ListFragment
 		@Override
 		protected StandardListAdapter doInBackground(Void... voids)
 		{
-			// load icons
-			projectIcons = getResources().obtainTypedArray(R.array.focus_project_icons);
-
-			abstractItems = new ArrayList<AbstractListItem>();
+			abstractItems = new ArrayList<>();
 			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
 					getString(R.string.focus_header_project),
 					null); // filter icon: ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter)
@@ -126,7 +119,7 @@ public class FocusFragment extends ListFragment
 				// ignore? or crash? FIXME TODO
 			}
 
-			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects(); // FIXME crash if no network here !!!!
+			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
 			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
 			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
 
@@ -146,12 +139,12 @@ public class FocusFragment extends ListFragment
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), projectIcons.getResourceId(0, -1)), projectTitle, projectDesc,
+				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_scissors), projectTitle, projectDesc,
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
 				abstractItems.add(drawListItem);
 			}
 
-			// FIXME TOOLS should come here, from __welcome__ project ; for now not implemented.
+			// FIXME TOOLS of __welcome__ should be here.; for now not implemented.
 
 			/*
 			FIXME TODO notifications
@@ -176,9 +169,6 @@ public class FocusFragment extends ListFragment
 			}
 
 */
-			// Recycle the typed array
-			projectIcons.recycle();
-//			notificationIcons.recycle();
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

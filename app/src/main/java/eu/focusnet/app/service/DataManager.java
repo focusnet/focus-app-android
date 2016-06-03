@@ -314,6 +314,7 @@ public class DataManager
 		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
 		if (this.userPreferences == null) {
 			throw new FocusMissingResourceException("Cannot retrieve Preference object.");
+			// FIXME we should create a default one(?)
 		}
 		return this.userPreferences;
 	}

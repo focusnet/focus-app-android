@@ -40,6 +40,7 @@ import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
+import eu.focusnet.app.ui.fragment.AboutFragment;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.FocusFragment;
 import eu.focusnet.app.ui.util.Constant;
@@ -105,12 +106,6 @@ public class FocusActivity extends BaseDrawerActivity
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
 			DrawerListItem drawListItem = new DrawerListItem(UiHelpers.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
-			//find out the synchronize menu
-			if (menuTitle.equals(getResources().getString(R.string.drawer_menu_synchronize))) { // FIXME do we keep that?
-				//TODO FIXME YANDY set the synchronized info
-				String lastUpdate = new SimpleDateFormat(eu.focusnet.app.model.util.Constant.DATE_FORMAT).format(new Date());
-				drawListItem.setInfo(getResources().getString(R.string.drawer_menu_update) + " " + lastUpdate);
-			}
 			drawerItems.add(drawListItem);
 		}
 
@@ -173,7 +168,6 @@ public class FocusActivity extends BaseDrawerActivity
 		return true;
 	}
 
-
 	/**
 	 * Listener for the back button
 	 *
@@ -226,6 +220,10 @@ public class FocusActivity extends BaseDrawerActivity
 			case Constant.UI_FRAGMENT_BOOKMARK:
 				fragment = new BookmarkFragment();
 				break;
+			case Constant.UI_FRAGMENT_ABOUT:
+				AboutFragment f = new AboutFragment();
+				f.show(getSupportFragmentManager(), "About FOCUS");
+				drawerLayout.closeDrawer(drawerListMenu);
 			default:
 				break;
 		}

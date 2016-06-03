@@ -49,6 +49,6 @@ public class Constant
 	;
 	// fragments identifiers
 	public static final int UI_FRAGMENT_FOCUS = 1,
-			UI_FRAGMENT_BOOKMARK = 2;
-
+			UI_FRAGMENT_BOOKMARK = 2,
+			UI_FRAGMENT_ABOUT = 3;
 }

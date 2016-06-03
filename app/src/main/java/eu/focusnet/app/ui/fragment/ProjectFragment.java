@@ -58,11 +58,6 @@ import eu.focusnet.app.ui.util.UiHelpers;
  */
 public class ProjectFragment extends ListFragment
 {
-
-	private TypedArray dashboardsIcons;
-	private TypedArray toolsIcons;
-	private TypedArray notificationIcons;
-	private int toolsHeaderPosition, notificationsHeaderPosition;
 	private ArrayList<AbstractListItem> abstractItems;
 	private String projectId;
 
@@ -125,8 +120,6 @@ public class ProjectFragment extends ListFragment
 		@Override
 		protected StandardListAdapter doInBackground(String... params)
 		{
-			dashboardsIcons = getResources().obtainTypedArray(R.array.cutting_dashboard_icons);
-			toolsIcons = getResources().obtainTypedArray(R.array.cutting_tool_icons);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
 
@@ -142,7 +135,7 @@ public class ProjectFragment extends ListFragment
 			abstractItems = new ArrayList<>();
 
 			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
-					getString(R.string.cutting_header_dashboard),
+					getString(R.string.header_dashboard),
 					null);
 			abstractItems.add(headerProjectsListItem);
 
@@ -158,7 +151,7 @@ public class ProjectFragment extends ListFragment
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original page
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), dashboard.getTitle(), dashboard.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 
@@ -166,7 +159,7 @@ public class ProjectFragment extends ListFragment
 
 
 			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
-					getString(R.string.cutting_header_tool),
+					getString(R.string.header_tool),
 					null);
 
 			abstractItems.add(headerToolListItem);
@@ -179,7 +172,7 @@ public class ProjectFragment extends ListFragment
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original page
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), dashboardsIcons.getResourceId(0, -1)), tool.getTitle(), tool.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 			}
@@ -206,9 +199,7 @@ public class ProjectFragment extends ListFragment
 			notificationIcons.recycle();
 */
 
-			// Recycle the typed array
-			dashboardsIcons.recycle();
-			toolsIcons.recycle();
+
 
 			return new StandardListAdapter(getActivity(), abstractItems);
 		}

@@ -22,7 +22,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.FocusActivity"/>
+        className = "eu.focusnet.app.ui.activity.ProjectsListingActivity"/>
       <point      
         x = "2508"      
         y = "1888"/>

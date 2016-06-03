@@ -28,9 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
@@ -50,7 +48,7 @@ import eu.focusnet.app.ui.util.UiHelpers;
 /**
  * This Activity contains the list of available projects.
  */
-public class FocusActivity extends BaseDrawerActivity
+public class ProjectsListingActivity extends BaseDrawerActivity
 {
 	private String[] navMenuTitles;
 
@@ -164,7 +162,7 @@ public class FocusActivity extends BaseDrawerActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+		getMenuInflater().inflate(R.menu.menu_projects_listing, menu);
 		return true;
 	}
 

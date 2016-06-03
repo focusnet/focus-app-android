@@ -41,10 +41,7 @@ public class ImageActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image);
 		ImageView tookImage = (ImageView) findViewById(R.id.tookImage);
-//        byte[] bytes = getIntent().getByteArrayExtra("image");
-//        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 		Uri imageUri = (Uri) getIntent().getExtras().get(Constant.UI_EXTRA_IMAGE_URI);
 		tookImage.setImageURI(imageUri);
-
 	}
 }

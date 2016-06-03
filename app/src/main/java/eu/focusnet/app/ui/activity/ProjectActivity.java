@@ -32,7 +32,7 @@ import eu.focusnet.app.ui.util.Constant;
 
 /**
  * This class displays (loading the ProjectFragment) the characteristics of a project after
- * the it was selected in the FocusActivity
+ * the it was selected in the ProjectsListingActivity
  */
 public class ProjectActivity extends BaseActivity
 {
@@ -83,7 +83,7 @@ public class ProjectActivity extends BaseActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_main_activity2, menu);
+		getMenuInflater().inflate(R.menu.menu_project, menu);
 		return true;
 	}
 

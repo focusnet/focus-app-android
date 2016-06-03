@@ -34,7 +34,7 @@ import eu.focusnet.app.service.DataManager;
  * <p/>
  * Start screen of the application. If the application is not configured, yet, he is redirected
  * to the LoginActivity. If the application is configured, then the basic application data are
- * loaded and the user is then redirected to the FocusActivity.
+ * loaded and the user is then redirected to the ProjectsListingActivity.
  * <p/>
  * TODO consider setting up AppIndex API
  * <p/>
@@ -78,7 +78,7 @@ public class EntryPointActivity extends Activity
 
 		/*
 		 * If we don't have login information, yet, let's redirect to the LoginActivity.
-		 * Otherwise, load the basic application configuration and redirect to FocusActivity
+		 * Otherwise, load the basic application configuration and redirect to ProjectsListingActivity
 		 */
 
 		// don't do anything while not init();
@@ -100,7 +100,7 @@ public class EntryPointActivity extends Activity
 						min_splashscreen_display_time -= 500;
 					}
 					if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
-						startActivity(new Intent(EntryPointActivity.this, FocusActivity.class));
+						startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 					}
 					else {
 						startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));

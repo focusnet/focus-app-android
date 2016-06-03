@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -35,9 +34,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -56,20 +52,13 @@ public class BarChartWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_barchart, container, false);
-
-		this.widgetInstance = getWidgetInstance();
-
-		// Update the reference height of the widget
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.reference_height = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
-
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_barchart, container, false));
 
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_bar_chart_title);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_bar_chart_title);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -77,7 +66,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		BarChart mChart = (BarChart) viewRoot.findViewById(R.id.bar_chart);
+		BarChart mChart = (BarChart) this.rootView.findViewById(R.id.bar_chart);
 
 		mChart.setDrawBarShadow(false);
 		mChart.setDrawValueAboveBar(true);
@@ -187,6 +176,13 @@ public class BarChartWidgetFragment extends WidgetFragment
 
 		//	mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 
-		return viewRoot;
+		return this.rootView;
+	}
+
+	@Override
+	protected void alterReferenceHeight()
+	{
+		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
 	}
 }

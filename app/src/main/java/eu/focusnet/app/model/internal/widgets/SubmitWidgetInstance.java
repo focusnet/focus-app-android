@@ -31,8 +31,6 @@ import eu.focusnet.app.model.util.TypesHelper;
 /**
  * Created by admin on 28.01.2016.
  */
-
-//TODO implement this class and its methods
 public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 {
 

@@ -46,7 +46,6 @@ import eu.focusnet.app.service.DataManager;
 /**
  * SQL Sample Data Access Object
  *
- * FIXME TODO  --- parse datetime
  */
 public class SampleDao
 {
@@ -145,7 +144,7 @@ public class SampleDao
 	}
 
 	/**
-	 * Mark a row for deletion
+	 * Mark a resource for deletion
 	 * <p/>
 	 * we mark ALL versions of the resource for deletion. Is that good? FIXME TODO JULIEN
 	 */
@@ -330,7 +329,6 @@ public class SampleDao
 			urls_list[i] = "'" + urls_list[i] + "'";
 		}
 
-		// FIXME sprintf-like syntax would be better.
 		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
 				+ " WHERE "
 				+ Constant.URL + " NOT LIKE '" + DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "%'"

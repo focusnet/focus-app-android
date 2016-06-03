@@ -39,7 +39,6 @@ import eu.focusnet.app.model.util.TypesHelper;
 /**
  * Created by admin on 28.01.2016.
  */
-//TODO implements this class and its methods
 public class FormWidgetInstance extends DataCollectionWidgetInstance
 {
 

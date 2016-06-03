@@ -28,10 +28,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
@@ -50,7 +48,6 @@ import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
- * Created by yandypiedra on 13.01.16.
  */
 public abstract class WidgetFragment extends Fragment
 {
@@ -58,9 +55,10 @@ public abstract class WidgetFragment extends Fragment
 	 * Reference height: if not 0, the widget will be set to this number of dp.
 	 * This allows us to adapt the height depending on the content of the widget.
 	 */
-	protected int reference_height;
+	protected int referenceHeight;
 
 	WidgetInstance widgetInstance;
+	protected View rootView;
 
 	/**
 	 * Get the WidgetFragment subtype depending on the input parameter
@@ -116,34 +114,62 @@ public abstract class WidgetFragment extends Fragment
 		super.onDestroyView();
 	}
 
-	protected void setWidgetLayout(View viewRoot)
+	protected void setWidgetLayout()
 	{
 		Bundle arguments = getArguments();
 		int linearLayoutWidth = 0; // width is determined by the weight only
 		int linearLayoutHeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
 		int linearLayoutWeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
-		viewRoot.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));
+		this.rootView.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));
 
-		if (this.reference_height != 0) {
-			ViewGroup.LayoutParams l = viewRoot.getLayoutParams();
-			l.height = UiHelpers.dp_to_pixels(this.reference_height, this.getActivity());
-			viewRoot.setLayoutParams(l);
+		if (this.referenceHeight != 0) {
+			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
+			l.height = UiHelpers.dp_to_pixels(this.referenceHeight, this.getActivity());
+			this.rootView.setLayoutParams(l);
 		}
 	}
 
-	public WidgetInstance getWidgetInstance()
+	/**
+	 * This function also sets the rootView instance variable, which must be returned by onCreateView
+	 * @param rootView
+	 */
+	protected void setupWidget(View rootView)
 	{
+		// assign root view
+		this.rootView = rootView;
+
+		// acquire the widget instance
 		Bundle bundles = getArguments();
 		String path = bundles.getString(Constant.UI_EXTRA_PATH);
-		DataManager dm = FocusApplication.getInstance().getDataManager();
-		this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
-		dm.registerActiveInstance(this.widgetInstance);
-		return this.widgetInstance;
+
+		// may happen that we have no path (e.g. EmptyWidgetFragment)
+		if (path != null) {
+			DataManager dm = FocusApplication.getInstance().getDataManager();
+			this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
+			dm.registerActiveInstance(this.widgetInstance);
+		}
+
+		// set margins / paddings
+		// FIXME TODO
+		// preferabily margin, such that we can revert webview width to 56.25vw
+
+		// alter the reference height if necessary
+		this.alterReferenceHeight();
+
+		// and finally apply the layout properties on the root view
+		this.setWidgetLayout();
+	}
+
+	/**
+	 * The reference height is not altered by default. Subclasses can override this behavior.
+	 */
+	protected void alterReferenceHeight()
+	{
+
 	}
 
 	public float getDisplayHeightInDp()
 	{
-
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		DisplayMetrics outMetrics = new DisplayMetrics ();
 		display.getMetrics(outMetrics);

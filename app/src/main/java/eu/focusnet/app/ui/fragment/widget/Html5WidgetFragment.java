@@ -59,16 +59,13 @@ public class Html5WidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		this.widgetInstance = getWidgetInstance();
-
-		// FIXME better to let the webapp take the space it wants.
-		// this.reference_height= 200;
-
-		View viewRoot = inflater.inflate(R.layout.fragment_webview, container, false);
-		setWidgetLayout(viewRoot);
+		// setup: we leave the contained webapp decide of the height of the widget (via viewport and body height,
+		// preferably expressed in vw)
+		super.onCreate(savedInstanceState);
+		this.setupWidget(inflater.inflate(R.layout.fragment_webview, container, false));
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_webapp);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_webapp);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -76,7 +73,7 @@ public class Html5WidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		webview = (TouchWebView) viewRoot.findViewById(R.id.webview);
+		webview = (TouchWebView) this.rootView.findViewById(R.id.webview);
 
 		// configure the WebView
 		webview.setWebViewClient(new FocusAppWebViewClient());
@@ -96,7 +93,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
 		webview.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/index.html");
 
-		return viewRoot;
+		return this.rootView;
 	}
 
 

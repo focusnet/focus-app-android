@@ -37,20 +37,18 @@ public class InvalidWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_invalid, container, false);
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_invalid, container, false));
 
-		this.widgetInstance = getWidgetInstance();
-
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.invalid_widget_title);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.invalid_widget_title);
 		Bundle bundles = getArguments();
 		String path = bundles.getString(Constant.UI_EXTRA_PATH);
 
 		if (path != null) {
 			textTitle.setText(path);
 		}
-		return viewRoot;
+		return this.rootView;
 	}
 
 

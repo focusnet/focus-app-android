@@ -51,21 +51,17 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_gps, container, false);
-
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_gps, container, false));
 
 		// --------------------------------- debug FIXME DEBUG TODO
 		LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 		boolean gps_enabled	= lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		boolean network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-
-		this.widgetInstance = this.getWidgetInstance();
-
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.textTitle);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.textTitle);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -73,11 +69,11 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		longitudeValue = (TextView) viewRoot.findViewById(R.id.text_longitude_value);
-		latitudeValue = (TextView) viewRoot.findViewById(R.id.text_latitude_value);
-		accuracyValue = (TextView) viewRoot.findViewById(R.id.text_accuracy_value);
+		longitudeValue = (TextView) this.rootView.findViewById(R.id.text_longitude_value);
+		latitudeValue = (TextView) this.rootView.findViewById(R.id.text_latitude_value);
+		accuracyValue = (TextView) this.rootView.findViewById(R.id.text_accuracy_value);
 
-		Button gpsPosition = (Button) viewRoot.findViewById(R.id.button_gps_position);
+		Button gpsPosition = (Button) this.rootView.findViewById(R.id.button_gps_position);
 		gpsPosition.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -87,7 +83,7 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 			}
 		});
 
-		return viewRoot;
+		return this.rootView;
 	}
 
 	@Override

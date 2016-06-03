@@ -37,14 +37,11 @@ public class TextWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
+		this.setupWidget(inflater.inflate(R.layout.fragment_text, container, false));
 
-		this.widgetInstance = getWidgetInstance();
-
-		View viewRoot = inflater.inflate(R.layout.fragment_text, container, false);
-		setWidgetLayout(viewRoot);
-
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.title_text_widget);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.title_text_widget);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -52,9 +49,9 @@ public class TextWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		TextView textContent = (TextView) viewRoot.findViewById(R.id.text_content);
+		TextView textContent = (TextView) this.rootView.findViewById(R.id.text_content);
 		textContent.setText(((TextWidgetInstance) this.widgetInstance).getContent());
 
-		return viewRoot;
+		return this.rootView;
 	}
 }

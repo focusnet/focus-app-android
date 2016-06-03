@@ -243,15 +243,14 @@ public class FormWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_form, container, false);
-		this.context = viewRoot.getContext();
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_form, container, false));
 
-		this.widgetInstance = getWidgetInstance();
+		this.context = this.rootView.getContext();
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.textTitle);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.textTitle);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -259,12 +258,12 @@ public class FormWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		TableLayout tl = (TableLayout) viewRoot.findViewById(R.id.formTableLayout);
+		TableLayout tl = (TableLayout) this.rootView.findViewById(R.id.formTableLayout);
 		for (Map.Entry e : ((FormWidgetInstance) this.widgetInstance).getFields().entrySet()) {
 			FieldInstance f = (FieldInstance) e.getValue();
 			this.addFieldToUI(f, tl);
 		}
-		return viewRoot;
+		return this.rootView;
 	}
 
 }

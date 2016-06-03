@@ -31,7 +31,7 @@ public class ProjectTemplate implements Serializable
 {
 
 	private String guid;
-	private String iterator; //TODO define this object
+	private String iterator;
 	private String title;
 	private String description;
 

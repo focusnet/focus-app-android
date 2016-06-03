@@ -39,12 +39,11 @@ public class SubmitWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		View viewRoot = inflater.inflate(R.layout.fragment_submit, container, false);
-		setWidgetLayout(viewRoot);
+		// setup
+		super.onCreate(savedInstanceState);
+		this.setupWidget(inflater.inflate(R.layout.fragment_submit, container, false));
 
-		this.widgetInstance = getWidgetInstance();
-
-		Button button = (Button) viewRoot.findViewById(R.id.submit_button);
+		Button button = (Button) this.rootView.findViewById(R.id.submit_button);
 		button.setText(((SubmitWidgetInstance) this.widgetInstance).getSubmitLabel());
 
 		button.setOnClickListener(new View.OnClickListener()
@@ -57,6 +56,6 @@ public class SubmitWidgetFragment extends WidgetFragment
 			}
 		});
 
-		return viewRoot;
+		return this.rootView;
 	}
 }

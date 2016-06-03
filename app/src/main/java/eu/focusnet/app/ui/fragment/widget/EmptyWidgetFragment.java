@@ -34,11 +34,11 @@ public class EmptyWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_empty, container, false);
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_empty, container, false));
 
-		return viewRoot;
+		return this.rootView;
 	}
 
 }

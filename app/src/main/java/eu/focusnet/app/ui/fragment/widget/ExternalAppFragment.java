@@ -47,13 +47,12 @@ public class ExternalAppFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		View viewRoot = inflater.inflate(R.layout.fragment_external_app, container, false);
-		setWidgetLayout(viewRoot);
-
-		this.widgetInstance = getWidgetInstance();
+		// setup
+		super.onCreate(savedInstanceState); // FIXME not mandatory????
+		this.setupWidget(inflater.inflate(R.layout.fragment_external_app, container, false));
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_external_app);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_external_app);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -62,12 +61,12 @@ public class ExternalAppFragment extends WidgetFragment
 		}
 
 
-		TextView textIdentifier = (TextView) viewRoot.findViewById(R.id.external_app_value_identifier);
+		TextView textIdentifier = (TextView) this.rootView.findViewById(R.id.external_app_value_identifier);
 		textIdentifier.setText(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
 
-		TextView textStatus = (TextView) viewRoot.findViewById(R.id.external_app_value_status);
+		TextView textStatus = (TextView) this.rootView.findViewById(R.id.external_app_value_status);
 
-		Button button = (Button) viewRoot.findViewById(R.id.launch_button);
+		Button button = (Button) this.rootView.findViewById(R.id.launch_button);
 		if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
 			textStatus.setText(R.string.installed_ready_to_be_used);
 			button.setText(((ExternalAppWidgetInstance) this.widgetInstance).getButtonLabel());
@@ -112,7 +111,7 @@ public class ExternalAppFragment extends WidgetFragment
 			}
 		});
 
-		return viewRoot;
+		return this.rootView;
 	}
 
 	@Override

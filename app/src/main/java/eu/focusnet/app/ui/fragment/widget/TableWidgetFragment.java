@@ -44,17 +44,11 @@ public class TableWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_table, container, false);
+		this.setupWidget(inflater.inflate(R.layout.fragment_table, container, false));
 
-		this.widgetInstance = getWidgetInstance();
-
-		// Adapt reference height for better UI
-		this.reference_height = (int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW;
-
-		setWidgetLayout(viewRoot);
-
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_table);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_table);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -62,7 +56,7 @@ public class TableWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		TableView tableView = (TouchTableView) viewRoot.findViewById(R.id.tableView);
+		TableView tableView = (TouchTableView) this.rootView.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);
@@ -74,7 +68,13 @@ public class TableWidgetFragment extends WidgetFragment
 		int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
 		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
 
-		return viewRoot;
+		return this.rootView;
+	}
+
+	@Override
+	protected void alterReferenceHeight()
+	{
+		this.referenceHeight = (int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW;
 	}
 
 }

@@ -52,22 +52,18 @@ public class CameraWidgetFragment extends WidgetFragment
 	private Uri imageUri;
 	private Uri tmpImageUri;
 	private ImageView imageView;
-	private CameraWidgetInstance cameraWidgetInstance;
 
 	private Button deleteButton, viewButton, takePictureButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_camera, container, false);
-
-		setWidgetLayout(viewRoot);
-
-		cameraWidgetInstance = (CameraWidgetInstance) getWidgetInstance();
+		this.setupWidget(inflater.inflate(R.layout.fragment_camera, container, false));
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.title);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.title);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -75,9 +71,9 @@ public class CameraWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		imageView = (ImageView) viewRoot.findViewById(R.id.picture);
+		imageView = (ImageView) this.rootView.findViewById(R.id.picture);
 
-		viewButton = (Button) viewRoot.findViewById(R.id.button_view);
+		viewButton = (Button) this.rootView.findViewById(R.id.button_view);
 		viewButton.setOnClickListener(new View.OnClickListener()
 
 									  {
@@ -91,7 +87,7 @@ public class CameraWidgetFragment extends WidgetFragment
 									  }
 		);
 
-		deleteButton = (Button) viewRoot.findViewById(R.id.button_delete);
+		deleteButton = (Button) this.rootView.findViewById(R.id.button_delete);
 		deleteButton.setOnClickListener(new View.OnClickListener()
 
 										{
@@ -103,13 +99,13 @@ public class CameraWidgetFragment extends WidgetFragment
 												viewButton.setEnabled(false);
 												takePictureButton.setText(R.string.take_a_picture);
 												imageUri = null;
-												cameraWidgetInstance.saveImage(null);
+												((CameraWidgetInstance)widgetInstance).saveImage(null);
 											}
 										}
 		);
 
 
-		takePictureButton = (Button) viewRoot.findViewById(R.id.button_take_picture);
+		takePictureButton = (Button) this.rootView.findViewById(R.id.button_take_picture);
 		takePictureButton.setOnClickListener(new View.OnClickListener()
 											 {
 												 @Override
@@ -125,7 +121,7 @@ public class CameraWidgetFragment extends WidgetFragment
 
 		);
 
-		return viewRoot;
+		return this.rootView;
 	}
 
 	@Override
@@ -136,7 +132,7 @@ public class CameraWidgetFragment extends WidgetFragment
 			try {
 				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), tmpImageUri);
 				imageView.setImageBitmap(bitmap);
-				this.cameraWidgetInstance.saveImage(bitmap);
+				((CameraWidgetInstance)(this.widgetInstance)).saveImage(bitmap);
 			}
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot retrieve bitmap from file.");

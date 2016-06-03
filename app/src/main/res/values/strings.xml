@@ -15,9 +15,9 @@
     <string-array name="drawer_items">
         <item>My FOCUS</item>
         <item>Starred</item>
-      <!--  <item>Synchronize</item>
-        <item>Settings</item>
-        <item>User manual</item> -->
+        <!--  <item>Synchronize</item>
+          <item>Settings</item>
+          <item>User manual</item> -->
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->

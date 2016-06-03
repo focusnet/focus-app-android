@@ -20,14 +20,12 @@
 
 package eu.focusnet.app.ui.fragment.widget;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -59,19 +57,12 @@ public class LineChartWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_linechart, container, false);
-
-		this.widgetInstance = getWidgetInstance();
-
-		// Update the reference height of the widget
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.reference_height = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
-
-		setWidgetLayout(viewRoot);
+		this.setupWidget(inflater.inflate(R.layout.fragment_linechart, container, false));
 
 		// set widget title
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_title_line_chart);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_line_chart);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -79,7 +70,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		LineChart lineChart = (LineChart) viewRoot.findViewById(R.id.line_chart);
+		LineChart lineChart = (LineChart) this.rootView.findViewById(R.id.line_chart);
 
 		// Caption
 		lineChart.setDescription(((LineChartWidgetInstance) this.widgetInstance).getxAxisLabel()); // we use the caption location to display the x-axis label
@@ -182,6 +173,13 @@ public class LineChartWidgetFragment extends WidgetFragment
 		legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
 		legend.setForm(Legend.LegendForm.LINE);
 
-		return viewRoot;
+		return this.rootView;
+	}
+
+	@Override
+	protected void alterReferenceHeight()
+	{
+		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
 	}
 }

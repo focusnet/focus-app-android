@@ -183,6 +183,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 			}
 			catch (JsonSyntaxException ex) {
 				// FIXME TODO log error, but do not crash (we depend on third party software)
+				// ACRA is good for that, but we should not disclose sensitive information in production environment
 				this.response = null;
 			}
 		}

@@ -205,7 +205,7 @@ public class DataContext extends HashMap<String, String>
 	 * <p/>
 	 * If the request format is not recognized, return it as-is.
 	 * <p/>
-	 * If the request does not succeed, return FIXME exception or null?  FocusMissingException is a good candidate
+	 * If the request does not succeed, throw a FocusMissingResourceException
 	 *
 	 * @return
 	 */
@@ -221,7 +221,7 @@ public class DataContext extends HashMap<String, String>
 
 		String[] parts = request.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
 		if (parts.length < 2) {
-			return null;
+			return new FocusInternalErrorException("Invalid context in resolve request.");
 		}
 
 		String url = this.get(parts[1]);

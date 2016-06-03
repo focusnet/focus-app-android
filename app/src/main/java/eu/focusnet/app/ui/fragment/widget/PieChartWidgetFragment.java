@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -53,18 +52,12 @@ public class PieChartWidgetFragment extends WidgetFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		// setup
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.fragment_piechart, container, false);
+		this.setupWidget(inflater.inflate(R.layout.fragment_piechart, container, false));
 
-		this.widgetInstance = getWidgetInstance();
 
-		// Update the reference height of the widget
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.reference_height = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
-
-		setWidgetLayout(viewRoot);
-
-		TextView textTitle = (TextView) viewRoot.findViewById(R.id.text_piechart_title);
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_piechart_title);
 		if (this.widgetInstance.getTitle() == null) {
 			((ViewGroup) textTitle.getParent()).removeView(textTitle);
 		}
@@ -90,7 +83,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 		data.setValueTextColor(Color.WHITE);
 
 
-		PieChart pieChart = (PieChart) viewRoot.findViewById(R.id.pie_chart);
+		PieChart pieChart = (PieChart) this.rootView.findViewById(R.id.pie_chart);
 
 		pieChart.setUsePercentValues(true);
 		pieChart.setDescription(((PieChartWidgetInstance) this.widgetInstance).getCaption());
@@ -119,6 +112,14 @@ public class PieChartWidgetFragment extends WidgetFragment
 		legend.setYEntrySpace(0f);
 		legend.setYOffset(0f);
 
-		return viewRoot;
+		return this.rootView;
+	}
+
+	@Override
+	protected void alterReferenceHeight()
+	{
+		// Alter reference height of the widget
+		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
 	}
 }

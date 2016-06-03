@@ -44,19 +44,9 @@ public class HeaderDrawerListItem extends AbstractListItem
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
 	public String getCompany()
 	{
 		return company;
-	}
-
-	public void setCompany(String company)
-	{
-		this.company = company;
 	}
 
 	@Override

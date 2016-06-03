@@ -100,10 +100,10 @@ public class ProjectInstance extends AbstractInstance
 			return;
 		}
 
-		// FIXME TODO special case ?: guid == __welcome__ == WELCOME_PROJECT_IDENTIFIER
+		// Special case: __welcome__ is a fake project that may contain tools only.
 		if (this.getGuid().equals(WELCOME_PROJECT_IDENTIFIER)) {
-			this.title = ""; // FIXME i18n string
-			this.description = ""; // FIXME i18n string.
+			this.title = "";
+			this.description = "";
 			return;
 		}
 
@@ -207,7 +207,7 @@ public class ProjectInstance extends AbstractInstance
 						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
 
 						DataContext new_widget_ctx = new DataContext(p.getDataContext());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx); // FIXME what if misconfigured widget?
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
 						p.addWidget(wi.getGuid(), wi);
 					}
 

@@ -111,7 +111,7 @@ public class PageFragment extends Fragment
 		containerLayout.setId(this.currentayoutId);
 		containerLayout.setOrientation(LinearLayout.HORIZONTAL);
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		layoutParams.setMargins(0, 0, 0, UiHelpers.dp_to_pixels(50, this.getActivity()));
+		layoutParams.setMargins(0, 0, 0, 0);
 		containerLayout.setLayoutParams(layoutParams);
 
 		int spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
@@ -151,6 +151,7 @@ public class PageFragment extends Fragment
 			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(this.projectInstance, this.pageInstance, widgetInstance));
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, requiredSpace);
+			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_POSITION_IN_ROW, Constant.LAYOUT_NUM_OF_COLUMNS - spaceLeft);
 			widgetFragment.setArguments(widgetBundle);
 
 			FragmentManager.addFragment(containerLayout.getId(), widgetFragment, this.getActivity().getFragmentManager());

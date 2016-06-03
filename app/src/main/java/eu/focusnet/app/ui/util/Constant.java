@@ -45,7 +45,8 @@ public class Constant
 	public static final String UI_BUNDLE_FRAGMENT_TITLE = "eu.focusnet.bundle.FRAGMENT_TITLE",
 			UI_BUNDLE_FRAGMENT_POSITION = "eu.focusnet.bundle.FRAGMENT_POSITION",
 			UI_BUNDLE_LAYOUT_HEIGHT = "eu.focusnet.bundle.LAYOUT_HEIGHT",
-			UI_BUNDLE_LAYOUT_WEIGHT = "eu.focusnet.bundle.LAYOUT_WEIGHT";
+			UI_BUNDLE_LAYOUT_WEIGHT = "eu.focusnet.bundle.LAYOUT_WEIGHT",
+			UI_BUNDLE_LAYOUT_POSITION_IN_ROW = "eu.focusnet.bundle.POSITION_IN_ROW";
 	;
 	// fragments identifiers
 	public static final int UI_FRAGMENT_FOCUS = 1,

@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * Created by yandypiedra on 13.01.16.
@@ -47,7 +48,7 @@ import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 public class PieChartWidgetFragment extends WidgetFragment
 {
 
-	private static int HEIGHT_DP_FOR_FULL_WIDTH = 800;
+	private static int HEIGHT_DP_FOR_FULL_WIDTH = 500;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -120,6 +121,6 @@ public class PieChartWidgetFragment extends WidgetFragment
 	{
 		// Alter reference height of the widget
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
+		this.referenceHeight = UiHelpers.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

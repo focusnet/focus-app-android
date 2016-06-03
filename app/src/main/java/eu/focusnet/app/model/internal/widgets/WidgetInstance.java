@@ -71,9 +71,6 @@ public abstract class WidgetInstance extends AbstractInstance
 	private String type;
 	private Map<String, String> layoutConfig;
 
-
-
-
 	/**
 	 * C'tor for instantiating real widget instances
 	 *

@@ -51,14 +51,15 @@ import eu.focusnet.app.ui.util.UiHelpers;
  */
 public abstract class WidgetFragment extends Fragment
 {
+
+	private final static int UI_MARGIN_SIZE = 22;
 	/**
 	 * Reference height: if not 0, the widget will be set to this number of dp.
 	 * This allows us to adapt the height depending on the content of the widget.
 	 */
 	protected int referenceHeight;
-
-	WidgetInstance widgetInstance;
 	protected View rootView;
+	WidgetInstance widgetInstance;
 
 	/**
 	 * Get the WidgetFragment subtype depending on the input parameter
@@ -117,10 +118,22 @@ public abstract class WidgetFragment extends Fragment
 	protected void setWidgetLayout()
 	{
 		Bundle arguments = getArguments();
-		int linearLayoutWidth = 0; // width is determined by the weight only
-		int linearLayoutHeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
-		int linearLayoutWeight = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
-		this.rootView.setLayoutParams(new LinearLayout.LayoutParams(linearLayoutWidth, linearLayoutHeight, linearLayoutWeight));
+		int width = 0; // width is determined by the weight only
+		int height = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
+		int num_of_cols = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
+		int position_in_row = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_POSITION_IN_ROW);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, num_of_cols);
+
+		// set a reasonable margin between fragments
+		int margin = UiHelpers.dp_to_pixels(UI_MARGIN_SIZE, this.getActivity());
+		params.setMargins(
+				position_in_row == 0 ? margin : margin / 2,
+				margin,
+				position_in_row + num_of_cols == Constant.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
+				margin
+		);
+
+		this.rootView.setLayoutParams(params);
 
 		if (this.referenceHeight != 0) {
 			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
@@ -131,6 +144,7 @@ public abstract class WidgetFragment extends Fragment
 
 	/**
 	 * This function also sets the rootView instance variable, which must be returned by onCreateView
+	 *
 	 * @param rootView
 	 */
 	protected void setupWidget(View rootView)
@@ -171,14 +185,12 @@ public abstract class WidgetFragment extends Fragment
 	public float getDisplayHeightInDp()
 	{
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
-		DisplayMetrics outMetrics = new DisplayMetrics ();
+		DisplayMetrics outMetrics = new DisplayMetrics();
 		display.getMetrics(outMetrics);
 
-		float density  = getResources().getDisplayMetrics().density;
+		float density = getResources().getDisplayMetrics().density;
 		float dpHeight = outMetrics.heightPixels / density;
 		return dpHeight;
-		// float dpWidth  = outMetrics.widthPixels / density;
-
 	}
 
 }

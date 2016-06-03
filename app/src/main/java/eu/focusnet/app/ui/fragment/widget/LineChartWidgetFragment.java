@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * <p/>
@@ -51,7 +52,7 @@ import eu.focusnet.app.model.internal.widgets.WidgetInstance;
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {
-	private static int HEIGHT_DP_FOR_FULL_WIDTH = 600;
+	private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
 
 
 	@Override
@@ -180,6 +181,6 @@ public class LineChartWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = (int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS;
+		this.referenceHeight = UiHelpers.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

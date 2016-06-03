@@ -33,6 +33,7 @@ import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.ui.common.TouchTableView;
+import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
  * Uses TouchTableView instead of TableView to overcome scrolling issues
@@ -74,7 +75,10 @@ public class TableWidgetFragment extends WidgetFragment
 	@Override
 	protected void alterReferenceHeight()
 	{
-		this.referenceHeight = (int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW;
+		int computed = UiHelpers.dp_to_pixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
+		int max = UiHelpers.dp_to_pixels((int) this.getDisplayHeightInDp(), this.getActivity());
+		this.referenceHeight = Math.min(computed, max);
 	}
+
 
 }

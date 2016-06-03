@@ -99,7 +99,7 @@ public class CameraWidgetFragment extends WidgetFragment
 												viewButton.setEnabled(false);
 												takePictureButton.setText(R.string.take_a_picture);
 												imageUri = null;
-												((CameraWidgetInstance)widgetInstance).saveImage(null);
+												((CameraWidgetInstance) widgetInstance).saveImage(null);
 											}
 										}
 		);
@@ -132,7 +132,7 @@ public class CameraWidgetFragment extends WidgetFragment
 			try {
 				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), tmpImageUri);
 				imageView.setImageBitmap(bitmap);
-				((CameraWidgetInstance)(this.widgetInstance)).saveImage(bitmap);
+				((CameraWidgetInstance) (this.widgetInstance)).saveImage(bitmap);
 			}
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot retrieve bitmap from file.");

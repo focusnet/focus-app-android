@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dip"
         android:text="LineChart Title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginBottom="10dip"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"

@@ -1,7 +1,6 @@
 package eu.focusnet.app.ui.common;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
@@ -28,7 +27,7 @@ import android.webkit.WebView;
 
 /**
  * Specialized WebView overcoming problems when embedded WebView within ScrollView
- *
+ * <p/>
  * See http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
 public class TouchWebView extends WebView

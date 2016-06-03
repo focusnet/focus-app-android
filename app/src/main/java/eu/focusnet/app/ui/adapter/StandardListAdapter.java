@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -21,13 +21,9 @@
 package eu.focusnet.app.ui.adapter;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,17 +34,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarkLink;
 import eu.focusnet.app.model.json.Preference;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.ui.activity.EntryPointActivity;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
@@ -266,7 +258,7 @@ public class StandardListAdapter extends BaseAdapter
 		}
 
 		@Override
-		protected Void doInBackground(Void ... nil)
+		protected Void doInBackground(Void... nil)
 		{
 			FocusApplication.getInstance().getDataManager().saveUserPreferences();
 			return null;

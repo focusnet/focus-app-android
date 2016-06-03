@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dip"
         android:text="Text Title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginBottom="10dip"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,15 +23,15 @@
             android:id="@+id/external_app_label_identifier"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_identifier"
-            android:layout_weight="0.7"/>
+            android:layout_weight="0.7"
+            android:text="@string/app_identifier"/>
 
         <TextView
             android:id="@+id/external_app_value_identifier"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/not_acquired_yet"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.3"
+            android:text="@string/not_acquired_yet"/>
 
     </LinearLayout>
 
@@ -45,15 +45,15 @@
             android:id="@+id/external_app_label_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/status"
-            android:layout_weight="0.7"/>
+            android:layout_weight="0.7"
+            android:text="@string/status"/>
 
         <TextView
             android:id="@+id/external_app_value_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/n_a"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.3"
+            android:text="@string/n_a"/>
 
     </LinearLayout>
 

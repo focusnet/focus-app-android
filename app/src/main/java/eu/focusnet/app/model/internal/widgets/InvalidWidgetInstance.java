@@ -2,9 +2,6 @@ package eu.focusnet.app.model.internal.widgets;
 
 import java.util.Map;
 
-import eu.focusnet.app.model.internal.DataContext;
-import eu.focusnet.app.model.json.WidgetTemplate;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch

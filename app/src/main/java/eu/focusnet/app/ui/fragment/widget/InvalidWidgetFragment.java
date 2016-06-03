@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.model.internal.widgets.InvalidWidgetInstance;
 import eu.focusnet.app.ui.util.Constant;
 
 /**
@@ -50,8 +49,6 @@ public class InvalidWidgetFragment extends WidgetFragment
 		}
 		return this.rootView;
 	}
-
-
 
 
 }

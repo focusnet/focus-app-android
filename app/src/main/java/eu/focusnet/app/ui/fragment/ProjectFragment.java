@@ -22,7 +22,6 @@ package eu.focusnet.app.ui.fragment;
 
 import android.app.ListFragment;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,13 +99,13 @@ public class ProjectFragment extends ListFragment
 //            }
 			//User has selected either Tools or Dashboard
 			// else {
-				// GuiUtil.displayToast(getActivity(), "Dashboard selected");
-				Intent intent = new Intent(getActivity(), PageActivity.class);
-				StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
-				intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, projectId);
-				intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
-				intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
-				startActivity(intent);
+			// GuiUtil.displayToast(getActivity(), "Dashboard selected");
+			Intent intent = new Intent(getActivity(), PageActivity.class);
+			StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, projectId);
+			intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
+			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
+			startActivity(intent);
 			// }
 		}
 	}
@@ -198,7 +197,6 @@ public class ProjectFragment extends ListFragment
 //            }
 			notificationIcons.recycle();
 */
-
 
 
 			return new StandardListAdapter(getActivity(), abstractItems);

@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -36,7 +36,6 @@ import java.util.Set;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
@@ -58,6 +57,12 @@ import eu.focusnet.app.ui.adapter.DateTypeAdapter;
  */
 public class DataManager
 {
+	public enum ResourceOperationStatus
+	{
+		SUCCESS, // resource altered directly
+		PENDING, // pending network operation
+		ERROR // permanent error
+	}
 	public static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION = FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "focus-internal-configuration";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER = "login-server";
@@ -66,9 +71,7 @@ public class DataManager
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS = "user-infos";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
-
 	private boolean isInitialized;
-
 	// other information regarding login?
 	private String loginUser;
 	private String loginPassword;
@@ -76,20 +79,11 @@ public class DataManager
 	private String userUrl;
 	private String prefUrl;
 	private String appContentUrl;
-
 	// java objects
 	private User user;
 	private Preference userPreferences;
 	private AppContentTemplate appContentTemplate;
 	private AppContentInstance appContentInstance;
-
-	public enum ResourceOperationStatus
-	{
-		SUCCESS, // resource altered directly
-		PENDING, // pending network operation
-		ERROR // permanent error
-	}
-
 	// for samples
 	private HashMap<String, FocusObject> cache;
 
@@ -289,7 +283,7 @@ public class DataManager
 		if (this.user != null) {
 			return this.user;
 		}
-			this.user = (User) (this.get(this.userUrl, User.class));
+		this.user = (User) (this.get(this.userUrl, User.class));
 
 		if (this.user == null) {
 			throw new FocusMissingResourceException("Cannot retrieve User object.");

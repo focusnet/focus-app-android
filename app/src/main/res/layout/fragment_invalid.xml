@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip"
         android:gravity="center"
         android:text="@string/invalid_configuration_for_widget"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ff0000"
-        android:layout_marginBottom="10dip"/>
+        android:textColor="#ff0000"/>
 
     <TextView
         android:id="@+id/invalid_widget_title"

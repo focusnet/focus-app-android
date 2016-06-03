@@ -89,7 +89,7 @@ public class ExternalAppFragment extends WidgetFragment
 					Intent intent = new Intent(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
 
 					FocusSample input_object = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
-					if(input_object != null) {
+					if (input_object != null) {
 						String json_input = FocusApplication.getInstance().getDataManager().getGson().toJson(input_object);
 						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, json_input);
 					}
@@ -101,13 +101,14 @@ public class ExternalAppFragment extends WidgetFragment
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					try {
 						startActivity(intent);
-					} catch (ActivityNotFoundException ex) {
+					}
+					catch (ActivityNotFoundException ex) {
 						// market is not installed
 						UiHelpers.displayToast(getActivity(), r.getString(R.string.market_not_installed));
 					}
 				}
 
-				
+
 			}
 		});
 

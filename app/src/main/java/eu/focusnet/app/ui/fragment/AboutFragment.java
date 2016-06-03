@@ -1,6 +1,5 @@
 package eu.focusnet.app.ui.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -37,7 +36,7 @@ public class AboutFragment extends DialogFragment
 		super.onCreate(savedInstanceState);
 		this.getDialog().setTitle(R.string.about_focus_title);
 		View viewRoot = inflater.inflate(R.layout.fragment_about, container, false);
-	// FIXME TODO	setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Dialog);
+		// FIXME TODO	setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Dialog);
 		return viewRoot;
 	}
 

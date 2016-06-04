@@ -43,11 +43,6 @@ public class HeaderListItem extends AbstractListItem
 		return rightIcon;
 	}
 
-	public void setRightIcon(Bitmap rightIcon)
-	{
-		this.rightIcon = rightIcon;
-	}
-
 	public int getType()
 	{
 		return TYPE_HEADER;

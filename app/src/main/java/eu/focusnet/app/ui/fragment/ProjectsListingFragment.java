@@ -56,7 +56,7 @@ import eu.focusnet.app.ui.util.UiHelpers;
  * after the user logged in.
  *
  */
-public class FocusFragment extends ListFragment
+public class ProjectsListingFragment extends ListFragment
 {
 
 	private ArrayList<AbstractListItem> abstractItems;

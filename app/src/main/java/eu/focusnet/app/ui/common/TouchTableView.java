@@ -25,6 +25,7 @@ import de.codecrafters.tableview.TableView;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+// FIXME we may use SortableTableView
 public class TouchTableView extends TableView
 {
 	public TouchTableView(Context context)

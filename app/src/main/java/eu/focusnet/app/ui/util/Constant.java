@@ -49,7 +49,7 @@ public class Constant
 			UI_BUNDLE_LAYOUT_POSITION_IN_ROW = "eu.focusnet.bundle.POSITION_IN_ROW";
 	;
 	// fragments identifiers
-	public static final int UI_FRAGMENT_FOCUS = 1,
+	public static final int UI_FRAGMENT_PROJECTS_LISTING = 1,
 			UI_FRAGMENT_BOOKMARK = 2,
 			UI_FRAGMENT_ABOUT = 3;
 }

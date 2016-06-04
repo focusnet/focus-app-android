@@ -87,11 +87,6 @@ public class StandardListItem extends AbstractListItem
 		return typeOfBookmark;
 	}
 
-	public void setTypeOfBookmark(String typeOfBookmark)
-	{
-		this.typeOfBookmark = typeOfBookmark;
-	}
-
 	public String getPath()
 	{
 		return path;

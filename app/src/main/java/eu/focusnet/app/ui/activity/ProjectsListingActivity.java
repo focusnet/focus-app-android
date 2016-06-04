@@ -40,7 +40,7 @@ import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.ui.fragment.AboutFragment;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
-import eu.focusnet.app.ui.fragment.FocusFragment;
+import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelpers;
@@ -62,7 +62,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		showView(Constant.UI_FRAGMENT_FOCUS);
+		showView(Constant.UI_FRAGMENT_PROJECTS_LISTING);
 	}
 
 	/**
@@ -212,8 +212,8 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		Fragment fragment = null;
 
 		switch (position) {
-			case Constant.UI_FRAGMENT_FOCUS:
-				fragment = new FocusFragment();
+			case Constant.UI_FRAGMENT_PROJECTS_LISTING:
+				fragment = new ProjectsListingFragment();
 				break;
 			case Constant.UI_FRAGMENT_BOOKMARK:
 				fragment = new BookmarkFragment();

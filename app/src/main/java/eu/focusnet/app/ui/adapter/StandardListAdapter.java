@@ -47,9 +47,12 @@ import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.UiHelpers;
 
 /**
- * List Adapter, used for
+ * List Adapter, used for drawer and entries in listings pages
  *
  * FIXME TODO JULIEN TO BE REVIEWED
+ *
+ * FIXME FIXME FIXME bookarmking for TOOLs does not work: the position value is relative to the HeaderItem. (e.g. 1 instead of count(PAGE)+1)
+ * however, simple click on TOOL items redirects to the correct page.
  */
 public class StandardListAdapter extends BaseAdapter
 {

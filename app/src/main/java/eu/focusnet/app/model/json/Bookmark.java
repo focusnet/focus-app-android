@@ -54,11 +54,6 @@ public class Bookmark
 		return pages;
 	}
 
-	public void setPages(ArrayList<BookmarkLink> pages)
-	{
-		this.pages = pages;
-	}
-
 	public ArrayList<BookmarkLink> getTools()
 	{
 		return tools;

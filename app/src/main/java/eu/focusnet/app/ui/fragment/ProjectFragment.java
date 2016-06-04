@@ -147,7 +147,6 @@ public class ProjectFragment extends ListFragment
 				PageInstance dashboard = entry.getValue();
 				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 
-				// FIXME bug: displayed title is not the title of the bookmark but the title of the original page
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
@@ -160,7 +159,6 @@ public class ProjectFragment extends ListFragment
 			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_tool),
 					getString(R.string.header_tool),
 					null);
-
 			abstractItems.add(headerToolListItem);
 
 			LinkedHashMap<String, PageInstance> tools = projectInstance.getTools();
@@ -168,11 +166,10 @@ public class ProjectFragment extends ListFragment
 				PageInstance tool = entry.getValue();
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-				// FIXME bug: displayed title is not the title of the bookmark but the title of the original page
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
-						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 			}
 

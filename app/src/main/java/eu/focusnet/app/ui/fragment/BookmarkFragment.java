@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarkLink;
@@ -58,8 +59,7 @@ public class BookmarkFragment extends ListFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-		return viewRoot;
+		return inflater.inflate(R.layout.list_fragment, container, false);
 	}
 
 	@Override
@@ -87,6 +87,8 @@ public class BookmarkFragment extends ListFragment
 					intent = new Intent(getActivity(), PageActivity.class);
 					intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
 					break;
+				default:
+					throw new FocusInternalErrorException("Invalid path format.");
 			}
 
 			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, parts[0]);

@@ -59,6 +59,8 @@ public class PageFragment extends Fragment
 							 Bundle savedInstanceState)
 	{
 
+		super.onCreate(savedInstanceState);
+
 		// Inflate the layout for this fragment
 		this.viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
 		Bundle bundle = getArguments();

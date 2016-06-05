@@ -23,7 +23,9 @@ package eu.focusnet.app.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
+import eu.focusnet.app.BuildConfig;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -51,7 +53,10 @@ public class EntryPointActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash);
+		setContentView(R.layout.activity_entry_point);
+
+		TextView version = (TextView) findViewById(R.id.versionNumber);
+		version.setText(BuildConfig.VERSION_NAME);
 
 		final Thread init_thread = new Thread()
 		{

@@ -55,11 +55,11 @@
     <string name="focus_remove_bookmark_question">Are you sure you want to remove this context from the Bookmarks?</string>
     <string name="focus_add_bookmark_question">Are you sure you want to register this context to the Bookmarks?</string>
     <string name="focus_external_app_button_label_default">Launch</string>
-    <string name="app_identifier">App identifier</string>
+    <string name="app_identifier">Application</string>
     <string name="not_acquired_yet">Not acquired, yet.</string>
     <string name="n_a">N/A</string>
     <string name="status">Status</string>
-    <string name="installed_ready_to_be_used">Installed. Ready to be used.</string>
+    <string name="installed_ready_to_be_used">Installed. Version: %s</string>
     <string name="not_installed">Not installed. Please install before continuing.</string>
     <string name="install_via_google_play">Install via Google Play</string>
     <string name="market_not_installed">Android Market is not installed</string>
@@ -71,5 +71,6 @@
     <string name="invalid_configuration_for_widget">Invalid configuration for widget</string>
     <string name="unknown_path">Unknown path</string>
     <string name="about_focus_title">About FOCUS</string>
+    <string name="version_unknown">unknown</string>
 
 </resources>

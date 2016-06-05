@@ -57,7 +57,7 @@ public abstract class BaseDrawerActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 
 		drawerLayout = (DrawerLayout) findViewById(getDrawerLayout());
-		drawerLayout.bringToFront(); // FIXME YANDY drawer is below the top toolbar. Wasn't always the case.
+		drawerLayout.bringToFront();
 		drawerListMenu = (ListView) findViewById(getDrawerList());
 		drawerListMenu.bringToFront();
 		drawerItems = getDrawerItems();

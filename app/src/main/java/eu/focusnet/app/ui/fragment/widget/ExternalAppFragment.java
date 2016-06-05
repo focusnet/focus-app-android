@@ -48,7 +48,7 @@ public class ExternalAppFragment extends WidgetFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		// setup
-		super.onCreate(savedInstanceState); // FIXME not mandatory????
+		super.onCreate(savedInstanceState);
 		this.setupWidget(inflater.inflate(R.layout.fragment_external_app, container, false));
 
 		// set widget title
@@ -68,7 +68,10 @@ public class ExternalAppFragment extends WidgetFragment
 
 		Button button = (Button) this.rootView.findViewById(R.id.launch_button);
 		if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
-			textStatus.setText(R.string.installed_ready_to_be_used);
+			textStatus.setText(
+					String.format(getResources().getString(R.string.installed_ready_to_be_used),
+					((ExternalAppWidgetInstance) widgetInstance).getInstalledVersion())
+			);
 			button.setText(((ExternalAppWidgetInstance) this.widgetInstance).getButtonLabel());
 		}
 		else {

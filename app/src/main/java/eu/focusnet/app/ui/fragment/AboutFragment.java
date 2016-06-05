@@ -30,6 +30,18 @@ import eu.focusnet.app.R;
 public class AboutFragment extends DialogFragment
 {
 
+	// FIXME FIXM TO INCLUDE:
+	/*
+
+	version number
+	app name
+	consortium member
+	licenses of all libs
+	description of project
+	link to webpage
+	copyright
+
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{

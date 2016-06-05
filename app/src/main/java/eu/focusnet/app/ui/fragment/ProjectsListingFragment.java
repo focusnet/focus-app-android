@@ -104,7 +104,7 @@ public class ProjectsListingFragment extends ListFragment
 		protected StandardListAdapter doInBackground(Void... voids)
 		{
 			abstractItems = new ArrayList<>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_file),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.picto_category_project_negative),
 					getString(R.string.focus_header_project),
 					null); // filter icon: ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter)
 
@@ -119,8 +119,8 @@ public class ProjectsListingFragment extends ListFragment
 			}
 
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
-			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star_o);
-			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.ic_star);
+			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
+			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
@@ -138,7 +138,7 @@ public class ProjectsListingFragment extends ListFragment
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), R.drawable.ic_scissors), projectTitle, projectDesc,
+				StandardListItem drawListItem = new StandardListItem(projectId, UiHelpers.getBitmap(getActivity(), R.drawable.picto_project), projectTitle, projectDesc,
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
 				abstractItems.add(drawListItem);
 			}

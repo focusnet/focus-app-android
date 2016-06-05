@@ -9,6 +9,6 @@
         android:layout_gravity="center"
         android:background="@color/list_item_background"
         android:choiceMode="singleChoice"
-        android:dividerHeight="1dp"
+        android:dividerHeight="1dip"
         android:listSelector="@drawable/list_item_selector"/>
 </FrameLayout>

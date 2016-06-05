@@ -273,6 +273,7 @@ public class DataManager
 
 	/**
 	 * Acquire personal information about the user of the application
+	 *
 	 */
 	public User getUser() throws FocusInternalErrorException, FocusMissingResourceException
 	{

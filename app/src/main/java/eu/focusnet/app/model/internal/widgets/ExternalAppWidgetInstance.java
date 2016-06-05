@@ -1,7 +1,9 @@
 package eu.focusnet.app.model.internal.widgets;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -11,6 +13,7 @@ import java.util.Random;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.FocusObject;
@@ -53,6 +56,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	private boolean appAvailable;
 	private int requestCode;
 	private FocusSample response;
+	private String installedVersion;
 
 	public ExternalAppWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -143,7 +147,23 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		this.appAvailable = false;
 		// check that the app is indeed available
 		Intent intent = new Intent(this.appIdentifier);
-		this.appAvailable = FocusApplication.getInstance().getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null;
+		PackageManager pm = FocusApplication.getInstance().getPackageManager();
+		ResolveInfo activity_info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		if (activity_info == null) {
+			this.appAvailable = false;
+			this.installedVersion = null;
+		}
+		else {
+			this.appAvailable = true;
+			PackageInfo pkg_info = null;
+			try {
+				pkg_info = pm.getPackageInfo(activity_info.activityInfo.packageName, 0);
+			}
+			catch (PackageManager.NameNotFoundException ex) {
+				throw new FocusInternalErrorException("Cannot get package info for application, but we just checked that the application exists");
+			}
+			this.installedVersion = pkg_info.versionName;
+		}
 		return this.appAvailable;
 	}
 
@@ -193,5 +213,10 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	public FocusSample getResponse()
 	{
 		return this.response;
+	}
+
+	public String getInstalledVersion()
+	{
+		return (this.installedVersion == null ? FocusApplication.getInstance().getResources().getString(R.string.version_unknown) : this.installedVersion);
 	}
 }

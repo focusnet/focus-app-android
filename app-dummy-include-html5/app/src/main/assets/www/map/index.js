@@ -164,7 +164,14 @@ function initmap() {
                 for (var property in data) {
                     if (data.hasOwnProperty(property)) {
                         if (property != "geojson") { // geojson is way too big attribute to dipslay so we skip it
-                            popupstr += "<tr><th>" + property + "</th><td>" + data[property] + "</td></tr>";
+
+                            var value = data[property];
+
+                            if (!isNaN(value)) {
+                                value = Math.round(value * 10) / 10;
+                            }
+
+                            popupstr += "<tr><th>" + property + "</th><td>" + value + "</td></tr>";
                         }
                     }
                 }

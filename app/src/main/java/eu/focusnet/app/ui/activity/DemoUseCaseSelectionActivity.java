@@ -28,7 +28,11 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -37,11 +41,13 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.ui.util.UiHelper;
 
 /**
- * Login Activity: this activity displays the login screen
- * and log the user in the application
+ * Demo use case activity
  */
-public class LoginActivity extends Activity
+public class DemoUseCaseSelectionActivity extends Activity implements AdapterView.OnItemSelectedListener
 {
+
+	private int selectedUseCase;
+	private Spinner spinner;
 
 	/**
 	 * Instantiate the activity UI
@@ -52,11 +58,24 @@ public class LoginActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_choose_use_case);
+
+		// default selection
+		this.selectedUseCase = 0;
+
+		// populate the spinner with values
+		this.spinner = (Spinner) findViewById(R.id.use_case_spinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+				R.array.demo_use_cases_labels, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(this);
+
+
 	}
 
 	/**
-	 * When the user clicks the login button, the provided username, password and server name
+	 * When the user clicks the activity_login button, the provided username, password and server name
 	 * are used to authenticate.
 	 * <p/>
 	 * This logic requires a network connection.
@@ -65,30 +84,42 @@ public class LoginActivity extends Activity
 	{
 		//test If the device is connected to the internet, if true
 		// test then the given credentials otherwise display an error message(toast) to the user
+		if (this.selectedUseCase == 0) {
+			((TextView) this.spinner.getSelectedView()).setError(getString(R.string.select_use_case));
+			return;
+		}
 
 		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
-			String username = ((EditText) findViewById(R.id.login_username_editText)).getText().toString();
-			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
-			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();
-
-			// FIXME check input ...
-			new LoginTask(this).execute(username, password, server);
+			new UseCaseSelectionTask(this).execute(this.selectedUseCase);
 		}
 		else {
 			UiHelper.displayToast(this, R.string.focus_login_error_no_network);
 		}
+
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+	{
+		this.selectedUseCase = position;
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent)
+	{
+		this.selectedUseCase = 0;
 	}
 
 	/**
 	 * This class is used for testing if the given credential are correct
 	 */
-	private class LoginTask extends AsyncTask<String, Void, Boolean>
+	private class UseCaseSelectionTask extends AsyncTask<Integer, Void, Boolean>
 	{
 
 		private ProgressDialog progressDialog;
 		private Context context;
 
-		public LoginTask(Context context)
+		public UseCaseSelectionTask(Context context)
 		{
 			this.context = context;
 		}
@@ -104,15 +135,18 @@ public class LoginActivity extends Activity
 		}
 
 		@Override
-		protected Boolean doInBackground(String... data)
+		protected Boolean doInBackground(Integer ... data)
 		{
-			String username = data[0];
-			String password = data[1];
-			String server = data[2];
+			int selectedUseCase = data[0];
+
+			String[] uris = getResources().getStringArray(R.array.demo_use_cases_values);
+
+			String uri;
 
 			Boolean hasAccess;
 			try {
-				hasAccess = FocusApplication.getInstance().getDataManager().login(username, password, server);
+		//		FocusApplication.getInstance().getDataManager().setApplicationContentUrl(x);
+				hasAccess = FocusApplication.getInstance().getDataManager().login("a","b", "c");
 			}
 			catch (IOException ex) {
 				hasAccess = false;
@@ -129,7 +163,7 @@ public class LoginActivity extends Activity
 
 			//If the given credential were correct start the EntryPointActivity otherwise display an error message(toast) to the user
 			if (hasAccess) {
-				Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
+				Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
 				startActivity(i);
 				finish();
 			}

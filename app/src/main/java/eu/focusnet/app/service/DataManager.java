@@ -238,12 +238,12 @@ public class DataManager
 	 */
 	public void logout()
 	{
-		this.loginUser = "";
-		this.loginPassword = "";
-		this.loginServer = "";
-		this.userUrl = "";
-		this.prefUrl = "";
-		this.appContentUrl = "";
+		this.loginUser = null;
+		this.loginPassword = null;
+		this.loginServer = null;
+		this.userUrl = null;
+		this.prefUrl = null;
+		this.appContentUrl = null;
 		this.user = null;
 		this.userPreferences = null;
 		this.appContentTemplate = null;
@@ -260,7 +260,7 @@ public class DataManager
 	 *
 	 * @return true if we have all required login information, false otherwise
 	 */
-	public boolean hasLoginInformation()
+	public boolean hasLoginInformation() // FIXME cache result. used a lot.
 	{
 		return this.loginUser != null
 				&& this.loginPassword != null

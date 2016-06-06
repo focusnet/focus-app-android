@@ -21,6 +21,7 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.User;
@@ -62,7 +64,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		showView(Constant.UI_FRAGMENT_PROJECTS_LISTING);
+		showView(Constant.UI_MENU_ENTRY_PROJECTS_LISTING);
 	}
 
 	/**
@@ -212,16 +214,32 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		Fragment fragment = null;
 
 		switch (position) {
-			case Constant.UI_FRAGMENT_PROJECTS_LISTING:
+			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
 				fragment = new ProjectsListingFragment();
 				break;
-			case Constant.UI_FRAGMENT_BOOKMARK:
+			case Constant.UI_MENU_ENTRY_BOOKMARK:
 				fragment = new BookmarkFragment();
 				break;
-			case Constant.UI_FRAGMENT_ABOUT:
+			case Constant.UI_MENU_ENTRY_ABOUT:
 				AboutFragment f = new AboutFragment();
 				f.show(getSupportFragmentManager(), "About FOCUS");
-				drawerLayout.closeDrawer(drawerListMenu);
+				drawerLayout.closeDrawer(drawerListMenu); // FIXME would be better to have a proper page.
+			case Constant.UI_MENU_ENTRY_LOGOUT:
+				final Thread logout_thread = new Thread()
+				{
+					public void run()
+					{
+						FocusApplication.getInstance().getDataManager().logout();
+						try {
+							startActivity(new Intent(ProjectsListingActivity.this, EntryPointActivity.class));
+						}
+						finally {
+							finish();
+						}
+					}
+				};
+				logout_thread.start();
+				break;
 			default:
 				break;
 		}

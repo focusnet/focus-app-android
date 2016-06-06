@@ -14,6 +14,7 @@
         <item>My FOCUS</item>
         <item>Bookmarks</item>
         <item>About</item>
+        <item>Log out</item>
     </string-array>
 
     <!-- Corresponding nav icons -->
@@ -21,6 +22,20 @@
         <item>@drawable/picto_home</item>
         <item>@drawable/picto_bookmark_selected</item>
         <item>@drawable/picto_about</item>
+        <item>@drawable/picto_power_off</item>
+    </string-array>
+
+    <!-- Demonstration use cases -->
+    <string-array name="demo_use_cases_labels">
+        <item>-- Select --</item>
+        <item>UI library</item>
+        <item>FOCUS Pilot Case I - Winterthur</item>
+        <item>FOCUS Pilot Case III - Arnsberg</item>
+    </string-array>
+    <string-array name="demo_use_cases_values">
+        <item>zero</item>
+        <item>one</item>
+        <item>two</item>
     </string-array>
 
     <string name="focus_header_project">My Projects</string>
@@ -43,7 +58,7 @@
     <string name="focus_crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
 
     <string name="focus_login_error_bad_credentials">Invalid credentials.</string>
-    <string name="focus_login_error_no_network">There is no internet connection. Please connect to the internet</string>
+    <string name="focus_login_error_no_network">There is no internet connection. Please connect your device to the network and try again.</string>
     <string name="focus_drawer_open_description">Open drawer</string>
     <string name="focus_drawer_close_description">Close drawer</string>
     <string name="focus_error_no_configuration_available">Cannot access application content configuration. Exiting…</string>
@@ -73,5 +88,8 @@
     <string name="about_focus_title">About FOCUS</string>
     <string name="version_unknown">unknown</string>
     <string name="focus_logo">FOCUS logo</string>
+    <string name="please_select_a_demontration_use_case">Select a demontration use case</string>
+    <string name="start_demo">Start demo</string>
+    <string name="select_use_case">Please select a use case</string>
 
 </resources>

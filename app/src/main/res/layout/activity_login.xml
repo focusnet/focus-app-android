@@ -15,7 +15,6 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
         android:layout_weight="0.5"
         android:src="@drawable/focus_logo"/>
 
@@ -46,7 +45,7 @@
                 android:id="@+id/login_username_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:ems="15"
                 android:maxLines="1"
                 android:textSize="20sp"/>
@@ -69,7 +68,7 @@
                 android:id="@+id/login_password_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:ems="15"
                 android:inputType="textPassword"
                 android:maxLines="1"
@@ -93,7 +92,7 @@
                 android:id="@+id/login_server_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:ems="15"
                 android:maxLines="1"
                 android:textSize="20sp"/>
@@ -109,7 +108,7 @@
 
             <Button
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:onClick="onClick"
                 android:paddingLeft="50dip"
                 android:paddingRight="50dip"

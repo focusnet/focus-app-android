@@ -12,6 +12,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <supports-screens android:smallScreens="false"
+                      android:normalScreens="false"
+                      android:largeScreens="true"
+                      android:xlargeScreens="true"
+                      android:requiresSmallestWidthDp="600" />
+
     <application
         android:name="FocusApplication"
         android:allowBackup="true"
@@ -28,6 +34,9 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ui.activity.DemoUseCaseSelectionActivity"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.activity.ProjectsListingActivity"

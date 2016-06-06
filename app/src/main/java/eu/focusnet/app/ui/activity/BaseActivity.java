@@ -21,6 +21,7 @@
 package eu.focusnet.app.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -45,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity
 		setContentView(getContentView());
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		ActionBar x = getSupportActionBar();
 		getSupportActionBar().setDisplayHomeAsUpEnabled(isDisplayHomeAsUpEnabled());
 		getSupportActionBar().setHomeButtonEnabled(isHomeButtonEnabled());
 	}

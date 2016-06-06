@@ -45,6 +45,11 @@ import eu.focusnet.app.service.DataManager;
 public class EntryPointActivity extends Activity
 {
 	/**
+	 * Login activity
+	 */
+	final private static Class LOGIN_ACTIVITY = DemoUseCaseSelectionActivity.class;
+
+	/**
 	 * Instantiate the activity.
 	 *
 	 * @param savedInstanceState past Activity state
@@ -73,6 +78,7 @@ public class EntryPointActivity extends Activity
 						// (e.g. no network, and the app content has not been previously completely loaded)
 						// ViewUtil.displayToast(FocusApplication.getInstance(), R.string.focus_error_no_configuration_available);
 						// FIXME TODO custom activity instead (that requests "try again later")
+						// or dialog?
 
 					}
 				}
@@ -108,7 +114,7 @@ public class EntryPointActivity extends Activity
 						startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 					}
 					else {
-						startActivity(new Intent(EntryPointActivity.this, LoginActivity.class));
+						startActivity(new Intent(EntryPointActivity.this, LOGIN_ACTIVITY));
 					}
 				}
 				catch (InterruptedException ex) {

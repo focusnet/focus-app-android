@@ -156,7 +156,7 @@ function initmap() {
             var geojson = stand.getGeoJSON();
 
             if (geojson != null) {
-                var projGeoJSON = L.Proj.geoJson(geojson).addTo(drawnItems);
+                var projGeoJSON = L.Proj.geoJson(geojson, shapeOptions).addTo(drawnItems);
                 var data = stand.getData();
 
                 var popupstr = "<table>";

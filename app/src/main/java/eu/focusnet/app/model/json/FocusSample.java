@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.json;
 
+import java.util.Date;
+
 /**
  * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
  * <p/>
@@ -33,15 +35,6 @@ public class FocusSample extends FocusObject
 	 * The Map containing objects of interest
 	 */
 	FocusSampleDataMap data = null;
-
-	/**
-	 * Dummy c'tor
-	 * <p/>
-	 * GSON documentation advises to always have an empty ctor, so we keep it.
-	 */
-	public FocusSample()
-	{
-	}
 
 	/**
 	 * C'tor for a new pre-fed FocusSample

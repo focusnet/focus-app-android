@@ -26,16 +26,6 @@ public class Setting
 	private Long id;
 	private String language;
 
-	public Setting()
-	{
-	}
-
-	public Setting(String language, Notification notification)
-	{
-
-		this.language = language;
-	}
-
 	public String getLanguage()
 	{
 		return language;

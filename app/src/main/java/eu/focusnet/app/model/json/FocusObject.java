@@ -47,6 +47,11 @@ public class FocusObject implements Serializable
 			editionDateTime;
 	private boolean active;
 
+	public FocusObject()
+	{
+
+	}
+
 	protected FocusObject(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
 
@@ -67,10 +72,6 @@ public class FocusObject implements Serializable
 		this.creationDateTime = creationDateTime != null ? creationDateTime : new Date();
 		this.editionDateTime = editionDateTime != null ? editionDateTime : new Date();
 		this.active = active;
-	}
-
-	public FocusObject()
-	{
 	}
 
 	/**

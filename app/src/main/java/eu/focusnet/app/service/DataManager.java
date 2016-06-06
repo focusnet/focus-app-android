@@ -211,8 +211,8 @@ public class DataManager
 		this.loginServer = server;
 		this.loginUser = user;
 		this.loginPassword = password;
-		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + demoId + "/user-information";
-		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + demoId + "/app-user-preferences";
+		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + 123 + "/user-information";
+		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + 123 + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading

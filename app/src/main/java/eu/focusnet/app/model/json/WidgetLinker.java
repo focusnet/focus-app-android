@@ -31,25 +31,13 @@ public class WidgetLinker
 	private String widgetid;
 	private Map<String, String> layout;
 
-	public WidgetLinker(String widgetid, Map<String, String> layout)
-	{
-		this.widgetid = widgetid;
-		this.layout = layout;
-	}
 
-	public WidgetLinker()
-	{
-	}
 
 	public String getWidgetid()
 	{
 		return widgetid;
 	}
 
-	public void setWidgetid(String widgetid)
-	{
-		this.widgetid = widgetid;
-	}
 
 	public Map<String, String> getLayout()
 	{

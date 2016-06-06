@@ -29,16 +29,6 @@ public class Bookmark
 	private ArrayList<BookmarkLink> pages;
 	private ArrayList<BookmarkLink> tools;
 
-	public Bookmark()
-	{
-	}
-
-	public Bookmark(ArrayList<BookmarkLink> pages, ArrayList<BookmarkLink> tools)
-	{
-		this.pages = pages;
-		this.tools = tools;
-	}
-
 	public Long getId()
 	{
 		return id;

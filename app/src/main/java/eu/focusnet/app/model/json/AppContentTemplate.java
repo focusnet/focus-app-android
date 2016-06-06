@@ -35,24 +35,6 @@ public class AppContentTemplate extends FocusObject
 	private LinkedHashMap<String, String> data;
 	private ArrayList<ProjectTemplate> projects;
 
-	public AppContentTemplate(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, ArrayList<ProjectTemplate> projects, LinkedHashMap<String, String> data)
-	{
-		super(type, url, context, owner, editor, version, creationDateTime, editionDateTime, active);
-		this.projects = projects;
-		this.data = data;
-	}
-
-	public AppContentTemplate(Long id, ArrayList<ProjectTemplate> projects, LinkedHashMap<String, String> data)
-	{
-		this.id = id;
-		this.projects = projects;
-		this.data = data;
-	}
-
-	public AppContentTemplate()
-	{
-	}
-
 	public Long getId()
 	{
 		return id;
@@ -66,11 +48,6 @@ public class AppContentTemplate extends FocusObject
 	public ArrayList<ProjectTemplate> getProjects()
 	{
 		return projects;
-	}
-
-	public void setProjects(ArrayList<ProjectTemplate> projects)
-	{
-		this.projects = projects;
 	}
 
 	public HashMap<String, String> getData()

@@ -28,23 +28,9 @@ public class Linker
 
 	private String pageid;
 
-	public Linker()
-	{
-	}
-
-	public Linker(String pageid)
-	{
-		this.pageid = pageid;
-	}
-
 	public String getPageid()
 	{
 		return pageid;
-	}
-
-	public void setPageid(String pageid)
-	{
-		this.pageid = pageid;
 	}
 
 }

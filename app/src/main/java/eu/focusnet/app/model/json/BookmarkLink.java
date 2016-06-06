@@ -26,7 +26,7 @@ package eu.focusnet.app.model.json;
 public class BookmarkLink
 {
 
-	public static enum BOOKMARK_LINK_TYPE
+	public enum BOOKMARK_LINK_TYPE
 	{
 		PAGE, TOOL
 	}
@@ -34,10 +34,6 @@ public class BookmarkLink
 	private Long id;
 	private String name,
 			path;
-
-	public BookmarkLink()
-	{
-	}
 
 	public BookmarkLink(String name, String path)
 	{

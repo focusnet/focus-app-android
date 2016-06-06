@@ -31,24 +31,6 @@ public class Preference extends FocusObject
 	private Setting settings;
 	private Bookmark bookmarks;
 
-	public Preference(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks)
-	{
-		super(type, url, context, owner, editor, version, creationDateTime, editionDateTime, active);
-		this.settings = settings;
-		this.bookmarks = bookmarks;
-	}
-
-	public Preference(Setting settings, Bookmark bookmarks)
-	{
-		super();
-		this.settings = settings;
-		this.bookmarks = bookmarks;
-	}
-
-	public Preference()
-	{
-	}
-
 	public Long getId()
 	{
 		return id;

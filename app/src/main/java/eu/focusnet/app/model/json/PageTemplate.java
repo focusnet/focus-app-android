@@ -39,26 +39,9 @@ public class PageTemplate
 
 	private ArrayList<WidgetLinker> widgets;
 
-	public PageTemplate(String guid, String title, String description, ArrayList<WidgetLinker> widgets)
-	{
-		this.guid = guid;
-		this.title = title;
-		this.description = description;
-		this.widgets = widgets;
-	}
-
-	public PageTemplate()
-	{
-	}
-
 	public String getGuid()
 	{
 		return guid;
-	}
-
-	public void setGuid(String guid)
-	{
-		this.guid = guid;
 	}
 
 	public String getTitle()
@@ -74,11 +57,6 @@ public class PageTemplate
 	public String getDescription()
 	{
 		return description;
-	}
-
-	public void setDescription(String description)
-	{
-		this.description = description;
 	}
 
 	public ArrayList<WidgetLinker> getWidgets()

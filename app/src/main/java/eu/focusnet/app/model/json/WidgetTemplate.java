@@ -32,28 +32,12 @@ public class WidgetTemplate
 			field;
 	private Object config;
 
-	public WidgetTemplate(String guid, String type, String title, Object config, String field)
-	{
-		this.guid = guid;
-		this.type = type;
-		this.title = title;
-		this.config = config;
-		this.field = field;
-	}
-
-	public WidgetTemplate()
-	{
-	}
 
 	public String getGuid()
 	{
 		return guid;
 	}
 
-	public void setGuid(String guid)
-	{
-		this.guid = guid;
-	}
 
 	public String getType()
 	{

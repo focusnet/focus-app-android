@@ -43,26 +43,14 @@ public class ProjectTemplate implements Serializable
 	private ArrayList<Linker> dashboards;
 	private ArrayList<Linker> tools;
 
-	private ArrayList<Notification> notifications;
-
 	public String getGuid()
 	{
 		return guid;
 	}
 
-	public void setGuid(String guid)
-	{
-		this.guid = guid;
-	}
-
 	public String getIterator()
 	{
 		return iterator;
-	}
-
-	public void setIterator(String iterator)
-	{
-		this.iterator = iterator;
 	}
 
 	public String getTitle()
@@ -80,11 +68,6 @@ public class ProjectTemplate implements Serializable
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
 	public ArrayList<WidgetTemplate> getWidgets()
 	{
 		return widgets;
@@ -95,24 +78,10 @@ public class ProjectTemplate implements Serializable
 		this.widgets = widgets;
 	}
 
-	public ArrayList<PageTemplate> getPages()
-	{
-		return pages;
-	}
-
-	public void setPages(ArrayList<PageTemplate> pages)
-	{
-		this.pages = pages;
-	}
 
 	public ArrayList<Linker> getDashboards()
 	{
 		return dashboards;
-	}
-
-	public void setDashboards(ArrayList<Linker> dashboards)
-	{
-		this.dashboards = dashboards;
 	}
 
 	public ArrayList<Linker> getTools()
@@ -123,16 +92,6 @@ public class ProjectTemplate implements Serializable
 	public void setTools(ArrayList<Linker> tools)
 	{
 		this.tools = tools;
-	}
-
-	public ArrayList<Notification> getNotifications()
-	{
-		return notifications;
-	}
-
-	public void setNotifications(ArrayList<Notification> notifications)
-	{
-		this.notifications = notifications;
 	}
 
 	/**

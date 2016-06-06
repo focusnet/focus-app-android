@@ -29,16 +29,6 @@ public class User extends FocusObject
 			email,
 			company;
 
-	public User()
-	{
-	}
-
-	public User(Long id, String firstname, String lastname, String email,
-				String company)
-	{
-		this.email = email;
-		this.company = company;
-	}
 
 	public Long getId()
 	{
@@ -55,19 +45,9 @@ public class User extends FocusObject
 		return firstName;
 	}
 
-	public void setFirstName(String firstName)
-	{
-		this.firstName = firstName;
-	}
-
 	public String getLastName()
 	{
 		return lastName;
-	}
-
-	public void setLastName(String lastName)
-	{
-		this.lastName = lastName;
 	}
 
 	public String getEmail()
@@ -75,19 +55,9 @@ public class User extends FocusObject
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
 	public String getCompany()
 	{
 		return company;
-	}
-
-	public void setCompany(String company)
-	{
-		this.company = company;
 	}
 
 	public String toString()

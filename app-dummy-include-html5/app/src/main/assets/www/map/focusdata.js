@@ -1,168 +1,280 @@
-function FocusStandData() {
-    this._type = null;
-    this._url = null;
-    this._version = null;
-    this._owner = null;
-    this._creationDateTime = null;
-    this._editor = null;
-    this._editionDateTime = null;
-    this._active = null;
-    this._data = null;
-    this._leafletid = null;
+var FocusData = Class.extend(function () {
+
+    var type = null;
+    var url = null;
+    var version = null;
+    var owner = null;
+    var creationDateTime = null;
+    var editor = null;
+    var editionDateTime = null;
+    var active = null;
+    var data = null;
 
     this.getType = function () {
-        return this._type;
+        return type;
     };
 
     this.setType = function (value) {
-        this._type = value;
+        type = value;
     };
 
     this.getURL = function () {
-        return this._url;
+        return url;
     };
 
     this.setURL = function (value) {
-        this._url = value;
+        url = value;
     };
 
     this.getVersion = function () {
-        return this._version;
+        return version;
     };
 
     this.setVersion = function (value) {
-        this._version = value;
+        version = value;
     };
 
     this.getOwner = function () {
-        return this._owner;
+        return owner;
     };
 
     this.setOwner = function (value) {
-        this._owner = value;
+        owner = value;
     };
 
     this.getCreationDateTime = function () {
-        return this._creationDateTime;
+        return creationDateTime;
     };
 
     this.setCreationDateTime = function (value) {
-        this._creationDateTime = value;
+        creationDateTime = value;
     };
 
     this.getEditor = function () {
-        return this._editor;
+        return editor;
     };
 
     this.setEditor = function (value) {
-        this._editor = value;
+        editor = value;
     };
 
     this.getEditionDateTime = function () {
-        return this._editionDateTime;
+        return editionDateTime;
     };
 
     this.setEditionDateTime = function (value) {
-        this._editionDateTime = value;
+        editionDateTime = value;
     };
 
     this.getActive = function () {
-        return this._active;
+        return active;
     };
 
     this.setActive = function (value) {
-        this._active = value;
+        active = value;
     };
 
     this.getData = function () {
-        return this._data;
+        return data;
     };
 
     this.setData = function (value) {
-        this._data = value;
+        data = value;
     };
 
-    this.setGeoJSON = function (value) {
-        var data = this.getData();
-        data.geojson = JSON.stringify(value);
+    this.fromJSON = function (json) {
+        try {
+            if (json.hasOwnProperty('active')) {
+                this.setActive(json.active);
+            }
+
+            if (json.hasOwnProperty('creationDateTime')) {
+                this.setCreationDateTime(json.creationDateTime);
+            }
+
+            if (json.hasOwnProperty('editionDateTime')) {
+                this.setEditionDateTime(json.editionDateTime);
+            }
+
+            if (json.hasOwnProperty('editor')) {
+                this.setEditor(json.editor);
+            }
+
+            if (json.hasOwnProperty('owner')) {
+                this.setOwner(json.owner);
+            }
+
+            if (json.hasOwnProperty('type')) {
+                this.setType(json.type);
+            }
+
+            if (json.hasOwnProperty('url')) {
+                this.setURL(json.url);
+            }
+
+            if (json.hasOwnProperty('version')) {
+                this.setVersion(json.version);
+            }
+
+            if (json.hasOwnProperty('data')) {
+                this.setData(json.data);
+            }
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+});
+
+var FocusRootData = FocusData.extend(function () {
+
+    var projects = [];
+
+    this.getProjects = function () {
+        return projects;
     };
+
+    this.setProejcts = function (value) {
+        projects = value;
+    };
+
+    this.loadProjects = function () {
+        console.log("loadProjects");
+        var me = this, queueDone = 0;
+
+        return new Promise(function (resolve, reject) {
+            var data = me.getData();
+
+            if (data.hasOwnProperty('project_urls')) {
+                var projectURLs = data['project_urls'];
+
+                console.log("Loading " + projectURLs.length + " projects...");
+
+                for (var i = 0; i < projectURLs.length; ++i) {
+                    var url = projectURLs[i];
+                    loadProject(url).then(function (content) {
+                        projects.push(content);
+                        queueDone++;
+
+                        if (queueDone == projectURLs.length) {
+                            resolve("all projects loaded succesfully")
+                        }
+                    });
+                }
+            }
+        });
+    };
+
+    function loadProject(url) {
+        console.log("loadProject " + url);
+
+        var me = this;
+
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                    if (xmlhttp.response) {
+                        var project = new FocusProjectData();
+                        project.fromJSON(JSON.parse(xmlhttp.responseText));
+
+                        project.loadStands().then(function (content) {
+                            console.log(content);
+                            resolve(project);
+                        })
+                    }
+                }
+            };
+
+            xmlhttp.open("GET", url, true);
+            xmlhttp.setRequestHeader("FOCUS-FOREST-API-KEY", apikey);
+            xmlhttp.send();
+        });
+    }
+});
+
+var FocusProjectData = FocusData.extend(function () {
+    var stands = [];
+
+    this.getStands = function () {
+        return stands;
+    };
+
+    this.setStands = function (value) {
+        stands = value;
+    };
+
+    this.loadStands = function () {
+        console.log("loadStands");
+        var me = this, queueDone = 0;
+
+        return new Promise(function (resolve, reject) {
+            var data = me.getData();
+
+            if (data.hasOwnProperty('stands_urls')) {
+                var standURLs = data['stands_urls'];
+
+                console.log("Loading " + standURLs.length + " stands...");
+
+                for (var i = 0; i < standURLs.length; ++i) {
+                    var url = standURLs[i];
+                    loadStand(url).then(function (content) {
+                        if (content != null) {
+                            stands.push(content);
+                        }
+                        queueDone++;
+
+                        if (queueDone == standURLs.length) {
+                            resolve("all stands loaded succesfully")
+                        }
+                    });
+                }
+            }
+        });
+    };
+
+    function loadStand(url) {
+        console.log("loadStand " + url);
+
+        var me = this;
+
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                    if (xmlhttp.response) {
+                        var stand = new FocusStandData();
+                        try {
+                            var json = JSON.parse(xmlhttp.responseText);
+                        } catch (error) {
+                            console.warn(error);
+                        }
+                        stand.fromJSON(json);
+                        resolve(stand);
+                    }
+                }
+            };
+            xmlhttp.open("GET", url, true);
+            xmlhttp.setRequestHeader("FOCUS-FOREST-API-KEY", apikey);
+            xmlhttp.send();
+        });
+    }
+});
+
+var FocusStandData = FocusData.extend(function () {
+    var me = this;
 
     this.getGeoJSON = function () {
-        var data = this.getData();
+        var data = me.getData();
 
-        if (data.hasOwnProperty('geojson')) {
-            return JSON.parse(data.geojson);
+        if (data && data.hasOwnProperty('geojson')) {
+            var geojson = JSON.parse(data['geojson']);
+            return geojson;
         } else {
             return null;
         }
     };
-
-    this.getUID = function () {
-        var url = this.getURL();
-        var split = url.split("/");
-        return split[split.length - 1];
-    }
-
-    this.toJSON = function () {
-        var result = {
-            url: this.getURL(),
-            creationDateTime: this.getCreationDateTime(),
-            active: this.getActive(),
-            version: this.getVersion(),
-            editor: this.getEditor(),
-            type: this.getType(),
-            owner: this.getOwner(),
-            editionDateTime: this.getEditionDateTime(),
-            data: this.getData()
-        };
-
-        result.data.geojson = JSON.stringify(this.getGeoJSON());
-
-        return result;
-    };
-};
-
-function FocusDataFactory() {
-    FocusDataFactory.prototype.createStandData = function createStandDataObject(response) {
-        console.log("CREATING FOCUS STAND DATA OBJECT");
-        var dataObject = new FocusStandData();
-
-        if (response.hasOwnProperty('active')) {
-            dataObject.setActive(response.active);
-        }
-
-        if (response.hasOwnProperty('creationDateTime')) {
-            dataObject.setCreationDateTime(response.creationDateTime);
-        }
-
-        if (response.hasOwnProperty('editionDateTime')) {
-            dataObject.setEditionDateTime(response.editionDateTime);
-        }
-
-        if (response.hasOwnProperty('editor')) {
-            dataObject.setEditor(response.editor);
-        }
-
-        if (response.hasOwnProperty('owner')) {
-            dataObject.setOwner(response.owner);
-        }
-
-        if (response.hasOwnProperty('type')) {
-            dataObject.setType(response.type);
-        }
-
-        if (response.hasOwnProperty('url')) {
-            dataObject.setURL(response.url);
-        }
-
-        if (response.hasOwnProperty('version')) {
-            dataObject.setVersion(response.version);
-        }
-
-        if (response.hasOwnProperty('data')) {
-            dataObject.setData(response.data);
-        }
-
-        return dataObject;
-    }
-};
+});

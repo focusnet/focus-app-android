@@ -1,4 +1,65 @@
 var map;
+var rootdata;
+var apikey = null;
+
+function init(context) {
+    console.log("init :: %o", context);
+
+    if (!apikey) {
+        window.alert("You must provide apikey within the code!");
+    } else {
+        loadRootData(context);
+    }
+}
+
+function loadRootData(url) {
+    console.log("load data");
+
+    var me = this;
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            if (xmlhttp.response) {
+
+                rootdata = new FocusRootData();
+                rootdata.fromJSON(JSON.parse(xmlhttp.responseText));
+                rootdata.loadProjects().then(function (result) {
+                    console.log(result); // "Stuff worked!"
+                    me.initmap();
+                }, function (err) {
+                    console.log(err); // Error: "It broke"
+                });
+            }
+        }
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.setRequestHeader("FOCUS-FOREST-API-KEY", apikey);
+    xmlhttp.send();
+}
+
+function onLoadProjects() {
+    console.log("onLoadProjects");
+}
+
+function loadStand(url) {
+    var standrequest = new XMLHttpRequest();
+
+    standrequest.onreadystatechange = function () {
+        if (standrequest.readyState == 4 && standrequest.status == 200) {
+            var stand = factory.createStandData(JSON.parse(standrequest.responseText));
+            console.log("%o", stand);
+        }
+    }
+
+    standrequest.withCredentials = true;
+    standrequest.open("GET", url, true);
+    standrequest.send();
+}
+
 
 function initmap() {
     console.log("initmap");
@@ -19,10 +80,11 @@ function initmap() {
 
     // create the openstreetmap tile layer
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18});
+    var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18});
 
     // start the map in South-East England
-    map.setView([51.503, -0.06], 13);
+
+    map.setView([51.505, -0.09], 8);
     map.addLayer(osm);
 
     var drawnItems = new L.FeatureGroup();
@@ -45,6 +107,7 @@ function initmap() {
             }
         },
         edit: {
+            edit: false,
             featureGroup: drawnItems,
             remove: true
         }
@@ -83,25 +146,35 @@ function initmap() {
         }
     })
 
-    // sample data load from local file
-    var xmlhttp = new XMLHttpRequest();
-    var url = "sampledata.json";
-    var standDataObject = null;
-    var factory = new FocusDataFactory();
+    var projects = rootdata.getProjects();
 
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            standDataObject = factory.createStandData(JSON.parse(xmlhttp.responseText));
-            console.log("STANDDATAOBJECT :: %o", standDataObject);
-            console.log(" > uid :: " + standDataObject.getUID());
-            data = standDataObject.getGeoJSON();
-            console.log(" > getGeoJSON :: %o", data);
-            var geojson = L.Proj.geoJson(data).addTo(drawnItems);
-            map.fitBounds(geojson.getBounds());
-            console.log(JSON.stringify(standDataObject.toJSON()));
+    for (var p = 0; p < projects.length; ++p) {
+        var project = projects[p];
+        var stands = project.getStands();
+        for (var s = 0; s < stands.length; ++s) {
+            var stand = stands[s];
+            var geojson = stand.getGeoJSON();
+
+            if (geojson != null) {
+                var projGeoJSON = L.Proj.geoJson(geojson).addTo(drawnItems);
+                var data = stand.getData();
+
+                var popupstr = "<table>";
+
+                for (var property in data) {
+                    if (data.hasOwnProperty(property)) {
+                        if (property != "geojson") { // geojson is way too big attribute to dipslay so we skip it
+                            popupstr += "<tr><th>" + property + "</th><td>" + data[property] + "</td></tr>";
+                        }
+                    }
+                }
+
+                popupstr += "</table>";
+
+                projGeoJSON.bindPopup(popupstr);
+            }
         }
-    };
+    }
 
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
+    map.fitBounds(drawnItems.getBounds());
 }

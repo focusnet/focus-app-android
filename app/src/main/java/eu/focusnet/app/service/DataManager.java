@@ -201,16 +201,18 @@ public class DataManager
 			return false;
 		}
 
+		// user contains identifer
+
 		// then acquire application basic content
 		// FIXME how do we retrieve the proper URLs? lookup() service ? context = user, but what is user url/identifier?
 		// FIXME FIXME TODO when we have data from Jussi
 		// and save the urls for later uses (no need to actually get the information at this point)
-		int userId = 123; // FIXME hard-coded. should be obtained from network.
+		String demoId = user;
 		this.loginServer = server;
 		this.loginUser = user;
 		this.loginPassword = password;
-		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/user-information";
-		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + userId + "/app-user-preferences";
+		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + demoId + "/user-information";
+		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + demoId + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
@@ -286,6 +288,7 @@ public class DataManager
 		this.user = (User) (this.get(this.userUrl, User.class));
 
 		if (this.user == null) {
+// FIXME creatae new user ?
 			throw new FocusMissingResourceException("Cannot retrieve User object.");
 		}
 		return this.user;
@@ -307,6 +310,8 @@ public class DataManager
 		}
 		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
 		if (this.userPreferences == null) {
+		// FIXME 	new Preference(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks)
+
 			throw new FocusMissingResourceException("Cannot retrieve Preference object.");
 			// FIXME we should create a default one(?)
 		}

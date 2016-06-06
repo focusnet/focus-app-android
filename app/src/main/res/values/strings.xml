@@ -33,9 +33,9 @@
         <item>FOCUS Pilot Case III - Arnsberg</item>
     </string-array>
     <string-array name="demo_use_cases_values">
-        <item>zero</item>
-        <item>one</item>
-        <item>two</item>
+        <item>ui-library</item>
+        <item>pilot-case-1</item>
+        <item>pilot-case-3</item>
     </string-array>
 
     <string name="focus_header_project">My Projects</string>

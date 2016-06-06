@@ -137,16 +137,12 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		@Override
 		protected Boolean doInBackground(Integer ... data)
 		{
-			int selectedUseCase = data[0];
-
 			String[] uris = getResources().getStringArray(R.array.demo_use_cases_values);
-
-			String uri;
+			String uri = uris[data[0] - 1];
 
 			Boolean hasAccess;
 			try {
-		//		FocusApplication.getInstance().getDataManager().setApplicationContentUrl(x);
-				hasAccess = FocusApplication.getInstance().getDataManager().login("a","b", "c");
+				hasAccess = FocusApplication.getInstance().getDataManager().login(uri,uri,uri);
 			}
 			catch (IOException ex) {
 				hasAccess = false;

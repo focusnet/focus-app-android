@@ -44,13 +44,13 @@ import eu.focusnet.app.model.json.Preference;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * List Adapter, used for drawer and entries in listings pages
- *
+ * <p/>
  * FIXME TODO JULIEN TO BE REVIEWED
- *
+ * <p/>
  * FIXME FIXME FIXME bookarmking for TOOLs does not work: the position value is relative to the HeaderItem. (e.g. 1 instead of count(PAGE)+1)
  * however, simple click on TOOL items redirects to the correct page.
  */
@@ -181,7 +181,7 @@ public class StandardListAdapter extends BaseAdapter
 
 									if (isRightIconActive) {
 										standardListItem.setIsRightIconActive(false);
-										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.picto_bookmark_not_selected);
+										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.picto_bookmark_not_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 										selectedContext.setEnabled(false);
@@ -190,7 +190,7 @@ public class StandardListAdapter extends BaseAdapter
 									}
 									else {
 										standardListItem.setIsRightIconActive(true);
-										Bitmap rightIcon = UiHelpers.getBitmap(context, R.drawable.picto_bookmark_selected);
+										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.picto_bookmark_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 
@@ -257,7 +257,7 @@ public class StandardListAdapter extends BaseAdapter
 		@Override
 		protected void onPreExecute()
 		{
-			UiHelpers.displayToast(this.context, R.string.focus_save_user_pref_before);
+			UiHelper.displayToast(this.context, R.string.focus_save_user_pref_before);
 		}
 
 		@Override
@@ -270,7 +270,7 @@ public class StandardListAdapter extends BaseAdapter
 		@Override
 		protected void onPostExecute(Void nil)
 		{
-			UiHelpers.displayToast(this.context, R.string.focus_save_user_pref_after);
+			UiHelper.displayToast(this.context, R.string.focus_save_user_pref_after);
 		}
 	}
 }

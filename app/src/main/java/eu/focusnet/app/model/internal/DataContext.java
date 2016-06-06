@@ -91,7 +91,7 @@ public class DataContext extends HashMap<String, String>
 	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
-	 *
+	 * <p/>
 	 * FIXME FIXME TODO the value of the .register() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
 	 * for history / lookup, that's less easy (?)
 	 */
@@ -200,7 +200,7 @@ public class DataContext extends HashMap<String, String>
 	 * <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
 	 * data being stored under the simple-example entry.
 	 * <ctx/simple-example> -> will return the url of the context identfied by simlpe-example (a FocusSample)
-	 *
+	 * <p/>
 	 * It is then the responsibility of the caller to create FocusSample's when appropriate.
 	 * <p/>
 	 * If the request format is not recognized, return it as-is.

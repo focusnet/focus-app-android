@@ -35,6 +35,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -42,17 +43,17 @@ import java.util.ArrayList;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.LineChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * <p/>
  * We may need to adapt these functions, though.
- *
+ * <p/>
  * NOTE: the caption is not rendered. We use this UI location to display the x-axis label instead.
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {
-	private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
+	final private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
 
 
 	@Override
@@ -78,7 +79,6 @@ public class LineChartWidgetFragment extends WidgetFragment
 
 		// chart configuration
 		lineChart.setDrawGridBackground(false);
-		lineChart.setHighlightEnabled(true);
 		lineChart.setTouchEnabled(true);
 		lineChart.setDragEnabled(true);
 		lineChart.setScaleEnabled(true);
@@ -99,7 +99,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		int current_color = 0;
 
 		// series
-		ArrayList<LineDataSet> datasets = new ArrayList<>();
+		ArrayList<ILineDataSet> datasets = new ArrayList<>();
 		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfSeries(); ++i) {
 			ArrayList<Double> values = ((LineChartWidgetInstance) this.widgetInstance).getSerieValues(i);
 			ArrayList<Entry> vals = new ArrayList<>();
@@ -122,7 +122,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 			set.setColor(rainbow[current_color]);
 			set.setCircleColor(rainbow[current_color]);
 			set.setLineWidth(1f);
-			set.setCircleSize(3f);
+			set.setCircleRadius(3f);
 			set.setDrawCircleHole(false);
 			set.setValueTextSize(9f);
 			set.setFillAlpha(65);
@@ -136,10 +136,9 @@ public class LineChartWidgetFragment extends WidgetFragment
 		// Yaxis and limits
 		YAxis leftAxis = lineChart.getAxisLeft();
 		leftAxis.removeAllLimitLines();
-		// leftAxis.setAxisMinValue(yAxisMinValue);
-		// leftAxis.setAxisMaxValue(yAxisMaxValue);
+		leftAxis.setAxisMinValue(yAxisMinValue);
+		leftAxis.setAxisMaxValue(yAxisMaxValue);
 		leftAxis.setYOffset(20);
-		leftAxis.setStartAtZero(false);
 		leftAxis.enableGridDashedLine(10f, 10f, 0f);
 		leftAxis.setDrawLimitLinesBehindData(true);
 
@@ -181,6 +180,6 @@ public class LineChartWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelpers.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		this.referenceHeight = UiHelper.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

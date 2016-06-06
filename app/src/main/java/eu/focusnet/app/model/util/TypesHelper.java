@@ -34,7 +34,6 @@ public class TypesHelper
 
 	/**
 	 * Types descriptions
-	 *
 	 */
 	public enum TargetType
 	{

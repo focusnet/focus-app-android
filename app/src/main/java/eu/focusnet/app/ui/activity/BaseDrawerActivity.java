@@ -49,6 +49,7 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 	/**
 	 * Create the Activity. Create the UI.
+	 *
 	 * @param savedInstanceState past state
 	 */
 	@Override
@@ -114,7 +115,7 @@ public abstract class BaseDrawerActivity extends BaseActivity
 	 *
 	 * @param item the item being selected
 	 * @return Return false to allow normal menu processing to
-	 *         proceed, true to consume it here.
+	 * proceed, true to consume it here.
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -190,8 +191,8 @@ public abstract class BaseDrawerActivity extends BaseActivity
 
 	/**
 	 * Is the "up" affordance enabled?
-	 * @return true if so, false otherwise
 	 *
+	 * @return true if so, false otherwise
 	 */
 	@Override
 	protected boolean isDisplayHomeAsUpEnabled()

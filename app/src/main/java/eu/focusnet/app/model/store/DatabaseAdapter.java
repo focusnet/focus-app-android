@@ -99,6 +99,7 @@ public class DatabaseAdapter
 
 		/**
 		 * When creating the database, register tables.
+		 *
 		 * @param db the object to work on
 		 */
 		@Override
@@ -110,7 +111,7 @@ public class DatabaseAdapter
 		/**
 		 * Migrate from one database version to another
 		 *
-		 * @param db the object to work on
+		 * @param db         the object to work on
 		 * @param oldVersion old version number of the database
 		 * @param newVersion new version number of the database
 		 */
@@ -140,6 +141,7 @@ public class DatabaseAdapter
 
 		/**
 		 * Upgrade from version 2 to version 3
+		 *
 		 * @param db the object to work on
 		 */
 		private void upgradeFromVersion2to3(SQLiteDatabase db)

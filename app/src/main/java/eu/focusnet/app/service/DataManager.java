@@ -63,6 +63,7 @@ public class DataManager
 		PENDING, // pending network operation
 		ERROR // permanent error
 	}
+
 	public static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION = FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "focus-internal-configuration";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER = "login-server";
@@ -121,7 +122,6 @@ public class DataManager
 
 	/**
 	 * Finish initializing the DataManager
-	 *
 	 */
 	public void init()
 	{
@@ -273,7 +273,6 @@ public class DataManager
 
 	/**
 	 * Acquire personal information about the user of the application
-	 *
 	 */
 	public User getUser() throws FocusInternalErrorException, FocusMissingResourceException
 	{
@@ -348,7 +347,7 @@ public class DataManager
 
 	/**
 	 * Get the three basic informations that are required to build the application UI
-	 *
+	 * <p/>
 	 * When building the different instances (AppContent, Project, PAge, Widget), we silently ignore errors, but we log them, just in case.
 	 */
 	public void retrieveApplicationData() throws FocusMissingResourceException
@@ -870,7 +869,7 @@ public class DataManager
 
 	/**
 	 * Get latest versions of all resources required for running the application, and replace the Application DataManager
-	 *
+	 * <p/>
 	 * No need to take care of activeInstances. They will simply be rebuilt on next Activity loading.
 	 */
 	public void rebuildApplicationData()

@@ -29,7 +29,7 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 
 /**
  * Created by admin on 06.07.2015.
- *
+ * <p/>
  * There are no setters on this object properties because we don't want it to be altered by
  * the application logic.
  */
@@ -85,7 +85,7 @@ public class FocusObject implements Serializable
 
 	/**
 	 * Update the current object to highlight the fact that we are providing a new version (sampe) of the same resource
-	 *
+	 * <p/>
 	 * We do not commit() yet, as this is done once the resource is submitted for POST/PUT-ing (i.e. to the DataManager)
 	 */
 	public void updateToNewVersion()

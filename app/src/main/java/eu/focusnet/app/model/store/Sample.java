@@ -82,7 +82,6 @@ public class Sample
 	 * Clone a FocusObject into the present Sample
 	 *
 	 * @param fo the FocusObject to get inspiration from
-	 *
 	 */
 	public static Sample cloneFromFocusObject(FocusObject fo)
 	{

@@ -34,7 +34,7 @@ import eu.focusnet.app.model.json.FocusObject;
  * This class contains all methods pertaining to networking. It follows a Singleton pattern.
  * <p/>
  * This class is an abstraction library for communicating with our REST server.
- *
+ * <p/>
  * FIXME convert to non-singleton.
  */
 public class NetworkManager

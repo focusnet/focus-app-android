@@ -29,11 +29,10 @@ import android.widget.TextView;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.ui.common.TouchTableView;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * Uses TouchTableView instead of TableView to overcome scrolling issues
@@ -67,16 +66,20 @@ public class TableWidgetFragment extends WidgetFragment
 		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableData()));
 		int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
 		int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
-		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
+		// FIXME colorize rows / does not work anymore after lib update
+		/*	tableView.setDataRowColorizer(colorizer);
+		TableDataRowColorizers x = new TableDataRowColorizers();
 
+		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
+*/
 		return this.rootView;
 	}
 
 	@Override
 	protected void alterReferenceHeight()
 	{
-		int computed = UiHelpers.dp_to_pixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
-		int max = UiHelpers.dp_to_pixels((int) this.getDisplayHeightInDp(), this.getActivity());
+		int computed = UiHelper.dp_to_pixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
+		int max = UiHelper.dp_to_pixels((int) this.getDisplayHeightInDp(), this.getActivity());
 		this.referenceHeight = Math.min(computed, max);
 	}
 

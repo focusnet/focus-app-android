@@ -1,3 +1,12 @@
+package eu.focusnet.app.ui.util;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -17,16 +26,14 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-package eu.focusnet.app.exception;
-
-/**
- * Exception trigerred when a resource cannot be retrieved when it should.
- */
-public class FocusMissingResourceException extends Exception
+public class PropertiesHelper
 {
-	public FocusMissingResourceException(String detailMessage)
+	public static String getProperty(String key, Context context) throws IOException
 	{
-		super(detailMessage);
+		Properties properties = new Properties();
+		AssetManager assetManager = context.getAssets();
+		InputStream inputStream = assetManager.open("focus.properties");
+		properties.load(inputStream);
+		return properties.getProperty(key);
 	}
 }

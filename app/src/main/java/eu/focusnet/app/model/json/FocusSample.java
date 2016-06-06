@@ -22,7 +22,7 @@ package eu.focusnet.app.model.json;
 
 /**
  * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
- *
+ * <p/>
  * NOTE: more complex deserializers like URL or BigInteger cannot work because this object Object is too generic.
  */
 public class FocusSample extends FocusObject
@@ -36,7 +36,7 @@ public class FocusSample extends FocusObject
 
 	/**
 	 * Dummy c'tor
-	 *
+	 * <p/>
 	 * GSON documentation advises to always have an empty ctor, so we keep it.
 	 */
 	public FocusSample()
@@ -78,6 +78,7 @@ public class FocusSample extends FocusObject
 
 	/**
 	 * Get the String representation of the object identified by the key in the map
+	 *
 	 * @param key the key being accessed in the map
 	 * @return the String representation of the Object of interest
 	 */

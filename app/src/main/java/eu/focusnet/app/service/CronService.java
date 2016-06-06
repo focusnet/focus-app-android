@@ -40,9 +40,9 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
  * This class is a service responsible for calling periodic tasks:
  * - cleaning of SQL database every N hours
  * - retrieving new version of data every N minutes
- *
+ * <p/>
  * It must make sure not to consume too much battery (by waking up the device inappropriately)
- *
+ * <p/>
  * FIXME TODO Detect the sleep/wake with a broadcast receiver
  * -> shutdown and restart tasks (but save last time of execution to avoid too frequent tasks calls)
  * This way the service is never killed, but it does not do anything if in sleep mode.
@@ -136,6 +136,7 @@ public class CronService extends Service
 
 	/**
 	 * Get the work-in-progress flag
+	 *
 	 * @return
 	 */
 	synchronized public boolean getWorkInProgress()

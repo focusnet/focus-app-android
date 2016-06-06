@@ -43,7 +43,7 @@ import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * This Activity contains the list of available projects.
@@ -100,10 +100,10 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 			throw new FocusInternalErrorException("User object cannot be accessed.");
 		}
 
-		drawerItems.add(new HeaderDrawerListItem(UiHelpers.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
-			DrawerListItem drawListItem = new DrawerListItem(UiHelpers.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
+			DrawerListItem drawListItem = new DrawerListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
 			drawerItems.add(drawListItem);
 		}
 
@@ -156,6 +156,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 	/**
 	 * Create the option menu of the app
+	 *
 	 * @param menu the menu
 	 * @return true
 	 */
@@ -168,7 +169,6 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 	/**
 	 * Listener for the back button
-	 *
 	 */
 	@Override
 	public void onBackPressed()

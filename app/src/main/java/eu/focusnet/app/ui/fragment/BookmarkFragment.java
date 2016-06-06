@@ -45,7 +45,7 @@ import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 
 /**
@@ -117,25 +117,25 @@ public class BookmarkFragment extends ListFragment
 		ArrayList<BookmarkLink> tools = bookmark.getTools();
 
 		abstractItems = new ArrayList<>();
-		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
+		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
 				getResources().getString(R.string.bookmark_header_dashboard), null);
 		abstractItems.add(headerProjectsListItem);
 
-		Bitmap rightIcon = UiHelpers.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
+		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
 
 		for (BookmarkLink bl : pages) {
-			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.picto_chevron_right),
+			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
 					bl.getName(), bl.getPath(), rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 			abstractItems.add(drawListItem);
 		}
 
-		AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
+		AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
 				getString(R.string.bookmark_header_tool), null);
 		abstractItems.add(headerToolListItem);
 
 
 		for (BookmarkLink bl : tools) {
-			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelpers.getBitmap(getActivity(), R.drawable.picto_chevron_right),
+			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
 					bl.getName(), bl.getPath(), rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 			abstractItems.add(drawListItem);
 		}

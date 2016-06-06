@@ -34,6 +34,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -41,14 +42,14 @@ import java.util.ArrayList;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * Created by yandypiedra on 13.01.16.
  */
 public class BarChartWidgetFragment extends WidgetFragment
 {
-	private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
+	final private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -116,7 +117,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		int current_color = 0;
 
 		// series
-		ArrayList<BarDataSet> datasets = new ArrayList<>();
+		ArrayList<IBarDataSet> datasets = new ArrayList<>();
 		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfSeries(); ++i) {
 			ArrayList<Double> values = ((BarChartWidgetInstance) this.widgetInstance).getSerieValues(i);
 			ArrayList<BarEntry> vals = new ArrayList<>();
@@ -184,6 +185,6 @@ public class BarChartWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelpers.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		this.referenceHeight = UiHelper.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

@@ -41,7 +41,6 @@ import eu.focusnet.app.service.DataManager;
 
 /**
  * SQL Sample Data Access Object
- *
  */
 public class SampleDao
 {
@@ -373,6 +372,7 @@ public class SampleDao
 
 	/**
 	 * Get the list of all urls marked as to be POST as an array of Strings
+	 *
 	 * @return
 	 */
 	public String[] getAllMarkedForPost()
@@ -382,6 +382,7 @@ public class SampleDao
 
 	/**
 	 * Get the list of all urls marked as to be PUT as an array of Strings
+	 *
 	 * @return
 	 */
 	public String[] getAllMarkedForPut()
@@ -391,6 +392,7 @@ public class SampleDao
 
 	/**
 	 * Get the list of all urls marked as to be DELETEd as an array of Strings
+	 *
 	 * @return
 	 */
 	public String[] getAllMarkedForDeletion()

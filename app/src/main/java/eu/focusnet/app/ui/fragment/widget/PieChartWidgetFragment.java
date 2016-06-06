@@ -33,17 +33,15 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.PercentFormatter;
 
 import java.util.ArrayList;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.PieChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
- * Created by yandypiedra on 13.01.16.
  */
 public class PieChartWidgetFragment extends WidgetFragment
 {
@@ -79,7 +77,8 @@ public class PieChartWidgetFragment extends WidgetFragment
 		dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
 		PieData data = new PieData(((PieChartWidgetInstance) this.widgetInstance).getLabels(), dataSet);
-		data.setValueFormatter(new PercentFormatter());
+		// data.setValueFormatter(new PercentFormatter()); // PERCENT FORMATTER ??? FIXME FIXME FIXME
+		// not compiling after lib update
 		data.setValueTextSize(11f);
 		data.setValueTextColor(Color.WHITE);
 
@@ -90,7 +89,6 @@ public class PieChartWidgetFragment extends WidgetFragment
 		pieChart.setDescription(((PieChartWidgetInstance) this.widgetInstance).getCaption());
 		pieChart.setDragDecelerationFrictionCoef(0.95f);
 		pieChart.setDrawHoleEnabled(false);
-		pieChart.setHoleColorTransparent(true);
 		pieChart.setHoleRadius(58f);
 		pieChart.setTransparentCircleColor(Color.WHITE);
 		pieChart.setTransparentCircleAlpha(110);
@@ -121,6 +119,6 @@ public class PieChartWidgetFragment extends WidgetFragment
 	{
 		// Alter reference height of the widget
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelpers.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		this.referenceHeight = UiHelper.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

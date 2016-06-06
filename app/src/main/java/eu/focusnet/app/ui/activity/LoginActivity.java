@@ -34,7 +34,7 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * Login Activity: this activity displays the login screen
@@ -45,6 +45,7 @@ public class LoginActivity extends Activity
 
 	/**
 	 * Instantiate the activity UI
+	 *
 	 * @param savedInstanceState
 	 */
 	@Override
@@ -72,7 +73,7 @@ public class LoginActivity extends Activity
 			new LoginTask(this).execute(username, password, server);
 		}
 		else {
-			UiHelpers.displayToast(this, R.string.focus_login_error_no_network);
+			UiHelper.displayToast(this, R.string.focus_login_error_no_network);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class LoginActivity extends Activity
 				finish();
 			}
 			else {
-				UiHelpers.displayToast(this.context, R.string.focus_login_error_bad_credentials);
+				UiHelper.displayToast(this.context, R.string.focus_login_error_bad_credentials);
 				//TODO maybe we should also show some text in red or something like this ...?
 			}
 		}

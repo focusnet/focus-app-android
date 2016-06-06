@@ -24,28 +24,33 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.config.ACRAConfiguration;
+import org.acra.config.ACRAConfigurationException;
+import org.acra.config.ConfigurationBuilder;
 
+import java.io.IOException;
+
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.FocusApplicationActivityLifecycleHandler;
+import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * ACRA configuration
- *
+ * <p/>
  * FIXME TODO YANDY move credentials / formUri to a properties file, which is not committed to git! and failsafe with defaults
  * see assets/acra.properties
  * we can use the programmatic way of settings params of ACRA if necessary, into onCreate()
  */
 @ReportsCrashes(
-		formUri = "https://focus.cloudant.com/acra-focus-app/_design/acra-storage/_update/report",
 		reportType = org.acra.sender.HttpSender.Type.JSON,
 		httpMethod = org.acra.sender.HttpSender.Method.PUT,
-		formUriBasicAuthLogin = "USER", // FIXME TODO JULIEN must request API key in cloudant
-		formUriBasicAuthPassword = "KEY",
 		mode = ReportingInteractionMode.DIALOG,
 		resToastText = R.string.focus_crash_toast_text,
 		resDialogText = R.string.focus_crash_dialog_text,
@@ -87,7 +92,7 @@ public class FocusApplication extends Application
 
 	/**
 	 * R
-	 helper function that allows reporting uncaught errors via ACRA
+	 * helper function that allows reporting uncaught errors via ACRA
 	 *
 	 * @param e
 	 */
@@ -105,7 +110,7 @@ public class FocusApplication extends Application
 
 	/**
 	 * R
-	 etrieve application-wide context
+	 * etrieve application-wide context
 	 *
 	 * @return
 	 */
@@ -116,7 +121,7 @@ public class FocusApplication extends Application
 
 	/**
 	 * A
-	 etrieve the DataManager
+	 * etrieve the DataManager
 	 *
 	 * @return
 	 */
@@ -125,9 +130,51 @@ public class FocusApplication extends Application
 		return this.dataManager;
 	}
 
+
 	/**
-	 * O
-	 n Application creation, do initialize the DataManager, CronService and ACRA
+	 * ACRA programmatic initialization.
+	 *
+	 * @param base
+	 */
+	@Override
+	protected void attachBaseContext(Context base)
+	{
+		super.attachBaseContext(base);
+
+		// Enable MultiDex
+		MultiDex.install(this);
+
+		// ACRA init, only in release mode
+		if (!BuildConfig.DEBUG) {
+			// prepopulated with values set in the annotation
+			String form_uri;
+			String user;
+			String pass;
+			try {
+				form_uri = PropertiesHelper.getProperty("acra.formUri", this.getContext());
+				user = PropertiesHelper.getProperty("acra.username", this.getContext());
+				pass = PropertiesHelper.getProperty("acra.password", this.getContext());
+			}
+			catch (IOException ex) {
+				throw new FocusInternalErrorException("Cannot get property in focus.properties");
+			}
+			try {
+				final ACRAConfiguration config = new ConfigurationBuilder(this)
+						.setFormUri(form_uri)
+						.setFormUriBasicAuthLogin(user)
+						.setFormUriBasicAuthPassword(pass)
+						.build();
+				ACRA.init(this, config);
+			}
+			catch (ACRAConfigurationException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	/**
+	 * On Application creation, do initialize the DataManager, CronService and ACRA
 	 */
 	@Override
 	public void onCreate()
@@ -156,10 +203,10 @@ public class FocusApplication extends Application
 		this.dataManager = new DataManager();
 
 		// start the CronService
-		this.startService(new Intent(this, CronService.class));
-		// setup ACRA, only in release mode
-		if (!BuildConfig.DEBUG) {
-			ACRA.init(this);
+		// We should not start the service if the current proces is ACRA's one.
+		// https://github.com/ACRA/acra/wiki/BasicSetup
+		if (!ACRA.isACRASenderServiceProcess()) {
+			this.startService(new Intent(this, CronService.class));
 		}
 	}
 

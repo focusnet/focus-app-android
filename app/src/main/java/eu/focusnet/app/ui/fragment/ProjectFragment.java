@@ -49,7 +49,7 @@ import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * This fragment will be loaded from the ProjectActivity and displays
@@ -91,7 +91,7 @@ public class ProjectFragment extends ListFragment
 	{
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 		/*	if (position > notificationsHeaderPosition) {
-				UiHelpers.displayToast(getActivity(), "Notification selected");
+				UiHelper.displayToast(getActivity(), "Notification selected");
 			}
 			*/
 //            else if(position > toolsHeaderPosition){
@@ -133,15 +133,15 @@ public class ProjectFragment extends ListFragment
 			}
 			abstractItems = new ArrayList<>();
 
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
 					getString(R.string.header_dashboard),
 					null);
 			abstractItems.add(headerProjectsListItem);
 
 			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
 
-			Bitmap rightIconNotActive = UiHelpers.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
-			Bitmap rightIconActive = UiHelpers.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
+			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
+			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
 
 			for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 				PageInstance dashboard = entry.getValue();
@@ -149,14 +149,14 @@ public class ProjectFragment extends ListFragment
 
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelpers.getBitmap(getActivity(), R.drawable.picto_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 
 			}
 
 
-			AbstractListItem headerToolListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
+			AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
 					getString(R.string.header_tool),
 					null);
 			abstractItems.add(headerToolListItem);
@@ -168,16 +168,16 @@ public class ProjectFragment extends ListFragment
 
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(toolId, UiHelpers.getBitmap(getActivity(), R.drawable.picto_chevron_right), tool.getTitle(), tool.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), tool.getTitle(), tool.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 			}
 
 			/* FIXME notifications to be added later. */
 			/*
-			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelpers.getBitmap(getActivity(), R.drawable.ic_notification),
+			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.cutting_header_notification),
-					UiHelpers.getBitmap(getActivity(), R.drawable.ic_filter));
+					UiHelper.getBitmap(getActivity(), R.drawable.ic_filter));
 			abstractItems.add(headerNotificationListItem);
 
 			notificationsHeaderPosition = abstractItems.size() - 1;

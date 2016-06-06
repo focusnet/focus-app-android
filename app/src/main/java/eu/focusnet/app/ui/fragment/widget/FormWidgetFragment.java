@@ -45,7 +45,7 @@ import eu.focusnet.app.model.internal.fields.SelectFieldInstance;
 import eu.focusnet.app.model.internal.fields.TextareaFieldInstance;
 import eu.focusnet.app.model.internal.fields.TextfieldFieldInstance;
 import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  */
@@ -84,7 +84,7 @@ public class FormWidgetFragment extends WidgetFragment
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
-			layoutLabel.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+			layoutLabel.rightMargin = UiHelper.dp_to_pixels(10, this.context);
 			label.setLayoutParams(layoutLabel);
 
 			tr.addView(label);
@@ -128,7 +128,7 @@ public class FormWidgetFragment extends WidgetFragment
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
-			layoutLabel.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+			layoutLabel.rightMargin = UiHelper.dp_to_pixels(10, this.context);
 			label.setLayoutParams(layoutLabel);
 
 			tr.addView(label);
@@ -198,7 +198,7 @@ public class FormWidgetFragment extends WidgetFragment
 		label.setText(f.getLabel());
 		label.setGravity(Gravity.TOP);
 		TableRow.LayoutParams layout = new TableRow.LayoutParams();
-		layout.rightMargin = UiHelpers.dp_to_pixels(10, this.context);
+		layout.rightMargin = UiHelper.dp_to_pixels(10, this.context);
 		label.setLayoutParams(layout);
 
 		EditText textfield = new EditText(this.context);

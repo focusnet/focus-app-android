@@ -37,7 +37,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * An application launcher.
@@ -70,7 +70,7 @@ public class ExternalAppFragment extends WidgetFragment
 		if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
 			textStatus.setText(
 					String.format(getResources().getString(R.string.installed_ready_to_be_used),
-					((ExternalAppWidgetInstance) widgetInstance).getInstalledVersion())
+							((ExternalAppWidgetInstance) widgetInstance).getInstalledVersion())
 			);
 			button.setText(((ExternalAppWidgetInstance) this.widgetInstance).getButtonLabel());
 		}
@@ -96,7 +96,7 @@ public class ExternalAppFragment extends WidgetFragment
 						String json_input = FocusApplication.getInstance().getDataManager().getGson().toJson(input_object);
 						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, json_input);
 					}
-					UiHelpers.displayToast(getActivity(), r.getString(R.string.launching_ext_app));
+					UiHelper.displayToast(getActivity(), r.getString(R.string.launching_ext_app));
 					startActivityForResult(intent, ((ExternalAppWidgetInstance) widgetInstance).getRequestCode());
 				}
 				else {
@@ -107,7 +107,7 @@ public class ExternalAppFragment extends WidgetFragment
 					}
 					catch (ActivityNotFoundException ex) {
 						// market is not installed
-						UiHelpers.displayToast(getActivity(), r.getString(R.string.market_not_installed));
+						UiHelper.displayToast(getActivity(), r.getString(R.string.market_not_installed));
 					}
 				}
 
@@ -127,7 +127,7 @@ public class ExternalAppFragment extends WidgetFragment
 				if (response != null && !response.equals("")) {
 					((ExternalAppWidgetInstance) widgetInstance).saveResponse(response);
 				}
-				UiHelpers.displayToast(getActivity(), getActivity().getResources().getString(R.string.appreturned));
+				UiHelper.displayToast(getActivity(), getActivity().getResources().getString(R.string.appreturned));
 			}
 		}
 	}

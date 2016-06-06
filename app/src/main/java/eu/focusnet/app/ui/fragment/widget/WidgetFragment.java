@@ -45,7 +45,7 @@ import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.UiHelpers;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  */
@@ -125,7 +125,7 @@ public abstract class WidgetFragment extends Fragment
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, num_of_cols);
 
 		// set a reasonable margin between fragments
-		int margin = UiHelpers.dp_to_pixels(UI_MARGIN_SIZE, this.getActivity());
+		int margin = UiHelper.dp_to_pixels(UI_MARGIN_SIZE, this.getActivity());
 		params.setMargins(
 				position_in_row == 0 ? margin : margin / 2,
 				margin,
@@ -137,7 +137,7 @@ public abstract class WidgetFragment extends Fragment
 
 		if (this.referenceHeight != 0) {
 			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
-			l.height = UiHelpers.dp_to_pixels(this.referenceHeight, this.getActivity());
+			l.height = UiHelper.dp_to_pixels(this.referenceHeight, this.getActivity());
 			this.rootView.setLayoutParams(l);
 		}
 	}

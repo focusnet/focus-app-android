@@ -142,10 +142,10 @@ public class PageInstance extends AbstractInstance
 
 	/**
 	 * Add a widget instance to the current page
-	 *
+	 * <p/>
 	 * If any of the widget instances is not valid, then the page is considered as not valid
 	 * (but it will still be displayed anyway).
-	 *
+	 * <p/>
 	 * We never pass invalid widgets to a PageIntance. Instead, we pass an InvalidWidgetInstance
 	 * that contains a reference to the invalid widget instance.
 	 *

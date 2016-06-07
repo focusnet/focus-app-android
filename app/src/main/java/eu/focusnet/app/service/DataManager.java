@@ -50,6 +50,7 @@ import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
+import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * This follows a Singleton pattern.
@@ -221,10 +222,11 @@ public class DataManager
 		this.loginServer = server;
 		this.loginUser = user;
 		this.loginPassword = password;
-		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + demo_user_id + "/user-information";
-		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + demo_user_id + "/app-user-preferences";
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
+		String test_server = PropertiesHelper.getProperty("resource-server.endpoint", FocusApplication.getInstance());
+		this.userUrl = test_server + "data/user/" + demo_user_id + "/user-information";
+		this.prefUrl = test_server + "data/user/" + demo_user_id + "/app-user-preferences";
+		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // FIXME not logged in, and we request to use the current USER -> failure. FIXME FIXME FIXME (getUser returns MissingExc

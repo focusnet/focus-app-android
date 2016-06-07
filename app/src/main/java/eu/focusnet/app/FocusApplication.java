@@ -151,7 +151,7 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 			try {
-				form_uri = PropertiesHelper.getProperty("acra.formUri", this.getContext());
+				form_uri = PropertiesHelper.getProperty("acra.form-uri", this.getContext());
 				user = PropertiesHelper.getProperty("acra.username", this.getContext());
 				pass = PropertiesHelper.getProperty("acra.password", this.getContext());
 			}

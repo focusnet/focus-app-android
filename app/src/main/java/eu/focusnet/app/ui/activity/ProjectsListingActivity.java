@@ -33,7 +33,6 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
@@ -92,9 +91,13 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 		ArrayList<AbstractListItem> drawerItems = new ArrayList<AbstractListItem>();
 
-		User user = FocusApplication.getInstance().getDataManager().getUser();
+		String use_case = FocusApplication.getInstance().getDataManager().getDemoUseCase();
 
-		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+		// FIXME if not in Demo mode we should use be the below line - but we should rewrite this UI component anyway
+		// User user = FocusApplication.getInstance().getDataManager().getUser();
+		// drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
+		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), use_case, "", ""));
+
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
 			DrawerListItem drawListItem = new DrawerListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info

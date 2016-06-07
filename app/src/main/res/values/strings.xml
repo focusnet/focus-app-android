@@ -10,8 +10,10 @@
     <string name="login_button">Login</string>
 
     <!-- Navigation drawer section titles -->
+    <string name="project_listing_title">My FOCUS</string>
+
     <string-array name="drawer_items">
-        <item>My FOCUS</item>
+        <item>@string/project_listing_title</item>
         <item>Bookmarks</item>
         <item>About</item>
         <item>Log out</item>

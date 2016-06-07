@@ -33,7 +33,6 @@ public class UserPreferences extends FocusObject
 	public UserPreferences(String targetUrl)
 	{
 		super(Constant.FOCUS_DATAMODEL_TYPE_USER_PREFERENCES, targetUrl);
-		this.commit();
 	}
 
 	public BookmarksList getBookmarks()

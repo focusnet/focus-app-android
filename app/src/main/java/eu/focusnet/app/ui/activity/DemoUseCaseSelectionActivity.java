@@ -38,6 +38,7 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -114,7 +115,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	/**
 	 * This class is used for testing if the given credential are correct
 	 */
-	private class UseCaseSelectionTask extends AsyncTask<Integer, Void, Boolean>
+	private class UseCaseSelectionTask extends AsyncTask<Integer, Void, Void>
 	{
 
 		private ProgressDialog progressDialog;
@@ -136,23 +137,22 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		}
 
 		@Override
-		protected Boolean doInBackground(Integer ... data)
+		protected Void doInBackground(Integer ... data)
 		{
-			String[] use_cases = getResources().getStringArray(R.array.demo_use_cases_values);
+			String[] use_cases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
 			String selected_use_case = use_cases[data[0] - 1];
 
-			Boolean hasAccess;
 			try {
-				hasAccess = FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
+				FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
 			}
 			catch (IOException ex) {
-				hasAccess = false;
+				throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");
 			}
-			return hasAccess;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean hasAccess)
+		protected void onPostExecute(Void v)
 		{
 			if (progressDialog.isShowing()) {
 				progressDialog.dismiss();

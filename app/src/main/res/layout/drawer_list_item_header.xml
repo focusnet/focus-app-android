@@ -12,7 +12,8 @@
         android:paddingBottom="10dip"
         android:paddingLeft="20dip"
         android:paddingRight="20dip"
-        android:paddingTop="20dip"/>
+        android:paddingTop="20dip"
+        android:contentDescription="@string/focus_logo"/>
 
     <TextView
         android:id="@+id/user"

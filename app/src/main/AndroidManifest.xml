@@ -40,7 +40,7 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.activity.ProjectsListingActivity"
-            android:label="@string/app_name"
+            android:label="@string/project_listing_title"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"/>
         <activity

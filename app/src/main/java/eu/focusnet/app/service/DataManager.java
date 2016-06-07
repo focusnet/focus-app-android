@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
@@ -75,6 +76,7 @@ public class DataManager
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS = "user-infos";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE = "demo-user-case";
 	private boolean isInitialized;
 	// other information regarding login?
 	private String loginUser;
@@ -98,6 +100,9 @@ public class DataManager
 	private ArrayList<AbstractInstance> activeInstances;
 	private boolean applicationReady;
 	private boolean loggedIn;
+
+	// FIXME only for demo purpose
+	private String demoUseCase;
 
 	/**
 	 * Constructor
@@ -150,6 +155,7 @@ public class DataManager
 			this.userUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS);
 			this.prefUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS);
 			this.appContentUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT);
+			this.demoUseCase = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE);
 			this.loggedIn = true;
 		}
 
@@ -269,9 +275,12 @@ public class DataManager
 		this.loginUser = "";
 		this.loginPassword = "";
 
+		// find the demo use case idx based on the
+		this.demoUseCase = use_case;
+
 		String test_server = PropertiesHelper.getProperty("resource-server.endpoint", FocusApplication.getInstance());
 		this.userUrl = test_server + "/data/focus-user/" + user_id;
-		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + use_case;
+		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + this.demoUseCase;
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
@@ -282,6 +291,7 @@ public class DataManager
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS, this.userUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE, this.demoUseCase);
 		fs.commit();
 
 		// and save in the local SQLite database (it won't be sent on the network)
@@ -306,6 +316,7 @@ public class DataManager
 		this.user = null;
 		this.userPreferences = null;
 		this.appContentTemplate = null;
+		this.demoUseCase = null;
 		this.cache = new HashMap<>();
 
 		// delete the whole database content
@@ -343,14 +354,15 @@ public class DataManager
 		}
 		User user = null;
 		try {
-			user = (User) (this.get(this.userUrl, User.class));
+			user = (User) this.get(this.userUrl, User.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without a user
 			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
 		}
 		if (user == null) {
-			user = new User(this.userUrl, "First", "Last", "email@email.com", "Company"); // FIXME defaults? something that the REST server can accept. validates against schema
+
+			user = new User(this.userUrl, "first", "last", "email@email.com", "company"); // FIXME inforation not used for now
 			ResourceOperationStatus ret = this.post(user);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
@@ -982,5 +994,30 @@ public class DataManager
 		if (!must_recover) {
 			FocusApplication.getInstance().replaceDataManager(new_dm);
 		}
+	}
+
+	/**
+	 * Return a user-friendly description of the demo
+	 *
+	 * FIXME for demo version
+	 *
+	 * @return
+	 */
+	public String getDemoUseCase()
+	{
+		// this.demoUseCase contains the identifier of the use case
+		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_labels);
+		int found_idx = -1;
+		for (int i = 0; i < use_cases_ids.length; ++i) {
+			if (this.demoUseCase.equals(use_cases_ids[i])) {
+				found_idx = i;
+			}
+		}
+		if (found_idx == -1) {
+			throw new FocusInternalErrorException("Invalid demo identifier");
+		}
+
+		String[] use_cases_labels = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_labels);
+		return use_cases_labels[found_idx];
 	}
 }

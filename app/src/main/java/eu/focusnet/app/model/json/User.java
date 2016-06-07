@@ -40,8 +40,6 @@ public class User extends FocusObject
 		this.lastName = lastName;
 		this.email = email;
 		this.company = company;
-
-		this.commit();
 	}
 
 	public String getFirstName()

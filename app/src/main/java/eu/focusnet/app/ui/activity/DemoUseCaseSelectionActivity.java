@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -60,7 +59,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_choose_use_case);
+		setContentView(R.layout.activity_choose_demo);
 
 		// default selection
 		this.selectedUseCase = 0;

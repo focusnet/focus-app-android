@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import eu.focusnet.app.R;
 
@@ -33,6 +34,7 @@ import eu.focusnet.app.R;
 public abstract class BaseActivity extends AppCompatActivity
 {
 	protected Toolbar toolbar;
+	private ActionBar actionBar;
 
 	/**
 	 * Override creation method. Add a toolbar.
@@ -44,11 +46,24 @@ public abstract class BaseActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
+
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		ActionBar x = getSupportActionBar();
-		getSupportActionBar().setDisplayHomeAsUpEnabled(isDisplayHomeAsUpEnabled());
-		getSupportActionBar().setHomeButtonEnabled(isHomeButtonEnabled());
+
+		this.actionBar = getSupportActionBar();
+		this.actionBar.setSubtitle("prout");
+
+ 		getSupportActionBar().setDisplayHomeAsUpEnabled(isDisplayHomeAsUpEnabled());
+		// getSupportActionBar().setHomeButtonEnabled(isHomeButtonEnabled());
+	}
+
+
+	// Menu icons are inflated just as they were with actionbar
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_projects_listing, menu);
+		return true;
 	}
 
 	/**
@@ -77,8 +92,5 @@ public abstract class BaseActivity extends AppCompatActivity
 	{
 		return true;
 	}
-
-	//TODO starting an stoping the service in each activity is not a good idea
-	// NOTE: why? except the fact that this is a pain to maintain (easy to forget to register the service to an activity)
 
 }

@@ -33,7 +33,6 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
@@ -72,7 +71,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	@Override
 	protected int getContentView()
 	{
-		return R.layout.activity_focus;
+		return R.layout.activity_projects_listing;
 	}
 
 	/**

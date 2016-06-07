@@ -361,8 +361,7 @@ public class DataManager
 			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
 		}
 		if (user == null) {
-
-			user = new User(this.userUrl, "first", "last", "email@email.com", "company"); // FIXME inforation not used for now
+			user = new User(this.userUrl, "first", "last", "email@email.com", "company"); // FIXME information not used for now
 			ResourceOperationStatus ret = this.post(user);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
@@ -1006,7 +1005,7 @@ public class DataManager
 	public String getDemoUseCase()
 	{
 		// this.demoUseCase contains the identifier of the use case
-		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_labels);
+		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
 		int found_idx = -1;
 		for (int i = 0; i < use_cases_ids.length; ++i) {
 			if (this.demoUseCase.equals(use_cases_ids[i])) {
@@ -1018,6 +1017,6 @@ public class DataManager
 		}
 
 		String[] use_cases_labels = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_labels);
-		return use_cases_labels[found_idx];
+		return use_cases_labels[found_idx + 1];
 	}
 }

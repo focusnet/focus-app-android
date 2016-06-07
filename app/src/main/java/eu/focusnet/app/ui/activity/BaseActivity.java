@@ -34,7 +34,6 @@ import eu.focusnet.app.R;
 public abstract class BaseActivity extends AppCompatActivity
 {
 	protected Toolbar toolbar;
-	private ActionBar actionBar;
 
 	/**
 	 * Override creation method. Add a toolbar.
@@ -50,8 +49,6 @@ public abstract class BaseActivity extends AppCompatActivity
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		this.actionBar = getSupportActionBar();
-		this.actionBar.setSubtitle("prout");
 
  		getSupportActionBar().setDisplayHomeAsUpEnabled(isDisplayHomeAsUpEnabled());
 		// getSupportActionBar().setHomeButtonEnabled(isHomeButtonEnabled());

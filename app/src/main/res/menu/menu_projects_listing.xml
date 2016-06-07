@@ -1,10 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".ui.activity.ProjectsListingActivity">
 
-    <item android:title="sync"
+    <item android:id="@+id/action_sync"
+          android:title="@string/synchronize_data"
           app:showAsAction="always"
-          android:icon="@drawable/picto_category_tool_negative"
+          android:icon="@drawable/picto_refresh_negative"
         />
 </menu>
-
-

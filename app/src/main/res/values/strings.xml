@@ -97,5 +97,6 @@
     <string name="init_app_first_run">Initializing FOOCUS Mobile ...</string>
     <string name="wiping_user_data_logout_msg">Wiping local data ...</string>
     <string name="load_info_load_demo">Loading demonstration data ...</string>
+    <string name="synchronize_data">Synchronize data</string>
 
 </resources>

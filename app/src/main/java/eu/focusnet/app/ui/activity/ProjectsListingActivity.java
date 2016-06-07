@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -210,9 +211,11 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		switch (position) {
 			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
 				fragment = new ProjectsListingFragment();
+				getSupportActionBar().setSubtitle(FocusApplication.getInstance().getDataManager().getDemoUseCase());// FIXME should come from the app content description!
 				break;
 			case Constant.UI_MENU_ENTRY_BOOKMARK:
-				fragment = new BookmarkFragment();
+				fragment = new BookmarkFragment(); // FIXME clicking on BOOKMARKS in Menu -> MY FOCUS is displayed, but not the subtitle
+				getSupportActionBar().setSubtitle(null);
 				break;
 			case Constant.UI_MENU_ENTRY_ABOUT:
 				AboutFragment f = new AboutFragment();
@@ -267,5 +270,33 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		// Highlight the selected item
 		drawerListMenu.setItemChecked(position, true);
 		drawerListMenu.setSelection(position);
+	}
+
+
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_sync:
+
+// do something.
+				// open a dialog? yes.
+				/*
+				contains: 1. title: sync
+				2. last sync:
+				3. buttons to sync, unsync
+				 	-> display progress bar
+				 	OR announce error
+				 on completion, dismiss
+				 */
+
+				return true;
+			default:
+				// If we got here, the user's action was not recognized.
+				// Invoke the superclass to handle it.
+				return super.onOptionsItemSelected(item);
+
+		}
 	}
 }

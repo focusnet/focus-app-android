@@ -27,10 +27,10 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.model.json.Linker;
+import eu.focusnet.app.model.json.PageReference;
 import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
-import eu.focusnet.app.model.json.WidgetLinker;
+import eu.focusnet.app.model.json.WidgetReference;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
@@ -138,7 +138,7 @@ public class ProjectInstance extends AbstractInstance
 	 * @param source
 	 * @return
 	 */
-	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<Linker> source, PageInstance.PageType type)
+	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
 	{
 		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<>();
 
@@ -159,7 +159,7 @@ public class ProjectInstance extends AbstractInstance
 			this.description = "";
 		}
 
-		for (Linker s : source) {
+		for (PageReference s : source) {
 			String page_id = s.getPageid();
 			PageTemplate pageTpl = this.template.findPage(page_id);
 
@@ -203,11 +203,11 @@ public class ProjectInstance extends AbstractInstance
 						continue;
 					}
 
-					for (WidgetLinker wl : pageTpl.getWidgets()) {
-						WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+					for (WidgetReference wr : pageTpl.getWidgets()) {
+						WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
 
 						DataContext new_widget_ctx = new DataContext(p.getDataContext());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
 						p.addWidget(wi.getGuid(), wi);
 					}
 
@@ -226,10 +226,10 @@ public class ProjectInstance extends AbstractInstance
 					continue;
 				}
 
-				for (WidgetLinker wl : pageTpl.getWidgets()) {
-					WidgetTemplate wTpl = this.template.findWidget(wl.getWidgetid());
+				for (WidgetReference wr : pageTpl.getWidgets()) {
+					WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
 					DataContext new_widget_ctx = new DataContext(p.getDataContext());
-					WidgetInstance wi = WidgetInstance.factory(wTpl, wl.getLayout(), new_widget_ctx);
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
 					p.addWidget(wi.getGuid(), wi);
 				}
 

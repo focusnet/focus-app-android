@@ -37,12 +37,13 @@ import java.util.Set;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.model.store.Sample;
@@ -84,7 +85,7 @@ public class DataManager
 	private String appContentUrl;
 	// java objects
 	private User user;
-	private Preference userPreferences;
+	private UserPreferences userPreferences;
 	private AppContentTemplate appContentTemplate;
 	private AppContentInstance appContentInstance;
 	// for samples
@@ -199,6 +200,14 @@ public class DataManager
 	 */
 	public boolean login(String user, String password, String server) throws IOException
 	{
+		if (1==1) {
+			throw new FocusNotImplementedException("DataManager.login()");
+		}
+
+
+		// FIXME most of the logic below is OK, except for the FIXME part
+
+
 		// if there is no network available, trigger a failure right away
 		if (!this.net.isNetworkAvailable()) {
 			throw new IOException("No network");
@@ -211,25 +220,62 @@ public class DataManager
 			return false;
 		}
 
-		// user contains identifer
-
-		// then acquire application basic content
-		// FIXME how do we retrieve the proper URLs? lookup() service ? context = user, but what is user url/identifier?
-		// FIXME FIXME TODO when we have data from Jussi
-		// and save the urls for later uses (no need to actually get the information at this point)
-		String android_id = Settings.Secure.getString(FocusApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
-		String demo_user_id = "user-" + android_id + "/demo-" + user;
 		this.loginServer = server;
 		this.loginUser = user;
 		this.loginPassword = password;
 
+		/* FIXME */
+		// how to get proper URLs?
+		this.userUrl = "FIXME";
+		this.prefUrl = "FIXME";
+		this.appContentUrl = "FIXME";
+		/* end of FIXME */
+
+		// if all ok, save info to local database for later loading
+		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS, this.userUrl);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
+		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
+		fs.commit();
+
+		// and save in the local SQLite database (it won't be sent on the network)
+		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
+		this.post(fs);
+
+		this.loggedIn = true;
+		return true;
+	}
+
+	/**
+	 * A temporary and more simple login function for the demonstration prototype
+	 */
+	public boolean demoLogin(String use_case) throws IOException
+	{
+		// if there is no network available, trigger a failure right away
+		if (!this.net.isNetworkAvailable()) {
+			throw new IOException("No network");
+		}
+
+		// Demo URIs:
+		// one Use URI per user
+		// one UserPreferences URI per user x use case combination
+		// one AppContentTemplate per use case
+		String user_id = "user-" + Settings.Secure.getString(FocusApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+		this.loginServer = "";
+		this.loginUser = "";
+		this.loginPassword = "";
+
 		String test_server = PropertiesHelper.getProperty("resource-server.endpoint", FocusApplication.getInstance());
-		this.userUrl = test_server + "data/user/" + demo_user_id + "/user-information";
-		this.prefUrl = test_server + "data/user/" + demo_user_id + "/app-user-preferences";
+		this.userUrl = test_server + "/data/focus-user/" + user_id;
+		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + use_case;
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
 		// if all ok, save info to local database for later loading
-		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // FIXME not logged in, and we request to use the current USER -> failure. FIXME FIXME FIXME (getUser returns MissingExc
+		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
@@ -249,7 +295,7 @@ public class DataManager
 	/**
 	 * Delete login information, and reset the content of the whole application
 	 */
-	public void logout()
+	public void reset()
 	{
 		this.loginUser = null;
 		this.loginPassword = null;
@@ -275,7 +321,7 @@ public class DataManager
 	 *
 	 * @return true if we have all required login information, false otherwise
 	 */
-	public boolean isLoggedIn() // FIXME cache result. used a lot.
+	public boolean isLoggedIn()
 	{
 		return this.loggedIn;
 	}
@@ -304,7 +350,7 @@ public class DataManager
 			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
 		}
 		if (user == null) {
-			user = new User(this.userUrl, "", "", "", ""); // FIXME defaults? something that the REST server can accept. validates against schema
+			user = new User(this.userUrl, "First", "Last", "email@email.com", "Company"); // FIXME defaults? something that the REST server can accept. validates against schema
 			ResourceOperationStatus ret = this.post(user);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
@@ -317,11 +363,11 @@ public class DataManager
 	/**
 	 * Acquire the application's user preferences.
 	 *
-	 * 	 * Preference is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
+	 * 	 * UserPreferences is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
 
-	 * @return A Preference object
+	 * @return A UserPreferences object
 	 */
-	public Preference getUserPreferences()
+	public UserPreferences getUserPreferences()
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -330,15 +376,15 @@ public class DataManager
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		Preference user_preference = null;
+		UserPreferences user_preference = null;
 		try {
-			user_preference = (Preference) (this.get(this.prefUrl, Preference.class));
+			user_preference = (UserPreferences) (this.get(this.prefUrl, UserPreferences.class));
 		}
 		catch (IOException ex) {
 			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
 		}
 		if (user_preference == null) {
-			user_preference = new Preference(this.prefUrl);
+			user_preference = new UserPreferences(this.prefUrl);
 			ResourceOperationStatus ret = this.post(user_preference);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create UserPreferences object.");
@@ -547,6 +593,8 @@ public class DataManager
 
 		// make it accessible through the cache
 		this.cache.put(url, data);
+
+
 		data.commit();
 
 		// push on the network
@@ -560,7 +608,8 @@ public class DataManager
 
 		boolean net_success = false;
 		try {
-			net_success = this.net.post(url, data).isSuccessful();
+			HttpResponse r = this.net.post(url, data);
+			net_success = r.isSuccessful();
 		}
 		catch (IOException ex) {
 			net_success = false;

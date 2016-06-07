@@ -25,7 +25,6 @@ import eu.focusnet.app.model.util.Constant;
 public class User extends FocusObject
 {
 
-	private Long id;
 	private String firstName,
 			lastName,
 			email,
@@ -41,16 +40,8 @@ public class User extends FocusObject
 		this.lastName = lastName;
 		this.email = email;
 		this.company = company;
-	}
 
-	public Long getId()
-	{
-		return id;
-	}
-
-	public void setId(Long id)
-	{
-		this.id = id;
+		this.commit();
 	}
 
 	public String getFirstName()

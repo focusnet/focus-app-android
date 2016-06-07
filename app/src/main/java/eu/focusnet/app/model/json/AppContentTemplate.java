@@ -31,19 +31,8 @@ import java.util.LinkedHashMap;
 public class AppContentTemplate extends FocusObject
 {
 
-	private Long id;
 	private LinkedHashMap<String, String> data;
 	private ArrayList<ProjectTemplate> projects;
-
-	public Long getId()
-	{
-		return id;
-	}
-
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
 
 	public ArrayList<ProjectTemplate> getProjects()
 	{

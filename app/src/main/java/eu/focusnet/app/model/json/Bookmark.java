@@ -20,39 +20,44 @@
 
 package eu.focusnet.app.model.json;
 
-import java.util.ArrayList;
+/**
 
+ */
 public class Bookmark
 {
 
-	private Long id;
-	private ArrayList<BookmarkLink> pages;
-	private ArrayList<BookmarkLink> tools;
-
-	public Long getId()
+	public enum BOOKMARK_LINK_TYPE
 	{
-		return id;
+		PAGE, TOOL
 	}
 
-	public void setId(Long id)
+	private String name,
+			path;
+
+	public Bookmark(String name, String path)
 	{
-		this.id = id;
+		this.name = name;
+		this.path = path;
 	}
 
-	public ArrayList<BookmarkLink> getPages()
+	public String getName()
 	{
-		return pages;
+		return name;
 	}
 
-	public ArrayList<BookmarkLink> getTools()
+	public void setName(String name)
 	{
-		return tools;
+		this.name = name;
 	}
 
-	public void setTools(ArrayList<BookmarkLink> tools)
+	public String getPath()
 	{
-		this.tools = tools;
+		return path;
 	}
 
+	public void setPath(String path)
+	{
+		this.path = path;
+	}
 
 }

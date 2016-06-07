@@ -36,11 +36,10 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.json.BookmarkLink;
-import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.model.json.Bookmark;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -109,7 +108,7 @@ public class ProjectsListingFragment extends ListFragment
 
 			abstractItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
-			Preference preference = dm.getUserPreferences();
+			UserPreferences preference = dm.getUserPreferences();
 
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
 			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
@@ -127,9 +126,9 @@ public class ProjectsListingFragment extends ListFragment
 				String projectTitle = p.getTitle();
 				String projectDesc = p.getDescription();
 
-				String bookmarkLinkType = BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
+				String bookmarkLinkType = Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
-				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(projectId, UiHelper.getBitmap(getActivity(), R.drawable.picto_project), projectTitle, projectDesc,
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);

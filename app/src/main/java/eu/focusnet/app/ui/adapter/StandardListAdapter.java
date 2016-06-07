@@ -38,9 +38,8 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.json.BookmarkLink;
-import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.model.json.Bookmark;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
@@ -170,7 +169,7 @@ public class StandardListAdapter extends BaseAdapter
 								@Override
 								public void onClick(View view)
 								{
-									Preference userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
+									UserPreferences userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
 									if (isRightIconActive) {
 										standardListItem.setIsRightIconActive(false);
@@ -187,7 +186,7 @@ public class StandardListAdapter extends BaseAdapter
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 
-										BookmarkLink bookmarkLink = new BookmarkLink(selectedContext.getText().toString(), standardListItem.getPath());
+										Bookmark bookmarkLink = new Bookmark(selectedContext.getText().toString(), standardListItem.getPath());
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 

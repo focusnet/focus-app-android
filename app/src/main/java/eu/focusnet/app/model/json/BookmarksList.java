@@ -20,32 +20,28 @@
 
 package eu.focusnet.app.model.json;
 
-import java.util.Map;
+import java.util.ArrayList;
 
-/**
- * Created by admin on 03.08.2015.
- */
-public class WidgetLinker
+public class BookmarksList
 {
 
-	private String widgetid;
-	private Map<String, String> layout;
+	private ArrayList<Bookmark> pages;
+	private ArrayList<Bookmark> tools;
 
-
-
-	public String getWidgetid()
+	public ArrayList<Bookmark> getPages()
 	{
-		return widgetid;
+		if (pages == null) {
+			pages = new ArrayList<>();
+		}
+		return pages;
 	}
 
-
-	public Map<String, String> getLayout()
+	public ArrayList<Bookmark> getTools()
 	{
-		return layout;
+		if (tools == null) {
+			tools = new ArrayList<>();
+		}
+		return tools;
 	}
 
-	public void setLayout(Map<String, String> layout)
-	{
-		this.layout = layout;
-	}
 }

@@ -86,7 +86,7 @@ public class EntryPointActivity extends Activity
 					}
 					catch (FocusMissingResourceException ex) {
 						// this may occur when no data has been previously loaded even though the login information are available
-						// (e.g. no network, and the app content has not been previously loaded -> User + Preference are created, but the app content must be loaded. )
+						// (e.g. no network, and the app content has not been previously loaded -> User + UserPreferences are created, but the app content must be loaded. )
 						// FIXME display dialog that requests network connectivity. If there is network, then the resource does not exist-> crash.
 
 					}

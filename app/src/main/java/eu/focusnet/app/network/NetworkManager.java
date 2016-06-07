@@ -27,6 +27,7 @@ import android.net.NetworkInfo;
 import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusObject;
 
 
@@ -169,7 +170,7 @@ public class NetworkManager
 	 */
 	public boolean login(String user, String password, String server) throws IOException
 	{
-		return true;
+		throw new FocusNotImplementedException("NetworkManager.login()");
 	}
 
 

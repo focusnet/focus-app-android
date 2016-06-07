@@ -20,17 +20,25 @@
 
 package eu.focusnet.app.model.json;
 
+import java.util.Map;
+
 /**
  * Created by admin on 03.08.2015.
  */
-public class Linker
+public class WidgetReference
 {
 
-	private String pageid;
+	private String widgetid;
+	private Map<String, String> layout;
 
-	public String getPageid()
+	public String getWidgetid()
 	{
-		return pageid;
+		return widgetid;
+	}
+
+	public Map<String, String> getLayout()
+	{
+		return layout;
 	}
 
 }

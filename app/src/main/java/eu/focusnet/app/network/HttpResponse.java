@@ -100,7 +100,7 @@ public class HttpResponse
 	 */
 	public boolean isSuccessful()
 	{
-		return (this.returnCode == HttpURLConnection.HTTP_OK);
+		return (this.returnCode == HttpURLConnection.HTTP_OK || this.returnCode == HttpURLConnection.HTTP_CREATED);
 	}
 
 	/**

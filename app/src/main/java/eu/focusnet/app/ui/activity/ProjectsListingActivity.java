@@ -33,9 +33,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
@@ -218,12 +216,13 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 				AboutFragment f = new AboutFragment();
 				f.show(getSupportFragmentManager(), "About FOCUS");
 				drawerLayout.closeDrawer(drawerListMenu); // FIXME would be better to have a proper page.
+				break;
 			case Constant.UI_MENU_ENTRY_LOGOUT:
 				final Thread logout_thread = new Thread()
 				{
 					public void run()
 					{
-						FocusApplication.getInstance().getDataManager().logout();
+						FocusApplication.getInstance().getDataManager().reset();
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
 							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));

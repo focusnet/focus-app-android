@@ -138,12 +138,12 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		@Override
 		protected Boolean doInBackground(Integer ... data)
 		{
-			String[] uris = getResources().getStringArray(R.array.demo_use_cases_values);
-			String uri = uris[data[0] - 1];
+			String[] use_cases = getResources().getStringArray(R.array.demo_use_cases_values);
+			String selected_use_case = use_cases[data[0] - 1];
 
 			Boolean hasAccess;
 			try {
-				hasAccess = FocusApplication.getInstance().getDataManager().login(uri,uri,uri);
+				hasAccess = FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
 			}
 			catch (IOException ex) {
 				hasAccess = false;
@@ -158,16 +158,10 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 				progressDialog.dismiss();
 			}
 
-			if (hasAccess) {
-				Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
-				i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
-				startActivity(i);
-				finish();
-			}
-			else {
-				UiHelper.displayToast(this.context, R.string.focus_login_error_bad_credentials);
-				//TODO maybe we should also show some text in red or something like this ...?
-			}
+			Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
+			i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
+			startActivity(i);
+			finish();
 		}
 	}
 

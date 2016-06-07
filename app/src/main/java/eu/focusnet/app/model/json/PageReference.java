@@ -20,29 +20,17 @@
 
 package eu.focusnet.app.model.json;
 
-public class Setting
+/**
+ * Created by admin on 03.08.2015.
+ */
+public class PageReference
 {
 
-	private Long id;
-	private String language;
+	private String pageid;
 
-	public String getLanguage()
+	public String getPageid()
 	{
-		return language;
+		return pageid;
 	}
 
-	public void setLanguage(String language)
-	{
-		this.language = language;
-	}
-
-	public Long getId()
-	{
-		return id;
-	}
-
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
 }

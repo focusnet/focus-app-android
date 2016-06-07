@@ -34,10 +34,9 @@ import java.util.ArrayList;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.json.BookmarksList;
 import eu.focusnet.app.model.json.Bookmark;
-import eu.focusnet.app.model.json.BookmarkLink;
-import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -103,11 +102,11 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void updateListAdapter()
 	{
-		Preference preference = FocusApplication.getInstance().getDataManager().getUserPreferences();;
+		UserPreferences preference = FocusApplication.getInstance().getDataManager().getUserPreferences();;
 
-		Bookmark bookmark = preference.getBookmarks();
-		ArrayList<BookmarkLink> pages = bookmark.getPages();
-		ArrayList<BookmarkLink> tools = bookmark.getTools();
+		BookmarksList bookmark = preference.getBookmarks();
+		ArrayList<Bookmark> pages = bookmark.getPages();
+		ArrayList<Bookmark> tools = bookmark.getTools();
 
 		abstractItems = new ArrayList<>();
 		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
@@ -116,9 +115,9 @@ public class BookmarkFragment extends ListFragment
 
 		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
 
-		for (BookmarkLink bl : pages) {
+		for (Bookmark bl : pages) {
 			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
-					bl.getName(), bl.getPath(), rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+					bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
 			abstractItems.add(drawListItem);
 		}
 
@@ -127,9 +126,9 @@ public class BookmarkFragment extends ListFragment
 		abstractItems.add(headerToolListItem);
 
 
-		for (BookmarkLink bl : tools) {
+		for (Bookmark bl : tools) {
 			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
-					bl.getName(), bl.getPath(), rightIcon, true, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
+					bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
 			abstractItems.add(drawListItem);
 		}
 

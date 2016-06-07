@@ -26,7 +26,7 @@ package eu.focusnet.app.model.util;
 public class Constant
 {
 
-	public static final String FOCUS_DATAMODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/user-information/v1.0",
+	public static final String FOCUS_DATAMODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/focus-user-information/v1.0",
 			FOCUS_DATAMODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0",
 			FOCUS_DATAMODEL_TYPE_FOCUS_SAMPLE = "http://reference.focusnet.eu/schemas/focus-data-sample/v1.0";
 

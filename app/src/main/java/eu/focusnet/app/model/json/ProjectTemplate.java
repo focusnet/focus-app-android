@@ -40,8 +40,8 @@ public class ProjectTemplate implements Serializable
 	private ArrayList<WidgetTemplate> widgets;
 	private ArrayList<PageTemplate> pages;
 
-	private ArrayList<Linker> dashboards;
-	private ArrayList<Linker> tools;
+	private ArrayList<PageReference> dashboards;
+	private ArrayList<PageReference> tools;
 
 	public String getGuid()
 	{
@@ -58,11 +58,6 @@ public class ProjectTemplate implements Serializable
 		return title;
 	}
 
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
 	public String getDescription()
 	{
 		return description;
@@ -73,25 +68,14 @@ public class ProjectTemplate implements Serializable
 		return widgets;
 	}
 
-	public void setWidgets(ArrayList<WidgetTemplate> widgets)
-	{
-		this.widgets = widgets;
-	}
-
-
-	public ArrayList<Linker> getDashboards()
+	public ArrayList<PageReference> getDashboards()
 	{
 		return dashboards;
 	}
 
-	public ArrayList<Linker> getTools()
+	public ArrayList<PageReference> getTools()
 	{
 		return tools;
-	}
-
-	public void setTools(ArrayList<Linker> tools)
-	{
-		this.tools = tools;
 	}
 
 	/**

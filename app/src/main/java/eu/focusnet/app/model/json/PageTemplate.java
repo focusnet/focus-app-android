@@ -37,7 +37,7 @@ public class PageTemplate
 
 	private LinkedHashMap<String, String> data = null;
 
-	private ArrayList<WidgetLinker> widgets;
+	private ArrayList<WidgetReference> widgets;
 
 	public String getGuid()
 	{
@@ -49,24 +49,14 @@ public class PageTemplate
 		return title;
 	}
 
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
 	public String getDescription()
 	{
 		return description;
 	}
 
-	public ArrayList<WidgetLinker> getWidgets()
+	public ArrayList<WidgetReference> getWidgets()
 	{
 		return widgets;
-	}
-
-	public void setWidgets(ArrayList<WidgetLinker> widgets)
-	{
-		this.widgets = widgets;
 	}
 
 	public String getIterator()

@@ -36,12 +36,11 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.json.BookmarkLink;
-import eu.focusnet.app.model.json.Preference;
+import eu.focusnet.app.model.json.Bookmark;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.StandardListAdapter;
@@ -124,7 +123,7 @@ public class ProjectFragment extends ListFragment
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);
-			Preference preference = dm.getUserPreferences();
+			UserPreferences preference = dm.getUserPreferences();
 
 			abstractItems = new ArrayList<>();
 
@@ -142,10 +141,10 @@ public class ProjectFragment extends ListFragment
 				PageInstance dashboard = entry.getValue();
 				String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 
-				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
-						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString());
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 
 			}
@@ -161,10 +160,10 @@ public class ProjectFragment extends ListFragment
 				PageInstance tool = entry.getValue();
 				String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString()));
+				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
 				StandardListItem drawListItem = new StandardListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), tool.getTitle(), tool.getDescription(),
-						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, BookmarkLink.BOOKMARK_LINK_TYPE.TOOL.toString());
+						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 			}
 

@@ -21,45 +21,40 @@
 package eu.focusnet.app.model.json;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import eu.focusnet.app.model.util.Constant;
 
 
-public class Preference extends FocusObject
+public class UserPreferences extends FocusObject
 {
 
-	private Long id;
-	private Setting settings;
-	private Bookmark bookmarks;
+	private BookmarksList bookmarks;
 
-	public Preference(String targetUrl)
+	public UserPreferences(String targetUrl)
 	{
 		super(Constant.FOCUS_DATAMODEL_TYPE_USER_PREFERENCES, targetUrl);
+		this.commit();
 	}
 
-	public Long getId()
+	public BookmarksList getBookmarks()
 	{
-		return id;
-	}
-
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
-
-	public Bookmark getBookmarks()
-	{
+		if (bookmarks == null) {
+			bookmarks = new BookmarksList();
+		}
 		return bookmarks;
 	}
 
-	public void addBookmarkLink(BookmarkLink bookmarkLink, String bookmarkType)
+	public void addBookmarkLink(Bookmark bookmark, String bookmarkType)
 	{
-		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
-			bookmarks.getPages().add(bookmarkLink);
+		if (bookmarks == null) {
+			bookmarks = new BookmarksList();
+		}
+
+		if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+			bookmarks.getPages().add(bookmark);
 		}
 		else {
-			bookmarks.getTools().add(bookmarkLink);
+			bookmarks.getTools().add(bookmark);
 		}
 	}
 
@@ -74,21 +69,23 @@ public class Preference extends FocusObject
 	public int findBookmarkLinkInSpecificSet(String path, String title, String bookmarkType)
 	{
 		int foundIndex = -1;
-		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
-			ArrayList<BookmarkLink> pages = bookmarks.getPages();
-			for (int i = 0; i < pages.size(); i++) {
-				BookmarkLink page = pages.get(i);
-				if (page.getPath().equals(path)) {
-					return i;
+		if (bookmarks != null) {
+			if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+				ArrayList<Bookmark> pages = bookmarks.getPages();
+				for (int i = 0; i < pages.size(); i++) {
+					Bookmark page = pages.get(i);
+					if (page.getPath().equals(path)) {
+						return i;
+					}
 				}
 			}
-		}
-		else {
-			ArrayList<BookmarkLink> tools = bookmarks.getTools();
-			for (int i = 0; i < tools.size(); i++) {
-				BookmarkLink tool = tools.get(i);
-				if (tool.getPath().equals(path)) {
-					return i;
+			else {
+				ArrayList<Bookmark> tools = bookmarks.getTools();
+				for (int i = 0; i < tools.size(); i++) {
+					Bookmark tool = tools.get(i);
+					if (tool.getPath().equals(path)) {
+						return i;
+					}
 				}
 			}
 		}
@@ -97,14 +94,14 @@ public class Preference extends FocusObject
 
 	public void removeBookmarkLink(String path, String title, String bookmarkType)
 	{
-		if (bookmarkType.equals(BookmarkLink.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+		if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
 			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
 			if (found != -1) {
 				bookmarks.getPages().remove(found);
 			}
 		}
 		else {
-			ArrayList<BookmarkLink> tools = bookmarks.getTools();
+			ArrayList<Bookmark> tools = bookmarks.getTools();
 			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
 			if (found != -1) {
 				bookmarks.getTools().remove(found);

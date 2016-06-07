@@ -120,6 +120,8 @@ public class FocusObject implements Serializable
 	/**
 	 * Committing means that the current object is considered a valid entity in the FOCUS context,
 	 * so we update the original_data to reflect this new state.
+	 *
+	 * FIXME document: do not forget to call it
 	 */
 	public void commit()
 	{

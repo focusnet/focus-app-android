@@ -30,6 +30,7 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.util.Constant;
 
 /**
  * Entry point activity
@@ -60,6 +61,16 @@ public class EntryPointActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry_point);
 
+		// Give more information about the currently pending operation
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			String loading_text = (String) extras.get(Constant.UI_EXTRA_LOADING_INFO_TEXT);
+			if (loading_text != null) {
+				TextView load_info = (TextView) findViewById(R.id.load_info);
+				load_info.setText(loading_text);
+			}
+		}
+
 		TextView version = (TextView) findViewById(R.id.versionNumber);
 		version.setText(BuildConfig.VERSION_NAME);
 
@@ -69,16 +80,14 @@ public class EntryPointActivity extends Activity
 			{
 				DataManager dm = FocusApplication.getInstance().getDataManager();
 				dm.init();
-				if (dm.hasLoginInformation()) {
+				if (dm.isLoggedIn()) {
 					try {
 						dm.retrieveApplicationData();
 					}
 					catch (FocusMissingResourceException ex) {
 						// this may occur when no data has been previously loaded even though the login information are available
-						// (e.g. no network, and the app content has not been previously completely loaded)
-						// ViewUtil.displayToast(FocusApplication.getInstance(), R.string.focus_error_no_configuration_available);
-						// FIXME TODO custom activity instead (that requests "try again later")
-						// or dialog?
+						// (e.g. no network, and the app content has not been previously loaded -> User + Preference are created, but the app content must be loaded. )
+						// FIXME display dialog that requests network connectivity. If there is network, then the resource does not exist-> crash.
 
 					}
 				}
@@ -110,7 +119,7 @@ public class EntryPointActivity extends Activity
 						sleep(500);
 						min_splashscreen_display_time -= 500;
 					}
-					if (FocusApplication.getInstance().getDataManager().hasLoginInformation()) {
+					if (FocusApplication.getInstance().getDataManager().isLoggedIn()) {
 						startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 					}
 					else {

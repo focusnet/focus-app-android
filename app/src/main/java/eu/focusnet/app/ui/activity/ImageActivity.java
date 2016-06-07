@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.ui.util.Constant;
 
 /**
@@ -41,7 +42,11 @@ public class ImageActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image);
 		ImageView tookImage = (ImageView) findViewById(R.id.tookImage);
-		Uri imageUri = (Uri) getIntent().getExtras().get(Constant.UI_EXTRA_IMAGE_URI);
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			throw new FocusInternalErrorException("ImageActivity MUST have an extra.");
+		}
+		Uri imageUri = (Uri) extras.get(Constant.UI_EXTRA_IMAGE_URI);
 		tookImage.setImageURI(imageUri);
 	}
 }

@@ -103,14 +103,7 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void updateListAdapter()
 	{
-		Preference preference = null;
-		try {
-			preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
-		}
-		catch (FocusMissingResourceException ex) {
-			// FIXME TODO do something smart.
-			// create a default object?
-		}
+		Preference preference = FocusApplication.getInstance().getDataManager().getUserPreferences();;
 
 		Bookmark bookmark = preference.getBookmarks();
 		ArrayList<BookmarkLink> pages = bookmark.getPages();

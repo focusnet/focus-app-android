@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.json;
 
+import eu.focusnet.app.model.util.Constant;
+
 public class User extends FocusObject
 {
 
@@ -29,6 +31,17 @@ public class User extends FocusObject
 			email,
 			company;
 
+
+	public User(String targetUrl, String firstName, String lastName, String email, String company)
+	{
+		// we expicitely give the owner and editor, such that the FocusObject contructor does not need
+		// to call DataManager getUser(). We may be in the case where we try to create the User
+		super(Constant.FOCUS_DATAMODEL_TYPE_USER, targetUrl, targetUrl, targetUrl, 1, null, null, true);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.company = company;
+	}
 
 	public Long getId()
 	{

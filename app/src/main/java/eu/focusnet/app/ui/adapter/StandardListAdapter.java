@@ -170,14 +170,7 @@ public class StandardListAdapter extends BaseAdapter
 								@Override
 								public void onClick(View view)
 								{
-									Preference userPreference = null;
-									try {
-										userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
-									}
-									catch (FocusMissingResourceException ex) {
-										// FIXME FIXME TODO
-										// create a new one? or crash
-									}
+									Preference userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
 									if (isRightIconActive) {
 										standardListItem.setIsRightIconActive(false);

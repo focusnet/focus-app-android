@@ -125,7 +125,6 @@ public class HttpRequest
 			throw new FocusInternalErrorException("Bad configuration for HTTP Request");
 		}
 
-
 		// object a new connection
 		HttpURLConnection connection = HttpRequest.getHTTPConnection(this.url, this.method);
 

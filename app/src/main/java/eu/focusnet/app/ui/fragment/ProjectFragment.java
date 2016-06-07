@@ -124,13 +124,8 @@ public class ProjectFragment extends ListFragment
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);
-			Preference preference = null;
-			try {
-				preference = dm.getUserPreferences();
-			}
-			catch (FocusMissingResourceException ex) {
-				// ignore? or crash? FIXME TODO
-			}
+			Preference preference = dm.getUserPreferences();
+
 			abstractItems = new ArrayList<>();
 
 			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),

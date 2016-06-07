@@ -21,6 +21,7 @@
 package eu.focusnet.app.service;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -94,6 +95,7 @@ public class DataManager
 
 	private ArrayList<AbstractInstance> activeInstances;
 	private boolean applicationReady;
+	private boolean loggedIn;
 
 	/**
 	 * Constructor
@@ -101,6 +103,7 @@ public class DataManager
 	public DataManager()
 	{
 		this.isInitialized = false;
+		this.loggedIn = false;
 
 		Context context = FocusApplication.getInstance().getContext();
 
@@ -131,7 +134,12 @@ public class DataManager
 
 		// get login infos from local store, and use it as the default
 		FocusSample internal_config = null;
-		internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+		try {
+			internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+		}
+		catch (IOException ex) {
+			// ok to ignore, no network access for internal configuration (saved in local db)
+		}
 
 		if (internal_config != null) {
 			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
@@ -140,6 +148,7 @@ public class DataManager
 			this.userUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS);
 			this.prefUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS);
 			this.appContentUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT);
+			this.loggedIn = true;
 		}
 
 		this.isInitialized = true;
@@ -207,16 +216,18 @@ public class DataManager
 		// FIXME how do we retrieve the proper URLs? lookup() service ? context = user, but what is user url/identifier?
 		// FIXME FIXME TODO when we have data from Jussi
 		// and save the urls for later uses (no need to actually get the information at this point)
-		String demoId = user;
+		String android_id = Settings.Secure.getString(FocusApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+		String demo_user_id = "user-" + android_id + "/demo-" + user;
 		this.loginServer = server;
 		this.loginUser = user;
 		this.loginPassword = password;
-		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + 123 + "/user-information";
-		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + 123 + "/app-user-preferences";
+		this.userUrl = "http://focus.yatt.ch/resources-server/data/user/" + demo_user_id + "/user-information";
+		this.prefUrl = "http://focus.yatt.ch/resources-server/data/user/" + demo_user_id + "/app-user-preferences";
 		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
 
+
 		// if all ok, save info to local database for later loading
-		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
+		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // FIXME not logged in, and we request to use the current USER -> failure. FIXME FIXME FIXME (getUser returns MissingExc
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER, this.loginServer);
@@ -227,16 +238,14 @@ public class DataManager
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
-		this.post(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, fs);
+		this.post(fs);
 
+		this.loggedIn = true;
 		return true;
 	}
 
 	/**
 	 * Delete login information, and reset the content of the whole application
-	 * <p/>
-	 * FIXME FIXME TODO YANDY: register logout button in settings fragment that triggers this function and then
-	 * redirects to the Entrypoint activity (user will redo the whole login process).
 	 */
 	public void logout()
 	{
@@ -254,6 +263,8 @@ public class DataManager
 		// delete the whole database content
 		SampleDao dao = this.databaseAdapter.getSampleDao();
 		dao.deleteAll();
+
+		this.loggedIn = false;
 	}
 
 
@@ -262,59 +273,76 @@ public class DataManager
 	 *
 	 * @return true if we have all required login information, false otherwise
 	 */
-	public boolean hasLoginInformation() // FIXME cache result. used a lot.
+	public boolean isLoggedIn() // FIXME cache result. used a lot.
 	{
-		return this.loginUser != null
-				&& this.loginPassword != null
-				&& this.loginServer != null
-				&& this.userUrl != null
-				&& this.prefUrl != null
-				&& this.appContentUrl != null;
+		return this.loggedIn;
 	}
 
 
 	/**
 	 * Acquire personal information about the user of the application
+	 *
+	 * User is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
 	 */
-	public User getUser() throws FocusInternalErrorException, FocusMissingResourceException
+	public User getUser()
 	{
-		if (!this.hasLoginInformation()) {
+		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.user != null) {
 			return this.user;
 		}
-		this.user = (User) (this.get(this.userUrl, User.class));
-
-		if (this.user == null) {
-// FIXME creatae new user ?
-			throw new FocusMissingResourceException("Cannot retrieve User object.");
+		User user = null;
+		try {
+			user = (User) (this.get(this.userUrl, User.class));
 		}
+		catch (IOException ex) {
+			// we cannot survive without a user
+			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
+		}
+		if (user == null) {
+			user = new User(this.userUrl, "", "", "", ""); // FIXME defaults? something that the REST server can accept. validates against schema
+			ResourceOperationStatus ret = this.post(user);
+			if (ret == ResourceOperationStatus.ERROR) {
+				throw new FocusInternalErrorException("Cannot create User object.");
+			}
+		}
+		this.user = user;
 		return this.user;
 	}
 
 	/**
 	 * Acquire the application's user preferences.
 	 *
+	 * 	 * Preference is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
+
 	 * @return A Preference object
 	 */
-	public Preference getUserPreferences() throws FocusMissingResourceException
+	public Preference getUserPreferences()
 	{
-		if (!this.hasLoginInformation()) {
+		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		this.userPreferences = (Preference) (this.get(this.prefUrl, Preference.class));
-		if (this.userPreferences == null) {
-		// FIXME 	new Preference(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active, Setting settings, Bookmark bookmarks)
-
-			throw new FocusMissingResourceException("Cannot retrieve Preference object.");
-			// FIXME we should create a default one(?)
+		Preference user_preference = null;
+		try {
+			user_preference = (Preference) (this.get(this.prefUrl, Preference.class));
 		}
+		catch (IOException ex) {
+			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
+		}
+		if (user_preference == null) {
+			user_preference = new Preference(this.prefUrl);
+			ResourceOperationStatus ret = this.post(user_preference);
+			if (ret == ResourceOperationStatus.ERROR) {
+				throw new FocusInternalErrorException("Cannot create UserPreferences object.");
+			}
+		}
+		this.userPreferences = user_preference;
 		return this.userPreferences;
 	}
 
@@ -325,14 +353,20 @@ public class DataManager
 	 */
 	public AppContentTemplate getAppContentTemplate() throws FocusMissingResourceException
 	{
-		if (!this.hasLoginInformation()) {
+		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
 		if (this.appContentTemplate != null) {
 			return this.appContentTemplate;
 		}
-		this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
+		try {
+			this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
+		}
+		catch (IOException ex) {
+			throw new FocusInternalErrorException("Object may exist on network but network error occurred"); // FIXME recover strategy. If network error, we may try again, or display
+			// a dialog that asks the user to connect back and try again. In the meantime, we continue to work with the old data set.
+		}
 		if (this.appContentTemplate == null) {
 			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
 		}
@@ -373,10 +407,17 @@ public class DataManager
 	 */
 	public FocusSample getSample(String url) throws FocusMissingResourceException
 	{
-		if (!this.hasLoginInformation()) {
+		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
-		FocusSample fs = (FocusSample) (this.get(url, FocusSample.class));
+
+		FocusSample fs = null;
+		try {
+			fs = (FocusSample) (this.get(url, FocusSample.class));
+		}
+		catch (IOException ex) {
+			throw new FocusMissingResourceException("FocusSample may exist on network but network error occurred");
+		}
 		if (fs == null) {
 			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.");
 		}
@@ -393,7 +434,7 @@ public class DataManager
 	 */
 	public FocusObject getLocalObject(String url)
 	{
-		if (!this.hasLoginInformation()) {
+		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
@@ -418,7 +459,7 @@ public class DataManager
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
 	 */
-	private FocusObject get(String url, Class targetClass)
+	private FocusObject get(String url, Class targetClass) throws IOException
 	{
 		// do we have it in the cache?
 		if (this.cache.get(url) != null) {
@@ -447,13 +488,7 @@ public class DataManager
 
 			// try to get it from the network
 			if (this.net.isNetworkAvailable()) {
-				HttpResponse response;
-				try {
-					response = this.net.get(url);
-				}
-				catch (IOException ex) {
-					return null;
-				}
+				HttpResponse response = this.net.get(url);
 				if (response.isSuccessful()) {
 					String json = response.getData();
 					result = FocusObject.factory(json, targetClass);
@@ -487,11 +522,11 @@ public class DataManager
 	 * <p/>
 	 * a POST is seen as a data commit, so we call data.commit()
 	 *
-	 * @param url  The URL identifying the resource to POST
 	 * @param data The FocusObject representing the data to POST
 	 */
-	public ResourceOperationStatus post(String url, FocusObject data)
+	public ResourceOperationStatus post(FocusObject data)
 	{
+		String url = data.getUrl();
 		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
 		// store in local database, with the "toPost" flag
@@ -555,11 +590,12 @@ public class DataManager
 	 * <p/>
 	 * a PUT is seen as a data commit, so we call data.commit()
 	 *
-	 * @param url  The URL identifying the resource to PUT
 	 * @param data The FocusObject data to PUT
 	 */
-	public ResourceOperationStatus put(String url, FocusObject data)
+	public ResourceOperationStatus put(FocusObject data)
 	{
+		String url = data.getUrl();
+
 		// special internal data are NOT to be PUT, ever.
 		if (url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
 			throw new FocusInternalErrorException("Cannot PUT internal data");
@@ -691,7 +727,7 @@ public class DataManager
 	 */
 	public void saveUserPreferences()
 	{
-		this.put(this.prefUrl, this.userPreferences);
+		this.put(this.userPreferences);
 	}
 
 	/**

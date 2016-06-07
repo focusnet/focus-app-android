@@ -22,6 +22,8 @@ package eu.focusnet.app.model.json;
 
 import java.util.Date;
 
+import eu.focusnet.app.model.util.Constant;
+
 /**
  * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
  * <p/>
@@ -29,7 +31,6 @@ import java.util.Date;
  */
 public class FocusSample extends FocusObject
 {
-	public static final String FOCUS_SAMPLE_TYPE = "http://reference.focusnet.eu/schemas/focus-data-sample/v0.1";
 
 	/**
 	 * The Map containing objects of interest
@@ -43,7 +44,7 @@ public class FocusSample extends FocusObject
 	 */
 	public FocusSample(String url)
 	{
-		super(FOCUS_SAMPLE_TYPE, url, null, null, null, 1, null, null, true);
+		super(Constant.FOCUS_DATAMODEL_TYPE_FOCUS_SAMPLE, url);
 		this.data = new FocusSampleDataMap();
 	}
 

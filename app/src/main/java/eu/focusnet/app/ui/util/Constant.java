@@ -34,7 +34,8 @@ public class Constant
 			UI_EXTRA_TITLE = "eu.focusnet.extra.TITLE",
 			UI_EXTRA_PATH = "eu.focusnet.extra.PATH",
 			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.extra.NOTIFICATION_ID",
-			UI_EXTRA_IMAGE_URI = "eu.focusnet.extra.IMAGE_URI";
+			UI_EXTRA_IMAGE_URI = "eu.focusnet.extra.IMAGE_URI",
+			UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.extra.LOADING_INFO_TEXT";
 
 	// Extra for external app
 	public static final String

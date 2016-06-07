@@ -49,7 +49,6 @@ public class SampleDao
 
 	private String[] columnsToRetrieve = {
 			Constant.URL,
-			Constant.CONTEXT,
 			Constant.VERSION,
 			Constant.TYPE,
 			Constant.OWNER,
@@ -191,7 +190,6 @@ public class SampleDao
 		ContentValues contentValues = new ContentValues();
 //		contentValues.register(Constant.ID, sample.getId());
 		contentValues.put(Constant.URL, sample.getUrl());
-		contentValues.put(Constant.CONTEXT, sample.getContext());
 		contentValues.put(Constant.VERSION, sample.getVersion());
 		contentValues.put(Constant.TYPE, sample.getType());
 		contentValues.put(Constant.OWNER, sample.getOwner());
@@ -216,7 +214,7 @@ public class SampleDao
 		// Build the list of URLs that we use in our data contexts
 		Set<String> used_urls = new HashSet<>();
 
-		// register our configuration URLs
+		// register our configuration URLs, which are not part of data contexts
 		try {
 			used_urls.add(dm.getUser().getUrl());
 			used_urls.add(dm.getUserPreferences().getUrl());
@@ -323,6 +321,10 @@ public class SampleDao
 		for (int i = 0; i < urls_list.length; ++i) {
 			urls_list[i] = "'" + urls_list[i] + "'";
 		}
+
+		// FIXME better format()
+		// 	String.format(sql, Constant.DATABASE_TABLE_SAMPLES, Constant.URL, DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX, Constant.URL, TextUtils.join(",", urls_list), Constant.TO_PUT, Constant.TO_POST,
+		//		Constant.TO_DELETE, Constant.EDITION_EPOCH, SAMPLES_OUTDATED_AFTER, Constant.URL, Constant.URL , Constant.DATABASE_TABLE_SAMPLES, Constant.URL, Constant.VERSION)
 
 		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
 				+ " WHERE "

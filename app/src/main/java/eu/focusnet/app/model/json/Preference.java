@@ -23,6 +23,8 @@ package eu.focusnet.app.model.json;
 import java.util.ArrayList;
 import java.util.Date;
 
+import eu.focusnet.app.model.util.Constant;
+
 
 public class Preference extends FocusObject
 {
@@ -30,6 +32,11 @@ public class Preference extends FocusObject
 	private Long id;
 	private Setting settings;
 	private Bookmark bookmarks;
+
+	public Preference(String targetUrl)
+	{
+		super(Constant.FOCUS_DATAMODEL_TYPE_USER_PREFERENCES, targetUrl);
+	}
 
 	public Long getId()
 	{
@@ -41,24 +48,9 @@ public class Preference extends FocusObject
 		this.id = id;
 	}
 
-	public Setting getSettings()
-	{
-		return settings;
-	}
-
-	public void setSettings(Setting settings)
-	{
-		this.settings = settings;
-	}
-
 	public Bookmark getBookmarks()
 	{
 		return bookmarks;
-	}
-
-	public void setBookmarks(Bookmark bookmarks)
-	{
-		this.bookmarks = bookmarks;
 	}
 
 	public void addBookmarkLink(BookmarkLink bookmarkLink, String bookmarkType)

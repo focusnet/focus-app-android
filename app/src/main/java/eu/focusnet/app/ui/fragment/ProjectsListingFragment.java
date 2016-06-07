@@ -109,13 +109,7 @@ public class ProjectsListingFragment extends ListFragment
 
 			abstractItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
-			Preference preference = null;
-			try {
-				preference = dm.getUserPreferences();
-			}
-			catch (FocusMissingResourceException ex) {
-				// ignore? or crash? FIXME TODO
-			}
+			Preference preference = dm.getUserPreferences();
 
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
 			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);

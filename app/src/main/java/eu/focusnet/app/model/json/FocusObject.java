@@ -26,6 +26,7 @@ import java.util.Date;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by admin on 06.07.2015.
@@ -38,7 +39,6 @@ public class FocusObject implements Serializable
 
 	private String type,
 			url,
-			context,
 			owner,
 			editor;
 	private String originalData;
@@ -52,20 +52,39 @@ public class FocusObject implements Serializable
 
 	}
 
-	protected FocusObject(String type, String url, String context, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
+	/**
+	 * Create a new active FocusObject belonging to the current user
+	 */
+	protected FocusObject(String type, String url)
 	{
+		this(type, url, null, null, 1, null, null, true);
+	}
 
-		User user;
-		try {
-			user = FocusApplication.getInstance().getDataManager().getUser();
+	/**
+	 * NOTE: if the url is internal, we do not set the following fields to anything: owner, editor
+	 *
+	 * @param type
+	 * @param url
+	 * @param owner
+	 * @param editor
+	 * @param version
+	 * @param creationDateTime
+	 * @param editionDateTime
+	 * @param active
+	 */
+	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
+	{
+		User user = null;
+		if (url.startsWith(DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
+			owner = "";
+			editor = "";
 		}
-		catch (FocusMissingResourceException e) {
-			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
+		else if (owner == null || editor == null) {
+			user = FocusApplication.getInstance().getDataManager().getUser();
 		}
 
 		this.type = type;
 		this.url = url;
-		this.context = context;
 		this.owner = owner == null ? user.toString() : owner;
 		this.editor = editor == null ? user.toString() : editor;
 		this.version = version;
@@ -92,13 +111,7 @@ public class FocusObject implements Serializable
 	public void updateToNewVersion()
 	{
 		++this.version;
-		User user;
-		try {
-			user = FocusApplication.getInstance().getDataManager().getUser();
-		}
-		catch (FocusMissingResourceException e) {
-			throw new FocusInternalErrorException("Not allowed to not have a User at this stage.");
-		}
+		User user = FocusApplication.getInstance().getDataManager().getUser();
 		this.editor = user.toString();
 		this.editionDateTime = new Date();
 		this.commit();
@@ -152,11 +165,6 @@ public class FocusObject implements Serializable
 	public boolean isActive()
 	{
 		return active;
-	}
-
-	public String getContext()
-	{
-		return context;
 	}
 
 	public String getOriginalData()

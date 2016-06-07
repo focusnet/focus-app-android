@@ -94,13 +94,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 		ArrayList<AbstractListItem> drawerItems = new ArrayList<AbstractListItem>();
 
-		User user = null;
-		try {
-			user = FocusApplication.getInstance().getDataManager().getUser();
-		}
-		catch (FocusMissingResourceException ex) {
-			throw new FocusInternalErrorException("User object cannot be accessed.");
-		}
+		User user = FocusApplication.getInstance().getDataManager().getUser();
 
 		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
 		for (int i = 0; i < navMenuTitles.length; i++) {
@@ -231,7 +225,9 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 					{
 						FocusApplication.getInstance().getDataManager().logout();
 						try {
-							startActivity(new Intent(ProjectsListingActivity.this, EntryPointActivity.class));
+							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
+							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
+							startActivity(i);
 						}
 						finally {
 							finish();

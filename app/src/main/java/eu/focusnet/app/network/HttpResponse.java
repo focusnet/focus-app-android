@@ -45,6 +45,7 @@ public class HttpResponse
 	 * An HttpResponse contains all information that may be useful by the application to
 	 * decide what to do after a network call.
 	 *
+	 * Returns even in case of on-success (e.g. 404).
 	 * @param connection
 	 * @throws IOException
 	 */
@@ -53,7 +54,7 @@ public class HttpResponse
 		this.method = connection.getRequestMethod();
 		this.returnCode = connection.getResponseCode();
 		if (!this.isSuccessful()) {
-			throw new IOException("HTTP request failed.");
+			return;
 		}
 
 		this.headers = connection.getHeaderFields();

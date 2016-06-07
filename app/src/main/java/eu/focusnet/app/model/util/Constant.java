@@ -26,6 +26,10 @@ package eu.focusnet.app.model.util;
 public class Constant
 {
 
+	public static final String FOCUS_DATAMODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/user-information/v1.0",
+			FOCUS_DATAMODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0",
+			FOCUS_DATAMODEL_TYPE_FOCUS_SAMPLE = "http://reference.focusnet.eu/schemas/focus-data-sample/v1.0";
+
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"; // ISO 8601
 
 	public static final String DATABASE_NAME = "Focus_DB";
@@ -35,7 +39,6 @@ public class Constant
 	public static final String ID = "id",
 			TYPE = "type",
 			URL = "url",
-			CONTEXT = "context",
 			OWNER = "owner",
 			EDITOR = "editor",
 			CREATION_EPOCH = "creation_date_time",
@@ -50,7 +53,6 @@ public class Constant
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
 			"(" + ID + " INTEGER AUTO INCREMENT," +
 			URL + " TEXT PRIMARY KEY, " +
-			CONTEXT + " TEXT, " +
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +

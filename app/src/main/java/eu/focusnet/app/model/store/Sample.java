@@ -32,7 +32,6 @@ public class Sample
 
 	private Long id;
 	private String url;
-	private String context;
 	private int version;
 	private String type;
 	private String owner;
@@ -48,7 +47,7 @@ public class Sample
 	/**
 	 * Constructor
 	 */
-	public Sample(Long id, String url, String context, int version,
+	public Sample(Long id, String url, int version,
 				  String type, String owner,
 				  Date creationDateTime, Date editionDateTime,
 				  String editor, boolean active,
@@ -56,7 +55,6 @@ public class Sample
 	{
 		this.id = id;
 		this.url = url;
-		this.context = context;
 		this.version = version;
 		this.type = type;
 		this.owner = owner;
@@ -88,7 +86,6 @@ public class Sample
 		return new Sample(
 				null,
 				fo.getUrl(),
-				fo.getContext(),
 				fo.getVersion(),
 				fo.getType(),
 				fo.getOwner(),
@@ -222,11 +219,6 @@ public class Sample
 	public void setToPut(boolean toPut)
 	{
 		this.toPut = toPut;
-	}
-
-	public String getContext()
-	{
-		return context;
 	}
 
 	public boolean isToPost()

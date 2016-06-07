@@ -186,7 +186,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		public DataManager.ResourceOperationStatus postFocusData(String url, String data)
 		{
 			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-			return this.dm.post(url, fs);
+			return this.dm.post(fs);
 		}
 
 		/**
@@ -198,7 +198,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		public DataManager.ResourceOperationStatus putFocusData(String url, String data)
 		{
 			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-			return this.dm.put(url, fs);
+			return this.dm.put(fs);
 		}
 
 		/**

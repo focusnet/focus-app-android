@@ -71,26 +71,8 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(this);
-
-
 	}
 
-	/**
-	 * When the user clicks the activity_login button, the provided username, password and server name
-	 * are used to authenticate.
-	 * <p/>
-	 * This logic requires a network connection.
-	 */
-	public void onClick(View view)
-	{
-		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
-			new UseCaseSelectionTask(this).execute(this.selectedUseCase);
-		}
-		else {
-			UiHelper.displayToast(this, R.string.focus_login_error_no_network);
-		}
-
-	}
 
 	/**
 	 * position is 0-based
@@ -113,56 +95,42 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	}
 
 	/**
-	 * This class is used for testing if the given credential are correct
+	 * When the user clicks the activity_login button, the provided username, password and server name
+	 * are used to authenticate.
+	 * <p/>
+	 * This logic requires a network connection.
 	 */
-	private class UseCaseSelectionTask extends AsyncTask<Integer, Void, Void>
+	public void onClick(View view)
 	{
+		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
 
-		private ProgressDialog progressDialog;
-		private Context context;
+			final Thread login = new Thread() {
+				public void run()
+				{
+					String[] use_cases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
+					String selected_use_case = use_cases[selectedUseCase];
 
-		public UseCaseSelectionTask(Context context)
-		{
-			this.context = context;
+					try {
+						FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
+					}
+					catch (IOException ex) {
+						throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");
+					}
+
+					Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
+					i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
+					startActivity(i);
+					finish();
+				}
+			};
+			login.start();
+
+		}
+		else {
+			UiHelper.displayToast(this, R.string.focus_login_error_no_network);
 		}
 
-		@Override
-		protected void onPreExecute()
-		{
-			Resources res = getResources();
-			progressDialog = new ProgressDialog(this.context);
-			progressDialog.setTitle(res.getString(R.string.focus_login_progress_message));
-			progressDialog.setMessage(res.getString(R.string.progress_wait_message));
-			progressDialog.show();
-		}
-
-		@Override
-		protected Void doInBackground(Integer ... data)
-		{
-			String[] use_cases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
-			String selected_use_case = use_cases[data[0]];
-
-			try {
-				FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
-			}
-			catch (IOException ex) {
-				throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v)
-		{
-			if (progressDialog.isShowing()) {
-				progressDialog.dismiss();
-			}
-
-			Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
-			i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
-			startActivity(i);
-			finish();
-		}
 	}
+
 
 }

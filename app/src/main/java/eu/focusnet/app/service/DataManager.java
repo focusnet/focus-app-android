@@ -56,6 +56,9 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * This follows a Singleton pattern.
+ *
+ * FIXME this class is probably responsible for too many things.
+ *
  * <p/>
  * Created by julien on 07.01.16.
  */
@@ -372,6 +375,7 @@ public class DataManager
 		}
 		catch (IOException ex) {
 			// we cannot survive without a user
+			// this case is triggered if there was network + no user in local db + network outage while retrieving object of interest
 			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
 		}
 		if (user == null) {
@@ -406,6 +410,8 @@ public class DataManager
 			user_preference = (UserPreferences) (this.get(this.prefUrl, UserPreferences.class));
 		}
 		catch (IOException ex) {
+			// we cannot survive without userpreferences
+			// this case is triggered if there was network + no userprerferences in local db + network outage while retrieving object of interest
 			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
 		}
 		if (user_preference == null) {
@@ -437,8 +443,9 @@ public class DataManager
 			this.appContentTemplate = (AppContentTemplate) (this.get(this.appContentUrl, AppContentTemplate.class));
 		}
 		catch (IOException ex) {
-			throw new FocusInternalErrorException("Object may exist on network but network error occurred"); // FIXME recover strategy. If network error, we may try again, or display
-			// a dialog that asks the user to connect back and try again. In the meantime, we continue to work with the old data set.
+			// we cannot survive without an appcontent
+			// this case is triggered if there was network + no appcontent in local db + network outage while retrieving object of interest
+			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
 		}
 		if (this.appContentTemplate == null) {
 			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");

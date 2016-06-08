@@ -89,6 +89,10 @@ public class EntryPointActivity extends Activity
 						// (e.g. no network, and the app content has not been previously loaded -> User + UserPreferences are created, but the app content must be loaded. )
 						// FIXME display dialog that requests network connectivity. If there is network, then the resource does not exist-> crash.
 
+						// FIXME here comes a dialog. Then redirect
+
+
+
 					}
 				}
 			}

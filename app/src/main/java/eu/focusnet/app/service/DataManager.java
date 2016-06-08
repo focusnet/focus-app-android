@@ -245,7 +245,6 @@ public class DataManager
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS, this.userUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
-		fs.commit();
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
@@ -278,10 +277,26 @@ public class DataManager
 		// find the demo use case idx based on the
 		this.demoUseCase = use_case;
 
+		// user and preferences URIs
 		String test_server = PropertiesHelper.getProperty("resource-server.endpoint", FocusApplication.getInstance());
 		this.userUrl = test_server + "/data/focus-user/" + user_id;
 		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + this.demoUseCase;
-		this.appContentUrl = "http://focus.yatt.ch/debug/app-content-4.json"; // FIXME hard-coded for testing.
+
+		// infer app content URI
+		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
+		int found_idx = -1;
+		for (int i = 0; i < use_cases_ids.length; ++i) {
+			if (this.demoUseCase.equals(use_cases_ids[i])) {
+				found_idx = i;
+			}
+		}
+		if (found_idx == -1) {
+			throw new FocusInternalErrorException("Invalid demo identifier");
+		}
+
+		String[] uris = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_app_cntent_uris);
+		this.appContentUrl = uris[found_idx];
+
 
 		// if all ok, save info to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
@@ -292,7 +307,6 @@ public class DataManager
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS, this.prefUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT, this.appContentUrl);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE, this.demoUseCase);
-		fs.commit();
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
@@ -605,9 +619,6 @@ public class DataManager
 		// make it accessible through the cache
 		this.cache.put(url, data);
 
-
-		data.commit();
-
 		// push on the network
 		if (is_special_url) {
 			return ResourceOperationStatus.SUCCESS;
@@ -679,7 +690,6 @@ public class DataManager
 
 		// make it accessible through the cache
 		this.cache.put(url, data);
-		data.commit();
 
 		// network PUT
 		if (!this.net.isNetworkAvailable()) {
@@ -993,30 +1003,5 @@ public class DataManager
 		if (!must_recover) {
 			FocusApplication.getInstance().replaceDataManager(new_dm);
 		}
-	}
-
-	/**
-	 * Return a user-friendly description of the demo
-	 *
-	 * FIXME for demo version
-	 *
-	 * @return
-	 */
-	public String getDemoUseCase()
-	{
-		// this.demoUseCase contains the identifier of the use case
-		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
-		int found_idx = -1;
-		for (int i = 0; i < use_cases_ids.length; ++i) {
-			if (this.demoUseCase.equals(use_cases_ids[i])) {
-				found_idx = i;
-			}
-		}
-		if (found_idx == -1) {
-			throw new FocusInternalErrorException("Invalid demo identifier");
-		}
-
-		String[] use_cases_labels = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_labels);
-		return use_cases_labels[found_idx + 1];
 	}
 }

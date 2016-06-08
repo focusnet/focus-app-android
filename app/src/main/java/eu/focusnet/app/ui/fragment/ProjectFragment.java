@@ -127,15 +127,15 @@ public class ProjectFragment extends ListFragment
 
 			abstractItems = new ArrayList<>();
 
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
 					getString(R.string.header_dashboard),
 					null);
 			abstractItems.add(headerProjectsListItem);
 
 			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
 
-			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
-			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
+			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
+			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 			for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 				PageInstance dashboard = entry.getValue();
@@ -143,14 +143,14 @@ public class ProjectFragment extends ListFragment
 
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
 				abstractItems.add(drawListItem);
 
 			}
 
 
-			AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
+			AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
 					getString(R.string.header_tool),
 					null);
 			abstractItems.add(headerToolListItem);
@@ -162,7 +162,7 @@ public class ProjectFragment extends ListFragment
 
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right), tool.getTitle(), tool.getDescription(),
+				StandardListItem drawListItem = new StandardListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
 				abstractItems.add(drawListItem);
 			}

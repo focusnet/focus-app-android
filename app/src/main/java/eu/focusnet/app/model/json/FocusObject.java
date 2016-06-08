@@ -41,7 +41,6 @@ public class FocusObject implements Serializable
 			url,
 			owner,
 			editor;
-	private String originalData;
 	private int version;
 	private Date creationDateTime,
 			editionDateTime;
@@ -98,9 +97,7 @@ public class FocusObject implements Serializable
 	 */
 	public static FocusObject factory(String json, Class targetClass)
 	{
-		FocusObject fo = (FocusObject) FocusApplication.getInstance().getDataManager().getGson().fromJson(json, targetClass);
-		fo.setOriginalData(json);
-		return fo;
+		return (FocusObject) FocusApplication.getInstance().getDataManager().getGson().fromJson(json, targetClass);
 	}
 
 	/**
@@ -114,19 +111,6 @@ public class FocusObject implements Serializable
 		User user = FocusApplication.getInstance().getDataManager().getUser();
 		this.editor = user.toString();
 		this.editionDateTime = new Date();
-		this.commit();
-	}
-
-	/**
-	 * Committing means that the current object is considered a valid entity in the FOCUS context,
-	 * so we update the original_data to reflect this new state.
-	 *
-	 * FIXME document: do not forget to call it
-	 */
-	public void commit()
-	{
-		this.originalData = ""; // avoid to store useless data
-		this.originalData = FocusApplication.getInstance().getDataManager().getGson().toJson(this);
 	}
 
 	public String getType()
@@ -169,25 +153,12 @@ public class FocusObject implements Serializable
 		return active;
 	}
 
-	public String getOriginalData()
-	{
-		return originalData;
-	}
 
-	private void setOriginalData(String original_data)
-	{
-		this.originalData = original_data;
-	}
 
 	@Override
 	public String toString()
 	{
-		// avoid to store useless data
-		String tmp = this.originalData;
-		this.originalData = "";
-		String ret = FocusApplication.getInstance().getDataManager().getGson().toJson(this);
-		this.originalData = tmp;
-		return ret;
+		return FocusApplication.getInstance().getDataManager().getGson().toJson(this);
 	}
 
 }

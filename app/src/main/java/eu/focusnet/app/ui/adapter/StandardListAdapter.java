@@ -173,7 +173,7 @@ public class StandardListAdapter extends BaseAdapter
 
 									if (isRightIconActive) {
 										standardListItem.setIsRightIconActive(false);
-										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.picto_bookmark_not_selected);
+										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 										selectedContext.setEnabled(false);
@@ -182,7 +182,7 @@ public class StandardListAdapter extends BaseAdapter
 									}
 									else {
 										standardListItem.setIsRightIconActive(true);
-										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.picto_bookmark_selected);
+										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 

@@ -22,6 +22,8 @@ package eu.focusnet.app.model.store;
 
 import java.util.Date;
 
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 
 /**
@@ -53,6 +55,9 @@ public class Sample
 				  String editor, boolean active,
 				  String data, boolean toDelete, boolean toPush, boolean toPost)
 	{
+		if (data == null || data.equals("")) {
+			throw new FocusInternalErrorException("When creating a sample, data cannot be empty");
+		}
 		this.id = id;
 		this.url = url;
 		this.version = version;
@@ -83,6 +88,7 @@ public class Sample
 	 */
 	public static Sample cloneFromFocusObject(FocusObject fo)
 	{
+		// make sure that the internal representation is up-to-date
 		return new Sample(
 				null,
 				fo.getUrl(),
@@ -93,7 +99,7 @@ public class Sample
 				fo.getEditionDateTime(),
 				fo.getEditor(),
 				fo.isActive(),
-				fo.getOriginalData(),
+				FocusApplication.getInstance().getDataManager().getGson().toJson(fo),
 				false,
 				false,
 				false

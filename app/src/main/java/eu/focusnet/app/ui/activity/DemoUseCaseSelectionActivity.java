@@ -83,13 +83,6 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 */
 	public void onClick(View view)
 	{
-		//test If the device is connected to the internet, if true
-		// test then the given credentials otherwise display an error message(toast) to the user
-		if (this.selectedUseCase == 0) {
-			((TextView) this.spinner.getSelectedView()).setError(getString(R.string.select_use_case));
-			return;
-		}
-
 		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
 			new UseCaseSelectionTask(this).execute(this.selectedUseCase);
 		}
@@ -99,6 +92,14 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 
 	}
 
+	/**
+	 * position is 0-based
+	 *
+	 * @param parent
+	 * @param view
+	 * @param position
+	 * @param id
+	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 	{
@@ -108,7 +109,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	@Override
 	public void onNothingSelected(AdapterView<?> parent)
 	{
-		this.selectedUseCase = 0;
+		this.selectedUseCase = -1;
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		protected Void doInBackground(Integer ... data)
 		{
 			String[] use_cases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
-			String selected_use_case = use_cases[data[0] - 1];
+			String selected_use_case = use_cases[data[0]];
 
 			try {
 				FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);

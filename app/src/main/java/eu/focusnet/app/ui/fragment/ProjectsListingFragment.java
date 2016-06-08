@@ -102,7 +102,7 @@ public class ProjectsListingFragment extends ListFragment
 		protected StandardListAdapter doInBackground(Void... voids)
 		{
 			abstractItems = new ArrayList<>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_project_negative),
+			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_project_negative),
 					getString(R.string.focus_header_project),
 					null); // filter icon: ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter)
 
@@ -111,8 +111,8 @@ public class ProjectsListingFragment extends ListFragment
 			UserPreferences preference = dm.getUserPreferences();
 
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
-			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_not_selected);
-			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
+			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
+			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 				ProjectInstance p = entry.getValue();
@@ -130,7 +130,7 @@ public class ProjectsListingFragment extends ListFragment
 				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
 				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
 
-				StandardListItem drawListItem = new StandardListItem(projectId, UiHelper.getBitmap(getActivity(), R.drawable.picto_project), projectTitle, projectDesc,
+				StandardListItem drawListItem = new StandardListItem(projectId, UiHelper.getBitmap(getActivity(), R.drawable.ic_project), projectTitle, projectDesc,
 						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
 				abstractItems.add(drawListItem);
 			}

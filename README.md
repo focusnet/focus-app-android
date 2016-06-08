@@ -12,6 +12,10 @@ with that, please do not use the application
 
 This feature will be disabled when the application enters production stage.
 
+## DEV note
+
+we use git sumbodules for fi.simosol.focus.map. Be careful, submodules are not easy not handle.
+
 ## License
 
 This software is released under the commercial-friendly and open-source MIT license.

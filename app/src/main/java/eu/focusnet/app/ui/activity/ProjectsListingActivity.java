@@ -32,6 +32,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.BuildConfig;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.common.AbstractListItem;
@@ -91,12 +92,12 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 		ArrayList<AbstractListItem> drawerItems = new ArrayList<AbstractListItem>();
 
-		String use_case = FocusApplication.getInstance().getDataManager().getDemoUseCase();
+		String app_version = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
 
 		// FIXME if not in Demo mode we should use be the below line - but we should rewrite this UI component anyway
 		// User user = FocusApplication.getInstance().getDataManager().getUser();
 		// drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), use_case, "", ""));
+		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), app_version, "", ""));
 
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
@@ -211,7 +212,9 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		switch (position) {
 			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
 				fragment = new ProjectsListingFragment();
-				getSupportActionBar().setSubtitle(FocusApplication.getInstance().getDataManager().getDemoUseCase());// FIXME should come from the app content description!
+				getSupportActionBar().setSubtitle(
+						FocusApplication.getInstance().getDataManager().getAppContentInstance().getTitle()
+				);
 				break;
 			case Constant.UI_MENU_ENTRY_BOOKMARK:
 				fragment = new BookmarkFragment(); // FIXME clicking on BOOKMARKS in Menu -> MY FOCUS is displayed, but not the subtitle

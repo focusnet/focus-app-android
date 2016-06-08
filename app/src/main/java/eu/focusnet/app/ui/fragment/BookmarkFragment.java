@@ -73,7 +73,7 @@ public class BookmarkFragment extends ListFragment
 	{
 		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
 
-			Intent intent = null;
+			Intent intent;
 			StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
 
 			String path = selectedItem.getPath();
@@ -109,27 +109,36 @@ public class BookmarkFragment extends ListFragment
 		ArrayList<Bookmark> tools = bookmark.getTools();
 
 		abstractItems = new ArrayList<>();
-		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_dashboard_negative),
+		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
 				getResources().getString(R.string.bookmark_header_dashboard), null);
 		abstractItems.add(headerProjectsListItem);
 
-		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.picto_bookmark_selected);
+		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
-		for (Bookmark bl : pages) {
-			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
-					bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
-			abstractItems.add(drawListItem);
+		if (!pages.isEmpty()) {
+			for (Bookmark bl : pages) {
+				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+						bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
+				abstractItems.add(drawListItem);
+			}
+		}
+		else {
+			// FIXME add empty list item (non-clickable) if no pages found
 		}
 
-		AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.picto_category_tool_negative),
+		AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
 				getString(R.string.bookmark_header_tool), null);
 		abstractItems.add(headerToolListItem);
 
-
-		for (Bookmark bl : tools) {
-			StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.picto_chevron_right),
-					bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
-			abstractItems.add(drawListItem);
+		if (!tools.isEmpty()) {
+			for (Bookmark bl : tools) {
+				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+						bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
+				abstractItems.add(drawListItem);
+			}
+		}
+		else {
+			// FIXME add empty list item (non-clickable) if no pages found
 		}
 
 		StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);

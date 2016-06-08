@@ -21,23 +21,27 @@
 
     <!-- Corresponding nav icons -->
     <string-array name="drawer_icons">
-        <item>@drawable/picto_home</item>
-        <item>@drawable/picto_bookmark_selected</item>
-        <item>@drawable/picto_about</item>
-        <item>@drawable/picto_power_off</item>
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_bookmark_selected</item>
+        <item>@drawable/ic_about</item>
+        <item>@drawable/ic_power_off</item>
     </string-array>
 
     <!-- Demonstration use cases -->
-    <string-array name="demo_use_cases_labels">
-        <item>-- Select --</item>
-        <item>UI library</item>
-        <item>FOCUS Pilot Case I - Winterthur</item>
-        <item>FOCUS Pilot Case III - Arnsberg</item>
-    </string-array>
     <string-array name="demo_use_cases_values">
         <item>ui-library</item>
         <item>pilot-case-1</item>
         <item>pilot-case-3</item>
+    </string-array>
+    <string-array name="demo_use_cases_labels">
+        <item>UI library</item>
+        <item>FOCUS Pilot Case I - Winterthur</item>
+        <item>FOCUS Pilot Case III - Arnsberg</item>
+    </string-array>
+    <string-array name="demo_use_cases_app_cntent_uris">
+        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
+        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
+        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
     </string-array>
 
     <string name="focus_header_project">My Projects</string>

@@ -95,9 +95,9 @@ public class DrawerListAdapter extends BaseAdapter
 			if (itemViewType == HeaderDrawerListItem.TYPE_HEADER_DRAWER) {
 				row = inflater.inflate(R.layout.drawer_list_item_header, parent, false);
 				holder.icon = (ImageView) row.findViewById(R.id.logo);
-				holder.title = (TextView) row.findViewById(R.id.user); //here is the value of title the user name
-				holder.email = (TextView) row.findViewById(R.id.email);
-				holder.company = (TextView) row.findViewById(R.id.company);
+				holder.title = (TextView) row.findViewById(R.id.user);
+			//	holder.email = (TextView) row.findViewById(R.id.email);
+			//	holder.company = (TextView) row.findViewById(R.id.company);
 			}
 			else {
 				row = inflater.inflate(R.layout.standard_list_item, parent, false);
@@ -117,8 +117,8 @@ public class DrawerListAdapter extends BaseAdapter
 		AbstractListItem drawerListItem = drawerListItems.get(position);
 		if (itemViewType == HeaderDrawerListItem.TYPE_HEADER_DRAWER) {
 			HeaderDrawerListItem headerDrawerListItem = (HeaderDrawerListItem) drawerListItem;
-			holder.email.setText(headerDrawerListItem.getEmail());
-			holder.company.setText(headerDrawerListItem.getCompany());
+//			holder.email.setText(headerDrawerListItem.getEmail());
+//			holder.company.setText(headerDrawerListItem.getCompany());
 		}
 		else {
 			holder.info.setText(((DrawerListItem) drawerListItem).getInfo());

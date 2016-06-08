@@ -43,6 +43,7 @@ public class AppContentInstance extends AbstractInstance
 	private DataManager dataManager;
 	private AppContentTemplate appTemplate;
 	private LinkedHashMap<String, ProjectInstance> projects;
+	private String title;
 
 	/**
 	 * C'tor
@@ -95,6 +96,9 @@ public class AppContentInstance extends AbstractInstance
 	 */
 	private void build()
 	{
+		// Get the global app content title
+		this.title = this.appTemplate.getTitle();
+
 		// retrieve application-wide data
 		try {
 			this.dataContext.provideData(this.appTemplate.getData());
@@ -242,4 +246,8 @@ public class AppContentInstance extends AbstractInstance
 	}
 
 
+	public String getTitle()
+	{
+		return title;
+	}
 }

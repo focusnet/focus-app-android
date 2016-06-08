@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 public class AppContentTemplate extends FocusObject
 {
 
+	private String title;
 	private LinkedHashMap<String, String> data;
 	private ArrayList<ProjectTemplate> projects;
 
@@ -44,4 +45,8 @@ public class AppContentTemplate extends FocusObject
 		return this.data;
 	}
 
+	public String getTitle()
+	{
+		return title;
+	}
 }

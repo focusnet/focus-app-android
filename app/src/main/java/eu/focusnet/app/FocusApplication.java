@@ -148,7 +148,7 @@ public class FocusApplication extends Application
 		MultiDex.install(this);
 
 		// ACRA init, only in release mode
-		if (!BuildConfig.DEBUG || 1==1) {
+		if (!BuildConfig.DEBUG) {
 			// prepopulated with values set in the annotation
 			String form_uri;
 			String user;

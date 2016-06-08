@@ -25,14 +25,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
-
+import org.acra.ErrorReporter;
 import java.io.IOException;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -40,24 +40,6 @@ import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.FocusApplicationActivityLifecycleHandler;
 import eu.focusnet.app.ui.util.PropertiesHelper;
-
-/**
- * ACRA configuration
- * <p/>
- * FIXME TODO YANDY move credentials / formUri to a properties file, which is not committed to git! and failsafe with defaults
- * see assets/acra.properties
- * we can use the programmatic way of settings params of ACRA if necessary, into onCreate()
- */
-@ReportsCrashes(
-		reportType = org.acra.sender.HttpSender.Type.JSON,
-		httpMethod = org.acra.sender.HttpSender.Method.PUT,
-		mode = ReportingInteractionMode.DIALOG,
-		resToastText = R.string.focus_crash_toast_text,
-		resDialogText = R.string.focus_crash_dialog_text,
-		resDialogTitle = R.string.focus_crash_dialog_title,
-		resDialogCommentPrompt = R.string.focus_crash_dialog_comment_prompt,
-		resDialogOkToast = R.string.focus_crash_dialog_ok_toast
-)
 
 /**
  * FOCUS Application
@@ -79,6 +61,25 @@ public class FocusApplication extends Application
 	 */
 	private DataManager dataManager;
 	private FocusApplicationActivityLifecycleHandler activityHandler;
+	private Thread.UncaughtExceptionHandler originalUncaughtExceptionHandler;
+	/**
+	 * A custom exception handler that will reset() the app if any exception is not caught.
+	 */
+	private Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler()
+	{
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex)
+		{
+			if (FocusApplication.getInstance() != null && FocusApplication.getInstance().getDataManager() != null) {
+				FocusApplication.getInstance().getDataManager().reset();
+			}
+
+			if (BuildConfig.DEBUG) {
+				ex.printStackTrace();
+			}
+			originalUncaughtExceptionHandler.uncaughtException(thread, ex);
+		}
+	};
 
 	/**
 	 * Acquire the instance of this app
@@ -116,7 +117,7 @@ public class FocusApplication extends Application
 	 */
 	public Context getContext()
 	{
-		return instance.getApplicationContext();
+		return instance;
 	}
 
 	/**
@@ -130,7 +131,6 @@ public class FocusApplication extends Application
 		return this.dataManager;
 	}
 
-
 	/**
 	 * ACRA programmatic initialization.
 	 *
@@ -141,11 +141,14 @@ public class FocusApplication extends Application
 	{
 		super.attachBaseContext(base);
 
+		// Singleton reference saving
+		instance = this;
+
 		// Enable MultiDex
 		MultiDex.install(this);
 
 		// ACRA init, only in release mode
-		if (!BuildConfig.DEBUG) {
+		if (!BuildConfig.DEBUG || 1==1) {
 			// prepopulated with values set in the annotation
 			String form_uri;
 			String user;
@@ -158,11 +161,22 @@ public class FocusApplication extends Application
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot get property in focus.properties");
 			}
+
 			try {
+				// ACRA configuration is fully programmatic, no annotation
+				// so everything at the same location
 				final ACRAConfiguration config = new ConfigurationBuilder(this)
 						.setFormUri(form_uri)
 						.setFormUriBasicAuthLogin(user)
 						.setFormUriBasicAuthPassword(pass)
+						.setReportType(org.acra.sender.HttpSender.Type.JSON)
+						.setHttpMethod(org.acra.sender.HttpSender.Method.PUT)
+						.setReportingInteractionMode(ReportingInteractionMode.DIALOG)
+						.setResToastText(R.string.focus_crash_toast_text)
+						.setResDialogText(R.string.focus_crash_dialog_text)
+						.setResDialogTitle(R.string.focus_crash_dialog_title)
+						.setResDialogCommentPrompt(R.string.focus_crash_dialog_comment_prompt)
+						.setResDialogOkToast(R.string.focus_crash_dialog_ok_toast)
 						.build();
 				ACRA.init(this, config);
 			}
@@ -171,6 +185,10 @@ public class FocusApplication extends Application
 			}
 		}
 
+		// We create a custom handler that will clean the application state
+		// but it will also call the ACRA handler for nice bug reports
+		this.originalUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+		Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 	}
 
 	/**
@@ -179,9 +197,6 @@ public class FocusApplication extends Application
 	@Override
 	public void onCreate()
 	{
-		// Singleton reference saving
-		instance = this;
-
 		super.onCreate();
 
 		this.activityHandler = new FocusApplicationActivityLifecycleHandler();

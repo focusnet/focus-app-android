@@ -54,7 +54,7 @@ public class EntryPointActivity extends Activity
 	 * Login activity
 	 */
 	final private static Class LOGIN_ACTIVITY = DemoUseCaseSelectionActivity.class;
-	private static final long MINIMUM_DISPLAY_DURATION = 2_000;
+	private static final long MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS = 2_000;
 
 	/**
 	 * Instantiate the activity.
@@ -82,6 +82,7 @@ public class EntryPointActivity extends Activity
 
 		// run tasks
 		new InitTask(this).execute();
+
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class EntryPointActivity extends Activity
 		@Override
 		protected void onPreExecute()
 		{
-			this.runUntil = System.currentTimeMillis() + MINIMUM_DISPLAY_DURATION;
+			this.runUntil = System.currentTimeMillis() + MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
 		}
 
 		@Override
@@ -149,17 +150,16 @@ public class EntryPointActivity extends Activity
 							else {
 								startActivity(new Intent(EntryPointActivity.this, LOGIN_ACTIVITY));
 							}
+							finish();
 						}
 					}
 					catch (InterruptedException ex) {
 						// empty, but that's ok. Ignore failure.
-					}
-					finally {
 						finish();
 					}
 					// restart this activity if necessary
 					if (tryAgain) {
-						startActivity(getIntent());
+						FocusApplication.getInstance().restartCurrentActivity();
 					}
 				}
 			};
@@ -178,7 +178,7 @@ public class EntryPointActivity extends Activity
 								finished = true;
 								tryAgain = true;
 								// force reloading of activity on next iteration of the waiting thread(
-								runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION;
+								runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
 							}
 						});
 				AlertDialog dialog = builder.create();

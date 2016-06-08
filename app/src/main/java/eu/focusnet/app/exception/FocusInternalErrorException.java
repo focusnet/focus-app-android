@@ -31,9 +31,5 @@ public class FocusInternalErrorException extends RuntimeException
 	public FocusInternalErrorException(String detailMessage)
 	{
 		super(detailMessage);
-
-		// delete everything from the local database before crashing such that we
-		// start next application run in a clean state.
-		FocusApplication.getInstance().getDataManager().reset();
 	}
 }

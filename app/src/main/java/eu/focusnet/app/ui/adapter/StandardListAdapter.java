@@ -130,13 +130,19 @@ public class StandardListAdapter extends BaseAdapter
 						if (standardListItem.getRightIcon() != null) {
 							final ImageView imageView = (ImageView) v;
 
+							// design our view
 							AlertDialog.Builder builder = new AlertDialog.Builder(context);
-							View dialogView = inflater.inflate(R.layout.custom_alert_dialog_layout, null);
+							View dialogView = inflater.inflate(R.layout.dialog_layout_custom, null);
+
+							// add the content to our dialog view
+							View dialog_content = inflater.inflate(R.layout.dialog_content_bookmark, null);
+							ViewGroup vg = (ViewGroup) dialogView.findViewById(R.id.dialog_content);
+							vg.addView(dialog_content);
+
 							builder.setView(dialogView);
 							final Dialog dialog = builder.create();
 
 							TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-
 
 							final boolean isRightIconActive = standardListItem.isRightIconActive();
 

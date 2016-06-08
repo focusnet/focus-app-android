@@ -41,6 +41,7 @@ import eu.focusnet.app.ui.fragment.widget.EmptyWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
+import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
@@ -78,6 +79,9 @@ public class PageFragment extends Fragment
 
 		//	ViewUtil.buildPageView(this.projectInstance, this.pageInstance, linearLayoutPageInfo, getActivity());
 		this.buildPage();
+
+		// Keyboard should disappear when the user clicks outside of it
+		UiHelper.setupHiddableKeyboard(this.viewRoot, this.getActivity());
 
 		return viewRoot;
 	}

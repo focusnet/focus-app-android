@@ -73,8 +73,8 @@
     <string name="focus_login_progress_message">Logging in</string>
     <string name="focus_save_user_pref_before">Saving user preferences …</string>
     <string name="focus_save_user_pref_after">User preferences saved.</string>
-    <string name="focus_remove_bookmark_question">Do you want to remove the following bookmark?</string>
-    <string name="focus_add_bookmark_question">Please name your bookmarkk</string>
+    <string name="focus_remove_bookmark_question">Do you want to remove this bookmark?</string>
+    <string name="focus_add_bookmark_question">Name your bookmark</string>
     <string name="focus_external_app_button_label_default">Launch</string>
     <string name="app_identifier">Application</string>
     <string name="not_acquired_yet">Not acquired, yet.</string>
@@ -104,5 +104,6 @@
     <string name="synchronize_data">Synchronize data</string>
     <string name="try_again">Try again</string>
     <string name="connected_to_web">Are you connected to Internet?</string>
+    <string name="fail_load_content_title">We failed to load the application content</string>
 
 </resources>

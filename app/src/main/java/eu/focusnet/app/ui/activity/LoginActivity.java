@@ -54,6 +54,8 @@ public class LoginActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		UiHelper.setupHiddableKeyboard(findViewById(R.id.activity_view_parent), this);
 	}
 
 	/**

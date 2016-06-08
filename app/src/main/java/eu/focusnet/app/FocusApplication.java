@@ -47,6 +47,7 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
  * FIXME TODO review all methods and 'synchronized' them if necessary, but only if necessary.
  *
  * This is a Singleton, which allows us to access the application context and DataManager from anywhere.
+ *
  */
 public class FocusApplication extends Application
 {

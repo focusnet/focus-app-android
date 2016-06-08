@@ -21,13 +21,16 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
@@ -82,7 +85,6 @@ public class EntryPointActivity extends Activity
 
 		// run tasks
 		new InitTask(this).execute();
-
 	}
 
 	/**
@@ -113,6 +115,12 @@ public class EntryPointActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... data)
 		{
+			// FIXME sometimes the remediation dialog does not show up.
+			// enable next 2 lines to display indefinitely this dialog and try to debug
+			this.remediationDialog = true;
+			if (1==1)return null;
+
+
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			dm.init();
 			if (dm.isLoggedIn()) {
@@ -167,22 +175,50 @@ public class EntryPointActivity extends Activity
 
 			// display the remediation dialog if necessary
 			if (this.remediationDialog) {
-				Resources res = getResources();
+	//			FocusAlertDialog d = new FocusAlertDialog();
 				AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-				builder.setTitle("We failed to load the application content")
-						.setMessage(getString(R.string.connected_to_web))
-						.setPositiveButton(getString(R.string.try_again), new DialogInterface.OnClickListener()
-						{
-							public void onClick(DialogInterface dialog, int id)
-							{
-								finished = true;
-								tryAgain = true;
-								// force reloading of activity on next iteration of the waiting thread(
-								runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
-							}
-						});
-				AlertDialog dialog = builder.create();
+				LayoutInflater inflater = LayoutInflater.from(this.context);
+				View dialogView = inflater.inflate(R.layout.dialog_layout_custom, null);
+				builder.setView(dialogView);
+				final Dialog dialog = builder.create();
+
+	//			d.setTitle();
+				// adapt title
+				TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
+				dialogTitle.setText(getString(R.string.fail_load_content_title));
+
+				// add the content to our dialog view
+	//			d.insertContent(view);
+				TextView dialog_content = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
+				dialog_content.setText(getString(R.string.connected_to_web));
+				ViewGroup vg = (ViewGroup) dialogView.findViewById(R.id.dialog_content);
+				vg.addView(dialog_content);
+
+				// d.setCancel(null, null)
+				// no need for cancel button
+				View cancelButton = dialogView.findViewById(R.id.cancel);
+				((ViewGroup) cancelButton.getParent()).removeView(cancelButton);
+
+				// d.isCancelable(false)
 				dialog.setCancelable(false);
+
+				// d.setOK("ok", clicklistener)
+				Button okButton = (Button) dialogView.findViewById(R.id.ok);
+				okButton.setText(getString(R.string.try_again));
+				okButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						finished = true;
+						tryAgain = true;
+						// force reloading of activity on next iteration of the waiting thread(
+						runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
+						dialog.dismiss();
+					}
+				});
+
+				// display d.show();
 				dialog.show();
 			}
 			else {

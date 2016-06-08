@@ -1,5 +1,6 @@
 package eu.focusnet.app.ui.util;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -105,5 +111,52 @@ public class UiHelper
 		NotificationManager notifMng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifMng.notify(notificationId, notif);
 	}
+
+	/**
+	 * Helper function to hide the keyboard when clicking outside of if
+	 *
+	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
+	 *
+	 * @param activity
+	 */
+	public static void hideSoftKeyboard(Activity activity)
+	{
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
+
+	/**
+	 * Setup UI to be able to click outside of keyboard to hide it.
+	 *
+	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
+	 *
+	 * @param view
+	 */
+	public static void setupHiddableKeyboard(View view, final Activity activity)
+	{
+		//Set up touch listener for non-text box views to hide keyboard.
+		if (!(view instanceof EditText)) {
+			view.setOnTouchListener(new View.OnTouchListener()
+			{
+				public boolean onTouch(View v, MotionEvent event)
+				{
+					hideSoftKeyboard(activity);
+					return false;
+				}
+			});
+		}
+
+		//If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				View innerView = ((ViewGroup) view).getChildAt(i);
+				setupHiddableKeyboard(innerView, activity);
+			}
+		}
+	}
+
+
+
+
 
 }

@@ -21,8 +21,13 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
@@ -49,6 +54,7 @@ public class EntryPointActivity extends Activity
 	 * Login activity
 	 */
 	final private static Class LOGIN_ACTIVITY = DemoUseCaseSelectionActivity.class;
+	private static final long MINIMUM_DISPLAY_DURATION = 2_000;
 
 	/**
 	 * Instantiate the activity.
@@ -74,75 +80,117 @@ public class EntryPointActivity extends Activity
 		TextView version = (TextView) findViewById(R.id.versionNumber);
 		version.setText(BuildConfig.VERSION_NAME);
 
-		final Thread init_thread = new Thread()
-		{
-			public void run()
-			{
-				DataManager dm = FocusApplication.getInstance().getDataManager();
-				dm.init();
-				if (dm.isLoggedIn()) {
-					try {
-						dm.retrieveApplicationData();
-					}
-					catch (FocusMissingResourceException ex) {
-						// this may occur when no data has been previously loaded even though the login information are available
-						// (e.g. no network, and the app content has not been previously loaded -> User + UserPreferences are created, but the app content must be loaded. )
-						// FIXME display dialog that requests network connectivity. If there is network, then the resource does not exist-> crash.
-
-						// FIXME here comes a dialog. Then redirect
-
-
-
-					}
-				}
-			}
-		};
-
-
-
-		/*
-		 * If we don't have login information, yet, let's redirect to the LoginActivity.
-		 * Otherwise, load the basic application configuration and redirect to ProjectsListingActivity
-		 */
-
-		// don't do anything while not init();
-
-		/*
-			 * This thread will simply sleep for a minimum amount of time, waiting for the
-			 * app_acquisition Thread to complete.
-			 */
-		final Thread splash_screen = new Thread()
-		{
-			public void run()
-			{
-				try {
-					int min_splashscreen_display_time = 2000;
-					sleep(1000);
-					min_splashscreen_display_time -= 1000;
-					while (init_thread.isAlive() || min_splashscreen_display_time > 0) {
-						sleep(500);
-						min_splashscreen_display_time -= 500;
-					}
-					if (FocusApplication.getInstance().getDataManager().isLoggedIn()) {
-						startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
-					}
-					else {
-						startActivity(new Intent(EntryPointActivity.this, LOGIN_ACTIVITY));
-					}
-				}
-				catch (InterruptedException ex) {
-					// empty, but that's ok. Ignore failure.
-				}
-				finally {
-					finish();
-				}
-			}
-		};
-
-		// start threads
-		init_thread.start();
-		splash_screen.start();
-
+		// run tasks
+		new InitTask(this).execute();
 	}
+
+	/**
+	 * This class is used for testing if the given credential are correct
+	 */
+	private class InitTask extends AsyncTask<Void, Void, Void>
+	{
+		private Context context;
+		private long runUntil;
+		private boolean remediationDialog;
+		private boolean finished;
+		private boolean tryAgain;
+
+		public InitTask(Context context)
+		{
+			this.context = context;
+			this.remediationDialog = false;
+			this.finished = false;
+			this.tryAgain = false;
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			this.runUntil = System.currentTimeMillis() + MINIMUM_DISPLAY_DURATION;
+		}
+
+		@Override
+		protected Void doInBackground(Void... data)
+		{
+			DataManager dm = FocusApplication.getInstance().getDataManager();
+			dm.init();
+			if (dm.isLoggedIn()) {
+				try {
+					dm.retrieveApplicationData();
+				}
+				catch (FocusMissingResourceException ex) {
+					// this may occur when no data has been previously loaded even though the login information are available
+					// (e.g. no network, and the app content has not been previously loaded -> User + UserPreferences are created, but the app content must be loaded. )
+					// if this is the case, we mark the current instance for it to display a remediation dialog in the UI
+					this.remediationDialog = true;
+				}
+			}
+			this.finished = true;
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v)
+		{
+			// sleep() is blocking, so let's create a new thread
+			final Thread wait_and_redirect = new Thread()
+			{
+				public void run()
+				{
+					try {
+						while (System.currentTimeMillis() < runUntil || !finished) {
+							sleep(500);
+						}
+						// we either redirect to the login page or the projects listing
+						if (!tryAgain) {
+							if (FocusApplication.getInstance().getDataManager().isLoggedIn()) {
+								startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
+							}
+							else {
+								startActivity(new Intent(EntryPointActivity.this, LOGIN_ACTIVITY));
+							}
+						}
+					}
+					catch (InterruptedException ex) {
+						// empty, but that's ok. Ignore failure.
+					}
+					finally {
+						finish();
+					}
+					// restart this activity if necessary
+					if (tryAgain) {
+						startActivity(getIntent());
+					}
+				}
+			};
+			wait_and_redirect.start();
+
+			// display the remediation dialog if necessary
+			if (this.remediationDialog) {
+				Resources res = getResources();
+				AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+				builder.setTitle("We failed to load the application content")
+						.setMessage(getString(R.string.connected_to_web))
+						.setPositiveButton(getString(R.string.try_again), new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int id)
+							{
+								finished = true;
+								tryAgain = true;
+								// force reloading of activity on next iteration of the waiting thread(
+								runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION;
+							}
+						});
+				AlertDialog dialog = builder.create();
+				dialog.setCancelable(false);
+				dialog.show();
+			}
+			else {
+				this.finished = true;
+			}
+
+		}
+	}
+
 
 }

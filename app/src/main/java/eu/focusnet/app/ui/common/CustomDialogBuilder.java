@@ -1,0 +1,124 @@
+package eu.focusnet.app.ui.common;
+
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import eu.focusnet.app.R;
+
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+public class CustomDialogBuilder extends AlertDialog.Builder
+{
+	private View rootView;
+	private View contentView;
+
+	public CustomDialogBuilder(Context context)
+	{
+		super(context);
+		LayoutInflater inflater = LayoutInflater.from(context);
+		this.rootView = inflater.inflate(R.layout.dialog_layout_custom, null);
+		this.setView(this.rootView);
+	}
+
+	public CustomDialogBuilder setTitle(String title)
+	{
+		TextView dialogTitle = ((TextView) this.rootView.findViewById(R.id.dialog_title));
+		dialogTitle.setText(title);
+		return this;
+	}
+
+	public CustomDialogBuilder insertContent(View content)
+	{
+		ViewGroup vg = (ViewGroup) this.rootView.findViewById(R.id.dialog_content);
+		this.contentView = content;
+		vg.addView(content);
+		return this;
+	}
+
+	public CustomDialogBuilder removeNegativeButton()
+	{
+		View b = this.rootView.findViewById(R.id.button_negative);
+		((ViewGroup) b.getParent()).removeView(b);
+		return this;
+	}
+
+	public CustomDialogBuilder removeNeutralButton()
+	{
+		View b = this.rootView.findViewById(R.id.button_neutral);
+		((ViewGroup) b.getParent()).removeView(b);
+		return this;
+	}
+
+	public CustomDialogBuilder removePositiveButton()
+	{
+		View b = this.rootView.findViewById(R.id.button_positive);
+		((ViewGroup) b.getParent()).removeView(b);
+		return this;
+	}
+
+	public CustomDialogBuilder setPositiveButtonText(String label)
+	{
+		Button b = (Button) this.rootView.findViewById(R.id.button_positive);
+		b.setText(label);
+		return this;
+	}
+
+	public CustomDialogBuilder setNeutralButtonText(String label)
+	{
+		Button b = (Button) this.rootView.findViewById(R.id.button_neutral);
+		b.setText(label);
+		return this;
+	}
+
+	public CustomDialogBuilder setNegativeButtonText(String label)
+	{
+		Button b = (Button) this.rootView.findViewById(R.id.button_negative);
+		b.setText(label);
+		return this;
+	}
+
+	public Button getNegativeButton()
+	{
+		return (Button) this.rootView.findViewById(R.id.button_negative);
+	}
+
+	public Button getNeutralButton()
+	{
+		return (Button) this.rootView.findViewById(R.id.button_neutral);
+	}
+
+	public Button getPositiveButton()
+	{
+		return (Button) this.rootView.findViewById(R.id.button_positive);
+	}
+
+	public CustomDialogBuilder setCancelable(boolean flag)
+	{
+		super.setCancelable(flag);
+		return this;
+	}
+
+
+}

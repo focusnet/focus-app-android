@@ -39,21 +39,28 @@
         android:showDividers="middle">
 
         <Button
-            android:id="@+id/cancel"
+            android:id="@+id/button_negative"
             style="?android:buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel"/>
+            />
 
         <Button
-            android:id="@+id/ok"
+            android:id="@+id/button_neutral"
             style="?android:buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ok"/>
-        <!-- TODO internationalization -->
+            />
+
+        <Button
+            android:id="@+id/button_positive"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
     </LinearLayout>
 
 

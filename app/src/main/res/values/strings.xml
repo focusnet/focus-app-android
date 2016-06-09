@@ -105,5 +105,7 @@
     <string name="try_again">Try again</string>
     <string name="connected_to_web">Are you connected to Internet?</string>
     <string name="fail_load_content_title">We failed to load the application content</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

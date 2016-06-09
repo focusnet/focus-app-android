@@ -21,7 +21,6 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -38,6 +37,7 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.ui.common.CustomDialogBuilder;
 import eu.focusnet.app.ui.util.Constant;
 
 /**
@@ -117,8 +117,8 @@ public class EntryPointActivity extends Activity
 		{
 			// FIXME sometimes the remediation dialog does not show up.
 			// enable next 2 lines to display indefinitely this dialog and try to debug
-			this.remediationDialog = true;
-			if (1==1)return null;
+			// this.remediationDialog = true;
+			// if (1==1)return null;
 
 
 			DataManager dm = FocusApplication.getInstance().getDataManager();
@@ -175,37 +175,19 @@ public class EntryPointActivity extends Activity
 
 			// display the remediation dialog if necessary
 			if (this.remediationDialog) {
-	//			FocusAlertDialog d = new FocusAlertDialog();
-				AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-				LayoutInflater inflater = LayoutInflater.from(this.context);
-				View dialogView = inflater.inflate(R.layout.dialog_layout_custom, null);
-				builder.setView(dialogView);
-				final Dialog dialog = builder.create();
-
-	//			d.setTitle();
-				// adapt title
-				TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-				dialogTitle.setText(getString(R.string.fail_load_content_title));
-
-				// add the content to our dialog view
-	//			d.insertContent(view);
+				LayoutInflater inflater = LayoutInflater.from(context);
 				TextView dialog_content = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
 				dialog_content.setText(getString(R.string.connected_to_web));
-				ViewGroup vg = (ViewGroup) dialogView.findViewById(R.id.dialog_content);
-				vg.addView(dialog_content);
 
-				// d.setCancel(null, null)
-				// no need for cancel button
-				View cancelButton = dialogView.findViewById(R.id.cancel);
-				((ViewGroup) cancelButton.getParent()).removeView(cancelButton);
-
-				// d.isCancelable(false)
-				dialog.setCancelable(false);
-
-				// d.setOK("ok", clicklistener)
-				Button okButton = (Button) dialogView.findViewById(R.id.ok);
-				okButton.setText(getString(R.string.try_again));
-				okButton.setOnClickListener(new View.OnClickListener()
+				CustomDialogBuilder builder = new CustomDialogBuilder(this.context)
+						.setTitle(getString(R.string.fail_load_content_title))
+						.insertContent(dialog_content)
+						.removeNegativeButton()
+						.removeNeutralButton()
+						.setCancelable(false)
+						.setPositiveButtonText(getString(R.string.try_again));
+				final AlertDialog dialog = builder.create();
+				builder.getPositiveButton().setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View v)
@@ -217,8 +199,6 @@ public class EntryPointActivity extends Activity
 						dialog.dismiss();
 					}
 				});
-
-				// display d.show();
 				dialog.show();
 			}
 			else {

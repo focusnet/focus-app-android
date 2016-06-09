@@ -22,6 +22,7 @@ package eu.focusnet.app.ui.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +42,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.common.AbstractListItem;
+import eu.focusnet.app.ui.common.CustomDialogBuilder;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.UiHelper;
@@ -130,32 +132,32 @@ public class StandardListAdapter extends BaseAdapter
 						if (standardListItem.getRightIcon() != null) {
 							final ImageView imageView = (ImageView) v;
 
-							// design our view
-							AlertDialog.Builder builder = new AlertDialog.Builder(context);
-							View dialogView = inflater.inflate(R.layout.dialog_layout_custom, null);
-
-							// add the content to our dialog view
-							View dialog_content = inflater.inflate(R.layout.dialog_content_bookmark, null);
-							ViewGroup vg = (ViewGroup) dialogView.findViewById(R.id.dialog_content);
-							vg.addView(dialog_content);
-
-							builder.setView(dialogView);
-							final Dialog dialog = builder.create();
-
-							TextView dialogTitle = ((TextView) dialogView.findViewById(R.id.dialog_title));
-
+							Resources res = FocusApplication.getInstance().getResources();
 							final boolean isRightIconActive = standardListItem.isRightIconActive();
 
+							// Dialog payload
+							LayoutInflater inflater = LayoutInflater.from(context);
+							View dialog_content = inflater.inflate(R.layout.dialog_content_bookmark, null);
+							final EditText selectedContext = (EditText) dialog_content.findViewById(R.id.edit_text_name);
+							selectedContext.setText(standardListItem.getTitle());
 							if (isRightIconActive) {
-								dialogTitle.setText(R.string.focus_remove_bookmark_question);
-							}
-							else {
-								dialogTitle.setText(R.string.focus_add_bookmark_question);
+								selectedContext.setEnabled(false);
 							}
 
-							Button ok = (Button) dialogView.findViewById(R.id.ok);
-							Button cancel = (Button) dialogView.findViewById(R.id.cancel);
-							cancel.setOnClickListener(new View.OnClickListener()
+							// Dialog building
+							CustomDialogBuilder builder = new CustomDialogBuilder(context)
+									.setTitle(res.getString(isRightIconActive ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
+									.insertContent(dialog_content)
+									.removeNeutralButton()
+								.setCancelable(false)
+									.setPositiveButtonText(res.getString(R.string.ok))
+									.setNegativeButtonText(res.getString(R.string.cancel));
+
+							// instantiate
+							final AlertDialog dialog = builder.create();
+
+							// Add click listeners on buttons
+							builder.getNegativeButton().setOnClickListener(new View.OnClickListener()
 							{
 								@Override
 								public void onClick(View v)
@@ -164,13 +166,7 @@ public class StandardListAdapter extends BaseAdapter
 								}
 							});
 
-							final EditText selectedContext = (EditText) dialogView.findViewById(R.id.edit_text_name);
-							selectedContext.setText(standardListItem.getTitle());
-							if (isRightIconActive) {
-								selectedContext.setEnabled(false);
-							}
-
-							ok.setOnClickListener(new View.OnClickListener()
+							builder.getPositiveButton().setOnClickListener(new View.OnClickListener()
 							{
 								@Override
 								public void onClick(View view)
@@ -183,7 +179,6 @@ public class StandardListAdapter extends BaseAdapter
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
 										selectedContext.setEnabled(false);
-
 										userPreference.removeBookmarkLink(standardListItem.getPath(), standardListItem.getTitle(), standardListItem.getTypeOfBookmark());
 									}
 									else {
@@ -191,16 +186,15 @@ public class StandardListAdapter extends BaseAdapter
 										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-
 										Bookmark bookmarkLink = new Bookmark(selectedContext.getText().toString(), standardListItem.getPath());
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 
 									new SaveUserPreferencesTask(context).execute();
-
 									dialog.dismiss();
 								}
 							});
+
 							dialog.show();
 						}
 					}

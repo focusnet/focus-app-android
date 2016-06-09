@@ -216,7 +216,6 @@ public class DataManager
 			throw new FocusNotImplementedException("DataManager.login()");
 		}
 
-
 		// FIXME most of the logic below is OK, except for the FIXME part
 
 

@@ -146,11 +146,7 @@ public class ProjectInstance extends AbstractInstance
 			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
 			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
 		}
-		catch (FocusMissingResourceException ex) {
-			FocusApplication.reportError(ex);
-			return null;
-		}
-		catch (FocusBadTypeException ex) {
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			FocusApplication.reportError(ex);
 			return null;
 		}

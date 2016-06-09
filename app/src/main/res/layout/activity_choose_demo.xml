@@ -14,14 +14,14 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.8"
         android:src="@drawable/focus_logo"/>
-
+<!--
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight=".05"/>
-
+-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

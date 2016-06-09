@@ -211,6 +211,10 @@ public class DataContext extends HashMap<String, String>
 	 */
 	public Object resolve(String request) throws FocusMissingResourceException
 	{
+		if (request == null) {
+			return "";
+		}
+
 		if (!request.startsWith(Constant.SELECTOR_SERVICE_OPEN + Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)
 				|| !request.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
 			return request;

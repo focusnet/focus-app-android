@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.model.util.Constant;
 
+// FIXME when initially loading bookmarks, check that the paths are still valid! otherwise delete them (and save on backend)
 
 public class UserPreferences extends FocusObject
 {

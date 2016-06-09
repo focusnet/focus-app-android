@@ -188,7 +188,6 @@ public class SampleDao
 	private ContentValues createContentValues(Sample sample)
 	{
 		ContentValues contentValues = new ContentValues();
-//		contentValues.register(Constant.ID, sample.getId());
 		contentValues.put(Constant.URL, sample.getUrl());
 		contentValues.put(Constant.VERSION, sample.getVersion());
 		contentValues.put(Constant.TYPE, sample.getType());

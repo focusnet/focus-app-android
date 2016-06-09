@@ -21,25 +21,47 @@
 package eu.focusnet.app.network;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusObject;
 
 
 /**
- * This class contains all methods pertaining to networking. It follows a Singleton pattern.
+ * This class contains all methods pertaining to networking.
  * <p/>
  * This class is an abstraction library for communicating with our REST server.
  * <p/>
- * FIXME convert to non-singleton.
  */
 public class NetworkManager
 {
+	private SSLContext sslContext;
 	private Context context = null;
 
 	// FIXME get the root of REST server on first request (such that we have the root of services)
@@ -50,6 +72,152 @@ public class NetworkManager
 	public NetworkManager()
 	{
 		this.context = FocusApplication.getInstance();
+
+		// we do this in the NetworkManager such that we do it only once for the whole app
+		try {
+			this.initSSLContext();
+		}
+		catch (CertificateException | IOException | KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
+			throw new FocusInternalErrorException("Error when importing our local trusted certificates.");
+		}
+
+		// FIXME DEBUG dummy host verification becauuse core.focusnet.eu has a certificate with hostname=localhost
+		HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
+	}
+
+	/**
+	 * init SSL context
+	 * <p/>
+	 * We must create a custom TrustManagerFactory because some of our certificates are self-signed.
+	 * <p/>
+	 * Android developer doc: https://developer.android.com/training/articles/security-ssl.html#SelfSigned
+	 * and we also fallback to the default manager
+	 *
+	 * FIXME FIXME DEBUG: we probably should not accept self-signed certificates in the future.
+	 *
+	 * @return
+	 */
+	//
+	private void initSSLContext() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException
+	{
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		tmf.init((KeyStore) null); // null -> use default trust store
+
+		// save default trust manager
+		X509TrustManager defaultTrustManager = null;
+		for (TrustManager tm : tmf.getTrustManagers()) {
+			if (tm instanceof X509TrustManager) {
+				defaultTrustManager = (X509TrustManager) tm;
+				break;
+			}
+		}
+
+		// Init certificate factory
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+		// Create an empty KeyStore to hold our trusted certificates
+		String keyStoreType = KeyStore.getDefaultType();
+		KeyStore myKeyStore = KeyStore.getInstance(keyStoreType);
+		myKeyStore.load(null, null);
+
+		// Add each certificate in the keystore
+		AssetManager am = FocusApplication.getInstance().getAssets();
+		List<String> certificates = Arrays.asList(am.list("self-signed-certificates"));
+		for (String cert : certificates) {
+			InputStream caInput = new BufferedInputStream(am.open("self-signed-certificates/" + cert));
+			Certificate ca;
+			try {
+				ca = cf.generateCertificate(caInput);
+			}
+			finally {
+				caInput.close();
+			}
+			myKeyStore.setCertificateEntry(cert, ca);
+		}
+
+		// Create a TrustManager that trusts the CAs in our KeyStore
+		TrustManagerFactory myTrustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		myTrustManagerFactory.init(myKeyStore);
+
+		// Get hold of the new trust manager
+		X509TrustManager myTrustManager = null;
+		for (TrustManager tm : myTrustManagerFactory.getTrustManagers()) {
+			if (tm instanceof X509TrustManager) {
+				myTrustManager = (X509TrustManager) tm;
+				break;
+			}
+		}
+
+		// merge the results of the default and custom managers
+		// into a custom trust manager
+		final X509TrustManager finalMyTrustManager = myTrustManager;
+		final X509TrustManager finalDefaultTrustManager = defaultTrustManager;
+		X509TrustManager customTrustManager = new X509TrustManager()
+		{
+
+			@Override
+			public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+			{
+				finalDefaultTrustManager.checkClientTrusted(chain, authType);
+			}
+
+			@Override
+			public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+			{
+				try {
+					finalMyTrustManager.checkServerTrusted(chain, authType);
+				} catch (CertificateException e) {
+					// This will throw another CertificateException if this fails too.
+					finalDefaultTrustManager.checkServerTrusted(chain, authType);
+				}
+			}
+
+			@Override
+			public X509Certificate[] getAcceptedIssuers()
+			{
+				return finalDefaultTrustManager.getAcceptedIssuers();
+			}
+		};
+
+		// make the SSL context available to the rest of the app
+		this.sslContext = SSLContext.getInstance("TLS");
+		this.sslContext.init(null, new TrustManager[]{customTrustManager}, null);
+
+
+		/*
+		// Init certificate factory
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+		// Create an empty KeyStore to hold our trusted certificates
+		String keyStoreType2 = KeyStore.getDefaultType();
+		KeyStore keyStore = KeyStore.getInstance(keyStoreType2);
+		keyStore.load(null, null);
+
+		// Add each certificate in the keystore
+		AssetManager am = FocusApplication.getInstance().getAssets();
+		List<String> certificates = Arrays.asList(am.list("self-signed-certificates"));
+		for (String cert : certificates) {
+			InputStream caInput = new BufferedInputStream(am.open("self-signed-certificates/" + cert));
+			Certificate ca;
+			try {
+				ca = cf.generateCertificate(caInput);
+			}
+			finally {
+				caInput.close();
+			}
+			keyStore.setCertificateEntry(cert, ca);
+		}
+
+		// Create a TrustManager that trusts the CAs in our KeyStore
+		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+		TrustManagerFactory tmf2 = TrustManagerFactory.getInstance(tmfAlgorithm);
+		tmf.init(keyStore);
+
+		// make the SSL context available to the rest of the app
+		this.sslContext = SSLContext.getInstance("TLS");
+		TrustManager[] m = tmf2.getTrustManagers();
+		this.sslContext.init(null, m, null);
+		**/
 	}
 
 
@@ -173,5 +341,26 @@ public class NetworkManager
 		throw new FocusNotImplementedException("NetworkManager.login()");
 	}
 
+	/**
+	 * Get the SSL context
+	 */
+	public SSLContext getSSLContext()
+	{
+		return this.sslContext;
+	}
 
+
+	/**
+	 * Custom (and dummy) host name verifier
+	 * <p/>
+	 * FIXME DEBUG this is prototype code and is not secure.
+	 */
+	private static class DummyHostNameVerifier implements HostnameVerifier
+	{
+		@Override
+		public boolean verify(String hostname, SSLSession session)
+		{
+			return true;
+		}
+	}
 }

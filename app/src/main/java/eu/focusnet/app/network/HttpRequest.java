@@ -26,6 +26,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
@@ -40,6 +46,9 @@ public class HttpRequest
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_PUT = "PUT";
 	public static final String HTTP_METHOD_DELETE = "DELETE";
+	private SSLContext sslContext;
+
+
 	String method = null;
 	URL url = null;
 	String payload = "";
@@ -105,10 +114,23 @@ public class HttpRequest
 	private static HttpURLConnection getHTTPConnection(URL url, String httpMethod) throws IOException
 	{
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+
+		// HTTP-related configuration
 		connection.setInstanceFollowRedirects(true); // FIXME we still have to resolve the redirection manually! TODO TODO
 		connection.setRequestMethod(httpMethod);
-		// no need to configure the persistence of HTTP connections. This is automatically handled
-		// by Android
+		// When appropriate, HTTPS-related configuration
+		// Works out of the box if certificates are valid (with valid and registered CA)
+		if (url.toString().startsWith("https://")) {
+			SSLSocketFactory socket_factory =
+					FocusApplication.getInstance()
+					.getDataManager()
+					.getNetworkManager()
+					.getSSLContext()
+					.getSocketFactory();
+			((HttpsURLConnection) connection).setSSLSocketFactory(socket_factory);
+		}
+
 		return connection;
 	}
 
@@ -159,6 +181,7 @@ public class HttpRequest
 
 		return response;
 	}
+
 
 
 }

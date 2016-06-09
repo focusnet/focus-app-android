@@ -29,12 +29,12 @@ import eu.focusnet.app.R;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-public class CustomDialogBuilder extends AlertDialog.Builder
+public class FocusDialogBuilder extends AlertDialog.Builder
 {
 	private View rootView;
 	private View contentView;
 
-	public CustomDialogBuilder(Context context)
+	public FocusDialogBuilder(Context context)
 	{
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
@@ -42,14 +42,14 @@ public class CustomDialogBuilder extends AlertDialog.Builder
 		this.setView(this.rootView);
 	}
 
-	public CustomDialogBuilder setTitle(String title)
+	public FocusDialogBuilder setTitle(String title)
 	{
 		TextView dialogTitle = ((TextView) this.rootView.findViewById(R.id.dialog_title));
 		dialogTitle.setText(title);
 		return this;
 	}
 
-	public CustomDialogBuilder insertContent(View content)
+	public FocusDialogBuilder insertContent(View content)
 	{
 		ViewGroup vg = (ViewGroup) this.rootView.findViewById(R.id.dialog_content);
 		this.contentView = content;
@@ -57,42 +57,43 @@ public class CustomDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
-	public CustomDialogBuilder removeNegativeButton()
+	public FocusDialogBuilder removeNegativeButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_negative);
 		((ViewGroup) b.getParent()).removeView(b);
 		return this;
 	}
 
-	public CustomDialogBuilder removeNeutralButton()
+	public FocusDialogBuilder removeNeutralButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_neutral);
 		((ViewGroup) b.getParent()).removeView(b);
 		return this;
 	}
 
-	public CustomDialogBuilder removePositiveButton()
+	public FocusDialogBuilder removePositiveButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_positive);
 		((ViewGroup) b.getParent()).removeView(b);
 		return this;
 	}
 
-	public CustomDialogBuilder setPositiveButtonText(String label)
+
+	public FocusDialogBuilder setPositiveButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_positive);
 		b.setText(label);
 		return this;
 	}
 
-	public CustomDialogBuilder setNeutralButtonText(String label)
+	public FocusDialogBuilder setNeutralButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_neutral);
 		b.setText(label);
 		return this;
 	}
 
-	public CustomDialogBuilder setNegativeButtonText(String label)
+	public FocusDialogBuilder setNegativeButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_negative);
 		b.setText(label);
@@ -114,7 +115,7 @@ public class CustomDialogBuilder extends AlertDialog.Builder
 		return (Button) this.rootView.findViewById(R.id.button_positive);
 	}
 
-	public CustomDialogBuilder setCancelable(boolean flag)
+	public FocusDialogBuilder setCancelable(boolean flag)
 	{
 		super.setCancelable(flag);
 		return this;

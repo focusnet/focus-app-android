@@ -107,5 +107,10 @@
     <string name="fail_load_content_title">We failed to load the application content</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="start">Start</string>
+    <string name="data_sync_title">Data synchronization</string>
+    <string name="syncronization_in_progress">Syncronization in progress …</string>
+    <string name="synchronization_status">Synchronization status:</string>
+    <string name="sync_already_in_progress">Synchronization already in progress …</string>
 
 </resources>

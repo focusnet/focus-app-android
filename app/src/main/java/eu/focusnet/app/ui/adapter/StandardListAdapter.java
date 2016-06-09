@@ -20,7 +20,6 @@
 
 package eu.focusnet.app.ui.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +40,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.ui.common.CustomDialogBuilder;
+import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.HeaderListItem;
 import eu.focusnet.app.ui.common.StandardListItem;
 import eu.focusnet.app.ui.util.UiHelper;
@@ -145,11 +143,11 @@ public class StandardListAdapter extends BaseAdapter
 							}
 
 							// Dialog building
-							CustomDialogBuilder builder = new CustomDialogBuilder(context)
+							FocusDialogBuilder builder = new FocusDialogBuilder(context)
 									.setTitle(res.getString(isRightIconActive ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
 									.insertContent(dialog_content)
 									.removeNeutralButton()
-								.setCancelable(false)
+									.setCancelable(false)
 									.setPositiveButtonText(res.getString(R.string.ok))
 									.setNegativeButtonText(res.getString(R.string.cancel));
 

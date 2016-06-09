@@ -21,14 +21,20 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -37,6 +43,7 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.common.AbstractListItem;
 import eu.focusnet.app.ui.common.DrawerListItem;
+import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.HeaderDrawerListItem;
 import eu.focusnet.app.ui.fragment.AboutFragment;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
@@ -51,6 +58,7 @@ import eu.focusnet.app.ui.util.UiHelper;
 public class ProjectsListingActivity extends BaseDrawerActivity
 {
 	private String[] navMenuTitles;
+	private boolean started_sync;
 
 	/**
 	 * Create the activity.
@@ -61,7 +69,6 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
 		showView(Constant.UI_MENU_ENTRY_PROJECTS_LISTING);
 	}
 
@@ -276,30 +283,137 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	}
 
 
-
-
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
 		switch (item.getItemId()) {
 			case R.id.action_sync:
+				LayoutInflater inflater = LayoutInflater.from(this);
+				final LinearLayout dialog_content = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
 
-// do something.
-				// open a dialog? yes.
-				/*
-				contains: 1. title: sync
-				2. last sync:
-				3. buttons to sync, unsync
-				 	-> display progress bar
-				 	OR announce error
-				 on completion, dismiss
-				 */
+				final Context context = this;
+				final FocusDialogBuilder builder = new FocusDialogBuilder(context)
+						.removeNeutralButton()
+						.setNegativeButtonText(getString(R.string.cancel))
+						.setPositiveButtonText(getString(R.string.start))
+						.setCancelable(false)
+						.insertContent(dialog_content)
+						.setTitle(getString(R.string.data_sync_title));
+				final AlertDialog dialog = builder.create();
+				dialog.show();
 
+
+				final View instructions = dialog_content.findViewById(R.id.dialog_sync_instructions);
+				final View progress = dialog_content.findViewById(R.id.dialog_sync_progress);
+				final View status = dialog_content.findViewById(R.id.dialog_sync_status);
+				final TextView instructionsField = (TextView) instructions.findViewById(R.id.dialog_sync_instructions_msg);
+				final TextView statusField = (TextView) status.findViewById(R.id.dialog_sync_status_field);
+				final TextView progressField = (TextView) progress.findViewById(R.id.dialog_sync_progress_field);
+
+				// FIXME // FIXME if last sync was too recent, do not allow
+				if (1 == 0) {
+					instructionsField.setText("Synchronization cannot be performed right now because it has already been done shortly in the past. Please try again later.");
+					builder.getPositiveButton().setEnabled(false);
+				}
+
+				// FIXME Cron service reports an ongoing sync?
+				if (1 == 0) {
+					builder.getPositiveButton().setEnabled(false);
+					progressField.setText(R.string.sync_already_in_progress);
+					instructions.setVisibility(View.GONE);
+					progress.setVisibility(View.VISIBLE);
+				}
+
+				// Cancelation listener
+				builder.getNegativeButton().setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						if (started_sync) { // FIXME we may rather check the current state of the Cron service?
+							// do something here. // FIXME TODO
+						}
+						dialog.dismiss();
+						started_sync = false;
+					}
+				});
+
+				// Start listener
+				builder.getPositiveButton().setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						builder.getPositiveButton().setEnabled(false);
+						instructions.setVisibility(View.GONE);
+						progress.setVisibility(View.VISIBLE);
+
+						new SyncTask(builder, dialog_content).execute();
+					}
+				});
 				return true;
 			default:
 				// If we got here, the user's action was not recognized.
 				// Invoke the superclass to handle it.
 				return super.onOptionsItemSelected(item);
 
+		}
+	}
+
+	private class SyncTask extends AsyncTask<Void, Void, Void>
+	{
+
+		private final LinearLayout dialogContent;
+		private final FocusDialogBuilder builder;
+
+		public SyncTask(FocusDialogBuilder builder, LinearLayout dialog_content)
+		{
+			this.builder = builder;
+			this.dialogContent = dialog_content;
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			started_sync = true;
+		}
+
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+
+			// if already in sync (CronService), discard
+
+			// CronService.startSync();
+			try {
+				Thread.sleep(2000); // FIXME TODO
+			}
+			catch (InterruptedException e) {
+
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v)
+		{
+			started_sync = false;
+// FIXME TODO
+			final View instructions = this.dialogContent.findViewById(R.id.dialog_sync_instructions);
+			final View progress = this.dialogContent.findViewById(R.id.dialog_sync_progress);
+			final View status = this.dialogContent.findViewById(R.id.dialog_sync_status);
+			final TextView instructionsField = (TextView) instructions.findViewById(R.id.dialog_sync_instructions_msg);
+			final TextView statusField = (TextView) status.findViewById(R.id.dialog_sync_status_field);
+			final TextView progressField = (TextView) progress.findViewById(R.id.dialog_sync_progress_field);
+			progress.setVisibility(View.GONE);
+			status.setVisibility(View.VISIBLE);
+			statusField.setText("OK");
+			statusField.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+			this.builder.removePositiveButton();
+			this.builder.getNegativeButton().setText("Close");
 		}
 	}
 }

@@ -50,10 +50,9 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
 public class FocusApplication extends Application
 {
 
-	private static final String	PROPERTY_ACRA_FORM_URI = "acra.form-uri",
+	private static final String PROPERTY_ACRA_FORM_URI = "acra.form-uri",
 			PROPERTY_ACRA_USERNAME = "acra.username",
 			PROPERTY_ACRA_PASSWORD = "acra.password";
-
 
 	/**
 	 * Static instance variable, hence our Singleton instanciatio

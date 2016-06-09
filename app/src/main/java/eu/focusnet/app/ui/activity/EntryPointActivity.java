@@ -35,7 +35,7 @@ import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.ui.common.CustomDialogBuilder;
+import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.util.Constant;
 
 /**
@@ -178,7 +178,7 @@ public class EntryPointActivity extends Activity
 				TextView dialog_content = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
 				dialog_content.setText(getString(R.string.connected_to_web));
 
-				CustomDialogBuilder builder = new CustomDialogBuilder(this.context)
+				FocusDialogBuilder builder = new FocusDialogBuilder(this.context)
 						.setTitle(getString(R.string.fail_load_content_title))
 						.insertContent(dialog_content)
 						.removeNegativeButton()

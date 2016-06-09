@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/synchronization_status"
+            android:layout_marginBottom="10sp"
+            android:layout_weight="30"/>
+
+        <TextView
+            android:id="@+id/dialog_sync_status_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/dialog_sync_instructions_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You can start data synchronization from this dialog. It may take a while to finish."
+            android:layout_marginBottom="10sp"
+            android:layout_weight="30"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last synchronization: 2016-03-30 13:33:33"
+            android:layout_weight="30"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Data volume: 34MB"
+            android:layout_weight="30"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/dialog_sync_progress_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/syncronization_in_progress"/>
+
+        <ProgressBar
+            android:id="@+id/entry_point_progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

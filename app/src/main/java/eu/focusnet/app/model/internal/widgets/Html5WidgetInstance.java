@@ -38,9 +38,10 @@ import eu.focusnet.app.model.util.TypesHelper;
 
 public class Html5WidgetInstance extends DataCollectionWidgetInstance
 {
+	public static final String ASSETS_HTML5_WEBAPPS_FOLDER = "webapps";
+	public static final String ASSETS_HTML5_WEBAPPS_ENTRY_POINT = "index.html";
 	private static final String CONFIG_WEB_APP_IDENTIFIER_FIELD = "webapp-identifier";
 	private static final String CONFIG_CONTEXT_FIELD = "context";
-
 	private String webAppIdentifier;
 	private String context;
 
@@ -77,7 +78,7 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		boolean asset_found = false;
 		try {
 			AssetManager am = FocusApplication.getInstance().getAssets();
-			asset_found = Arrays.asList(am.list("webapps/" + this.webAppIdentifier)).contains("index.html");
+			asset_found = Arrays.asList(am.list(ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier)).contains(ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
 		}
 		catch (IOException ex) {
 			// ok, asset_found defaults to false.

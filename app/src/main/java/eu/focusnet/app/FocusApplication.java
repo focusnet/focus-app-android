@@ -25,14 +25,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
-import org.acra.ErrorReporter;
+
 import java.io.IOException;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -43,14 +42,18 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * FOCUS Application
- *
+ * <p/>
  * FIXME TODO review all methods and 'synchronized' them if necessary, but only if necessary.
- *
+ * <p/>
  * This is a Singleton, which allows us to access the application context and DataManager from anywhere.
- *
  */
 public class FocusApplication extends Application
 {
+
+	private static final String	PROPERTY_ACRA_FORM_URI = "acra.form-uri",
+			PROPERTY_ACRA_USERNAME = "acra.username",
+			PROPERTY_ACRA_PASSWORD = "acra.password";
+
 
 	/**
 	 * Static instance variable, hence our Singleton instanciatio
@@ -155,9 +158,9 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 			try {
-				form_uri = PropertiesHelper.getProperty("acra.form-uri", this.getContext());
-				user = PropertiesHelper.getProperty("acra.username", this.getContext());
-				pass = PropertiesHelper.getProperty("acra.password", this.getContext());
+				form_uri = PropertiesHelper.getProperty(PROPERTY_ACRA_FORM_URI, this.getContext());
+				user = PropertiesHelper.getProperty(PROPERTY_ACRA_USERNAME, this.getContext());
+				pass = PropertiesHelper.getProperty(PROPERTY_ACRA_PASSWORD, this.getContext());
 			}
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot get property in focus.properties");

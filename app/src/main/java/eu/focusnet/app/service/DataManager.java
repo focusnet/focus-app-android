@@ -52,6 +52,7 @@ import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
+import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
@@ -80,6 +81,8 @@ public class DataManager
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE = "demo-user-case";
+	private static final String PROPERTY_TARGET_PERMANENT_STORAGE_SERVER = "resource-server.endpoint";
+
 	private boolean isInitialized;
 	// other information regarding login?
 	private String loginUser;
@@ -281,7 +284,7 @@ public class DataManager
 		this.demoUseCase = use_case;
 
 		// user and preferences URIs
-		String test_server = PropertiesHelper.getProperty("resource-server.endpoint", FocusApplication.getInstance());
+		String test_server = PropertiesHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER, FocusApplication.getInstance());
 		this.userUrl = test_server + "/data/focus-user/" + user_id;
 		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + this.demoUseCase;
 

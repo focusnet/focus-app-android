@@ -54,4 +54,7 @@ public class Constant
 			UI_MENU_ENTRY_BOOKMARK = 2,
 			UI_MENU_ENTRY_ABOUT = 3,
 			UI_MENU_ENTRY_LOGOUT = 4;
+
+
+
 }

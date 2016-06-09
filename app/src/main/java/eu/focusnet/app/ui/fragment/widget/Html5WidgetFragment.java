@@ -49,9 +49,9 @@ import eu.focusnet.app.ui.common.TouchWebView;
 public class Html5WidgetFragment extends WidgetFragment
 {
 
+
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
 	private static final String JAVASCRIPT_INIT_FUNCTION = JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME + ".init";
-
 	private TouchWebView webview;
 	private String context;
 
@@ -91,7 +91,12 @@ public class Html5WidgetFragment extends WidgetFragment
 		// and load the actual page in the browser
 
 		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
-		webview.loadUrl("file:///android_asset/webapps/" + ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/index.html");
+		webview.loadUrl(
+				"file:///android_asset/"
+				+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
+				+ ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/"
+				+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_ENTRY_POINT
+		);
 
 		return this.rootView;
 	}

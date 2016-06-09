@@ -25,22 +25,28 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
+import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * An HTTP request to be issued to the REST server
  */
 public class HttpRequest
 {
+
+	public static final String PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX = "http-request-header-modification.";
+
+
 
 	public static final String HTTP_METHOD_GET = "GET";
 	public static final String HTTP_METHOD_POST = "POST";
@@ -111,24 +117,41 @@ public class HttpRequest
 	 * @return
 	 * @throws IOException
 	 */
-	private static HttpURLConnection getHTTPConnection(URL url, String httpMethod) throws IOException
+	private static HttpURLConnection httpConnectionFactory(URL url, String httpMethod) throws IOException
 	{
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
 
 		// HTTP-related configuration
 		connection.setInstanceFollowRedirects(true); // FIXME we still have to resolve the redirection manually! TODO TODO
 		connection.setRequestMethod(httpMethod);
 		// When appropriate, HTTPS-related configuration
 		// Works out of the box if certificates are valid (with valid and registered CA)
+		FocusApplication app = FocusApplication.getInstance();
 		if (url.toString().startsWith("https://")) {
 			SSLSocketFactory socket_factory =
-					FocusApplication.getInstance()
+					app
 					.getDataManager()
 					.getNetworkManager()
 					.getSSLContext()
 					.getSocketFactory();
 			((HttpsURLConnection) connection).setSSLSocketFactory(socket_factory);
+		}
+
+		// add custom headers when necessary
+		String headers = PropertiesHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost() , app);
+		// FIXME For now, multiple headers per host are not supported.
+		if (headers != null) {
+			Pattern p = Pattern.compile("^([^\\s:]+):\\s*(.*)$");
+			Matcher m = p.matcher(headers);
+			boolean ma = m.matches();
+			if (ma) {
+				String label = m.group(1);
+				String value = m.group(2);
+				connection.setRequestProperty(label, value);
+			}
+			else {
+				throw new FocusInternalErrorException("Invalid HTTP heade description in property file.");
+			}
 		}
 
 		return connection;
@@ -148,7 +171,7 @@ public class HttpRequest
 		}
 
 		// object a new connection
-		HttpURLConnection connection = HttpRequest.getHTTPConnection(this.url, this.method);
+		HttpURLConnection connection = HttpRequest.httpConnectionFactory(this.url, this.method);
 
 		// configure connection depending on method
 		switch (this.method) {

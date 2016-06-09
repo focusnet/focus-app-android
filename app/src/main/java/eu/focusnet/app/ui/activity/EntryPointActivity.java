@@ -28,15 +28,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.CustomDialogBuilder;
 import eu.focusnet.app.ui.util.Constant;
@@ -127,15 +124,6 @@ public class EntryPointActivity extends Activity
 			if (dm.isLoggedIn()) {
 				try {
 					dm.retrieveApplicationData();
-
-					// FIXME conect to IPTIM DEBUG
-					FocusSample s;
-					s = dm.getSample("https://www.tornos.com/featured-content/focus-test.json");
-							s = dm.getSample("https://core.focusnet.eu:21223/forest");
-							s = dm.getSample("https://core.focusnet.eu:21223/forest");
-						// s = dm.getSample("https://www.tornos.com/featured-content/focus-test.json");
-
-					return null;
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available
@@ -144,8 +132,6 @@ public class EntryPointActivity extends Activity
 					this.remediationDialog = true;
 				}
 			}
-
-
 
 			this.finished = true;
 			return null;

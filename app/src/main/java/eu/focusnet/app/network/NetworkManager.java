@@ -61,6 +61,7 @@ import eu.focusnet.app.model.json.FocusObject;
  */
 public class NetworkManager
 {
+	private static final String ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER = "self-signed-certificates";
 	private SSLContext sslContext;
 	private Context context = null;
 
@@ -122,9 +123,9 @@ public class NetworkManager
 
 		// Add each certificate in the keystore
 		AssetManager am = FocusApplication.getInstance().getAssets();
-		List<String> certificates = Arrays.asList(am.list("self-signed-certificates"));
+		List<String> certificates = Arrays.asList(am.list(ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER));
 		for (String cert : certificates) {
-			InputStream caInput = new BufferedInputStream(am.open("self-signed-certificates/" + cert));
+			InputStream caInput = new BufferedInputStream(am.open(ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER + "/" + cert));
 			Certificate ca;
 			try {
 				ca = cf.generateCertificate(caInput);
@@ -158,12 +159,18 @@ public class NetworkManager
 			@Override
 			public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
 			{
+				if (finalDefaultTrustManager == null) {
+					throw new FocusInternalErrorException("No default trust store found");
+				}
 				finalDefaultTrustManager.checkClientTrusted(chain, authType);
 			}
 
 			@Override
 			public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
 			{
+				if (finalMyTrustManager == null || finalDefaultTrustManager == null) {
+					throw new FocusInternalErrorException("No custom or default trust store found");
+				}
 				try {
 					finalMyTrustManager.checkServerTrusted(chain, authType);
 				} catch (CertificateException e) {
@@ -175,6 +182,9 @@ public class NetworkManager
 			@Override
 			public X509Certificate[] getAcceptedIssuers()
 			{
+				if (finalDefaultTrustManager == null) {
+					throw new FocusInternalErrorException("No default trust store found");
+				}
 				return finalDefaultTrustManager.getAcceptedIssuers();
 			}
 		};
@@ -182,42 +192,6 @@ public class NetworkManager
 		// make the SSL context available to the rest of the app
 		this.sslContext = SSLContext.getInstance("TLS");
 		this.sslContext.init(null, new TrustManager[]{customTrustManager}, null);
-
-
-		/*
-		// Init certificate factory
-		CertificateFactory cf = CertificateFactory.getInstance("X.509");
-
-		// Create an empty KeyStore to hold our trusted certificates
-		String keyStoreType2 = KeyStore.getDefaultType();
-		KeyStore keyStore = KeyStore.getInstance(keyStoreType2);
-		keyStore.load(null, null);
-
-		// Add each certificate in the keystore
-		AssetManager am = FocusApplication.getInstance().getAssets();
-		List<String> certificates = Arrays.asList(am.list("self-signed-certificates"));
-		for (String cert : certificates) {
-			InputStream caInput = new BufferedInputStream(am.open("self-signed-certificates/" + cert));
-			Certificate ca;
-			try {
-				ca = cf.generateCertificate(caInput);
-			}
-			finally {
-				caInput.close();
-			}
-			keyStore.setCertificateEntry(cert, ca);
-		}
-
-		// Create a TrustManager that trusts the CAs in our KeyStore
-		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory tmf2 = TrustManagerFactory.getInstance(tmfAlgorithm);
-		tmf.init(keyStore);
-
-		// make the SSL context available to the rest of the app
-		this.sslContext = SSLContext.getInstance("TLS");
-		TrustManager[] m = tmf2.getTrustManagers();
-		this.sslContext.init(null, m, null);
-		**/
 	}
 
 

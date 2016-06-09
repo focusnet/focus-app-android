@@ -28,11 +28,13 @@ import java.util.Properties;
  */
 public class PropertiesHelper
 {
+	private static final java.lang.String ASSETS_PROPERTY_FILE = "focus.properties";
+
 	public static String getProperty(String key, Context context) throws IOException
 	{
 		Properties properties = new Properties();
 		AssetManager assetManager = context.getAssets();
-		InputStream inputStream = assetManager.open("focus.properties");
+		InputStream inputStream = assetManager.open(ASSETS_PROPERTY_FILE);
 		properties.load(inputStream);
 		return properties.getProperty(key);
 	}

@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 
 /**

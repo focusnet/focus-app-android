@@ -29,7 +29,6 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.PageFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
-import eu.focusnet.app.ui.util.UiHelper;
 
 
 /**

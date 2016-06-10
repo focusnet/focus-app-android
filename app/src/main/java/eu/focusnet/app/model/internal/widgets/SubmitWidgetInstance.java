@@ -34,8 +34,8 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 {
 
-	private static String CONFIG_LABEL_LABEL = "label";
-	private static String CONFIG_LABEL_DEFAULT_VALUE = "Submit";
+	final private static String CONFIG_LABEL_LABEL = "label";
+	final private static String CONFIG_LABEL_DEFAULT_VALUE = "Submit";
 
 	private String submitLabel;
 

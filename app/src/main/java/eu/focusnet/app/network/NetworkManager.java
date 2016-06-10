@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -63,7 +62,6 @@ public class NetworkManager
 {
 	private static final String ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER = "self-signed-certificates";
 	private SSLContext sslContext;
-	private Context context = null;
 
 	public final static int NETWORK_REQUEST_STATUS_SUCCESS = 0x0;
 	public final static int NETWORK_REQUEST_STATUS_NETWORK_FAILURE = 0x1;
@@ -77,8 +75,6 @@ public class NetworkManager
 	 */
 	public NetworkManager()
 	{
-		this.context = FocusApplication.getInstance();
-
 		// we do this in the NetworkManager such that we do it only once for the whole app
 		try {
 			this.initSSLContext();

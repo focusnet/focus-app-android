@@ -102,7 +102,7 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void updateListAdapter()
 	{
-		UserPreferences preference = FocusApplication.getInstance().getDataManager().getUserPreferences();;
+		UserPreferences preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
 		BookmarksList bookmark = preference.getBookmarks();
 		ArrayList<Bookmark> pages = bookmark.getPages();

@@ -36,8 +36,6 @@ import java.util.Map;
  */
 public class HttpResponse
 {
-	private Map<String, List<String>> headers = null;
-	private String method = "";
 	private String data = "";
 	private int returnCode = 0;
 
@@ -51,17 +49,17 @@ public class HttpResponse
 	 */
 	public HttpResponse(HttpURLConnection connection) throws IOException
 	{
-		this.method = connection.getRequestMethod();
+		// String method = connection.getRequestMethod();
 		this.returnCode = connection.getResponseCode();
 		if (!this.isSuccessful()) {
 			return;
 		}
 
-		this.headers = connection.getHeaderFields();
+		Map<String, List<String>> headers = connection.getHeaderFields();
 		InputStream inputStream = connection.getInputStream();
 
 		// depending on the content type, we decide whether the object is binary or text.
-		List<String> content_types = this.headers.get("Content-Type");
+		List<String> content_types = headers.get("Content-Type");
 
 		// basically, only application/json is text
 		if (content_types.contains("application/json")) {

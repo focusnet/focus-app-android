@@ -36,7 +36,6 @@ abstract public class DataCollectionWidgetInstance extends WidgetInstance
 		super(wTpl, layoutConfig, dataCtx);
 		if (this.fieldName == null) {
 			this.markAsInvalid("No field name has been set.");
-			return;
 		}
 	}
 

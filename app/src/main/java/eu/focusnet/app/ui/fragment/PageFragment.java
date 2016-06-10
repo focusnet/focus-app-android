@@ -53,7 +53,6 @@ public class PageFragment extends Fragment
 	private PageInstance pageInstance;
 	private ProjectInstance projectInstance;
 	private View viewRoot;
-	private int currentayoutId;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,12 +102,12 @@ public class PageFragment extends Fragment
 	{
 		LinkedHashMap<String, WidgetInstance> widgetInstances = this.pageInstance.getWidgets();
 
-		this.currentayoutId = View.generateViewId();
+		int currentayoutId = View.generateViewId();
 
 		LinearLayout verticalContainerLayout = (LinearLayout) this.viewRoot.findViewById(R.id.pageInfo);
 
 		LinearLayout containerLayout = new LinearLayout(this.getActivity());
-		containerLayout.setId(this.currentayoutId);
+		containerLayout.setId(currentayoutId);
 		containerLayout.setOrientation(LinearLayout.HORIZONTAL);
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(0, 0, 0, 0);
@@ -140,7 +139,7 @@ public class PageFragment extends Fragment
 				// and create a new container line
 				containerLayout = new LinearLayout(this.getActivity());
 				containerLayout.setOrientation(LinearLayout.HORIZONTAL);
-				containerLayout.setId(++this.currentayoutId);
+				containerLayout.setId(++currentayoutId);
 				containerLayout.setLayoutParams(layoutParams);
 				spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
 			}
@@ -148,7 +147,7 @@ public class PageFragment extends Fragment
 			// add the new widget fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putString(Constant.UI_EXTRA_PATH, FocusApplication.getInstance().getDataManager().getAppContentInstance().buildPath(this.projectInstance, this.pageInstance, widgetInstance));
+			widgetBundle.putString(Constant.UI_EXTRA_PATH, AppContentInstance.buildPath(this.projectInstance, this.pageInstance, widgetInstance));
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT, requiredSpace);
 			widgetBundle.putInt(Constant.UI_BUNDLE_LAYOUT_POSITION_IN_ROW, Constant.LAYOUT_NUM_OF_COLUMNS - spaceLeft);

@@ -83,12 +83,12 @@ public class DatabaseAdapter
 	 *
 	 * @return A DatabaseAdapter to interact with the database.
 	 */
-	private DatabaseAdapter openWritableDatabase()
+	private SQLiteDatabase openWritableDatabase()
 	{
 		if (this.db == null || !this.db.isOpen()) {
 			this.db = databaseHelper.getWritableDatabase();
 		}
-		return this;
+		return this.db;
 	}
 
 	/**
@@ -106,8 +106,7 @@ public class DatabaseAdapter
 
 	public SampleDao getSampleDao()
 	{
-		this.openWritableDatabase();
-		return new SampleDao(this.getDb(), this.uniqueInstanceIdentifier);
+		return new SampleDao(this.openWritableDatabase(), this.uniqueInstanceIdentifier);
 	}
 
 	/**

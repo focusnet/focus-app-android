@@ -53,7 +53,6 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	 * Always an URL pointing to a FocusSample
 	 */
 	private FocusSample inputObject;
-	private boolean appAvailable;
 	private int requestCode;
 	private FocusSample response;
 	private String installedVersion;
@@ -144,17 +143,17 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	public boolean updateAppAvailability()
 	{
 		// app identifier
-		this.appAvailable = false;
+		boolean appAvailable;
 		// check that the app is indeed available
 		Intent intent = new Intent(this.appIdentifier);
 		PackageManager pm = FocusApplication.getInstance().getPackageManager();
 		ResolveInfo activity_info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (activity_info == null) {
-			this.appAvailable = false;
+			appAvailable = false;
 			this.installedVersion = null;
 		}
 		else {
-			this.appAvailable = true;
+			appAvailable = true;
 			PackageInfo pkg_info = null;
 			try {
 				pkg_info = pm.getPackageInfo(activity_info.activityInfo.packageName, 0);
@@ -164,7 +163,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 			}
 			this.installedVersion = pkg_info.versionName;
 		}
-		return this.appAvailable;
+		return appAvailable;
 	}
 
 	public String getButtonLabel()

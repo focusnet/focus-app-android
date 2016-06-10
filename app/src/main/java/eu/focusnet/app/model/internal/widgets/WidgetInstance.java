@@ -85,7 +85,7 @@ public abstract class WidgetInstance extends AbstractInstance
 		this.guid = wTpl.getGuid();
 		this.type = wTpl.getType();
 		this.template = wTpl;
-		this.layoutConfig = (layoutConfig == null ? this.layoutConfigDefaults : layoutConfig);
+		this.layoutConfig = (layoutConfig == null ? WidgetInstance.layoutConfigDefaults : layoutConfig);
 		this.dataContext = dataCtx;
 		if (this.dataContext == null) {
 			this.dataContext = new DataContext();
@@ -109,7 +109,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	{
 		super();
 
-		this.layoutConfig = (layoutConfig == null ? this.layoutConfigDefaults : layoutConfig);
+		this.layoutConfig = (layoutConfig == null ? WidgetInstance.layoutConfigDefaults : layoutConfig);
 	}
 
 	public static WidgetInstance factory(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)

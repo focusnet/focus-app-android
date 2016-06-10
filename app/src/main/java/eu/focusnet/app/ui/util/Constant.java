@@ -48,7 +48,7 @@ public class Constant
 			UI_BUNDLE_LAYOUT_HEIGHT = "eu.focusnet.bundle.LAYOUT_HEIGHT",
 			UI_BUNDLE_LAYOUT_WEIGHT = "eu.focusnet.bundle.LAYOUT_WEIGHT",
 			UI_BUNDLE_LAYOUT_POSITION_IN_ROW = "eu.focusnet.bundle.POSITION_IN_ROW";
-	;
+
 	// fragments identifiers
 	public static final int UI_MENU_ENTRY_PROJECTS_LISTING = 1,
 			UI_MENU_ENTRY_BOOKMARK = 2,

@@ -185,6 +185,6 @@ public class BarChartWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelper.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		this.referenceHeight = UiHelper.dp_to_pixels(HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

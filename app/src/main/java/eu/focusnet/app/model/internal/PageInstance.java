@@ -45,7 +45,7 @@ public class PageInstance extends AbstractInstance
 	}
 
 	public final static String LABEL_PAGE_ITERATOR = "$page-iterator$";
-	LinkedHashMap<String, WidgetInstance> widgets; // layout + widgetdefinition, with dataContext.
+	LinkedHashMap<String, WidgetInstance> widgets; // layout + widget definition, with dataContext.
 	private PageTemplate template;
 	private String guid;
 	private PageType type;
@@ -81,11 +81,7 @@ public class PageInstance extends AbstractInstance
 			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
 			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
 		}
-		catch (FocusMissingResourceException ex) {
-			FocusApplication.reportError(ex);
-			return;
-		}
-		catch (FocusBadTypeException ex) {
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			FocusApplication.reportError(ex);
 			return;
 		}

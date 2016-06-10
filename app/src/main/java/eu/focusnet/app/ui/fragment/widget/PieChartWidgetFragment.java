@@ -46,7 +46,7 @@ import eu.focusnet.app.ui.util.UiHelper;
 public class PieChartWidgetFragment extends WidgetFragment
 {
 
-	private static int HEIGHT_DP_FOR_FULL_WIDTH = 500;
+	private final static int HEIGHT_DP_FOR_FULL_WIDTH = 500;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -119,6 +119,6 @@ public class PieChartWidgetFragment extends WidgetFragment
 	{
 		// Alter reference height of the widget
 		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelper.dp_to_pixels((int) HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		this.referenceHeight = UiHelper.dp_to_pixels(HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

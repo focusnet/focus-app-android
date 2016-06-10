@@ -52,7 +52,6 @@ public class Html5WidgetFragment extends WidgetFragment
 
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
 	private static final String JAVASCRIPT_INIT_FUNCTION = JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME + ".init";
-	private TouchWebView webview;
 	private String context;
 
 
@@ -73,11 +72,11 @@ public class Html5WidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		webview = (TouchWebView) this.rootView.findViewById(R.id.webview);
+		TouchWebView webView = (TouchWebView) this.rootView.findViewById(R.id.webview);
 
 		// configure the WebView
-		webview.setWebViewClient(new FocusAppWebViewClient());
-		WebSettings settings = webview.getSettings();
+		webView.setWebViewClient(new FocusAppWebViewClient());
+		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
 		settings.setDatabaseEnabled(true);
 		settings.setDomStorageEnabled(true);
@@ -85,13 +84,13 @@ public class Html5WidgetFragment extends WidgetFragment
 		settings.setUseWideViewPort(true);
 
 		// Enable app-js communication
-		webview.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
-		webview.setWebChromeClient(new WebChromeClient());
+		webView.addJavascriptInterface(new WebAppInterface(getActivity()), JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME);
+		webView.setWebChromeClient(new WebChromeClient());
 
 		// and load the actual page in the browser
 
 		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
-		webview.loadUrl(
+		webView.loadUrl(
 				"file:///android_asset/"
 				+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
 				+ ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/"

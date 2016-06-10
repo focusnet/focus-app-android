@@ -32,8 +32,8 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class SelectFieldInstance extends FieldInstance
 {
 
-	private final String SELECT_LABEL_OPTIONS_TEXTS = "options-texts";
-	private final String SELECT_LABEL_OPTIONS_VALUES = "options-values";
+	final private static String SELECT_LABEL_OPTIONS_TEXTS = "options-texts";
+	final private static String SELECT_LABEL_OPTIONS_VALUES = "options-values";
 
 	private ArrayList<String> values;
 	private ArrayList<String> texts;

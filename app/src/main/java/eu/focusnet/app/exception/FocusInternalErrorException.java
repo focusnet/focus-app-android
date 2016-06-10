@@ -20,8 +20,6 @@
 
 package eu.focusnet.app.exception;
 
-import eu.focusnet.app.FocusApplication;
-
 /**
  * An FocusInternalErrorException denotes a problem that should not happen if the logic of the
  * application was correct. This is an additional sanity check.

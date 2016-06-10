@@ -73,18 +73,8 @@ abstract public class FieldInstance
 		}
 
 		// some common attributes
-		if (this.config.get(FIELD_LABEL_MANDATORY) != null) {
-			this.isMandatory = (boolean) this.config.get(FIELD_LABEL_MANDATORY);
-		}
-		else {
-			this.isMandatory = false;
-		}
-		if (this.config.get(FIELD_LABEL_READONLY) != null) {
-			this.isReadOnly = (boolean) this.config.get(FIELD_LABEL_READONLY);
-		}
-		else {
-			this.isReadOnly = false;
-		}
+		this.isMandatory = this.config.get(FIELD_LABEL_MANDATORY) != null && (boolean) this.config.get(FIELD_LABEL_MANDATORY);
+		this.isReadOnly = this.config.get(FIELD_LABEL_READONLY) != null && (boolean) this.config.get(FIELD_LABEL_READONLY);
 
 		Object raw_label = this.config.get(FIELD_LABEL_LABEL);
 		try {

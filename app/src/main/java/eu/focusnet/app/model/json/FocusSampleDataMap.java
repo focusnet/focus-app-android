@@ -49,7 +49,7 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 				throw new FocusInternalErrorException("Invalid type: " + o.getClass().getName());
 			}
 			else {
-				// Because of type erasure, no knowledge of parameterized type at runtime.
+				// Because of type erasure, no knowledge of parametrized type at runtime.
 				// So let's guess at runtime.
 				Object first = null;
 				try {
@@ -82,13 +82,9 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 	 */
 	private boolean isValidScalarType(Object o)
 	{
-		if (o instanceof String
+		return o instanceof String
 				|| o instanceof Double
-				|| o instanceof Integer) {
-			//        || o instanceof URL) { // useful? or check at usage time?
-			return true;
-		}
-		return false;
+				|| o instanceof Integer;
 	}
 
 

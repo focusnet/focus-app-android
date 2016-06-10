@@ -139,9 +139,9 @@ public class CronService extends Service
 		if (1 == 1) {
 
 			try {
-				Thread.sleep(1000 * 60 * 1); // 1 min
+				Thread.sleep(1000 * 60); // 1 min
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException ignored) {
 
 			}
 			this.lastSync = System.currentTimeMillis();
@@ -199,7 +199,7 @@ public class CronService extends Service
 					// already work in progress, let's discard this execution
 					return;
 				}
-				;
+
 				PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 						"FOCUS_SYNC_DATA");
 				wakeLock.acquire();

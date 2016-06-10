@@ -24,10 +24,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.View;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * The BaseActivity is used as the basis for Activities that have a title bar and a content below

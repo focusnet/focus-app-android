@@ -32,7 +32,6 @@ import eu.focusnet.app.R;
 public class FocusDialogBuilder extends AlertDialog.Builder
 {
 	private View rootView;
-	private View contentView;
 
 	public FocusDialogBuilder(Context context)
 	{
@@ -52,7 +51,6 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 	public FocusDialogBuilder insertContent(View content)
 	{
 		ViewGroup vg = (ViewGroup) this.rootView.findViewById(R.id.dialog_content);
-		this.contentView = content;
 		vg.addView(content);
 		return this;
 	}

@@ -21,17 +21,12 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -48,7 +43,6 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 {
 
 	private int selectedUseCase;
-	private Spinner spinner;
 
 	/**
 	 * Instantiate the activity UI
@@ -65,7 +59,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		this.selectedUseCase = 0;
 
 		// populate the spinner with values
-		this.spinner = (Spinner) findViewById(R.id.use_case_spinner);
+		Spinner spinner = (Spinner) findViewById(R.id.use_case_spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.demo_use_cases_labels, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

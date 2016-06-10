@@ -75,6 +75,7 @@ public class ProjectInstance extends AbstractInstance
 		}
 
 		this.build();
+		this.freeDataContext();
 	}
 
 	/**
@@ -140,7 +141,7 @@ public class ProjectInstance extends AbstractInstance
 	 */
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
 	{
-		LinkedHashMap<String, PageInstance> ret = new LinkedHashMap<>();
+		LinkedHashMap<String, PageInstance> pageInstances = new LinkedHashMap<>();
 
 		try {
 			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
@@ -190,9 +191,9 @@ public class ProjectInstance extends AbstractInstance
 					}
 
 					// the guid is adapted in the PageInstance constructor
-					PageInstance p;
+					PageInstance page;
 					try {
-						p = new PageInstance(pageTpl, type, new_page_ctx);
+						page = new PageInstance(pageTpl, type, new_page_ctx);
 					}
 					catch (FocusMissingResourceException ex) {
 						FocusApplication.reportError(ex);
@@ -202,20 +203,22 @@ public class ProjectInstance extends AbstractInstance
 					for (WidgetReference wr : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
 
-						DataContext new_widget_ctx = new DataContext(p.getDataContext());
+						DataContext new_widget_ctx = new DataContext(page.getDataContext());
 						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
-						p.addWidget(wi.getGuid(), wi);
+						page.addWidget(wi.getGuid(), wi);
 					}
 
-					ret.put(p.getGuid(), p);
+					page.freeDataContext();
+
+					pageInstances.put(page.getGuid(), page);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
-				PageInstance p;
+				PageInstance page;
 				DataContext new_page_ctx = new DataContext(this.dataContext);
 				try {
-					p = new PageInstance(pageTpl, type, new_page_ctx);
+					page = new PageInstance(pageTpl, type, new_page_ctx);
 				}
 				catch (FocusMissingResourceException ex) {
 					FocusApplication.reportError(ex);
@@ -224,15 +227,17 @@ public class ProjectInstance extends AbstractInstance
 
 				for (WidgetReference wr : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
-					DataContext new_widget_ctx = new DataContext(p.getDataContext());
+					DataContext new_widget_ctx = new DataContext(page.getDataContext());
 					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
-					p.addWidget(wi.getGuid(), wi);
+					page.addWidget(wi.getGuid(), wi);
 				}
 
-				ret.put(p.getGuid(), p);
+				page.freeDataContext();
+
+				pageInstances.put(page.getGuid(), page);
 			}
 		}
-		return ret;
+		return pageInstances;
 	}
 
 	/**

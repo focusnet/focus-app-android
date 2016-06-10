@@ -98,6 +98,8 @@ public abstract class WidgetInstance extends AbstractInstance
 
 		this.processSpecificConfig();
 		this.processCommonConfig();
+
+		this.freeDataContext();
 	}
 
 	/**
@@ -229,7 +231,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	{
 		String tmp = layoutConfig.get(attribute);
 		if (tmp == null) {
-			return this.layoutConfigDefaults.get(attribute);
+			return WidgetInstance.layoutConfigDefaults.get(attribute);
 		}
 		return tmp;
 	}

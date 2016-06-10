@@ -59,6 +59,7 @@ public class AppContentInstance extends AbstractInstance
 		this.dataManager = FocusApplication.getInstance().getDataManager();
 		this.dataContext = new DataContext();
 		this.build();
+		this.freeDataContext();
 
 		if (!this.isValid()) {
 			throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");

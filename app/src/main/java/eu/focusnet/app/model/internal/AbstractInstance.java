@@ -61,4 +61,8 @@ abstract public class AbstractInstance
 	}
 
 
+	public void freeDataContext()
+	{
+		this.dataContext = null;
+	}
 }

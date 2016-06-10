@@ -76,14 +76,17 @@ public class DataContext extends HashMap<String, String>
 	 * <p/>
 	 * - a simple URL, e.g. http://data.example.org/test/123
 	 * - a reference to an existing entry in this data context, with a selector to the
-	 * appropriate key in its data object; e.g. <ctx|machine-ABC|woodpile-url>
+	 * appropriate key in its data object; e.g. <ctx/machine-ABC/woodpile-url>
+	 *
+	 *     TODO
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a lookup request, e.g. <lookup:http://schemas.focusnet.eu/my-special-type|URL>
-	 * where URL is the "context" of the FocusObject.
-	 * <p/>
-	 * In the last 2 possibilities, the URL can also be replaced by a reference from an existing
-	 * context. In this case, the separator "|" is replaced by "/" within this context description.
-	 * <p/>
+	 *     	 * where URL is the "context" of the FocusObject.
+	 * - above services with references to context:
+	 * <history|ctx/machine-ABC/woodpile-url|since=now-86400;until=now;every=240>
+	 *
+	 *
+	 *
 	 * Examples:
 	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
 	 * "referenced-url": "<ctx/simple-url/url1>",
@@ -91,7 +94,10 @@ public class DataContext extends HashMap<String, String>
 	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
-	 * <p/>
+	 *
+	 *
+	 *
+	 *
 	 * FIXME FIXME TODO the value of the .register() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
 	 * for history / lookup, that's less easy (?)
 	 */
@@ -100,25 +106,26 @@ public class DataContext extends HashMap<String, String>
 		// what kind of data do we have?
 		FocusSample f;
 
-		if (description.startsWith(Constant.SELECTOR_SERVICE_OPEN)
-				&& description.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
+		if (description.startsWith(Constant.SELECTOR_OPEN)
+				&& description.endsWith(Constant.SELECTOR_CLOSE)) {
 
 			description = description
-					.replace(Constant.SELECTOR_SERVICE_OPEN, "")
-					.replace(Constant.SELECTOR_SERVICE_CLOSE, "");
+					.replace(Constant.SELECTOR_OPEN, "")
+					.replace(Constant.SELECTOR_CLOSE, "");
 
-			if (description.startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
+			if (description.startsWith(Constant.SELECTOR_CONTEXT_LABEL
+					+ Constant.SELECTOR_CONTEXT_SEPARATOR)) {
 				String u = this.resolveReferencedUrl(description);
 				f = this.dataManager.getSample(u);
 			}
 			else {
-				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_OUTER_PATTERN);
+				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
 				if (parts.length != 3) {
 					throw new FocusInternalErrorException("Wrong number of fields for description of data context.");
 				}
 				if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
 					String u = null;
-					if (parts[1].startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
+					if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
 						u = this.resolveReferencedUrl(parts[1]);
 					}
 					else {
@@ -128,7 +135,7 @@ public class DataContext extends HashMap<String, String>
 				}
 				else if (parts[0].equals(Constant.SELECTOR_SERVICE_LOOKUP)) {
 					String u;
-					if (parts[1].startsWith(Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)) {
+					if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
 						u = this.resolveReferencedUrl(parts[1]);
 					}
 					else {
@@ -157,7 +164,7 @@ public class DataContext extends HashMap<String, String>
 	 */
 	private String resolveReferencedUrl(String description) throws FocusMissingResourceException
 	{
-		String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
+		String[] parts = description.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length != 3) {
 			throw new FocusInternalErrorException("badly formatted reference");
 		}
@@ -215,15 +222,15 @@ public class DataContext extends HashMap<String, String>
 			return "";
 		}
 
-		if (!request.startsWith(Constant.SELECTOR_SERVICE_OPEN + Constant.SELECTOR_SERVICE_CTX + Constant.SELECTOR_SERVICE_SEPARATOR_INNER)
-				|| !request.endsWith(Constant.SELECTOR_SERVICE_CLOSE)) {
+		if (!request.startsWith(Constant.SELECTOR_OPEN + Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)
+				|| !request.endsWith(Constant.SELECTOR_CLOSE)) {
 			return request;
 		}
 		request = request
-				.replace(Constant.SELECTOR_SERVICE_OPEN, "")
-				.replace(Constant.SELECTOR_SERVICE_CLOSE, "");
+				.replace(Constant.SELECTOR_OPEN, "")
+				.replace(Constant.SELECTOR_CLOSE, "");
 
-		String[] parts = request.split(Constant.SELECTOR_SERVICE_SEPARATOR_INNER);
+		String[] parts = request.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length < 2) {
 			return new FocusInternalErrorException("Invalid context in resolve request.");
 		}

@@ -96,7 +96,7 @@ public class DataManager
 	private UserPreferences userPreferences;
 	private AppContentTemplate appContentTemplate;
 	private AppContentInstance appContentInstance;
-	// for samples
+	// for samples, the cache is read-only. It helps speed up the process of building the application content
 	private HashMap<String, FocusObject> cache;
 
 	private Gson gson;
@@ -478,6 +478,10 @@ public class DataManager
 		AppContentTemplate template = this.getAppContentTemplate();
 		this.appContentInstance = new AppContentInstance(template);
 		this.registerActiveInstance(this.appContentInstance);
+
+		// we don't need the cache anymore
+		this.cache = new HashMap<>();
+
 		this.applicationReady = true;
 	}
 
@@ -626,7 +630,7 @@ public class DataManager
 		}
 
 		// make it accessible through the cache
-		this.cache.put(url, data);
+// 		this.cache.put(url, data);
 
 		// push on the network
 		if (is_special_url) {

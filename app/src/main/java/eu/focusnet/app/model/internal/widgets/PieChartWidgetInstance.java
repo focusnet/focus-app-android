@@ -133,16 +133,6 @@ public class PieChartWidgetInstance extends WidgetInstance
 		return this.caption;
 	}
 
-	/**
-	 * Get the total number of parts on the pie chart.
-	 *
-	 * @return
-	 */
-	public int getNumberOfParts()
-	{
-		return this.numberOfParts;
-	}
-
 	public ArrayList<String> getLabels()
 	{
 		return this.labels;

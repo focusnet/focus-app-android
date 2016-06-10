@@ -81,9 +81,6 @@ public class NetworkManager
 		catch (CertificateException | IOException | KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
 			throw new FocusInternalErrorException("Error when importing our local trusted certificates.");
 		}
-
-		// FIXME DEBUG dummy host verification becauuse core.focusnet.eu has a certificate with hostname=localhost
-		HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
 	}
 
 	/**
@@ -327,7 +324,11 @@ public class NetworkManager
 	/**
 	 * Custom (and dummy) host name verifier
 	 * <p/>
-	 * FIXME DEBUG this is prototype code and is not secure.
+	 * This is prototype code and is not secure. It may be used to bypass hostname validation of SSL certificates.
+	 *
+	 * If required, put in NetworkManager constructor
+	 * HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
+	 *
 	 */
 	private static class DummyHostNameVerifier implements HostnameVerifier
 	{

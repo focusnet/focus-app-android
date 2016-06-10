@@ -125,6 +125,13 @@ public class Html5WidgetFragment extends WidgetFragment
 	 */
 	private class FocusAppWebViewClient extends WebViewClient
 	{
+		/**
+		 * FIXME FIXME DEBUG TODO
+		 * remove this. Or handle errors properly!! BIG SECURITY ISSUE
+		 * @param view
+		 * @param handler
+		 * @param error
+		 */
 		@Override
 		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error)
 		{

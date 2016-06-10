@@ -109,8 +109,19 @@
     <string name="ok">OK</string>
     <string name="start">Start</string>
     <string name="data_sync_title">Data synchronization</string>
-    <string name="syncronization_in_progress">Syncronization in progress …</string>
+    <string name="syncronization_in_progress">In progress …</string>
     <string name="synchronization_status">Synchronization status:</string>
-    <string name="sync_already_in_progress">Synchronization already in progress …</string>
+    <string name="sync_already_in_progress">Already in progress …</string>
+    <string name="delete_bookmark">Delete</string>
+    <string name="sync_too_recent">Synchronization cannot be performed right now because it has already been done too recently in the past. Please try again later.</string>
+    <string name="last_synchronization_n_a">Last synchronization: N/A</string>
+    <string name="data_volume_n_a">Data volume: N/A</string>
+    <string name="you_can_start_data_sync">You can start data synchronization from this dialog. It may take a while to finish.</string>
+    <string name="last_sync_label">"Last data synchronization: "</string>
+    <string name="last_sync_data_volume_label">"Data volume: "</string>
+    <string name="done">Done.</string>
+    <string name="close">Close</string>
+    <string name="sync_continue_background">Continue in background</string>
+    <string name="about_focus">About FOCUS</string>
 
 </resources>

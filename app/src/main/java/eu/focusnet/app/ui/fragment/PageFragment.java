@@ -81,7 +81,7 @@ public class PageFragment extends Fragment
 		this.buildPage();
 
 		// Keyboard should disappear when the user clicks outside of it
-		UiHelper.setupHiddableKeyboard(this.viewRoot, this.getActivity());
+		UiHelper.setupHidableKeyboard(this.viewRoot, this.getActivity());
 
 		return viewRoot;
 	}

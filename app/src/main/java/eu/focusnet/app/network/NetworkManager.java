@@ -65,6 +65,11 @@ public class NetworkManager
 	private SSLContext sslContext;
 	private Context context = null;
 
+	public final static int NETWORK_REQUEST_STATUS_SUCCESS = 0x0;
+	public final static int NETWORK_REQUEST_STATUS_NETWORK_FAILURE = 0x1;
+	public final static int NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE = 0x2;
+
+
 	// FIXME get the root of REST server on first request (such that we have the root of services)
 
 	/**

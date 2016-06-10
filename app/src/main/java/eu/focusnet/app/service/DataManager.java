@@ -836,42 +836,10 @@ public class DataManager
 	}
 
 	/**
-	 * Free memory from our in-RAM data structure, where this is possible
-	 */
-	public void freeMemory()
-	{
-		// FIXME FIXME FIXME TODO
-		if (1 == 1) {
-			return;
-		}
-		Set<String> used_urls = new HashSet<>();
-		for (AbstractInstance ai : this.activeInstances) {
-			Map<String, String> m = ai.getDataContext();
-			if (m == null) {
-				continue;
-			}
-			for (Map.Entry<String, String> e : m.entrySet()) {
-				used_urls.add(e.getValue());
-			}
-		}
-
-		for (Map.Entry<String, FocusObject> e : this.cache.entrySet()) {
-			String url = e.getKey();
-			if (!used_urls.contains(url)) {
-				this.cache.remove(url);
-			}
-		}
-	}
-
-	/**
 	 * Clean the samples table from useless entries.
 	 */
 	public void cleanDataStore()
 	{
-		// FIXME FIXME FIXME TODO
-		if (1 == 1) {
-			return;
-		}
 		if (!this.isApplicationReady()) {
 			return;
 		}
@@ -891,10 +859,6 @@ public class DataManager
 	 */
 	public boolean syncData() throws FocusMissingResourceException
 	{
-		// FIXME FIXME FIXME TODO
-		if (1 == 1) {
-			return false;
-		}
 		if (!this.isApplicationReady()) {
 			return false;
 		}
@@ -913,14 +877,9 @@ public class DataManager
 	 */
 	private void pushLocalModifications() throws FocusMissingResourceException
 	{
-		// FIXME FIXME FIXME TODO
-		if (1 == 1) {
-			return;
-		}
-
 		// POST
 		String[] to_post_urls;
-		int report_failure = 0; // 1 = network failure only, 2 = at some point a HTTP request had a failed status
+		int report_failure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS; // report_failure is a bit mask
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
 			to_post_urls = dao.getAllMarkedForPost();
@@ -936,11 +895,11 @@ public class DataManager
 						dao.update(sample);
 					}
 					else {
-						report_failure = 2;
+						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure = report_failure == 2 ? 2 : 1;
+					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 
@@ -959,11 +918,11 @@ public class DataManager
 						dao.update(sample);
 					}
 					else {
-						report_failure = 2;
+						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure = report_failure == 2 ? 2 : 1;
+					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 
@@ -976,19 +935,19 @@ public class DataManager
 						dao.delete(url);
 					}
 					else {
-						report_failure = 2;
+						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure = report_failure == 2 ? 2 : 1;
+					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 		}
 		finally {
 			this.databaseAdapter.close();
 		}
-		if (report_failure > 0) {
-			throw new FocusMissingResourceException("Cannot retrieve resource - " + (report_failure == 2 ? "At least one unsuccessful request" : "Network failure only"));
+		if (report_failure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
+			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + report_failure);
 		}
 	}
 
@@ -997,14 +956,14 @@ public class DataManager
 	 * Get latest versions of all resources required for running the application, and replace the Application DataManager
 	 * <p/>
 	 * No need to take care of activeInstances. They will simply be rebuilt on next Activity loading.
+	 *
+	 * FIXME FIXME FIXME are we really loading new data, or do they come from the local cache? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 *
+	 *
+	 * FIXME also, what happens if user / preferences / app content have changed? should be reload full app? -> should be ok like this as we change the data manager being used.
 	 */
 	public void rebuildApplicationData()
 	{
-		// FIXME FIXME FIXME TODO
-		if (1 == 1) {
-			return;
-		}
-
 		boolean must_recover = false;
 		DataManager new_dm = new DataManager();
 		try {
@@ -1016,5 +975,10 @@ public class DataManager
 		if (!must_recover) {
 			FocusApplication.getInstance().replaceDataManager(new_dm);
 		}
+	}
+
+	public long getDatabaseSize()
+	{
+		return this.databaseAdapter.getDatabaseSize();
 	}
 }

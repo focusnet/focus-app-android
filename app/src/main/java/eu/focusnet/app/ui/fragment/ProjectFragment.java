@@ -70,7 +70,7 @@ public class ProjectFragment extends ListFragment
 		Bundle bundle = getArguments();
 		//Path is the same as projectId
 		projectId = bundle.getString(Constant.UI_EXTRA_PROJECT_PATH);
-		new ProjectBuilderTask().execute();
+		new ProjectBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 		return viewRoot;
 	}

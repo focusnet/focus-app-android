@@ -100,7 +100,7 @@ public class FocusApplication extends Application
 	 *
 	 * @param e
 	 */
-	public static final void reportError(Exception e)
+	public static void reportError(Exception e)
 	{
 		// FIXME TODO we should alter the report to remove sensitive information!
 
@@ -229,28 +229,6 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * When we are running low on memory, let's recycle what we can
-	 */
-	@Override
-	public void onLowMemory()
-	{
-		super.onLowMemory();
-		this.dataManager.freeMemory();
-	}
-
-	/**
-	 * When the system requests so, let's recycle what we can
-	 *
-	 * @param level The higher, the more critical memory recycling is important.
-	 */
-	@Override
-	public void onTrimMemory(int level)
-	{
-		super.onTrimMemory(level);
-		this.dataManager.freeMemory();
-	}
-
-	/**
 	 * Replace the current data manager with a new one. The old one will therefore be
 	 * garbage collected.
 	 *
@@ -268,4 +246,5 @@ public class FocusApplication extends Application
 	{
 		this.activityHandler.restartCurrentActivity();
 	}
+
 }

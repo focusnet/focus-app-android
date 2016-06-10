@@ -24,6 +24,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.File;
+
 import eu.focusnet.app.model.util.Constant;
 
 /**
@@ -80,6 +82,14 @@ public class DatabaseAdapter
 		return new SampleDao(this.getDb());
 	}
 
+	/**
+	 * Get the databse size
+	 */
+	public long getDatabaseSize()
+	{
+		return new File(this.db.getPath()).length();
+	}
+
 
 	/**
 	 * Helper class for database management.
@@ -107,6 +117,7 @@ public class DatabaseAdapter
 		{
 			db.execSQL(Constant.CREATE_TABLE_SAMPLES_QUERY);
 		}
+
 
 		/**
 		 * Migrate from one database version to another

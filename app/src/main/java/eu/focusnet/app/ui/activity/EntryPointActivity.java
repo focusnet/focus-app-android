@@ -82,7 +82,7 @@ public class EntryPointActivity extends Activity
 		version.setText(BuildConfig.VERSION_NAME);
 
 		// run tasks
-		new InitTask(this).execute();
+		new InitTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	/**

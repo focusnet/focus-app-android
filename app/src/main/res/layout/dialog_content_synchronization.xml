@@ -39,20 +39,22 @@
             android:id="@+id/dialog_sync_instructions_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You can start data synchronization from this dialog. It may take a while to finish."
+            android:text="@string/you_can_start_data_sync"
             android:layout_marginBottom="10sp"
             android:layout_weight="30"/>
 
         <TextView
+            android:id="@+id/dialog_sync_last_sync_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last synchronization: 2016-03-30 13:33:33"
+            android:text="@string/last_synchronization_n_a"
             android:layout_weight="30"/>
 
         <TextView
+            android:id="@+id/dialog_sync_data_volume_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Data volume: 34MB"
+            android:text="@string/data_volume_n_a"
             android:layout_weight="30"/>
 
     </LinearLayout>

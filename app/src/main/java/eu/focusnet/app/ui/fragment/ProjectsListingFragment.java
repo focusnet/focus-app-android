@@ -66,7 +66,7 @@ public class ProjectsListingFragment extends ListFragment
 	{
 		super.onCreate(savedInstanceState);
 		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
-		new FocusBuilderTask().execute();
+		new ProjectsListingBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return viewRoot;
 	}
 
@@ -95,7 +95,7 @@ public class ProjectsListingFragment extends ListFragment
 	 * This class loads all projects from the database belonging to the logged user and displays
 	 * the project title and a small description of the project
 	 */
-	private class FocusBuilderTask extends AsyncTask<Void, Void, StandardListAdapter>
+	private class ProjectsListingBuilderTask extends AsyncTask<Void, Void, StandardListAdapter>
 	{
 
 		@Override

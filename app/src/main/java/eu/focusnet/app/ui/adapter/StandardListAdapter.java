@@ -148,7 +148,7 @@ public class StandardListAdapter extends BaseAdapter
 									.insertContent(dialog_content)
 									.removeNeutralButton()
 									.setCancelable(false)
-									.setPositiveButtonText(res.getString(R.string.ok))
+									.setPositiveButtonText(res.getString((isRightIconActive ? R.string.delete_bookmark : R.string.ok)))
 									.setNegativeButtonText(res.getString(R.string.cancel));
 
 							// instantiate
@@ -188,7 +188,7 @@ public class StandardListAdapter extends BaseAdapter
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 
-									new SaveUserPreferencesTask(context).execute();
+									new SaveUserPreferencesTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 									dialog.dismiss();
 								}
 							});

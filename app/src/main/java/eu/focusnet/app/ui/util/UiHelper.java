@@ -17,6 +17,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -114,7 +116,7 @@ public class UiHelper
 
 	/**
 	 * Helper function to hide the keyboard when clicking outside of if
-	 *
+	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
 	 * @param activity
@@ -122,17 +124,20 @@ public class UiHelper
 	public static void hideSoftKeyboard(Activity activity)
 	{
 		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		View f = activity.getCurrentFocus();
+		if (f != null) {
+			inputMethodManager.hideSoftInputFromWindow(f.getWindowToken(), 0);
+		}
 	}
 
 	/**
 	 * Setup UI to be able to click outside of keyboard to hide it.
-	 *
+	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
 	 * @param view
 	 */
-	public static void setupHiddableKeyboard(View view, final Activity activity)
+	public static void setupHidableKeyboard(View view, final Activity activity)
 	{
 		//Set up touch listener for non-text box views to hide keyboard.
 		if (!(view instanceof EditText)) {
@@ -150,13 +155,24 @@ public class UiHelper
 		if (view instanceof ViewGroup) {
 			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
 				View innerView = ((ViewGroup) view).getChildAt(i);
-				setupHiddableKeyboard(innerView, activity);
+				setupHidableKeyboard(innerView, activity);
 			}
 		}
 	}
 
 
-
+	/**
+	 * Get user-friendly file size
+	 */
+	public static String getFileSize(long size)
+	{
+		if (size <= 0) {
+			return "0";
+		}
+		final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
 
 
 }

@@ -55,7 +55,7 @@ public class LoginActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		UiHelper.setupHiddableKeyboard(findViewById(R.id.activity_view_parent), this);
+		UiHelper.setupHidableKeyboard(findViewById(R.id.activity_view_parent), this);
 	}
 
 	/**
@@ -74,8 +74,9 @@ public class LoginActivity extends Activity
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
 			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();
 
-			// FIXME check input ...
-			new LoginTask(this).execute(username, password, server);
+			// FIXME input validation
+
+			new LoginTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, username, password, server);
 		}
 		else {
 			UiHelper.displayToast(this, R.string.focus_login_error_no_network);

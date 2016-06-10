@@ -1,11 +1,3 @@
-package eu.focusnet.app.ui.common;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-
-import de.codecrafters.tableview.TableView;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -25,6 +17,15 @@ import de.codecrafters.tableview.TableView;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.ui.common;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+
+import de.codecrafters.tableview.TableView;
+
 // FIXME we may use SortableTableView
 public class TouchTableView extends TableView
 {

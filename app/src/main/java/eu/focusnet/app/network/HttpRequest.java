@@ -149,7 +149,7 @@ public class HttpRequest
 				connection.setRequestProperty(label, value);
 			}
 			else {
-				throw new FocusInternalErrorException("Invalid HTTP heade description in property file.");
+				throw new FocusInternalErrorException("Invalid HTTP header description in property file.");
 			}
 		}
 

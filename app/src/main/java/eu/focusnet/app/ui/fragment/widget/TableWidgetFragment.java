@@ -56,7 +56,7 @@ public class TableWidgetFragment extends WidgetFragment
 			textTitle.setText(this.widgetInstance.getTitle());
 		}
 
-		TableView tableView = (TouchTableView) this.rootView.findViewById(R.id.tableView);
+		TouchTableView tableView = (TouchTableView) this.rootView.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);

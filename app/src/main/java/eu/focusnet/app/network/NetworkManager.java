@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -190,6 +191,7 @@ public class NetworkManager
 		// make the SSL context available to the rest of the app
 		this.sslContext = SSLContext.getInstance("TLS");
 		this.sslContext.init(null, new TrustManager[]{customTrustManager}, null);
+		HttpsURLConnection.setDefaultSSLSocketFactory(this.sslContext.getSocketFactory());
 	}
 
 

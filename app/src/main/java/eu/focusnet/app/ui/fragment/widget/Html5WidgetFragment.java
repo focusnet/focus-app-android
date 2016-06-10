@@ -20,28 +20,40 @@
 
 package eu.focusnet.app.ui.fragment.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Network;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
+import eu.focusnet.app.network.HttpRequest;
+import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
+import eu.focusnet.app.ui.util.PropertiesHelper;
 
 // FIXME should use DataManager instead of NetworkManager!
 // FIXME FIXME FIXME TODO
@@ -55,6 +67,7 @@ public class Html5WidgetFragment extends WidgetFragment
 	private String context;
 
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -79,6 +92,10 @@ public class Html5WidgetFragment extends WidgetFragment
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
 		settings.setDatabaseEnabled(true);
+
+		settings.setAllowFileAccessFromFileURLs(true); //Maybe you don't need this rule
+		settings.setAllowUniversalAccessFromFileURLs(true);
+
 		settings.setDomStorageEnabled(true);
 		settings.setGeolocationEnabled(true);
 		settings.setUseWideViewPort(true);
@@ -90,11 +107,12 @@ public class Html5WidgetFragment extends WidgetFragment
 		// and load the actual page in the browser
 
 		this.context = ((Html5WidgetInstance) this.widgetInstance).getContext();
+
 		webView.loadUrl(
 				"file:///android_asset/"
-				+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
-				+ ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/"
-				+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_ENTRY_POINT
+						+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
+						+ ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/"
+						+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_ENTRY_POINT
 		);
 
 		return this.rootView;
@@ -107,6 +125,11 @@ public class Html5WidgetFragment extends WidgetFragment
 	 */
 	private class FocusAppWebViewClient extends WebViewClient
 	{
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error)
+		{
+			handler.proceed(); // if set, I get 403, but i should get 200
+		}
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
@@ -238,6 +261,30 @@ public class Html5WidgetFragment extends WidgetFragment
 			return "bb";
 
 			//      return "{\"mimetype\": \"image/png\", \"data\":\"base64encodeddata\"}"; // or exception
+		}
+
+		/**
+		 * Get an access control token directly from the application
+		 * <p/>
+		 * FIXME - in the end, this information should come from an Access Control manager, and not
+		 * from a simple hard-coded property
+		 */
+		@JavascriptInterface
+		public String getAccessControlToken(String which)
+		{
+			String header = null;
+			try {
+				header = PropertiesHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
+			}
+			catch (IOException e) {
+				throw new FocusInternalErrorException("Impossible to retrieve access token in properties.");
+			}
+			if (header != null) {
+				return header;
+			}
+			else {
+				return "";
+			}
 		}
 
 

@@ -79,6 +79,7 @@ public class CronService extends Service
 		this.syncInProgress = false;
 		this.lastSync = 0;
 		this.lastClean = 0;
+		this.failures = 0;
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class CronService extends Service
 
 		// DEBUG FIXME
 		if (1==1) {
-			FocusApplication.getInstance().getDataManager().cleanDataStore();
+			FocusApplication.getInstance().getDataManager().cleanDataStore(); // DEPRECATED
 
 			return true;
 		}
@@ -158,8 +159,8 @@ public class CronService extends Service
 			old_dm.syncData();
 		}
 		catch (FocusMissingResourceException e) {
-			++failures;
-			if (failures % 10 == 0) {
+			++this.failures;
+			if (this.failures % 10 == 0) {
 				// if too many failures, let's report them, just in case that may me an important problem.
 				FocusApplication.reportError(e);
 			}
@@ -325,6 +326,8 @@ public class CronService extends Service
 	/**
 	 * Get the last sync date
 	 *
+	 * NOTE: only available within a single application instance run. We do not permanently save
+	 * this information (e.g. in the db)
 	 * @return
 	 */
 	public long getLastSync()

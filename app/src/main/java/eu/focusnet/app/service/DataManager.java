@@ -30,9 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
@@ -44,22 +41,21 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.model.json.User;
+import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.model.store.DatabaseAdapter;
 import eu.focusnet.app.model.store.Sample;
 import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
  * This follows a Singleton pattern.
- *
+ * <p/>
  * FIXME this class is probably responsible for too many things.
- *
+ * <p/>
  * <p/>
  * Created by julien on 07.01.16.
  */
@@ -91,6 +87,7 @@ public class DataManager
 	private String userUrl;
 	private String prefUrl;
 	private String appContentUrl;
+
 	// java objects
 	private User user;
 	private UserPreferences userPreferences;
@@ -212,7 +209,7 @@ public class DataManager
 	 */
 	public boolean login(String user, String password, String server) throws IOException
 	{
-		if (1==1) {
+		if (1 == 1) {
 			throw new FocusNotImplementedException("DataManager.login()");
 		}
 
@@ -359,7 +356,7 @@ public class DataManager
 
 	/**
 	 * Acquire personal information about the user of the application
-	 *
+	 * <p/>
 	 * User is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
 	 */
 	public User getUser()
@@ -393,9 +390,9 @@ public class DataManager
 
 	/**
 	 * Acquire the application's user preferences.
+	 * <p/>
+	 * * UserPreferences is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
 	 *
-	 * 	 * UserPreferences is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
-
 	 * @return A UserPreferences object
 	 */
 	public UserPreferences getUserPreferences()
@@ -956,10 +953,10 @@ public class DataManager
 	 * Get latest versions of all resources required for running the application, and replace the Application DataManager
 	 * <p/>
 	 * No need to take care of activeInstances. They will simply be rebuilt on next Activity loading.
-	 *
+	 * <p/>
 	 * FIXME FIXME FIXME are we really loading new data, or do they come from the local cache? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 *
-	 *
+	 * <p/>
+	 * <p/>
 	 * FIXME also, what happens if user / preferences / app content have changed? should be reload full app? -> should be ok like this as we change the data manager being used.
 	 */
 	public void rebuildApplicationData()

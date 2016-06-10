@@ -25,6 +25,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import eu.focusnet.app.model.util.Constant;
 
@@ -41,6 +44,22 @@ public class DatabaseAdapter
 	private Object sampleDao;
 
 	/**
+	 * A unique identifier for that instance, based on time.
+	 *
+	 * This identifier will be used to identify the different sets of data coming from backends
+	 * At each data sync, we create a new DataManager that will replace the old one on success,
+	 * and each of these DataManagers contains a single DatabaseAdapter. Therefore, by
+	 * identifying data sync sets with this unique ID, we are able to distinguish the differents
+	 * syncs. It makes local db cleaning easier, as it then only consists in deleting entries that
+	 * do not match this unique ID.
+	 *
+	 * When updating/creating/deletion entries (PUT,POST,DELETE), we still use the same ID. This
+	 * is not an incremental version number, but only an instance identifier.
+	 */
+	final private long uniqueInstanceIdentifier;
+
+
+	/**
 	 * Constructor.
 	 *
 	 * @param context the application context
@@ -48,7 +67,16 @@ public class DatabaseAdapter
 	public DatabaseAdapter(Context context)
 	{
 		databaseHelper = new DatabaseHelper(context);
+
+		String time = Long.toString(System.currentTimeMillis());
+
+		// replace 4 first digits by a random number for more randomness
+		Pattern p = Pattern.compile("^\\d{3}");
+		Matcher matcher = p.matcher(time);
+		int rand = new Random().nextInt(1_000);
+		this.uniqueInstanceIdentifier = Long.parseLong(matcher.replaceAll(Integer.toString(rand)));
 	}
+
 
 	/**
 	 * Open a database for writing
@@ -57,8 +85,8 @@ public class DatabaseAdapter
 	 */
 	private DatabaseAdapter openWritableDatabase()
 	{
-		if (db == null || !db.isOpen()) {
-			db = databaseHelper.getWritableDatabase();
+		if (this.db == null || !this.db.isOpen()) {
+			this.db = databaseHelper.getWritableDatabase();
 		}
 		return this;
 	}
@@ -73,13 +101,13 @@ public class DatabaseAdapter
 
 	public SQLiteDatabase getDb()
 	{
-		return db;
+		return this.db;
 	}
 
 	public SampleDao getSampleDao()
 	{
 		this.openWritableDatabase();
-		return new SampleDao(this.getDb());
+		return new SampleDao(this.getDb(), this.uniqueInstanceIdentifier);
 	}
 
 	/**

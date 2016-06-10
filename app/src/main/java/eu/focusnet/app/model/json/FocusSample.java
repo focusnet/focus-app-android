@@ -20,8 +20,6 @@
 
 package eu.focusnet.app.model.json;
 
-import java.util.Date;
-
 import eu.focusnet.app.model.util.Constant;
 
 /**
@@ -44,7 +42,7 @@ public class FocusSample extends FocusObject
 	 */
 	public FocusSample(String url)
 	{
-		super(Constant.FOCUS_DATAMODEL_TYPE_FOCUS_SAMPLE, url);
+		super(Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE, url);
 		this.data = new FocusSampleDataMap();
 	}
 

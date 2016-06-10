@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -131,24 +130,25 @@ public class StandardListAdapter extends BaseAdapter
 							final ImageView imageView = (ImageView) v;
 
 							Resources res = FocusApplication.getInstance().getResources();
-							final boolean isRightIconActive = standardListItem.isRightIconActive();
+							final boolean isExistingBookmark = standardListItem.isExistingBookmark();
 
 							// Dialog payload
 							LayoutInflater inflater = LayoutInflater.from(context);
 							View dialog_content = inflater.inflate(R.layout.dialog_content_bookmark, null);
-							final EditText selectedContext = (EditText) dialog_content.findViewById(R.id.edit_text_name);
-							selectedContext.setText(standardListItem.getTitle());
-							if (isRightIconActive) {
-								selectedContext.setEnabled(false);
-							}
+							final TextView bookmarkTitle = (TextView) dialog_content.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
+							TextView alternateField = (TextView) dialog_content.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
+							alternateField.setVisibility(View.GONE);
+							bookmarkTitle.setVisibility(View.VISIBLE);
+							bookmarkTitle.setText(standardListItem.getTitle());
+
 
 							// Dialog building
 							FocusDialogBuilder builder = new FocusDialogBuilder(context)
-									.setTitle(res.getString(isRightIconActive ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
+									.setTitle(res.getString(isExistingBookmark ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
 									.insertContent(dialog_content)
 									.removeNeutralButton()
 									.setCancelable(false)
-									.setPositiveButtonText(res.getString((isRightIconActive ? R.string.delete_bookmark : R.string.ok)))
+									.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete_bookmark : R.string.ok)))
 									.setNegativeButtonText(res.getString(R.string.cancel));
 
 							// instantiate
@@ -171,12 +171,12 @@ public class StandardListAdapter extends BaseAdapter
 								{
 									UserPreferences userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
-									if (isRightIconActive) {
+									if (isExistingBookmark) {
 										standardListItem.setIsRightIconActive(false);
 										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										selectedContext.setEnabled(false);
+										bookmarkTitle.setEnabled(false);
 										userPreference.removeBookmarkLink(standardListItem.getPath(), standardListItem.getTitle(), standardListItem.getTypeOfBookmark());
 									}
 									else {
@@ -184,7 +184,7 @@ public class StandardListAdapter extends BaseAdapter
 										Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
 										standardListItem.setRightIcon(rightIcon);
 										imageView.setImageBitmap(rightIcon);
-										Bookmark bookmarkLink = new Bookmark(selectedContext.getText().toString(), standardListItem.getPath());
+										Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), standardListItem.getPath());
 										userPreference.addBookmarkLink(bookmarkLink, standardListItem.getTypeOfBookmark());
 									}
 

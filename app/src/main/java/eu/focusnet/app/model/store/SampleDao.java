@@ -23,7 +23,6 @@ package eu.focusnet.app.model.store;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -45,8 +44,7 @@ import eu.focusnet.app.service.DataManager;
 public class SampleDao
 {
 
-	private static final int SAMPLES_OUTDATED_AFTER = 7 * 24 * 60 * 60; // seconds
-
+	private final long dataSyncSetId;
 	private String[] columnsToRetrieve = {
 			Constant.URL,
 			Constant.VERSION,
@@ -59,7 +57,8 @@ public class SampleDao
 			Constant.DATA,
 			Constant.TO_DELETE,
 			Constant.TO_PUT,
-			Constant.TO_POST
+			Constant.TO_POST,
+			Constant.DATA_SYNC_SET_ID
 	};
 
 	private SQLiteDatabase database;
@@ -67,9 +66,10 @@ public class SampleDao
 	/**
 	 * Constructor
 	 */
-	public SampleDao(SQLiteDatabase database)
+	public SampleDao(SQLiteDatabase database, long dataSyncSetId)
 	{
 		this.database = database;
+		this.dataSyncSetId = dataSyncSetId;
 	}
 
 	/**
@@ -102,6 +102,8 @@ public class SampleDao
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
 		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_PUT)) > 0);
+
+		// we don't need the dataSyncSetId in the sample. It is used for maintenance operations only
 
 		return sample;
 	}
@@ -200,6 +202,7 @@ public class SampleDao
 		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
 		contentValues.put(Constant.TO_PUT, sample.isToPut());
 		contentValues.put(Constant.TO_POST, sample.isToPost());
+		contentValues.put(Constant.DATA_SYNC_SET_ID, this.dataSyncSetId);
 		return contentValues;
 	}
 
@@ -208,6 +211,13 @@ public class SampleDao
 	 */
 	public void cleanTable()
 	{
+		/**
+		 * FIXME DEPRECATED
+		 *
+		 * instead of that: add a field to db, that contains the current sync_version_number (INCREMENT)
+		 * -> when we have finished creating a DataManager, then DELETE FROM samples WHERE sync_version_number != $version
+		 */
+
 		DataManager dm = FocusApplication.getInstance().getDataManager();
 
 		// Build the list of URLs that we use in our data contexts
@@ -325,7 +335,7 @@ public class SampleDao
 		// 	String.format(sql, Constant.DATABASE_TABLE_SAMPLES, Constant.URL, DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX, Constant.URL, TextUtils.join(",", urls_list), Constant.TO_PUT, Constant.TO_POST,
 		//		Constant.TO_DELETE, Constant.EDITION_EPOCH, SAMPLES_OUTDATED_AFTER, Constant.URL, Constant.URL , Constant.DATABASE_TABLE_SAMPLES, Constant.URL, Constant.VERSION)
 
-		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
+	/*	String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
 				+ " WHERE "
 				+ Constant.URL + " NOT LIKE '" + DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "%'"
 				+ " AND "
@@ -342,6 +352,7 @@ public class SampleDao
 				+ "  SELECT " + Constant.URL + " FROM " + Constant.DATABASE_TABLE_SAMPLES + " GROUP BY " + Constant.URL + " ORDER BY MAX(" + Constant.VERSION + ")"
 				+ " ) ";
 		this.database.execSQL(sql);
+		*/
 	}
 
 	/**

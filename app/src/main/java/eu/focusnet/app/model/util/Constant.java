@@ -26,9 +26,9 @@ package eu.focusnet.app.model.util;
 public class Constant
 {
 
-	public static final String FOCUS_DATAMODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/focus-user-information/v1.0",
-			FOCUS_DATAMODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0",
-			FOCUS_DATAMODEL_TYPE_FOCUS_SAMPLE = "http://reference.focusnet.eu/schemas/focus-data-sample/v1.0";
+	public static final String FOCUS_DATA_MODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/focus-user-information/v1.0",
+			FOCUS_DATA_MODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0",
+			FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE = "http://reference.focusnet.eu/schemas/focus-data-sample/v1.0";
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"; // ISO 8601
 
@@ -48,7 +48,8 @@ public class Constant
 			DATA = "data",
 			TO_DELETE = "toDelete",
 			TO_PUT = "toPut",
-			TO_POST = "toPost";
+			TO_POST = "toPost",
+			DATA_SYNC_SET_ID = "dataSetId";
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
 			"(" + ID + " INTEGER AUTO INCREMENT," +
@@ -56,13 +57,14 @@ public class Constant
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +
-			CREATION_EPOCH + " INTEGER , " +
-			EDITION_EPOCH + " INTEGER ," +
+			CREATION_EPOCH + " INTEGER, " +
+			EDITION_EPOCH + " INTEGER," +
 			EDITOR + " TEXT, " +
 			DATA + " TEXT, " +
 			TO_DELETE + " BOOL, " +
 			TO_PUT + " BOOL, " +
 			TO_POST + " BOOL," +
+			DATA_SYNC_SET_ID + " INTEGER," +
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE," +
 			"UNIQUE(" + Constant.URL + ", " + Constant.VERSION + ") ON CONFLICT REPLACE)";
 

@@ -74,7 +74,7 @@ public class StandardListItem extends AbstractListItem
 		this.info = info;
 	}
 
-	public boolean isRightIconActive()
+	public boolean isExistingBookmark()
 	{
 		return isRightIconActive;
 	}

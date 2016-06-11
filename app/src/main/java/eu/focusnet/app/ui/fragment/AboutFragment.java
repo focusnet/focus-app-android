@@ -47,7 +47,7 @@ public class AboutFragment extends DialogFragment
 	{
 		super.onCreate(savedInstanceState);
 		this.getDialog().setTitle(R.string.about_focus_title);
-		View viewRoot = inflater.inflate(R.layout.fragment_about, container, false);
+		View viewRoot = inflater.inflate(R.layout.fixme_todo_fragment_page_about, container, false);
 		// FIXME TODO	setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Dialog);
 		return viewRoot;
 	}

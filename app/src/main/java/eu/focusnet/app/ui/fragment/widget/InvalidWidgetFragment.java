@@ -38,14 +38,14 @@ public class InvalidWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_invalid, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_invalid, container, false));
 
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.invalid_widget_title);
+		TextView invalidWidgetInfo = (TextView) this.rootView.findViewById(R.id.invalid_widget_info);
 		Bundle bundles = getArguments();
 		String path = bundles.getString(Constant.UI_EXTRA_PATH);
 
 		if (path != null) {
-			textTitle.setText(path);
+			invalidWidgetInfo.setText(path);
 		}
 		return this.rootView;
 	}

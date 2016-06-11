@@ -24,10 +24,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import de.codecrafters.tableview.colorizers.TableDataRowColorizer;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+import de.codecrafters.tableview.toolkit.TableDataRowColorizers;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.ui.common.TouchTableView;
@@ -45,15 +46,7 @@ public class TableWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_table, container, false));
-
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_table);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_table, container, false));
 
 		TouchTableView tableView = (TouchTableView) this.rootView.findViewById(R.id.tableView);
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
@@ -62,15 +55,9 @@ public class TableWidgetFragment extends WidgetFragment
 		adapter.setTextColor(getResources().getColor(R.color.table_header_text));
 		tableView.setHeaderAdapter(adapter);
 		tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
+		TableDataRowColorizer<Object> colorizer = TableDataRowColorizers.alternatingRows(R.color.table_data_row_even, R.color.table_data_row_odd);
+		tableView.setDataRowColorizer(colorizer);
 		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableData()));
-		int colorEvenRows = getResources().getColor(R.color.table_data_row_even);
-		int colorOddRows = getResources().getColor(R.color.table_data_row_odd);
-		// FIXME colorize rows / does not work anymore after lib update
-		/*	tableView.setDataRowColorizer(colorizer);
-		TableDataRowColorizers x = new TableDataRowColorizers();
-
-		tableView.setDataRowColoriser(TableDataRowColorizers.alternatingRows(colorEvenRows, colorOddRows));
-*/
 		return this.rootView;
 	}
 

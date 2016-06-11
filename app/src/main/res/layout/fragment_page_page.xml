@@ -5,10 +5,10 @@
             tools:context=".ui.fragment.PageFragment">
 
     <LinearLayout
-        android:id="@+id/pageInfo"
+        android:id="@+id/page_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        /> <!--  android:padding="0dip" -->
+        />
 
 </ScrollView>

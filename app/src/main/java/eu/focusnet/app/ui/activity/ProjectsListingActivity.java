@@ -186,7 +186,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 	@Override
 	protected int getDrawerList()
 	{
-		return R.id.drawer_list_menu;
+		return R.id.focus_drawer;
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 			bundle.putString(Constant.UI_EXTRA_FRAGMENT_TITLE, title);
 			bundle.putInt(Constant.UI_EXTRA_FRAGMENT_POSITION, effectivePosition);
 			fragment.setArguments(bundle);
-			FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
+			FragmentManager.replaceFragment(R.id.focus_drawer_content_container, fragment, getFragmentManager());
 
 			highlightSelectedMenuItem(position);
 			setTitle(title);
@@ -404,7 +404,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 					builder.setNegativeButtonText(getString(R.string.close));
 
 					statusField.setText(R.string.sync_already_in_progress);
-					statusField.setTextColor(getResources().getColor(R.color.orange));
+					statusField.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
 
 					instructions.setVisibility(View.GONE);
 					status.setVisibility(View.VISIBLE);

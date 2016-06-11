@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="focus_text">#004812</color>
     <color name="colorPrimary">#009966</color> <!-- used dans applats 88CC88 -->
     <color name="colorPrimaryDark">#3aa170</color>
-    <color name="view_pressed_color">#00703c</color>
 
     <color name="table_header_text">@android:color/white</color>
     <color name="table_data_row_even">@android:color/white</color>
@@ -13,37 +10,7 @@
     <color name="list_item_title">#aaaaaa</color>
     <color name="list_item_background">@android:color/white</color>
     <color name="list_item_background_pressed">#daf1d9</color>
-    <!--<color name="list_divider">#FFCC00</color>-->
 
-    <color name="actionbar_text">@android:color/white</color>
-
-
-    <color name="bright_pink">#FF007F</color>
-    <color name="red">#FF0000</color>
-    <color name="orange">#FF7F00</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="chartreuse">#7FFF00</color>
-    <color name="green">#00FF00</color>
-    <color name="spring_green">#00FF7F</color>
-    <color name="cyan">#00FFFF</color>
-    <color name="azure">#007FFF</color>
-    <color name="blue">#0000FF</color>
-    <color name="violet">#7F00FF</color>
-    <color name="magenta">#FF00FF</color>
-
-    <array name="rainbow">
-        <item>@color/blue</item>
-        <item>@color/red</item>
-        <item>@color/orange</item>
-        <item>@color/spring_green</item>
-        <item>@color/magenta</item>
-        <item>@color/violet</item>
-        <item>@color/cyan</item>
-        <item>@color/chartreuse</item>
-        <item>@color/bright_pink</item>
-        <item>@color/yellow</item>
-        <item>@color/azure</item>
-        <item>@color/green</item>
-    </array>
-
+    <color name="text_on_dark_background">@android:color/white</color>
+    <color name="text_on_light_background">@android:color/black</color>
 </resources>

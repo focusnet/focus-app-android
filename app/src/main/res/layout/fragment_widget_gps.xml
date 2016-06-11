@@ -4,14 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dip"
-        android:text="GPS Title"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <include layout="@layout/include_widget_title"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,17 +14,16 @@
 
         <TextView
             android:id="@+id/text_logitude"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Longitude: "
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:text="@string/longitude"/>
 
         <TextView
             android:id="@+id/text_longitude_value"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -40,17 +33,16 @@
 
         <TextView
             android:id="@+id/text_latitude"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Latitude: "
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:text="@string/latitude"/>
 
         <TextView
             android:id="@+id/text_latitude_value"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -60,17 +52,16 @@
 
         <TextView
             android:id="@+id/text_accuracy"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Accuracy: "
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:text="@string/accuracy"/>
 
         <TextView
             android:id="@+id/text_accuracy_value"
+            style="@style/FocusText.Medium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
@@ -78,6 +69,6 @@
         android:id="@+id/button_gps_position"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get Position"/>
+        android:text="@string/get_position"/>
 
 </LinearLayout>

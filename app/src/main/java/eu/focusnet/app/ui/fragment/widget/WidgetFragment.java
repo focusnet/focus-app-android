@@ -28,8 +28,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
@@ -163,15 +165,23 @@ public abstract class WidgetFragment extends Fragment
 			dm.registerActiveInstance(this.widgetInstance);
 		}
 
-		// set margins / paddings
-		// FIXME TODO
-		// preferabily margin, such that we can revert webview width to 56.25vw
-
 		// alter the reference height if necessary
 		this.alterReferenceHeight();
 
-		// and finally apply the layout properties on the root view
+		// apply the layout properties on the root view
 		this.setWidgetLayout();
+
+		// and finally set the title
+		TextView textTitle = (TextView) this.rootView.findViewById(R.id.widget_title);
+		if (this.widgetInstance == null || this.widgetInstance.getTitle() == null) {
+			if (textTitle != null) {
+				((ViewGroup) textTitle.getParent()).removeView(textTitle);
+			}
+		}
+		else {
+			textTitle.setText(this.widgetInstance.getTitle());
+		}
+
 	}
 
 	/**

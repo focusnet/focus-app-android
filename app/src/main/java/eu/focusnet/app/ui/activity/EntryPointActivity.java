@@ -73,12 +73,12 @@ public class EntryPointActivity extends Activity
 		if (extras != null) {
 			String loadingText = (String) extras.get(Constant.UI_EXTRA_LOADING_INFO_TEXT);
 			if (loadingText != null) {
-				TextView loadInfo = (TextView) findViewById(R.id.load_info);
+				TextView loadInfo = (TextView) findViewById(R.id.splashscreen_loading_info);
 				loadInfo.setText(loadingText);
 			}
 		}
 
-		TextView version = (TextView) findViewById(R.id.versionNumber);
+		TextView version = (TextView) findViewById(R.id.splashscreen_version_number);
 		version.setText(BuildConfig.VERSION_NAME);
 
 		// run tasks

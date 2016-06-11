@@ -4,23 +4,22 @@
                 android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginEnd="@dimen/focus_splashscreen_logo_horizontal_image_margin"
+        android:layout_marginStart="@dimen/focus_splashscreen_logo_horizontal_image_margin"
         android:src="@drawable/focus_logo"
-        android:contentDescription="@string/focus_logo"/>
+        android:contentDescription="@string/caption_focus_logo"/>
 
     <TextView
-        android:id="@+id/versionNumber"
+        android:id="@+id/splashscreen_version_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:padding="10dip"
+        android:padding="@dimen/focus_splashscreen_padding_version_number"
         />
 
     <LinearLayout
@@ -44,7 +43,6 @@
                 android:layout_weight="20"/>
 
             <ProgressBar
-                android:id="@+id/entry_point_progressbar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -61,7 +59,7 @@
 
 
         <TextView
-            android:id="@+id/load_info"
+            android:id="@+id/splashscreen_loading_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

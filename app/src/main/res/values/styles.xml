@@ -1,27 +1,8 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!--<item name="android:textAppearance">@style/HeaderAppearance</item>-->
 
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
 
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
 
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="colorControlNormal">@color/colorPrimary</item>
-        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@android:color/white</item>
-    </style>
 
     <style name="ToolBarTextHeaderAppearance">
         <item name="android:textColor">@android:color/white</item>
@@ -45,5 +26,70 @@
     </style>
 
     <style name="Theme.Dialog" parent="@android:style/Theme.Dialog"/>
+
+
+
+    <!-- validated below this comment -->
+
+    <!-- Base application theme. -->
+    <style name="FocusTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="FocusText">
+
+    </style>
+
+    <style name="FocusText.Medium">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="FocusText.Big">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+    <style name="FocusSpinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:layout_marginTop">@dimen/focus_spinner_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/focus_spinner_vertical_margin</item>
+    </style>
+
+
+    <style name="FocusSpinner.Big">
+        <item name="android:layout_marginTop">@dimen/focus_spinner_vertical_margin_big</item>
+        <item name="android:layout_marginBottom">@dimen/focus_spinner_vertical_margin_big</item>
+        <item name="android:padding">@dimen/focus_spinner_padding</item>
+    </style>
+
+    <style name="FocusToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="FocusDrawer">
+        <item name="android:layout_width">@dimen/focus_drawer_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
 
 </resources>

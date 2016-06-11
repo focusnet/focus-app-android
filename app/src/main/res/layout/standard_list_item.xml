@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/picto_width"
+        android:layout_width="@dimen/focus_picto_width"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
@@ -33,7 +33,7 @@
 
     <ImageView
         android:id="@+id/right_icon"
-        android:layout_width="@dimen/picto_width"
+        android:layout_width="@dimen/focus_picto_width"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

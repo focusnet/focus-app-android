@@ -93,7 +93,7 @@ public class DrawerListAdapter extends BaseAdapter
 
 			//Find out the item view type and set the corresponding layout
 			if (itemViewType == HeaderDrawerListItem.TYPE_HEADER_DRAWER) {
-				row = inflater.inflate(R.layout.drawer_list_item_header, parent, false);
+				row = inflater.inflate(R.layout.list_item_drawer_header, parent, false);
 				holder.icon = (ImageView) row.findViewById(R.id.logo);
 				holder.title = (TextView) row.findViewById(R.id.user);
 			//	holder.email = (TextView) row.findViewById(R.id.email);

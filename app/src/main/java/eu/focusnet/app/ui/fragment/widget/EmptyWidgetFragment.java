@@ -36,7 +36,7 @@ public class EmptyWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_empty, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_empty, container, false));
 
 		return this.rootView;
 	}

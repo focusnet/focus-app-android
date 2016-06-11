@@ -39,15 +39,7 @@ public class TextWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_text, container, false));
-
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.title_text_widget);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_text, container, false));
 
 		TextView textContent = (TextView) this.rootView.findViewById(R.id.text_content);
 		textContent.setText(((TextWidgetInstance) this.widgetInstance).getContent());

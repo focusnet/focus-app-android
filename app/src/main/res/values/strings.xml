@@ -93,8 +93,8 @@
     <string name="unknown_path">Unknown path</string>
     <string name="about_focus_title">About FOCUS</string>
     <string name="version_unknown">unknown</string>
-    <string name="focus_logo">FOCUS logo</string>
-    <string name="please_select_a_demontration_use_case">Select a demontration use case</string>
+    <string name="caption_focus_logo">FOCUS logo</string>
+    <string name="login_demo_label_select_use_case">Select a demontration use case</string>
     <string name="start_demo">Start demo</string>
     <string name="select_use_case">Please select a use case</string>
     <string name="loading">Loading …</string>
@@ -116,7 +116,7 @@
     <string name="sync_too_recent">Synchronization cannot be performed right now because it has already been done too recently in the past. Please try again later.</string>
     <string name="last_synchronization_n_a">Last synchronization: N/A</string>
     <string name="data_volume_n_a">Data volume: N/A</string>
-    <string name="you_can_start_data_sync">You can start data synchronization from this dialog. It may take a while to finish.</string>
+    <string name="you_can_start_data_sync">You can start data synchronization from this dialog.</string>
     <string name="last_sync_label">"Last data synchronization: "</string>
     <string name="last_sync_data_volume_label">"Data volume: "</string>
     <string name="done">Done.</string>
@@ -124,5 +124,13 @@
     <string name="sync_continue_background">Continue in background</string>
     <string name="about_focus">About FOCUS</string>
     <string name="select_no_selection">-- Select --</string>
+    <string name="activity_image_caption_captured_image">Captured image</string>
+    <string name="view">View</string>
+    <string name="delete">Delete</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="accuracy">Accuracy:</string>
+    <string name="get_position">Get Position</string>
+    <string name="submit">Submit</string>
 
 </resources>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="70dip"
                 android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/header_left_icon"
-        android:layout_width="@dimen/picto_width"
+        android:layout_width="@dimen/focus_picto_width"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
@@ -19,8 +19,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="16dip"
         android:layout_toEndOf="@id/header_left_icon"
-        android:gravity="center_vertical"
-        android:paddingEnd="40dip"/>
+        android:gravity="center_vertical"/>
 
     <ImageView
         android:id="@+id/header_right_icon"
@@ -28,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="25dip"/>
+        android:paddingStart="25dip"
+        android:paddingEnd="25dip"/>
 
 </RelativeLayout>

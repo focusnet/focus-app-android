@@ -246,18 +246,10 @@ public class FormWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_form, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_form, container, false));
 
 		this.context = this.rootView.getContext();
 
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.textTitle);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
 
 		TableLayout tl = (TableLayout) this.rootView.findViewById(R.id.formTableLayout);
 		for (Map.Entry e : ((FormWidgetInstance) this.widgetInstance).getFields().entrySet()) {

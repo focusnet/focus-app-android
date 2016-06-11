@@ -11,16 +11,14 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary">
 
-
         <TextView
             android:id="@+id/dialog_title"
+            style="@style/FocusText.Big"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="15dp"
-            android:textColor="@android:color/white"
-            android:textSize="19sp"/>
-
+            android:padding="@dimen/focus_default_spacing"
+            android:textColor="@color/text_on_dark_background"/>
     </LinearLayout>
 
     <LinearLayout
@@ -28,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dip">
+        android:padding="@dimen/focus_default_spacing">
     </LinearLayout>
 
 

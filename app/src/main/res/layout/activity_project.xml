@@ -5,15 +5,13 @@
               android:orientation="vertical"
               tools:context=".ui.activity.ProjectActivity">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/include_toolbar"/>
 
     <LinearLayout
         android:id="@+id/project_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-
     </LinearLayout>
 
 

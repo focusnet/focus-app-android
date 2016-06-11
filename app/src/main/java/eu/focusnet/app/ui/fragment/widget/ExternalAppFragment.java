@@ -49,17 +49,7 @@ public class ExternalAppFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_external_app, container, false));
-
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_external_app);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
-
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_external_app, container, false));
 
 		TextView textIdentifier = (TextView) this.rootView.findViewById(R.id.external_app_value_identifier);
 		textIdentifier.setText(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
@@ -76,7 +66,7 @@ public class ExternalAppFragment extends WidgetFragment
 		}
 		else {
 			textStatus.setText(R.string.not_installed);
-			textStatus.setTextColor(getResources().getColor(R.color.red));
+			textStatus.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 			button.setText(R.string.install_via_google_play);
 		}
 

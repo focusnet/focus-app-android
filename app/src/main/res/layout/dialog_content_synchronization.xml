@@ -13,6 +13,7 @@
         android:visibility="gone">
 
         <TextView
+            style="@style/FocusText.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/synchronization_status"
@@ -20,11 +21,11 @@
             android:layout_weight="30"/>
 
         <TextView
+            style="@style/FocusText.Medium"
             android:id="@+id/dialog_sync_status_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="30"/>
-
     </LinearLayout>
 
 
@@ -36,6 +37,7 @@
         android:visibility="visible">
 
         <TextView
+            style="@style/FocusText.Medium"
             android:id="@+id/dialog_sync_instructions_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +46,7 @@
             android:layout_weight="30"/>
 
         <TextView
+            style="@style/FocusText.Medium"
             android:id="@+id/dialog_sync_last_sync_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,12 +54,12 @@
             android:layout_weight="30"/>
 
         <TextView
+            style="@style/FocusText.Medium"
             android:id="@+id/dialog_sync_data_volume_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/data_volume_n_a"
             android:layout_weight="30"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -69,6 +72,7 @@
         android:visibility="gone">
 
         <TextView
+            style="@style/FocusText.Medium"
             android:id="@+id/dialog_sync_progress_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,13 +80,10 @@
             android:text="@string/syncronization_in_progress"/>
 
         <ProgressBar
-            android:id="@+id/entry_point_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"/>
     </LinearLayout>
-
-
 
 </LinearLayout>

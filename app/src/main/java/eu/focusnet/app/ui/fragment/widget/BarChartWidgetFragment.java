@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -56,17 +55,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_barchart, container, false));
-
-
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_bar_chart_title);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_barchart, container, false));
 
 		BarChart mChart = (BarChart) this.rootView.findViewById(R.id.bar_chart);
 
@@ -154,7 +143,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMinLimits(); ++i) {
 			LimitLine limitLineLowerYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMinLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMinLimitLabel(i));
 			limitLineLowerYAxis.setLineWidth(4f);
-			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
+			limitLineLowerYAxis.setLineColor(getResources().getColor(android.R.color.holo_green_dark));
 			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineLowerYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineLowerYAxis);
@@ -163,7 +152,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMaxLimits(); ++i) {
 			LimitLine limitLineUpperYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMaxLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMaxLimitLabel(i));
 			limitLineUpperYAxis.setLineWidth(4f);
-			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
+			limitLineUpperYAxis.setLineColor(getResources().getColor(android.R.color.holo_red_light));
 			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineUpperYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineUpperYAxis);

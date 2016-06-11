@@ -24,12 +24,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -63,16 +61,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_linechart, container, false));
-
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_line_chart);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_linechart, container, false));
 
 		LineChart lineChart = (LineChart) this.rootView.findViewById(R.id.line_chart);
 
@@ -143,7 +132,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfMinLimits(); ++i) {
 			LimitLine limitLineLowerYAxis = new LimitLine(((LineChartWidgetInstance) this.widgetInstance).getMinLimitValue(i).floatValue(), ((LineChartWidgetInstance) this.widgetInstance).getMinLimitLabel(i));
 			limitLineLowerYAxis.setLineWidth(4f);
-			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
+			limitLineLowerYAxis.setLineColor(getResources().getColor(android.R.color.holo_green_dark));
 			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineLowerYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineLowerYAxis);
@@ -152,7 +141,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((LineChartWidgetInstance) this.widgetInstance).getNumberOfMaxLimits(); ++i) {
 			LimitLine limitLineUpperYAxis = new LimitLine(((LineChartWidgetInstance) this.widgetInstance).getMaxLimitValue(i).floatValue(), ((LineChartWidgetInstance) this.widgetInstance).getMaxLimitLabel(i));
 			limitLineUpperYAxis.setLineWidth(4f);
-			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
+			limitLineUpperYAxis.setLineColor(getResources().getColor(android.R.color.holo_red_light));
 			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineUpperYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineUpperYAxis);

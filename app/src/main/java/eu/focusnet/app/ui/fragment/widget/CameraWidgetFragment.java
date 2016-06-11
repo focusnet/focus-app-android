@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -60,18 +59,9 @@ public class CameraWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_camera, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_camera, container, false));
 
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.title);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
-
-		imageView = (ImageView) this.rootView.findViewById(R.id.picture);
+		imageView = (ImageView) this.rootView.findViewById(R.id.captured_image);
 
 		viewButton = (Button) this.rootView.findViewById(R.id.button_view);
 		viewButton.setOnClickListener(new View.OnClickListener()

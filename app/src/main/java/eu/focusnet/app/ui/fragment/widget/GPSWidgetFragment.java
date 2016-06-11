@@ -57,21 +57,13 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_gps, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_gps, container, false));
 
 		// --------------------------------- debug FIXME DEBUG TODO
 		LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 		boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		boolean networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.textTitle);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
 
 		longitudeValue = (TextView) this.rootView.findViewById(R.id.text_longitude_value);
 		latitudeValue = (TextView) this.rootView.findViewById(R.id.text_latitude_value);

@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -53,16 +52,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_piechart, container, false));
-
-
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_piechart_title);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_piechart, container, false));
 
 		ArrayList<Entry> yVals = new ArrayList<>();
 

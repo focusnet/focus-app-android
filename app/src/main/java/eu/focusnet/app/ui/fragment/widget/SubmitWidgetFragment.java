@@ -41,7 +41,7 @@ public class SubmitWidgetFragment extends WidgetFragment
 	{
 		// setup
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_submit, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_submit, container, false));
 
 		Button button = (Button) this.rootView.findViewById(R.id.submit_button);
 		button.setText(((SubmitWidgetInstance) this.widgetInstance).getSubmitLabel());

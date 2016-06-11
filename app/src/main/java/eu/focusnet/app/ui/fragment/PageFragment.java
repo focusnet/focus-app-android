@@ -62,7 +62,7 @@ public class PageFragment extends Fragment
 		super.onCreate(savedInstanceState);
 
 		// Inflate the layout for this fragment
-		this.viewRoot = inflater.inflate(R.layout.fragment_page, container, false);
+		this.viewRoot = inflater.inflate(R.layout.fragment_page_page, container, false);
 		Bundle bundle = getArguments();
 		String projectPath = (String) bundle.get(Constant.UI_EXTRA_PROJECT_PATH);
 		String pagePath = (String) bundle.get(Constant.UI_EXTRA_PAGE_PATH);
@@ -104,7 +104,7 @@ public class PageFragment extends Fragment
 
 		int currentayoutId = View.generateViewId();
 
-		LinearLayout verticalContainerLayout = (LinearLayout) this.viewRoot.findViewById(R.id.pageInfo);
+		LinearLayout verticalContainerLayout = (LinearLayout) this.viewRoot.findViewById(R.id.page_info);
 
 		LinearLayout containerLayout = new LinearLayout(this.getActivity());
 		containerLayout.setId(currentayoutId);

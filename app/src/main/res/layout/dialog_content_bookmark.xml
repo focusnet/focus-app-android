@@ -7,6 +7,7 @@
 
 
     <EditText
+        style="@style/FocusText.Medium"
         android:id="@+id/bookmark_field_rw"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -14,6 +15,7 @@
         android:inputType="text"/>
 
     <TextView
+        style="@style/FocusText.Medium"
         android:id="@+id/bookmark_field_ro"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

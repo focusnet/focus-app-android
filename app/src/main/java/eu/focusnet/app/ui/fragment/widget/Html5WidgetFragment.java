@@ -35,7 +35,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -70,16 +69,8 @@ public class Html5WidgetFragment extends WidgetFragment
 		// setup: we leave the contained webapp decide of the height of the widget (via viewport and body height,
 		// preferably expressed in vw)
 		super.onCreate(savedInstanceState);
-		this.setupWidget(inflater.inflate(R.layout.fragment_webview, container, false));
+		this.setupWidget(inflater.inflate(R.layout.fragment_widget_html5_webapp, container, false));
 
-		// set widget title
-		TextView textTitle = (TextView) this.rootView.findViewById(R.id.text_title_webapp);
-		if (this.widgetInstance.getTitle() == null) {
-			((ViewGroup) textTitle.getParent()).removeView(textTitle);
-		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
 
 		TouchWebView webView = (TouchWebView) this.rootView.findViewById(R.id.webview);
 
@@ -123,12 +114,12 @@ public class Html5WidgetFragment extends WidgetFragment
 	{
 		/**
 		 * FIXME FIXME DEBUG TODO
-		 * remove this. Or handle errors properly!! BIG SECURITY ISSUE
+		 * remove this if all certificates have a proper CA. Or handle errors properly!! BIG SECURITY ISSUE
 		 * @param view
 		 * @param handler
 		 * @param error
 		 */
-		@Override
+	 @Override
 		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error)
 		{
 			handler.proceed(); // if set, I get 403, but i should get 200

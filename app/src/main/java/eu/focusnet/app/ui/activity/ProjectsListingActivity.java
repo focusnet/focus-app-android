@@ -210,7 +210,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			case Constant.UI_MENU_ENTRY_ABOUT: // this fragment will not replace
 				AboutFragment f = new AboutFragment();
 				f.show(getSupportFragmentManager(), getString(R.string.about_focus));
-				drawerLayout.closeDrawer(drawerListMenu); // FIXME would be better to have a proper page.
 				break;
 			case Constant.UI_MENU_ENTRY_LOGOUT:
 				final Thread logoutThread = new Thread()
@@ -231,11 +230,13 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				logoutThread.start();
 				break;
 			default:
+				// if fragment will be created, update sectionToRender
+				highlightSelectedMenuItem(this.sectionToRender);
 				break;
 		}
 
-		highlightSelectedMenuItem(this.sectionToRender);
-		drawerLayout.closeDrawer(drawerListMenu); // should be after replaceFragment
+
+		drawerLayout.closeDrawer(this.drawerListMenu); // should be after replaceFragment
 
 	}
 
@@ -290,6 +291,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 *
 	 * FIXME if we have more than 2 menu entries in the Drawer that load their fragments in the
 	 * main content, that may be more complicated.
+	 *
+	 * FIXME no animation?
 	 */
 	@Override
 	public void onBackPressed()

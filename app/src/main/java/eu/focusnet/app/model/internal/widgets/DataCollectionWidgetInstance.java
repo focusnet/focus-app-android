@@ -46,10 +46,5 @@ abstract public class DataCollectionWidgetInstance extends WidgetInstance
 		this.fieldName = this.template.getField();
 	}
 
-	public String getFieldName()
-	{
-		return fieldName;
-	}
-
 
 }

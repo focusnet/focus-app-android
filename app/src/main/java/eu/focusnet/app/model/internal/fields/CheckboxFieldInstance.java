@@ -43,21 +43,21 @@ public class CheckboxFieldInstance extends FieldInstance
 	private String uncheckedValue;
 	private String checkboxLabel;
 
-	public CheckboxFieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
+	public CheckboxFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
-		super(field_name, config, dataContext);
+		super(fieldName, config, dataContext);
 	}
 
 	@Override
 	protected void processSpecificConfig()
 	{
-		Object raw_label = this.config.get(CHECKBOX_LABEL_CHECKBOX_LABEL);
-		if (raw_label == null) {
+		Object rawLabel = this.config.get(CHECKBOX_LABEL_CHECKBOX_LABEL);
+		if (rawLabel == null) {
 			this.markAsInvalid();
 			return;
 		}
 		try {
-			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_label)));
+			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawLabel)));
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.markAsInvalid();
@@ -67,15 +67,15 @@ public class CheckboxFieldInstance extends FieldInstance
 		this.checkedValue = CHECKBOX_CHECKED_DEFAULT_VALUE;
 		this.uncheckedValue = CHECKBOX_UNCHECKED_DEFAULT_VALUE;
 
-		Object raw_checked = this.config.get(CHECKBOX_LABEL_CHECKED_VALUE);
-		Object raw_unchecked = this.config.get(CHECKBOX_LABEL_UNCHECKED_VALUE);
-		if (raw_checked == null || raw_unchecked == null) {
+		Object rawChecked = this.config.get(CHECKBOX_LABEL_CHECKED_VALUE);
+		Object rawUnchecked = this.config.get(CHECKBOX_LABEL_UNCHECKED_VALUE);
+		if (rawChecked == null || rawUnchecked == null) {
 			this.markAsInvalid();
 			return;
 		}
 		try {
-			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_checked)));
-			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_unchecked)));
+			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawChecked)));
+			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawUnchecked)));
 		}
 		catch (FocusBadTypeException | FocusMissingResourceException ex) {
 			this.markAsInvalid();
@@ -84,16 +84,17 @@ public class CheckboxFieldInstance extends FieldInstance
 
 		// should we initially check or uncheck the box?
 		String isChecked = this.getDefaultValue();
-		if (isChecked.equals(CHECKBOX_DEFAULT_IS_CHECKED)) {
-			this.defaultChecked = true;
-		}
-		else if (isChecked.equals(CHECKBOX_DEFAULT_IS_UNCHECKED)
-				|| isChecked.equals("")) {
-			this.defaultChecked = false;
-		}
-		else {
-			this.markAsInvalid();
-			return;
+		switch (isChecked) {
+			case CHECKBOX_DEFAULT_IS_CHECKED:
+				this.defaultChecked = true;
+				break;
+			case CHECKBOX_DEFAULT_IS_UNCHECKED:
+			case "":
+				this.defaultChecked = false;
+				break;
+			default:
+				this.markAsInvalid();
+				break;
 		}
 
 	}
@@ -101,16 +102,6 @@ public class CheckboxFieldInstance extends FieldInstance
 	public boolean isDefaultChecked()
 	{
 		return defaultChecked;
-	}
-
-	public String getCheckedValue()
-	{
-		return checkedValue;
-	}
-
-	public String getUncheckedValue()
-	{
-		return uncheckedValue;
 	}
 
 	public String getCheckboxLabel()

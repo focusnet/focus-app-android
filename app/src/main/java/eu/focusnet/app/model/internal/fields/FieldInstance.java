@@ -52,10 +52,10 @@ abstract public class FieldInstance
 	private boolean isMandatory;
 	private boolean valid;
 
-	public FieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
+	public FieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
 		this.valid = true;
-		this.fieldName = field_name;
+		this.fieldName = fieldName;
 		this.config = config;
 		this.dataContext = dataContext;
 
@@ -113,11 +113,6 @@ abstract public class FieldInstance
 	public String getType()
 	{
 		return type;
-	}
-
-	public String getFieldName()
-	{
-		return fieldName;
 	}
 
 	public boolean isMandatory()

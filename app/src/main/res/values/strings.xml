@@ -123,5 +123,6 @@
     <string name="close">Close</string>
     <string name="sync_continue_background">Continue in background</string>
     <string name="about_focus">About FOCUS</string>
+    <string name="select_no_selection">-- Select --</string>
 
 </resources>

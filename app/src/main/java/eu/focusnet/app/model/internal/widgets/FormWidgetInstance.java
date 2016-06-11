@@ -58,15 +58,15 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 	{
 		this.fields = new LinkedHashMap<>();
 		for (Map.Entry e : this.config.entrySet()) {
-			String field_name = (String) e.getKey();
-			LinkedTreeMap<String, Object> field_config = (LinkedTreeMap<String, Object>) e.getValue();
-			if (field_config == null) {
+			String fieldName = (String) e.getKey();
+			LinkedTreeMap<String, Object> fieldConfig = (LinkedTreeMap<String, Object>) e.getValue();
+			if (fieldConfig == null) {
 				this.markAsInvalid();
 				return;
 			}
 			FieldInstance new_field = null;
 			String type;
-			Object raw_type = field_config.get(FieldInstance.FIELD_LABEL_TYPE);
+			Object raw_type = fieldConfig.get(FieldInstance.FIELD_LABEL_TYPE);
 			if (raw_type == null) {
 				markAsInvalid();
 				return;
@@ -80,23 +80,23 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 			}
 			switch (type) {
 				case FieldInstance.FIELD_TYPE_TEXTFIELD:
-					new_field = new TextfieldFieldInstance(field_name, field_config, this.dataContext);
+					new_field = new TextfieldFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_TEXTAREA:
-					new_field = new TextareaFieldInstance(field_name, field_config, this.dataContext);
+					new_field = new TextareaFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_CHECKBOX:
-					new_field = new CheckboxFieldInstance(field_name, field_config, this.dataContext);
+					new_field = new CheckboxFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_SELECT:
-					new_field = new SelectFieldInstance(field_name, field_config, this.dataContext);
+					new_field = new SelectFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				default:
 					this.markAsInvalid();
 					return;
 			}
 
-			this.fields.put(field_name, new_field);
+			this.fields.put(fieldName, new_field);
 			if (!new_field.isValid()) {
 				this.markAsInvalid();
 			}

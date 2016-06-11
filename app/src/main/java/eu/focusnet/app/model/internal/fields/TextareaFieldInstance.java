@@ -25,8 +25,8 @@ import eu.focusnet.app.model.internal.DataContext;
  */
 public class TextareaFieldInstance extends FieldInstance
 {
-	public TextareaFieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
+	public TextareaFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
-		super(field_name, config, dataContext);
+		super(fieldName, config, dataContext);
 	}
 }

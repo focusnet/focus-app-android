@@ -4,6 +4,8 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -39,9 +41,9 @@ public class SelectFieldInstance extends FieldInstance
 	private ArrayList<String> texts;
 
 
-	public SelectFieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
+	public SelectFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
-		super(field_name, config, dataContext);
+		super(fieldName, config, dataContext);
 	}
 
 	@Override
@@ -49,13 +51,13 @@ public class SelectFieldInstance extends FieldInstance
 	{
 
 		// first handle values of SELECT
-		Object raw_values = this.config.get(SELECT_LABEL_OPTIONS_VALUES);
-		if (raw_values == null) {
+		Object rawValues = this.config.get(SELECT_LABEL_OPTIONS_VALUES);
+		if (rawValues == null) {
 			this.markAsInvalid();
 			return;
 		}
 		try {
-			this.values = TypesHelper.asArrayOfStrings(raw_values);
+			this.values = TypesHelper.asArrayOfStrings(rawValues);
 		}
 		catch (FocusBadTypeException ex) {
 			throw new FocusInternalErrorException("Invalid values in select");
@@ -64,15 +66,15 @@ public class SelectFieldInstance extends FieldInstance
 		// resolve
 		this.texts = new ArrayList<>();
 		for (int i = 0; i < this.values.size(); ++i) {
-			String new_val;
-			String raw_v = this.values.get(i);
-			if (raw_v == null) {
+			String newVal;
+			String rawVal = this.values.get(i);
+			if (rawVal == null) {
 				this.markAsInvalid();
 				return;
 			}
 			try {
-				new_val = TypesHelper.asString(this.dataContext.resolve(raw_v));
-				this.values.set(i, new_val);
+				newVal = TypesHelper.asString(this.dataContext.resolve(rawVal));
+				this.values.set(i, newVal);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -80,7 +82,7 @@ public class SelectFieldInstance extends FieldInstance
 			}
 
 			// let's add a default user-friendly text
-			this.texts.add(new_val);
+			this.texts.add(newVal);
 		}
 
 		// check if default value is in array of values
@@ -92,29 +94,29 @@ public class SelectFieldInstance extends FieldInstance
 		}
 
 		// Then user-friendly texts
-		ArrayList<String> tmp_texts;
-		Object raw_texts = this.config.get(SELECT_LABEL_OPTIONS_TEXTS);
-		if (raw_texts == null) {
+		ArrayList<String> tmpTexts;
+		Object rawTexts = this.config.get(SELECT_LABEL_OPTIONS_TEXTS);
+		if (rawTexts == null) {
 			this.markAsInvalid();
 			return;
 		}
 		try {
-			tmp_texts = TypesHelper.asArrayOfStrings(raw_texts);
+			tmpTexts = TypesHelper.asArrayOfStrings(rawTexts);
 		}
 		catch (FocusBadTypeException ex) {
 			this.markAsInvalid();
 			return;
 		}
 
-		if (tmp_texts.size() > this.values.size()) {
+		if (tmpTexts.size() > this.values.size()) {
 			this.markAsInvalid("Too many values in texts array");
 			return;
 		}
 
 		for (int i = 0; i < this.texts.size(); ++i) {
-			String raw_t = tmp_texts.get(i);
+			String rawText = tmpTexts.get(i);
 			try {
-				String v = TypesHelper.asString(this.dataContext.resolve(raw_t));
+				String v = TypesHelper.asString(this.dataContext.resolve(rawText));
 				this.texts.set(i, v);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
@@ -123,7 +125,7 @@ public class SelectFieldInstance extends FieldInstance
 		}
 
 		if (!this.isMandatory()) {
-			this.texts.add(0, "-- Select --");
+			this.texts.add(0, FocusApplication.getInstance().getString(R.string.select_no_selection));
 			this.values.add(0, "");
 		}
 

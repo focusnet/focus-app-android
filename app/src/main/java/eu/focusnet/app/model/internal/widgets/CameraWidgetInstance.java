@@ -73,13 +73,4 @@ public class CameraWidgetInstance extends DataCollectionWidgetInstance
 		this.savedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
 	}
 
-	/**
-	 * Get the saved image.
-	 *
-	 * @return
-	 */
-	public String getSavedImage()
-	{
-		return savedImage;
-	}
 }

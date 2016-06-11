@@ -66,13 +66,13 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	protected void processSpecificConfig()
 	{
 		// button label
-		Object raw_label = this.config.get(CONFIG_LABEL_BUTTON_LABEL);
-		if (raw_label == null) {
+		Object rawLabel = this.config.get(CONFIG_LABEL_BUTTON_LABEL);
+		if (rawLabel == null) {
 			this.buttonLabel = FocusApplication.getInstance().getResources().getString(R.string.focus_external_app_button_label_default);
 		}
 		else {
 			try {
-				this.buttonLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_label)));
+				this.buttonLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawLabel)));
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -86,14 +86,14 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 		// app identifier
 		this.appIdentifier = null;
-		Object raw_identifer = this.config.get(CONFIG_LABEL_APP_IDENTIFIER);
-		if (raw_identifer == null) {
+		Object rawIdentifer = this.config.get(CONFIG_LABEL_APP_IDENTIFIER);
+		if (rawIdentifer == null) {
 			this.markAsInvalid();
 			return;
 		}
 		else {
 			try {
-				this.appIdentifier = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_identifer)));
+				this.appIdentifier = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawIdentifer)));
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -106,14 +106,14 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 		// input object
 		String url;
-		Object raw_input = this.config.get(CONFIG_LABEL_INPUT_OBJECT);
-		if (raw_input == null) {
+		Object rawInput = this.config.get(CONFIG_LABEL_INPUT_OBJECT);
+		if (rawInput == null) {
 			this.inputObject = null;
 			url = "";
 		}
 		else {
 			try {
-				url = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_input)));
+				url = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawInput)));
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -147,21 +147,21 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		// check that the app is indeed available
 		Intent intent = new Intent(this.appIdentifier);
 		PackageManager pm = FocusApplication.getInstance().getPackageManager();
-		ResolveInfo activity_info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-		if (activity_info == null) {
+		ResolveInfo activityInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		if (activityInfo == null) {
 			appAvailable = false;
 			this.installedVersion = null;
 		}
 		else {
 			appAvailable = true;
-			PackageInfo pkg_info = null;
+			PackageInfo packageInfo = null;
 			try {
-				pkg_info = pm.getPackageInfo(activity_info.activityInfo.packageName, 0);
+				packageInfo = pm.getPackageInfo(activityInfo.activityInfo.packageName, 0);
 			}
 			catch (PackageManager.NameNotFoundException ex) {
 				throw new FocusInternalErrorException("Cannot get package info for application, but we just checked that the application exists");
 			}
-			this.installedVersion = pkg_info.versionName;
+			this.installedVersion = packageInfo.versionName;
 		}
 		return appAvailable;
 	}
@@ -207,11 +207,6 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 				this.response = null;
 			}
 		}
-	}
-
-	public FocusSample getResponse()
-	{
-		return this.response;
 	}
 
 	public String getInstalledVersion()

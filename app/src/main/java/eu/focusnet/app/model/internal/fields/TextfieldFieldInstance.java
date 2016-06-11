@@ -66,9 +66,9 @@ public class TextfieldFieldInstance extends FieldInstance
 	private static final String TEXTFIELD_LABEL_INPUT_TYPE = "input-type";
 	protected ValidType inputType;
 
-	public TextfieldFieldInstance(String field_name, LinkedTreeMap<String, Object> config, DataContext dataContext)
+	public TextfieldFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
-		super(field_name, config, dataContext);
+		super(fieldName, config, dataContext);
 	}
 
 	@Override
@@ -76,17 +76,16 @@ public class TextfieldFieldInstance extends FieldInstance
 	{
 		this.inputType = ValidType.TEXTFIELD_TYPE_TEXT;
 
-		Object raw_input_type = this.config.get(TEXTFIELD_LABEL_INPUT_TYPE);
-		if (raw_input_type == null) {
+		Object rawInputType = this.config.get(TEXTFIELD_LABEL_INPUT_TYPE);
+		if (rawInputType == null) {
 			this.inputType = ValidType.TEXTFIELD_TYPE_TEXT;
 		}
 		else {
 			try {
-				this.inputType = ValidType.fromString(TypesHelper.asString(raw_input_type));
+				this.inputType = ValidType.fromString(TypesHelper.asString(rawInputType));
 			}
 			catch (FocusBadTypeException ex) {
 				this.markAsInvalid();
-				return;
 			}
 		}
 	}

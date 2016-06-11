@@ -10,5 +10,6 @@
     <dimen name="focus_splashscreen_logo_horizontal_image_margin">30dp</dimen>
     <dimen name="focus_drawer_width">300dp</dimen>
     <dimen name="focus_max_image_preview_height">250dp</dimen>
+    <dimen name="focus_divider_height">1dp</dimen>
 
 </resources>

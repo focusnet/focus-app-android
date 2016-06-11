@@ -102,8 +102,19 @@ public class CronService extends Service
 
 		// DEBUG FIXME
 		if (1==1) {
-			FocusApplication.getInstance().getDataManager().cleanDataStore(); // DEPRECATED
+			if (!setSyncInProgress(true)) {
+				// already work in progress, let's discard this execution
+				return false;
+			}
 
+			try {
+				Thread.sleep(10_000)
+				;
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			setSyncInProgress(false);
 			return true;
 		}
 

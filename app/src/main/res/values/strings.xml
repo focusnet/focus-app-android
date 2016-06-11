@@ -11,6 +11,7 @@
 
     <!-- Navigation drawer section titles -->
     <string name="project_listing_title">My FOCUS</string>
+    <string name="bookmarks_title">My Bookmarks</string>
 
     <string-array name="drawer_items">
         <item>@string/project_listing_title</item>

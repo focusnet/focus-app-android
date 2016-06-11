@@ -38,7 +38,7 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.activity.DemoUseCaseSelectionActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"/>(
         <activity
             android:name=".ui.activity.ProjectsListingActivity"
             android:label="@string/project_listing_title"
@@ -51,6 +51,7 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.activity.PageActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.activity.ProjectActivity"
             android:screenOrientation="landscape"/>
         <activity

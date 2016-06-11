@@ -38,8 +38,6 @@ public class Constant
 			UI_EXTRA_PATH = "eu.focusnet.app.extra.PATH",
 			UI_EXTRA_IMAGE_URI = "eu.focusnet.app.extra.IMAGE_URI",
 			UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.app.extra.LOADING_INFO_TEXT",
-			UI_EXTRA_FRAGMENT_TITLE = "eu.focusnet.app.extra.FRAGMENT_TITLE",
-			UI_EXTRA_FRAGMENT_POSITION = "eu.focusnet.app.extra.FRAGMENT_POSITION",
 			UI_EXTRA_LAYOUT_HEIGHT = "eu.focusnet.app.extra.LAYOUT_HEIGHT",
 			UI_EXTRA_LAYOUT_WEIGHT = "eu.focusnet.app.extra.LAYOUT_WEIGHT",
 			UI_EXTRA_LAYOUT_POSITION_IN_ROW = "eu.focusnet.app.extra.POSITION_IN_ROW";

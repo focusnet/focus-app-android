@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.ui.adapter;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -37,27 +39,30 @@ import java.util.Date;
 import eu.focusnet.app.model.util.Constant;
 
 /**
- * DateTypeAdapter is used by the GSON parser to translate DateTime formats
+ * DateTypeAdapter is used by the GSON parser to serialize and deserialize DateTime formats
  */
 public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date>
 {
 	private final DateFormat dateFormat;
 
 	/**
-	 * C'tor
+	 * Constructor.
+	 *
+	 * We initialize our Date formatter here.
 	 */
+	@SuppressLint("SimpleDateFormat")
 	public DateTypeAdapter()
 	{
 		dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
 	}
 
 	/**
-	 * Serialization
+	 * Serialization of a date into JSON
 	 *
-	 * @param date
-	 * @param type
-	 * @param jsonSerializationContext
-	 * @return
+	 * @param date The {@link Date} to serialize
+	 * @param type inherited
+	 * @param jsonSerializationContext inherited
+	 * @return a GSON {@link JsonElement} representing the date
 	 */
 	@Override
 	public synchronized JsonElement serialize(Date date, Type type,
@@ -69,10 +74,10 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	/**
 	 * Deserialization
 	 *
-	 * @param jsonElement
-	 * @param type
-	 * @param jsonDeserializationContext
-	 * @return
+	 * @param jsonElement The GSON {@link JsonElement} to deserialize into at {@link Date}
+	 * @param type inherited
+	 * @param jsonDeserializationContext inherited
+	 * @return A {@link Date} object
 	 */
 	@Override
 	public synchronized Date deserialize(JsonElement jsonElement, Type type,

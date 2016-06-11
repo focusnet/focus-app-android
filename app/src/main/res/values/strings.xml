@@ -58,7 +58,7 @@
     <string name="title_activity_image">ImageActivity</string>
 
     <string name="focus_crash_toast_text">Oops! FOCUS Mobile has just crashed.</string>
-    <string name="focus_crash_dialog_title">The FOCUS app has crashed!</string>
+    <string name="focus_crash_dialog_title">FOCUS Mobile has crashed!</string>
     <string name="focus_crash_dialog_text">An unexpected error occurred forcing the application to stop. Please help us to fix this by sending us error data; all you have to do is click OK.</string>
     <string name="focus_crash_dialog_ok_toast">Thank you!</string>
     <string name="focus_crash_dialog_comment_prompt">You might add your comments about the problem below:</string>

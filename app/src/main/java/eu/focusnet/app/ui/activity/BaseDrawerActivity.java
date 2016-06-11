@@ -56,12 +56,12 @@ public abstract class BaseDrawerActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		drawerItems = getDrawerItems();
 		drawerLayout = (DrawerLayout) findViewById(getDrawerLayout());
 		drawerLayout.bringToFront();
 		drawerListMenu = (ListView) findViewById(getDrawerList());
 		drawerListMenu.bringToFront();
-		drawerItems = getDrawerItems();
+
 		drawerListMenu.setOnItemClickListener(getOnClickListener());
 
 		// setting the nav drawer list adapter

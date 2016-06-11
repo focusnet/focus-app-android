@@ -59,6 +59,7 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
  * accessing these objects more quickly as it is the only Singleton of the application.
  * <p/>
  * FIXME review all methods and set synchronize / volatile when appropriate
+ * FIXME ACRA make sure it works in production. I noticed that sometimes the interactive dialog is not shown emulator (real-time issue?) / Probably only when debugger is attached.
  */
 public class FocusApplication extends Application
 {

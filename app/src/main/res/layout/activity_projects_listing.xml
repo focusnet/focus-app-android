@@ -17,8 +17,9 @@
             android:layout_height="match_parent"/>
 
         <!-- Listview to display slider menu -->
-        <ListView
+        <ListView 
             android:id="@+id/focus_drawer"
             style="@style/FocusDrawer"/>
+
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

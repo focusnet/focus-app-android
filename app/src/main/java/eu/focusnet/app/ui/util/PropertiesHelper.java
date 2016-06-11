@@ -26,10 +26,25 @@ import java.util.Properties;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/**
+ * A helper class used for retrieving Properties.
+ */
 public class PropertiesHelper
 {
-	private static final java.lang.String ASSETS_PROPERTY_FILE = "focus.properties";
+	/**
+	 * Name of our properties file in the assets directory.
+	 */
+	private static final String ASSETS_PROPERTY_FILE = "focus.properties";
 
+	/**
+	 * Retrieve a property.
+	 *
+	 * @param key The key of the property to retrieve
+	 * @param context The Context from which we acquire the {@link AssetManager}
+	 * @return A String containing the value of the property, or {@code null} on failure.
+	 * @throws IOException If the properties file could not be open
+	 */
 	public static String getProperty(String key, Context context) throws IOException
 	{
 		Properties properties = new Properties();

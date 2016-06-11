@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
+import android.view.MenuItem;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -35,6 +36,7 @@ import org.acra.config.ConfigurationBuilder;
 import java.io.IOException;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.FocusApplicationActivityLifecycleHandler;
@@ -43,51 +45,39 @@ import eu.focusnet.app.ui.util.PropertiesHelper;
 /**
  * FOCUS Application
  * <p/>
- * FIXME TODO review all methods and 'synchronized' them if necessary, but only if necessary.
+ * This is the entry point of our application and direct subclass of the default Android
+ * Application.
  * <p/>
- * This is a Singleton, which allows us to access the application context and DataManager from anywhere.
+ * In this class, we override the default behavior by:
+ * - Defining a custom error reporting system (ACRA)
+ * - Defining a custom Activity handler used to
+ * <p/>
+ * This class also:
+ * - provides most application-wide instances, and/or methods for accesing them. It is a Singleton
+ * and therefore allows us to refer to these instances efficiently. In fact many single-instance
+ * objects are stored in the DataManager, but this class contains helper functions that allow
+ * accessing these objects more quickly as it is the only Singleton of the application.
+ * <p/>
+ * FIXME review all methods and set synchronize / volatile when appropriate
  */
 public class FocusApplication extends Application
 {
-
+	/**
+	 * ACRA configuration keys, from the focus.properties file
+	 */
 	private static final String PROPERTY_ACRA_FORM_URI = "acra.form-uri",
 			PROPERTY_ACRA_USERNAME = "acra.username",
 			PROPERTY_ACRA_PASSWORD = "acra.password";
 
-	/**
-	 * Static instance variable, hence our Singleton instanciatio
-	 */
 	private static FocusApplication instance;
-
-	/**
-	 * DataManager
-	 */
 	private DataManager dataManager;
 	private FocusApplicationActivityLifecycleHandler activityHandler;
 	private Thread.UncaughtExceptionHandler originalUncaughtExceptionHandler;
-	/**
-	 * A custom exception handler that will reset() the app if any exception is not caught.
-	 */
-	private Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler()
-	{
-		@Override
-		public void uncaughtException(Thread thread, Throwable ex)
-		{
-			if (FocusApplication.getInstance() != null && FocusApplication.getInstance().getDataManager() != null) {
-				FocusApplication.getInstance().getDataManager().reset();
-			}
-
-			if (BuildConfig.DEBUG) {
-				ex.printStackTrace();
-			}
-			originalUncaughtExceptionHandler.uncaughtException(thread, ex);
-		}
-	};
 
 	/**
-	 * Acquire the instance of this app
+	 * Acquire the Singleton instance
 	 *
-	 * @return
+	 * @return the Singleton instance
 	 */
 	public static FocusApplication getInstance()
 	{
@@ -95,15 +85,22 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * R
-	 * helper function that allows reporting uncaught errors via ACRA
+	 * This function triggers a silent ACRA report to the reporting server.
+	 * <p/>
+	 * This is used when we think we have somehow end up in a strange/crashed state, but we
+	 * were still able to recover. We however want to inspect the reasons of this state and
+	 * therefore expect to receive a bug report.
+	 * <p/>
+	 * This also allows us to send reports even if no exception is triggered. We may for example
+	 * monitor the application performance and send a report if it is too slow, for knowing what
+	 * happens.
+	 * <p/>
+	 * FIXME the report may contain sensitive information. It should be anonymized.
 	 *
-	 * @param e
+	 * @param e The exception to be transmitted on the remote reporting server.
 	 */
 	public static void reportError(Exception e)
 	{
-		// FIXME TODO we should alter the report to remove sensitive information!
-
 		if (!BuildConfig.DEBUG) {
 			ACRA.getErrorReporter().handleSilentException(e);
 		}
@@ -113,21 +110,9 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * R
-	 * etrieve application-wide context
+	 * Application-wide current DataManager
 	 *
-	 * @return
-	 */
-	public Context getContext()
-	{
-		return instance;
-	}
-
-	/**
-	 * A
-	 * etrieve the DataManager
-	 *
-	 * @return
+	 * @return the current DataManager for the application
 	 */
 	public DataManager getDataManager()
 	{
@@ -135,9 +120,15 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * ACRA programmatic initialization.
+	 * Attach the base Context
+	 * <p/>
+	 * This implementation does:
+	 * - register our Singleton instance
+	 * - Enable MultiDex
+	 * - Enable ACRA when not in DEBUG build mode
+	 * - Register a custom uncaught exception handler
 	 *
-	 * @param base
+	 * @param base inherited parameter
 	 */
 	@Override
 	protected void attachBaseContext(Context base)
@@ -152,22 +143,21 @@ public class FocusApplication extends Application
 
 		// ACRA init, only in release mode
 		if (!BuildConfig.DEBUG) {
-			// prepopulated with values set in the annotation
+			// Get ACRA's configuration parameters from the focus.properties file
 			String form_uri;
 			String user;
 			String pass;
 			try {
-				form_uri = PropertiesHelper.getProperty(PROPERTY_ACRA_FORM_URI, this.getContext());
-				user = PropertiesHelper.getProperty(PROPERTY_ACRA_USERNAME, this.getContext());
-				pass = PropertiesHelper.getProperty(PROPERTY_ACRA_PASSWORD, this.getContext());
+				form_uri = PropertiesHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
+				user = PropertiesHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
+				pass = PropertiesHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
 			}
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot get property in focus.properties");
 			}
 
+			// fully programmatic ACRA configuration (no annotation)
 			try {
-				// ACRA configuration is fully programmatic, no annotation
-				// so everything at the same location
 				final ACRAConfiguration config = new ConfigurationBuilder(this)
 						.setFormUri(form_uri)
 						.setFormUriBasicAuthLogin(user)
@@ -188,14 +178,49 @@ public class FocusApplication extends Application
 			}
 		}
 
-		// We create a custom handler that will clean the application state
-		// but it will also call the ACRA handler for nice bug reports
+
+		/*
+		 * We create a custom uncaught exception handler that will delete any local data if any
+		 * exception is not caught.
+		 *
+		 * We enforce this such that the application does not end up in a strange state from which we
+		 * cannot recover without updating. By doing this, we can assume that on next application
+		 * execution, it will download data from the server(s) again and hopefully things will be
+		 * better. If this is not the case, it is easier to alter data on the server than on the client
+		 * anyway.
+		 *
+		 * But it will also call the ACRA handler for nice bug reports, so let's save it first
+		 * and then setup this new handler
+		 */
 		this.originalUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+		Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler()
+		{
+			@Override
+			public void uncaughtException(Thread thread, Throwable ex)
+			{
+				if (FocusApplication.getInstance() != null && FocusApplication.getInstance().getDataManager() != null) {
+					FocusApplication.getInstance().getDataManager().logout();
+				}
+
+				if (BuildConfig.DEBUG) {
+					ex.printStackTrace();
+				}
+
+				// The original handler is in fact ACRA's one, which ha been configured in onAttachBaseContext()
+				originalUncaughtExceptionHandler.uncaughtException(thread, ex);
+			}
+		};
 		Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 	}
 
 	/**
-	 * On Application creation, do initialize the DataManager, CronService and ACRA
+	 * Perform operations when creating the Application
+	 * <p/>
+	 * This is called after attachBaseContext(). We do the following:
+	 * - Register a custom activity handler that will help us keep track of the currently active
+	 * Activity
+	 * - Enable debugging checks in DEBUG build mode
+	 * - Setup our DataManager and CronService
 	 */
 	@Override
 	public void onCreate()
@@ -230,9 +255,12 @@ public class FocusApplication extends Application
 
 	/**
 	 * Replace the current data manager with a new one. The old one will therefore be
-	 * garbage collected.
+	 * garbage collected. This is part of the data synchronization procedure.
 	 *
-	 * @param new_dm
+	 * @param new_dm A new DataManager
+	 * @see CronService The periodic tasks runner
+	 * @see eu.focusnet.app.ui.activity.ProjectsListingActivity#onOptionsItemSelected(MenuItem)
+	 * Where the synchronization task can be manually triggered
 	 */
 	public void replaceDataManager(DataManager new_dm)
 	{
@@ -240,11 +268,42 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * Use the registered FocusApplicationActivityLifecycleHandler to restart the current activity.
+	 * Use the custom FocusApplicationActivityLifecycleHandler to restart the current activity.
 	 */
 	public void restartCurrentActivity()
 	{
 		this.activityHandler.restartCurrentActivity();
 	}
 
+	/**
+	 * Retrieve the NetworkManager
+	 *
+	 * @return the current unique NetworkManager of the application
+	 */
+	public NetworkManager getNetworkManager()
+	{
+		return this.getDataManager().getNetworkManager();
+	}
+
+	/**
+	 * Explictly free memory when requested to do so.
+	 *
+	 * @param level inherited
+	 */
+	@Override
+	public void onTrimMemory(int level)
+	{
+		super.onTrimMemory(level);
+		this.dataManager.freeMemory();
+	}
+
+	/**
+	 * Explicitly free memory when requested to do so.
+	 */
+	@Override
+	public void onLowMemory()
+	{
+		super.onLowMemory();
+		this.dataManager.freeMemory();
+	}
 }

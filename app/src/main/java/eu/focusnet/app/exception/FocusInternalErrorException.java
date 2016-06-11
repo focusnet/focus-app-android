@@ -22,10 +22,17 @@ package eu.focusnet.app.exception;
 
 /**
  * An FocusInternalErrorException denotes a problem that should not happen if the logic of the
- * application was correct. This is an additional sanity check.
+ * application was correct.
+ * <p/>
+ * This is an unchecked exception that will generally crash the application.
  */
 public class FocusInternalErrorException extends RuntimeException
 {
+	/**
+	 * Exception constructor
+	 *
+	 * @param detailMessage Message summarizing the encountered issue
+	 */
 	public FocusInternalErrorException(String detailMessage)
 	{
 		super(detailMessage);

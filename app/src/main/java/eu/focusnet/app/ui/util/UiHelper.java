@@ -1,15 +1,9 @@
 package eu.focusnet.app.ui.util;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,16 +32,17 @@ import java.text.DecimalFormat;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/**
+ * This class contains static methods to help building commonly used UI elements.
+ */
 public class UiHelper
 {
-
-	private static Float scale;
-
 	/**
 	 * Displays a toast
 	 *
-	 * @param context the context
-	 * @param msg     the message in the toast
+	 * @param context The context
+	 * @param msg     The message in the toast
 	 */
 	public static void displayToast(Context context, CharSequence msg)
 	{
@@ -57,69 +52,44 @@ public class UiHelper
 	/**
 	 * Displays a toast
 	 *
-	 * @param context the context
-	 * @param msg     the message in the toast as integer
+	 * @param context The context
+	 * @param msg     The message in the toast as a resource reference
 	 */
 	public static void displayToast(Context context, int msg)
 	{
 		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Get a bitmap image
+	 *
+	 * @param context The context
+	 * @param image   The image as a resource reference
+	 * @return a {@code Bitmap} object or {@code null} on failure.
+	 */
 	public static Bitmap getBitmap(Context context, int image)
 	{
 		return BitmapFactory.decodeResource(context.getResources(), image);
 	}
 
-
-	public static int dp_to_pixels(int dp, Context context)
-	{
-		if (scale == null) {
-			scale = context.getResources().getDisplayMetrics().density;
-		}
-		return (int) ((float) dp * scale);
-	}
-
-
 	/**
-	 * Displays a notification
+	 * Conversion function
 	 *
-	 * @param context        the context
-	 * @param cls            the class (Activity which will be started when user click in the notification)
-	 * @param icon           the icon
-	 * @param title          the title
-	 * @param content        the content
-	 * @param notificationId Represent the notification id and the navigation id to display the appropriate fragment
+	 * @param dp      The number of dps to convert from.
+	 * @param context The context
+	 * @return The corresponding number of pixels.
 	 */
-	public static void displayNotification(Context context, Class<?> cls, int icon, CharSequence title, CharSequence content, int notificationId)
+	public static int dpToPixels(int dp, Context context)
 	{
-
-		// Intent to be triggered when the notification is selected
-		Intent intent = new Intent(context, cls);
-		intent.putExtra(Constant.UI_EXTRA_NOTIFICATION_ID, notificationId);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-		//   mBuilder.setVibrate(new long[]{100, 250, 100, 500});
-		Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		Notification.Builder mBuilder = new Notification.Builder(context)
-				.setSmallIcon(icon)
-				.setContentTitle(title)
-				.setContentText(content)
-				.setContentIntent(pendingIntent)
-				.setWhen(System.currentTimeMillis())
-				.setSound(notificationSound);
-		Notification notif = mBuilder.build();
-		// hide the notification after its selected
-		notif.flags |= Notification.FLAG_AUTO_CANCEL;
-		NotificationManager notifMng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		notifMng.notify(notificationId, notif);
+		return (int) ((float) dp * context.getResources().getDisplayMetrics().density);
 	}
 
 	/**
-	 * Helper function to hide the keyboard when clicking outside of if
+	 * Helper function to hide the keyboard when clicking on an element.
 	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
-	 * @param activity
+	 * @param activity The Activity where this operation is performed
 	 */
 	public static void hideSoftKeyboard(Activity activity)
 	{
@@ -131,11 +101,15 @@ public class UiHelper
 	}
 
 	/**
-	 * Setup UI to be able to click outside of keyboard to hide it.
+	 * Setup the UI to be able to click outside of keyboard to hide it.
+	 * <p/>
+	 * We recursively parse the content of the View and register a touch listener that will hide
+	 * the keyboard on all elements that are not {@link EditText}s.
 	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
-	 * @param view
+	 * @param view     The view to parse
+	 * @param activity The Activity where this operation is performed
 	 */
 	public static void setupHidableKeyboard(View view, final Activity activity)
 	{
@@ -162,14 +136,17 @@ public class UiHelper
 
 
 	/**
-	 * Get user-friendly file size
+	 * Get a user-friendly data size
+	 *
+	 * @param size The size of the data to evaluate
+	 * @return a String such as "2.2 GB or 1.23kB
 	 */
 	public static String getFileSize(long size)
 	{
 		if (size <= 0) {
 			return "0";
 		}
-		final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+		final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}

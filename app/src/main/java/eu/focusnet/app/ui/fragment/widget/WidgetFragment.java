@@ -119,13 +119,13 @@ public abstract class WidgetFragment extends Fragment
 	{
 		Bundle arguments = getArguments();
 		int width = 0; // width is determined by the weight only
-		int height = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_HEIGHT);
-		int num_of_cols = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_WEIGHT);
-		int position_in_row = arguments.getInt(Constant.UI_BUNDLE_LAYOUT_POSITION_IN_ROW);
+		int height = arguments.getInt(Constant.UI_EXTRA_LAYOUT_HEIGHT);
+		int num_of_cols = arguments.getInt(Constant.UI_EXTRA_LAYOUT_WEIGHT);
+		int position_in_row = arguments.getInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, num_of_cols);
 
 		// set a reasonable margin between fragments
-		int margin = UiHelper.dp_to_pixels(UI_MARGIN_SIZE, this.getActivity());
+		int margin = UiHelper.dpToPixels(UI_MARGIN_SIZE, this.getActivity());
 		params.setMargins(
 				position_in_row == 0 ? margin : margin / 2,
 				margin,
@@ -137,7 +137,7 @@ public abstract class WidgetFragment extends Fragment
 
 		if (this.referenceHeight != 0) {
 			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
-			l.height = UiHelper.dp_to_pixels(this.referenceHeight, this.getActivity());
+			l.height = UiHelper.dpToPixels(this.referenceHeight, this.getActivity());
 			this.rootView.setLayoutParams(l);
 		}
 	}

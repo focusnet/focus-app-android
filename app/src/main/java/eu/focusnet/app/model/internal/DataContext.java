@@ -26,6 +26,7 @@ import java.util.Map;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
@@ -90,11 +91,13 @@ public class DataContext extends HashMap<String, String>
 	 * Examples:
 	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
 	 * "referenced-url": "<ctx/simple-url/url1>",
+	 *
+	 * FIXME TODO
 	 * "history-test": "<history|http://focus.yatt.ch/debug/focus-sample-1.json|params>",
 	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
-	 *
+	 *lookup: no context for now.
 	 *
 	 *
 	 *
@@ -119,6 +122,10 @@ public class DataContext extends HashMap<String, String>
 				f = this.dataManager.getSample(u);
 			}
 			else {
+				throw new FocusNotImplementedException("DataContext.register() -> services");
+
+				/*
+				FIXME TO BE IMPLEMENTED
 				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
 				if (parts.length != 3) {
 					throw new FocusInternalErrorException("Wrong number of fields for description of data context.");
@@ -131,7 +138,7 @@ public class DataContext extends HashMap<String, String>
 					else {
 						u = parts[1];
 					}
-					f = this.dataManager.getHistorySample(u, parts[2]);
+					f = this.dataManager.getHistory(u, parts[2]);
 				}
 				else if (parts[0].equals(Constant.SELECTOR_SERVICE_LOOKUP)) {
 					String u;
@@ -141,11 +148,12 @@ public class DataContext extends HashMap<String, String>
 					else {
 						u = parts[1];
 					}
-					f = this.dataManager.getLookupSample(u, parts[2]);
+					f = this.dataManager.getLookup(parts[2]);
 				}
 				else {
 					throw new FocusInternalErrorException("This data reference is not supported.");
 				}
+				*/
 			}
 		}
 		else {

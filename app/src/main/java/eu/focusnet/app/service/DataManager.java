@@ -52,70 +52,229 @@ import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.ui.util.PropertiesHelper;
 
 /**
- * This follows a Singleton pattern.
+ * The DataManager is responsible for building the application content and data management.
  * <p/>
- * FIXME this class is probably responsible for too many things.
+ * Its specific tasks are:
+ * <ul>
+ * <li>Serve as a single contact entity for data CRUD operations.</li>
+ * <li>Initialize and construct the application content</li>
+ * </ul>
  * <p/>
+ * The DataManager is hence the Model of the application. It does not provide any UI-related
+ * feature, and does not run tasks in the background. This is left to the View aspect of
+ * the application.
  * <p/>
- * Created by julien on 07.01.16.
+ * TODO move user/login-related operations to a standalone {@code AccessControlManager}
+ * <p/>
+ * FIXME we instantiate all application contentn parts (projects, pages, widgets) at start-time. Should we rather do it on-demand?
  */
 public class DataManager
 {
+	/**
+	 * When performing operations on resources, it may happens that the result is not binary
+	 * (sucess or failure). If there is no network available, the operation is queued by storing
+	 * the altered version of the resource into the local database storage, and will therefore be
+	 * pushed later to the network.
+	 */
 	public enum ResourceOperationStatus
 	{
-		SUCCESS, // resource altered directly
-		PENDING, // pending network operation
-		ERROR // permanent error
+		/**
+		 * Resource has been altered directly and successfully.
+		 *
+		 * @see ResourceOperationStatus
+		 */
+		SUCCESS,
+		/**
+		 * Resource has been altered locally and modification will be pushed on the network later
+		 * by the periodic tasks of {@link CronService}.
+		 *
+		 * @see ResourceOperationStatus
+		 */
+		PENDING,
+		/**
+		 * A permanent error occured.
+		 *
+		 * @see ResourceOperationStatus
+		 */
+		ERROR
 	}
 
+	/**
+	 * Prefix for internal configuration resources.
+	 *
+	 * @see DataManager#FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION
+	 */
 	public static final String FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX = "http://localhost/FOCUS-INTERNAL/";
+	/**
+	 * The local database storage contains a special entry that contains the basics of application
+	 * configuration. This is identified by the {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION} resource
+	 * URI. More generally, any URI starting with{@link #FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX} should
+	 * never be transmitted over the network.
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION = FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "focus-internal-configuration";
+	/**
+	 * Label for server name as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER = "login-server";
+	/**
+	 * Label for username for authentication as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME = "login-username";
+	/**
+	 * Label for password for authentication as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD = "login-password";
+	/**
+	 * Label for URI to user information as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS = "user-infos";
-	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "application-settings";
+	/**
+	 * Label for URI to application preferences as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS = "user-preferences";
+	/**
+	 * Label for URI to application content as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 */
 	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT = "application-content";
-	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE = "demo-user-case";
+	/**
+	 * Label for URI to application preferences as stored in the internal configuration identified by
+	 * {@link #FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION}
+	 *
+	 * @deprecated Used only in the prototype. Can be safely removed in production version.
+	 */
+	private static final String FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE = "demo-use-case";
+
+	/**
+	 * This property defines the endpoint where our application-specific data are stored
+	 * (User information, User preferences)
+	 */
 	private static final String PROPERTY_TARGET_PERMANENT_STORAGE_SERVER = "resource-server.endpoint";
 
-	private boolean isInitialized;
-	// other information regarding login?
+	/**
+	 * Login-related input information: username
+	 */
 	private String loginUser;
+	/**
+	 * Login-related input information: password
+	 */
 	private String loginPassword;
+	/**
+	 * Login-related input information: connection server
+	 */
 	private String loginServer;
-	private String userUrl;
-	private String prefUrl;
-	private String appContentUrl;
 
-	// java objects
-	private User user;
-	private UserPreferences userPreferences;
-	private AppContentTemplate appContentTemplate;
-	private AppContentInstance appContentInstance;
-	// for samples, the cache is read-only. It helps speed up the process of building the application content
-	private HashMap<String, FocusObject> cache;
-
-	private Gson gson;
-	private NetworkManager net;
-	private DatabaseAdapter databaseAdapter;
-
-	private ArrayList<AbstractInstance> activeInstances;
-	private boolean applicationReady;
-	private boolean loggedIn;
-
-	// FIXME only for demo purpose
+	/**
+	 * The currently selected use case identifier for the prototype. This is one of the values
+	 * listed in R.string.demo_use_cases_values.
+	 *
+	 * @deprecated This is only used in the prototype of the application.
+	 */
 	private String demoUseCase;
 
 	/**
-	 * Constructor
+	 * URI to resource holding user information.
+	 * <p/>
+	 * URIs to resources that are used for building the application. 3 objects are of special
+	 * importance and mandatory for the application to work properly:
+	 * - userUrl points to a {@link User} object, which contains basic information such as the
+	 * user's name
+	 * - prefUrl points to a {@link UserPreferences} object, which contains e.g. bookmarks
+	 * - appContentUrl points to a {@link AppContentTemplate} object, which contains the template
+	 * used to generate the content of the application.
+	 */
+	private String userUrl;
+	/**
+	 * URI to resource holding user information.
+	 *
+	 * @see #userUrl;
+	 */
+	private String prefUrl;
+	/**
+	 * URI to resource holding user information.
+	 *
+	 * @see #userUrl;
+	 */
+	private String appContentUrl;
+
+	/**
+	 * Java object holding the content of {@link #userUrl}
+	 */
+	private User user;
+	/**
+	 * Java object holding the content of {@link #prefUrl}
+	 */
+	private UserPreferences userPreferences;
+	/**
+	 * Java object holding the content of {@link #appContentUrl}
+	 */
+	private AppContentTemplate appContentTemplate;
+
+	/**
+	 * The {@link AppContentInstance} is the instanciation of the {@link AppContentTemplate}
+	 * referenced above. It means that the template will be evaluated and expanded with actual data.
+	 */
+	private AppContentInstance appContentInstance;
+
+	/**
+	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
+	 * instanciation of the application content, by avoiding to retrieve many time the same
+	 * resources from the network and/or the local database.
+	 * <p/>
+	 * This cache is only used when initializing the application content instance, and is
+	 * then freed, as resources are not required after that anymore.
+	 */
+	private HashMap<String, FocusObject> cache;
+
+	/**
+	 * The GSON object with which we do all our Java Object &lt;-&gt; JSON transformations
+	 */
+	private Gson gson;
+
+	/**
+	 * The object responsible for providing networking facilities
+	 */
+	private NetworkManager net;
+
+	/**
+	 * The object responsible for providing local database storage faiclities (SQLite database)
+	 */
+	private DatabaseAdapter databaseAdapter;
+
+	/**
+	 * This List keeps track of the currently active instances
+	 * <p/>
+	 * We use this such that the instances are not garbage collected
+	 * <p/>
+	 * FIXME check that last sentence, I have a doubt now. Not really useful?
+	 */
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+	private ArrayList<AbstractInstance> activeInstances;
+
+	/**
+	 * Tells whether the application is ready to be used
+	 */
+	private boolean applicationReady;
+
+	/**
+	 * Tells whether the user is properly logged in.
+	 */
+	private boolean loggedIn;
+
+	/**
+	 * Constructor. Initialize all default values and facilities, but does not perform any
+	 * operation.
 	 */
 	public DataManager()
 	{
-		this.isInitialized = false;
 		this.loggedIn = false;
 
-		Context context = FocusApplication.getInstance().getContext();
+		Context context = FocusApplication.getInstance();
 
 		this.activeInstances = new ArrayList<>();
 		this.applicationReady = false;
@@ -134,72 +293,41 @@ public class DataManager
 	}
 
 	/**
-	 * Finish initializing the DataManager
+	 * Finish initializing the DataManager by retrieving the internal configuration containing
+	 * credentials, URIs to basic resources, etc.
+	 * <p/>
+	 * If this initialization fails, {@code this.login} will not be set to {@code true} and the UI
+	 * will act consequently.
 	 */
 	public void init()
 	{
-		if (this.isInitialized) {
-			return;
-		}
 
 		// get login infos from local store, and use it as the default
-		FocusSample internal_config = null;
+		FocusSample internalConfig = null;
 		try {
-			internal_config = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+			internalConfig = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
 		}
-		catch (IOException ex) {
+		catch (IOException ignored) {
 			// ok to ignore, no network access for internal configuration (saved in local db)
 		}
 
-		if (internal_config != null) {
-			this.loginUser = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
-			this.loginPassword = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD);
-			this.loginServer = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER);
-			this.userUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS);
-			this.prefUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS);
-			this.appContentUrl = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT);
-			this.demoUseCase = internal_config.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE);
+		if (internalConfig != null) {
+			this.loginUser = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME);
+			this.loginPassword = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD);
+			this.loginServer = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_SERVER);
+			this.userUrl = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_USER_INFOS);
+			this.prefUrl = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_SETTINGS);
+			this.appContentUrl = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_APPLICATION_CONTENT);
+			this.demoUseCase = internalConfig.getString(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_DEMO_USE_CASE);
 			this.loggedIn = true;
 		}
-
-		this.isInitialized = true;
-	}
-
-
-	/**
-	 * Get the GSON object used for data conversion in our app
-	 *
-	 * @return a pointer to the GSON object, which is already properly configured for our application
-	 */
-	public Gson getGson()
-	{
-		return this.gson;
 	}
 
 	/**
-	 * Get the network manager
-	 *
-	 * @return
-	 */
-	public NetworkManager getNetworkManager()
-	{
-		return this.net;
-	}
-
-	/**
-	 * Tells whether the application is ready for being run, i.e. all basic objects have been loaded
-	 *
-	 * @return
-	 */
-	public boolean isApplicationReady()
-	{
-		return this.applicationReady;
-	}
-
-	/**
-	 * Login and if successful, save the login information in the permanent store.
+	 * Login and if successful, save the login information in the permanent store, as the internal
+	 * configuration resource.
 	 * <p/>
-	 * This method relies on network connectivity.
+	 * FIXME TODO implementation to be completed once we have an authentication server.
 	 *
 	 * @param user     The login user
 	 * @param password The login password
@@ -213,8 +341,7 @@ public class DataManager
 			throw new FocusNotImplementedException("DataManager.login()");
 		}
 
-		// FIXME most of the logic below is OK, except for the FIXME part
-
+		// FIXME logic below is OK, except for the FIXME part
 
 		// if there is no network available, trigger a failure right away
 		if (!this.net.isNetworkAvailable()) {
@@ -222,8 +349,8 @@ public class DataManager
 		}
 
 		// do network login
-		boolean login_result = this.net.login(user, password, server);
-		if (!login_result) { // 403 error
+		boolean loginResult = this.net.login(user, password, server);
+		if (!loginResult) { // 403 error
 			this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 			return false;
 		}
@@ -250,16 +377,26 @@ public class DataManager
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
-		this.post(fs);
+		this.create(fs);
 
 		this.loggedIn = true;
 		return true;
 	}
 
 	/**
-	 * A temporary and more simple login function for the demonstration prototype
+	 * A temporary and more simple login-like function that will retrieve all information from
+	 * resources ({@code R.string.demo_use_cases_labels, R.string.demo_use_cases_app_content_uris}).
+	 * These resources are stored as string-arrays, and the selected use case properties share the
+	 * same array index as the one of the selected {@param useCase}  as it can be found in
+	 * {@code R.string#demo_use_cases_values}.
+	 *
+	 * @param useCase the identifier of the use case selected by the user, as it can be found in
+	 *                {@code R.string#demo_use_cases_values}.
+	 * @return true on success, false otherwise
+	 * @throws IOException If a network error occured
+	 * @deprecated Only valid for the prototype
 	 */
-	public boolean demoLogin(String use_case) throws IOException
+	public boolean demoLogin(String useCase) throws IOException
 	{
 		// if there is no network available, trigger a failure right away
 		if (!this.net.isNetworkAvailable()) {
@@ -267,38 +404,38 @@ public class DataManager
 		}
 
 		// Demo URIs:
-		// one Use URI per user
-		// one UserPreferences URI per user x use case combination
-		// one AppContentTemplate per use case
-		String user_id = "user-" + Settings.Secure.getString(FocusApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+		// - one Use URI per user
+		// - one UserPreferences URI per user x use case combination
+		// - one AppContentTemplate per use case
+		String userId = "user-" + Settings.Secure.getString(FocusApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
 
+		// no need to set credentials, we won't use them.
 		this.loginServer = "";
 		this.loginUser = "";
 		this.loginPassword = "";
 
 		// find the demo use case idx based on the
-		this.demoUseCase = use_case;
+		this.demoUseCase = useCase;
 
 		// user and preferences URIs
-		String test_server = PropertiesHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER, FocusApplication.getInstance());
-		this.userUrl = test_server + "/data/focus-user/" + user_id;
-		this.prefUrl = test_server + "/data/focus-user/" + user_id + "/focus-mobile-app-preferences/" + this.demoUseCase;
+		String testServer = PropertiesHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER, FocusApplication.getInstance());
+		this.userUrl = testServer + "/data/focus-user/" + userId;
+		this.prefUrl = testServer + "/data/focus-user/" + userId + "/focus-mobile-app-preferences/" + this.demoUseCase;
 
 		// infer app content URI
-		String[] use_cases_ids = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
-		int found_idx = -1;
-		for (int i = 0; i < use_cases_ids.length; ++i) {
-			if (this.demoUseCase.equals(use_cases_ids[i])) {
-				found_idx = i;
+		String[] useCasesIds = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
+		int foundIdx = -1;
+		for (int i = 0; i < useCasesIds.length; ++i) {
+			if (this.demoUseCase.equals(useCasesIds[i])) {
+				foundIdx = i;
+				break;
 			}
 		}
-		if (found_idx == -1) {
+		if (foundIdx == -1) {
 			throw new FocusInternalErrorException("Invalid demo identifier");
 		}
-
-		String[] uris = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_app_cntent_uris);
-		this.appContentUrl = uris[found_idx];
-
+		String[] uris = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_app_content_uris);
+		this.appContentUrl = uris[foundIdx];
 
 		// if all ok, save info to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
@@ -312,16 +449,16 @@ public class DataManager
 
 		// and save in the local SQLite database (it won't be sent on the network)
 		this.delete(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION); // delete existing configuration, just in case
-		this.post(fs);
+		this.create(fs);
 
 		this.loggedIn = true;
 		return true;
 	}
 
 	/**
-	 * Delete login information, and reset the content of the whole application
+	 * Delete login information and any locally stored data
 	 */
-	public void reset()
+	public void logout()
 	{
 		this.loginUser = null;
 		this.loginPassword = null;
@@ -342,22 +479,92 @@ public class DataManager
 		this.loggedIn = false;
 	}
 
-
 	/**
-	 * Do we have login information?
+	 * Tells whether the user has already logged in.
 	 *
-	 * @return true if we have all required login information, false otherwise
+	 * @return {@code true} if we have all required login information, {@code false} otherwise
 	 */
 	public boolean isLoggedIn()
 	{
 		return this.loggedIn;
 	}
 
+	/**
+	 * Get the 3 basic objects, and then instantiate the Application content as a
+	 * {@link AppContentInstance}, based on the Application template ({@link AppContentTemplate}).
+	 *
+	 * @throws FocusMissingResourceException If any of the involved resources could not be found
+	 */
+	public void retrieveApplicationData() throws FocusMissingResourceException
+	{
+		this.getUser();
+		this.getUserPreferences();
+		AppContentTemplate template = this.getAppContentTemplate();
+		this.appContentInstance = new AppContentInstance(template);
+		this.registerActiveInstance(this.appContentInstance);
+
+		// we don't need the cache anymore
+		this.cache = new HashMap<>(); // FIXME should we keep it anyway? maybe useful for periodic operations?
+
+		this.applicationReady = true;
+	}
 
 	/**
-	 * Acquire personal information about the user of the application
+	 * Get the application content instance, i.e. the application content with all projects,
+	 * pages and widgets and their content being initialized with proper values.
+	 *
+	 * @return An ApplicationInstance object reflecting the current content of the app
+	 */
+	public AppContentInstance getAppContentInstance()
+	{
+		return this.appContentInstance;
+	}
+
+	/**
+	 * Tells whether the application is ready for being run, i.e. all 3 basic objects have been
+	 * loaded and the application content has been built.
+	 *
+	 * @return {@code true} if this is the case, {@code false} otherwise.
+	 */
+	public boolean isApplicationReady()
+	{
+		return this.applicationReady;
+	}
+
+	/**
+	 * Get latest versions of all resources required for running the application, and replace
+	 * the application-wide DataManager on success.
 	 * <p/>
-	 * User is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
+	 * Note: we do not need to take care of currently active instances ({@see #activeInstances}),
+	 * this list will be rebuilt on next Activity loading. FIXME sure of that?
+	 * <p/>
+	 * FIXME bug: it looks like the data come from the local databse, not from the network. To check.
+	 * FIXME behavior: what if one of the 3 basic types has changed? relaod full app?
+	 */
+	public void rebuildApplicationData()
+	{
+		boolean mustRecover = false;
+		DataManager newDm = new DataManager();
+		try {
+			newDm.retrieveApplicationData();
+		}
+		catch (FocusMissingResourceException ex) {
+			mustRecover = true;
+		}
+		if (!mustRecover) {
+			FocusApplication.getInstance().replaceDataManager(newDm);
+		}
+	}
+
+	/**
+	 * The {@link User} is one of the 3 mandatory objects for the application to run. This method
+	 * retrieves this object based on the URI that has been obtained during the login procedure.
+	 * If the object does not exist, a new one is created on the network.
+	 * <p/>
+	 * The application cannot live without this object and will therefore crash if it does not
+	 * succeed in retrieving or creating this object.
+	 *
+	 * @return A {@link User} object
 	 */
 	public User getUser()
 	{
@@ -368,18 +575,20 @@ public class DataManager
 		if (this.user != null) {
 			return this.user;
 		}
-		User user = null;
+		User user;
 		try {
 			user = (User) this.get(this.userUrl, User.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without a user
-			// this case is triggered if there was network + no user in local db + network outage while retrieving object of interest
+			// this case is triggered if there was network + no user in local db + network outage
+			// while retrieving object of interest
 			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
 		}
 		if (user == null) {
-			user = new User(this.userUrl, "first", "last", "email@email.com", "company"); // FIXME information not used for now
-			ResourceOperationStatus ret = this.post(user);
+			// FIXME information not used for now, must still must be valid to pass JSON Schema valiation on the server-side
+			user = new User(this.userUrl, "first", "last", "email@email.com", "company");
+			ResourceOperationStatus ret = this.create(user);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
 			}
@@ -389,11 +598,14 @@ public class DataManager
 	}
 
 	/**
-	 * Acquire the application's user preferences.
+	 * The {@link UserPreferences} is one of the 3 mandatory objects for the application to run.
+	 * This method retrieves this object based on the URI that has been obtained during the
+	 * login procedure. If the object does not exist, a new one is created on the network.
 	 * <p/>
-	 * * UserPreferences is mandatory object, app cannot live without it, so failure to retrieve it throws a crash.
+	 * The application cannot live without this object and will therefore crash if it does not
+	 * succeed in retrieving or creating this object.
 	 *
-	 * @return A UserPreferences object
+	 * @return A {@link UserPreferences} object
 	 */
 	public UserPreferences getUserPreferences()
 	{
@@ -404,30 +616,44 @@ public class DataManager
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		UserPreferences user_preference = null;
+		UserPreferences userPreferences = null;
 		try {
-			user_preference = (UserPreferences) (this.get(this.prefUrl, UserPreferences.class));
+			userPreferences = (UserPreferences) (this.get(this.prefUrl, UserPreferences.class));
 		}
 		catch (IOException ex) {
 			// we cannot survive without userpreferences
 			// this case is triggered if there was network + no userprerferences in local db + network outage while retrieving object of interest
 			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
 		}
-		if (user_preference == null) {
-			user_preference = new UserPreferences(this.prefUrl);
-			ResourceOperationStatus ret = this.post(user_preference);
+		if (userPreferences == null) {
+			userPreferences = new UserPreferences(this.prefUrl);
+			ResourceOperationStatus ret = this.create(userPreferences);
 			if (ret == ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create UserPreferences object.");
 			}
 		}
-		this.userPreferences = user_preference;
+		this.userPreferences = userPreferences;
 		return this.userPreferences;
 	}
 
 	/**
-	 * Acquire the application content object
+	 * Trigger saving of user preferences.
+	 */
+	public void saveUserPreferences()
+	{
+		this.update(this.userPreferences);
+	}
+
+	/**
+	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
+	 * This method retrieves this object based on the URI that has been obtained during the
+	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
+	 * <p/>
+	 * The application cannot live without this object and will therefore crash if it does not
+	 * succeed in retrieving this object.
 	 *
-	 * @return An AppContentTemplate object (not an instance, it still must be processed)
+	 * @return A {@link AppContentTemplate} object
+	 * @throws FocusMissingResourceException If the object could not be found
 	 */
 	public AppContentTemplate getAppContentTemplate() throws FocusMissingResourceException
 	{
@@ -453,40 +679,12 @@ public class DataManager
 	}
 
 	/**
-	 * Get the application content instance, i.e. with data context and iterator having beeen resolved.
-	 *
-	 * @return An ApplicationInstance object reflecting the current content of the app
-	 * @throws RuntimeException
-	 */
-	public AppContentInstance getAppContentInstance()
-	{
-		return this.appContentInstance;
-	}
-
-	/**
-	 * Get the three basic informations that are required to build the application UI
-	 * <p/>
-	 * When building the different instances (AppContent, Project, PAge, Widget), we silently ignore errors, but we log them, just in case.
-	 */
-	public void retrieveApplicationData() throws FocusMissingResourceException
-	{
-		this.getUser();
-		this.getUserPreferences();
-		AppContentTemplate template = this.getAppContentTemplate();
-		this.appContentInstance = new AppContentInstance(template);
-		this.registerActiveInstance(this.appContentInstance);
-
-		// we don't need the cache anymore
-		this.cache = new HashMap<>();
-
-		this.applicationReady = true;
-	}
-
-	/**
 	 * Get a FocusSample
 	 *
 	 * @param url The URL identifyiing the sample to retrieve
 	 * @return A FocusSample
+	 * @throws FocusMissingResourceException If the resource could not be found (in the local store
+	 *                                       and on the network)
 	 */
 	public FocusSample getSample(String url) throws FocusMissingResourceException
 	{
@@ -494,7 +692,7 @@ public class DataManager
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
 		}
 
-		FocusSample fs = null;
+		FocusSample fs;
 		try {
 			fs = (FocusSample) (this.get(url, FocusSample.class));
 		}
@@ -508,12 +706,42 @@ public class DataManager
 		return fs;
 	}
 
+	/**
+	 * Get a sample history.
+	 * <p/>
+	 * FIXME give a proper description of the output
+	 *
+	 * @param url    The URL of the resource for which we want an history
+	 * @param params The parameters to be passed to the history retrieving service
+	 * @return A {@link FocusSample} containing the history of intereset
+	 * <p/>
+	 * TODO to implement
+	 */
+	public FocusSample getHistory(String url, String params)
+	{
+		throw new FocusNotImplementedException("DataManager.getHistory()");
+	}
 
 	/**
-	 * Retrieve a sample that is stored in the local database (or in the cache), but do not get it from the network
+	 * Lookup for data based on their type.
+	 * <p/>
+	 * FIXME give a proper description of the output
 	 *
-	 * @param url
-	 * @return
+	 * @param type The FOCUS object type of interest,
+	 *             e.g. http://reference.focusnet.eu/schemas/focus-data-sample/v1.0
+	 * @return A {@link FocusSample} containing references to resources matching the lookup.
+	 */
+	public FocusSample getLookup(String type)
+	{
+		throw new FocusNotImplementedException("DataManager.getLookup()");
+	}
+
+	/**
+	 * Retrieve a sample that is stored in the local database (or in the cache), but do not
+	 * get it from the network
+	 *
+	 * @param url the URL of the resource to get
+	 * @return a FocusObject
 	 */
 	public FocusObject getLocalObject(String url)
 	{
@@ -538,9 +766,17 @@ public class DataManager
 		return null;
 	}
 
-
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
+	 * <p/>
+	 * This method first tries to acquire the resource from the local database and then from the
+	 * network if not available. It also stores the object in the local database such that it
+	 * can later be quickly accessed.
+	 *
+	 * @param url         The URL of the resource to retrieve
+	 * @param targetClass The retrieved object will be converted to a Java object matching this class
+	 * @return A FocusObject, or mor specifically one of its inherited classes matching {@code targetclass}
+	 * @throws IOException If an inrecoverable netowrk error occurs
 	 */
 	private FocusObject get(String url, Class targetClass) throws IOException
 	{
@@ -601,20 +837,26 @@ public class DataManager
 	}
 
 	/**
-	 * Create a new data entry
+	 * Create a new FOCUS data object and send it to the its target location on the network.
 	 * <p/>
-	 * a POST is seen as a data commit, so we call data.commit()
+	 * The resource is also saved in the local database for later quicker use. If network is not
+	 * available, it is only stored in this database and will be pushed to the network later
+	 * during periodic operations performed by {@link CronService}.
 	 *
-	 * @param data The FocusObject representing the data to POST
+	 * @param data The FocusObject representing the data to create
+	 * @return {@code ResourceOperationsStatus.SUCESS} on success,
+	 * {@code ResourceOperationsStatus.FAILURE} on failure, or
+	 * {@code ResourceOperationsStatus.PENDING} on success but without
+	 * network connectivity.
 	 */
-	public ResourceOperationStatus post(FocusObject data)
+	public ResourceOperationStatus create(FocusObject data)
 	{
 		String url = data.getUrl();
-		boolean is_special_url = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
+		boolean isSpecialUrl = url.startsWith(FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX);
 
 		// store in local database, with the "toPost" flag
 		Sample sample = Sample.cloneFromFocusObject(data);
-		if (!is_special_url) {
+		if (!isSpecialUrl) {
 			sample.setToPost(true);
 		}
 
@@ -626,11 +868,8 @@ public class DataManager
 			this.databaseAdapter.close();
 		}
 
-		// make it accessible through the cache
-// 		this.cache.put(url, data);
-
 		// push on the network
-		if (is_special_url) {
+		if (isSpecialUrl) {
 			return ResourceOperationStatus.SUCCESS;
 		}
 
@@ -638,15 +877,15 @@ public class DataManager
 			return ResourceOperationStatus.PENDING;
 		}
 
-		boolean net_success = false;
+		boolean netSuccess;
 		try {
 			HttpResponse r = this.net.post(url, data);
-			net_success = r.isSuccessful();
+			netSuccess = r.isSuccessful();
 		}
 		catch (IOException ex) {
-			net_success = false;
+			netSuccess = false;
 		}
-		if (net_success) { // if POST on network, also remove POST flag in local db copy
+		if (netSuccess) { // if POST on network, also remove POST flag in local db copy
 			sample.setToPost(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
@@ -661,21 +900,19 @@ public class DataManager
 	}
 
 	/**
-	 * PUT some data to a remote server.
+	 * Upate an existing FOCUS data object and send it to the its target location on the network.
 	 * <p/>
-	 * Methods calling this object do not have to take care of the FocusObject attributes, e.g.
-	 * version, creationTime, editionTime, owner, editor, etc. They should only modify the object's
-	 * specific attributes, such as the content of the data Map for FocusSample objects.
-	 * <p/>
-	 * We consider that we are provided with a *copy* of the FocusObject we update. At the end of
-	 * this method, we replace the old object in our RAM cache with the new one, such that the old
-	 * one will be garbage collected.
-	 * <p/>
-	 * a PUT is seen as a data commit, so we call data.commit()
+	 * The resource is also saved in the local database for later quicker use. If network is not
+	 * available, it is only stored in this database and will be pushed to the network later
+	 * during periodic operations performed by {@link CronService}.
 	 *
-	 * @param data The FocusObject data to PUT
+	 * @param data The FocusObject representing the data to update.
+	 * @return {@code ResourceOperationsStatus.SUCESS} on success,
+	 * {@code ResourceOperationsStatus.FAILURE} on failure, or
+	 * {@code ResourceOperationsStatus.PENDING} on success but without
+	 * network connectivity.
 	 */
-	public ResourceOperationStatus put(FocusObject data)
+	public ResourceOperationStatus update(FocusObject data)
 	{
 		String url = data.getUrl();
 
@@ -698,22 +935,19 @@ public class DataManager
 			this.databaseAdapter.close();
 		}
 
-		// make it accessible through the cache
-		this.cache.put(url, data);
-
 		// network PUT
 		if (!this.net.isNetworkAvailable()) {
 			return ResourceOperationStatus.PENDING;
 		}
 
-		boolean net_success = false;
+		boolean netSuccess;
 		try {
-			net_success = this.net.put(url, data).isSuccessful();
+			netSuccess = this.net.put(url, data).isSuccessful();
 		}
 		catch (IOException ex) {
-			net_success = false;
+			netSuccess = false;
 		}
-		if (net_success) { // if PUT on network, also remove PUT flag in local db copy
+		if (netSuccess) { // if PUT on network, also remove PUT flag in local db copy
 			sample.setToPut(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
@@ -728,9 +962,17 @@ public class DataManager
 	}
 
 	/**
-	 * DELETE a resource
+	 * Delete an existing FOCUS data object, both locally and on its target location on the network.
+	 * <p/>
+	 * If network is not available, the deletion information is only stored in the local database
+	 * and deletion will be performed on the network later during periodic operations performed by
+	 * {@link CronService}.
 	 *
-	 * @param url The URL identifying the resource to DELETE.
+	 * @param url The URL of the resource to delete.
+	 * @return {@code ResourceOperationsStatus.SUCESS} on success,
+	 * {@code ResourceOperationsStatus.FAILURE} on failure, or
+	 * {@code ResourceOperationsStatus.PENDING} on success but without
+	 * network connectivity.
 	 */
 	public ResourceOperationStatus delete(String url)
 	{
@@ -755,15 +997,15 @@ public class DataManager
 				return ResourceOperationStatus.PENDING;
 			}
 
-			boolean net_success = false;
+			boolean netSuccess;
 			try {
-				net_success = this.net.delete(url).isSuccessful();
+				netSuccess = this.net.delete(url).isSuccessful();
 			}
 			catch (IOException ex) {
-				net_success = false;
+				netSuccess = false;
 			}
 
-			if (net_success) { // if remove on network, also remove copy in local db
+			if (netSuccess) { // if remove on network, also remove copy in local db
 				dao.delete(url);
 				return ResourceOperationStatus.SUCCESS;
 			}
@@ -775,47 +1017,9 @@ public class DataManager
 	}
 
 	/**
-	 * Get the history for a url, according to provided parameters. This will call a remote service.
-	 * <p/>
-	 * HistorySample = { data: field1: [], field2: []}
+	 * Adds the specified instance to the list of currently active instances.
 	 *
-	 * @param url
-	 * @param params
-	 * @return
-	 */
-	public FocusSample getHistorySample(String url, String params)
-	{
-		return null;
-		// 	throw new FocusNotImplementedException("getHistorySample");
-	}
-
-	/**
-	 * Look for objects that are of the specified type and context. This will call a remote service.
-	 * <p/>
-	 * LookupSample = { data: urls: []}
-	 *
-	 * @param context
-	 * @param type
-	 * @return
-	 */
-	public FocusSample getLookupSample(String context, String type)
-	{
-		return null;
-// 		throw new FocusNotImplementedException("getLookupSample");
-	}
-
-	/**
-	 * Trigger saving of user preferences
-	 */
-	public void saveUserPreferences()
-	{
-		this.put(this.userPreferences);
-	}
-
-	/**
-	 * Adds the specified AbstractInstance to the list of currently active instances.
-	 *
-	 * @param i
+	 * @param i The instance to add
 	 */
 	public void registerActiveInstance(AbstractInstance i)
 	{
@@ -823,9 +1027,9 @@ public class DataManager
 	}
 
 	/**
-	 * Removes the specified AbstractInstance from the list of active instances.
+	 * Removes the specified instance from the list of active instances.
 	 *
-	 * @param i
+	 * @param i the instance to remove
 	 */
 	public void unregisterActiveInstance(AbstractInstance i)
 	{
@@ -834,13 +1038,14 @@ public class DataManager
 
 	/**
 	 * Clean the samples table from useless entries.
+	 *
+	 * @deprecated may not be necessary anymore as this will be done by the SyncData cron service -- TODO FIXME
 	 */
 	public void cleanDataStore()
 	{
 		if (!this.isApplicationReady()) {
 			return;
 		}
-
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
 			dao.cleanTable();
@@ -853,6 +1058,9 @@ public class DataManager
 	/**
 	 * Sync data currently on the client side with the ones of the backends,
 	 * and then retrieve latest versions of resources.
+	 *
+	 * @return true on successful completion, false if the operation could not be performed at all.
+	 * @throws FocusMissingResourceException if any of the data could not FIXME check why we have this exception. I should catch it and return false?
 	 */
 	public boolean syncData() throws FocusMissingResourceException
 	{
@@ -864,24 +1072,26 @@ public class DataManager
 			return false;
 		}
 
-		this.pushLocalModifications();
+		this.pushLocalModifications(); // FIXME this one returns the FocusMissingResourceException
 		this.rebuildApplicationData();
 		return true;
 	}
 
 	/**
-	 * Push local modifications to the backends
+	 * Push local modifications to the network
+	 *
+	 * @throws FocusMissingResourceException FIXME complete documentation
 	 */
 	private void pushLocalModifications() throws FocusMissingResourceException
 	{
 		// POST
-		String[] to_post_urls;
-		int report_failure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS; // report_failure is a bit mask
+		String[] toPostUrls;
+		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS; // report_failure is a bit mask
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
-			to_post_urls = dao.getAllMarkedForPost();
-			for (String url : to_post_urls) {
-				FocusObject fo = this.getLocalObject(url);
+			toPostUrls = dao.getAllMarkedForPost();
+			for (String url : toPostUrls) {
+				FocusObject fo = this.getLocalObject(url); // FIXME opens a dao by itself, so 2 dao acquired, which may not be good and we close the db in this method and in the called method
 				if (fo == null) {
 					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (POST).");
 				}
@@ -892,19 +1102,19 @@ public class DataManager
 						dao.update(sample);
 					}
 					else {
-						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
+						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
+					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 
 			// PUT
-			String[] to_put_urls;
-			to_put_urls = dao.getAllMarkedForPut();
-			for (String url : to_put_urls) {
-				FocusObject fo = this.getLocalObject(url);
+			String[] toPutUrls;
+			toPutUrls = dao.getAllMarkedForPut();
+			for (String url : toPutUrls) {
+				FocusObject fo = this.getLocalObject(url); // FIXME opens a dao by itself, so 2 dao acquired, which may not be good and we close the db in this method and in the called method
 				if (fo == null) {
 					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (PUT).");
 				}
@@ -915,67 +1125,83 @@ public class DataManager
 						dao.update(sample);
 					}
 					else {
-						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
+						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
+					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 
 			// DELETE
-			String[] to_delete_urls;
-			to_delete_urls = dao.getAllMarkedForDeletion();
-			for (String url : to_delete_urls) {
+			String[] toDeleteUrls;
+			toDeleteUrls = dao.getAllMarkedForDeletion();
+			for (String url : toDeleteUrls) {
 				try {
 					if (this.net.delete(url).isSuccessful()) {
 						dao.delete(url);
 					}
 					else {
-						report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
+						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 					}
 				}
 				catch (IOException e) {
-					report_failure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
+					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 				}
 			}
 		}
 		finally {
 			this.databaseAdapter.close();
 		}
-		if (report_failure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
-			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + report_failure);
+		if (reportFailure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
+			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + reportFailure);
 		}
 	}
-
 
 	/**
-	 * Get latest versions of all resources required for running the application, and replace the Application DataManager
-	 * <p/>
-	 * No need to take care of activeInstances. They will simply be rebuilt on next Activity loading.
-	 * <p/>
-	 * FIXME FIXME FIXME are we really loading new data, or do they come from the local cache? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 * <p/>
-	 * <p/>
-	 * FIXME also, what happens if user / preferences / app content have changed? should be reload full app? -> should be ok like this as we change the data manager being used.
+	 * Retrieve the size of the current local database.
+	 *
+	 * @return The size in bytes.
 	 */
-	public void rebuildApplicationData()
-	{
-		boolean must_recover = false;
-		DataManager new_dm = new DataManager();
-		try {
-			new_dm.retrieveApplicationData();
-		}
-		catch (FocusMissingResourceException ex) {
-			must_recover = true;
-		}
-		if (!must_recover) {
-			FocusApplication.getInstance().replaceDataManager(new_dm);
-		}
-	}
-
 	public long getDatabaseSize()
 	{
 		return this.databaseAdapter.getDatabaseSize();
 	}
+
+	/**
+	 * Get the GSON object used for data conversion in our app
+	 *
+	 * @return a pointer to the GSON object, which is already properly configured for our
+	 * application case.
+	 */
+	public Gson getGson()
+	{
+		return this.gson;
+	}
+
+	/**
+	 * Get the network manager.
+	 *
+	 * @return The current NetworkManager.
+	 */
+	public NetworkManager getNetworkManager()
+	{
+		return this.net;
+	}
+
+	/**
+	 * Delete non-mandatory data structure for freeing memory.
+	 * <p/>
+	 * The application will continue to work, but might require more disk accesses and will
+	 * then be slower.
+	 */
+	public void freeMemory()
+	{
+		// the in-memory cache is anyway delete after the building of the application content
+		// instance, but it is not required for the this task to complete, so we may garbabe collect
+		// its content, and the application will then fallback to the local database when accessing
+		// resources.
+		this.cache = new HashMap<>();
+	}
 }
+

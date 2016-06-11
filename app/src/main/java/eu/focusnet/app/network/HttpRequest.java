@@ -129,7 +129,6 @@ public class HttpRequest
 		if (url.toString().startsWith("https://")) {
 			SSLSocketFactory socket_factory =
 					app
-					.getDataManager()
 					.getNetworkManager()
 					.getSSLContext()
 					.getSocketFactory();

@@ -21,40 +21,39 @@
 package eu.focusnet.app.ui.util;
 
 /**
- * UI-related constants
+ * UI-related constants.
  */
 public class Constant
 {
+	/**
+	 * The layout in pages is orgianized based on this number of columns.
+	 */
 	public static final int LAYOUT_NUM_OF_COLUMNS = 4;
 	public static final String WIDGET_LAYOUT_OF = "of";
 
 	// Extra parameters names
-	public static final String UI_EXTRA_PROJECT_PATH = "eu.focusnet.extra.PROJECT_PATH",
-			UI_EXTRA_PAGE_PATH = "eu.focusnet.extra.PAGE_PATH",
-			UI_EXTRA_TITLE = "eu.focusnet.extra.TITLE",
-			UI_EXTRA_PATH = "eu.focusnet.extra.PATH",
-			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.extra.NOTIFICATION_ID",
-			UI_EXTRA_IMAGE_URI = "eu.focusnet.extra.IMAGE_URI",
-			UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.extra.LOADING_INFO_TEXT";
+	public static final String UI_EXTRA_PROJECT_PATH = "eu.focusnet.app.extra.PROJECT_PATH",
+			UI_EXTRA_PAGE_PATH = "eu.focusnet.app.extra.PAGE_PATH",
+			UI_EXTRA_TITLE = "eu.focusnet.app.extra.TITLE",
+			UI_EXTRA_PATH = "eu.focusnet.app.extra.PATH",
+			UI_EXTRA_NOTIFICATION_ID = "eu.focusnet.app.extra.NOTIFICATION_ID",
+			UI_EXTRA_IMAGE_URI = "eu.focusnet.app.extra.IMAGE_URI",
+			UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.app.extra.LOADING_INFO_TEXT",
+			UI_EXTRA_FRAGMENT_TITLE = "eu.focusnet.app.extra.FRAGMENT_TITLE",
+			UI_EXTRA_FRAGMENT_POSITION = "eu.focusnet.app.extra.FRAGMENT_POSITION",
+			UI_EXTRA_LAYOUT_HEIGHT = "eu.focusnet.app.extra.LAYOUT_HEIGHT",
+			UI_EXTRA_LAYOUT_WEIGHT = "eu.focusnet.app.extra.LAYOUT_WEIGHT",
+			UI_EXTRA_LAYOUT_POSITION_IN_ROW = "eu.focusnet.app.extra.POSITION_IN_ROW";
 
-	// Extra for external app
+	// Extras for communication with third-party apps
 	public static final String
-			UI_EXTRA_EXTERNAL_APP_INPUT = "eu.focusnet.extra.EXTERNAL_APP_INPUT",
-			UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.extra.EXTERNAL_APP_OUTPUT";
-
-	// and bundle
-	public static final String UI_BUNDLE_FRAGMENT_TITLE = "eu.focusnet.bundle.FRAGMENT_TITLE",
-			UI_BUNDLE_FRAGMENT_POSITION = "eu.focusnet.bundle.FRAGMENT_POSITION",
-			UI_BUNDLE_LAYOUT_HEIGHT = "eu.focusnet.bundle.LAYOUT_HEIGHT",
-			UI_BUNDLE_LAYOUT_WEIGHT = "eu.focusnet.bundle.LAYOUT_WEIGHT",
-			UI_BUNDLE_LAYOUT_POSITION_IN_ROW = "eu.focusnet.bundle.POSITION_IN_ROW";
+			UI_EXTRA_EXTERNAL_APP_INPUT = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT",
+			UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.app.extra.EXTERNAL_APP_OUTPUT";
 
 	// fragments identifiers
 	public static final int UI_MENU_ENTRY_PROJECTS_LISTING = 1,
 			UI_MENU_ENTRY_BOOKMARK = 2,
 			UI_MENU_ENTRY_ABOUT = 3,
 			UI_MENU_ENTRY_LOGOUT = 4;
-
-
 
 }

@@ -20,19 +20,20 @@
 
 package eu.focusnet.app.exception;
 
-import eu.focusnet.app.FocusApplication;
-
 /**
  * This Exception is triggered when an unexpected type is encountered.
  * <p/>
- * This is a checked exception, so we will try to survive its occurrence as much as possible, and if that is not possible, we will throw an
- * unchecked exception (i.e. FocusInternalErrorException)
+ * This is a checked exception, and we will try to survive this situation as much as possible.
  */
 public class FocusBadTypeException extends Exception
 {
+	/**
+	 * Exception constructor
+	 *
+	 * @param detailMessage A message summarizing the encountered issue
+	 */
 	public FocusBadTypeException(String detailMessage)
 	{
 		super(detailMessage);
-		FocusApplication.reportError(this);
 	}
 }

@@ -96,7 +96,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 */
 	public void onClick(View view)
 	{
-		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
+		if (FocusApplication.getInstance().getNetworkManager().isNetworkAvailable()) {
 
 			final Thread login = new Thread() {
 				public void run()

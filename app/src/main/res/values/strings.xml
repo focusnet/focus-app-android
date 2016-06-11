@@ -38,7 +38,7 @@
         <item>FOCUS Pilot Case I - Winterthur</item>
         <item>FOCUS Pilot Case III - Arnsberg</item>
     </string-array>
-    <string-array name="demo_use_cases_app_cntent_uris">
+    <string-array name="demo_use_cases_app_content_uris">
         <item>http://focus.yatt.ch/debug/app-content-5.json</item>
         <item>http://focus.yatt.ch/debug/app-content-5.json</item>
         <item>http://focus.yatt.ch/debug/app-content-4.json</item>

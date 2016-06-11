@@ -23,7 +23,6 @@ package eu.focusnet.app.ui.fragment.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Network;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -40,8 +39,6 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -50,7 +47,6 @@ import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpRequest;
-import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.ui.util.PropertiesHelper;
@@ -214,13 +210,13 @@ public class Html5WidgetFragment extends WidgetFragment
 		/**
 		 * POST Focus data
 		 * <p/>
-		 * post data to localstore (will later be pushed to server)
+		 * create data to localstore (will later be pushed to server)
 		 */
 		@JavascriptInterface
 		public DataManager.ResourceOperationStatus postFocusData(String url, String data)
 		{
 			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-			return this.dm.post(fs);
+			return this.dm.create(fs);
 		}
 
 		/**
@@ -229,10 +225,10 @@ public class Html5WidgetFragment extends WidgetFragment
 		 * register data to local store (will later be pushed to server)
 		 */
 		@JavascriptInterface
-		public DataManager.ResourceOperationStatus putFocusData(String url, String data)
+		public DataManager.ResourceOperationStatus putFocusData(String url, String jsonData)
 		{
-			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-			return this.dm.put(fs);
+			FocusSample fs = (FocusSample) FocusObject.factory(jsonData, FocusSample.class);
+			return this.dm.update(fs);
 		}
 
 		/**

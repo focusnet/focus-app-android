@@ -240,11 +240,11 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 			Bundle bundle = fragment.getArguments();
 
 			// Set title
-			String title = (String) bundle.get(Constant.UI_BUNDLE_FRAGMENT_TITLE);
+			String title = (String) bundle.get(Constant.UI_EXTRA_FRAGMENT_TITLE);
 			setTitle(title);
 
 			// Highlight the item
-			int position = (int) bundle.get(Constant.UI_BUNDLE_FRAGMENT_POSITION);
+			int position = (int) bundle.get(Constant.UI_EXTRA_FRAGMENT_POSITION);
 			highlightSelectedMenuItem(position);
 
 			// close the drawer if the user clicks the back button
@@ -286,7 +286,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 				{
 					public void run()
 					{
-						FocusApplication.getInstance().getDataManager().reset();
+						FocusApplication.getInstance().getDataManager().logout();
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
 							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
@@ -307,8 +307,8 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 			int effectivePosition = position - 1;
 			String title = navMenuTitles[effectivePosition];
 			Bundle bundle = new Bundle();
-			bundle.putString(Constant.UI_BUNDLE_FRAGMENT_TITLE, title);
-			bundle.putInt(Constant.UI_BUNDLE_FRAGMENT_POSITION, effectivePosition);
+			bundle.putString(Constant.UI_EXTRA_FRAGMENT_TITLE, title);
+			bundle.putInt(Constant.UI_EXTRA_FRAGMENT_POSITION, effectivePosition);
 			fragment.setArguments(bundle);
 			FragmentManager.replaceFragment(R.id.frame_container, fragment, getFragmentManager());
 

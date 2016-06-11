@@ -16,6 +16,14 @@ This feature will be disabled when the application enters production stage.
 
 we use git sumbodules for fi.simosol.focus.map. Be careful, submodules are not easy not handle.
 
+
+## Third-party software
+
+Android:
+
+Webapps:
+- jQuery
+- SIMOSOL: 
 ## License
 
 This software is released under the commercial-friendly and open-source MIT license.

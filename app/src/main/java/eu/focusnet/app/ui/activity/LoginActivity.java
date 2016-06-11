@@ -69,7 +69,7 @@ public class LoginActivity extends Activity
 		//test If the device is connected to the internet, if true
 		// test then the given credentials otherwise display an error message(toast) to the user
 
-		if (FocusApplication.getInstance().getDataManager().getNetworkManager().isNetworkAvailable()) {
+		if (FocusApplication.getInstance().getNetworkManager().isNetworkAvailable()) {
 			String username = ((EditText) findViewById(R.id.login_username_editText)).getText().toString();
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
 			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();

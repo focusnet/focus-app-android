@@ -21,10 +21,17 @@
 package eu.focusnet.app.exception;
 
 /**
- * Exception triggered when a resource cannot be retrieved when it should.
+ * A FocusMissingResourceException is triggered when a resource cannot be retrieved when it should.
+ * <p/>
+ * This is a checked exception.
  */
 public class FocusMissingResourceException extends Exception
 {
+	/**
+	 * Exception constructor
+	 *
+	 * @param detailMessage Message summarizing the encountered issue
+	 */
 	public FocusMissingResourceException(String detailMessage)
 	{
 		super(detailMessage);

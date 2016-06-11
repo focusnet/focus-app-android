@@ -24,12 +24,26 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
-
+/**
+ * A custom lifecycle manager that allows use to keep track of the currently active
+ * Activity and therefore restart it when necessary.
+ *
+ * FIXME I don't remember exactly why I specifically needed that. Only for restarting activities?
+ */
 public class FocusApplicationActivityLifecycleHandler implements Application.ActivityLifecycleCallbacks
 {
 
+	/**
+	 * Currently active Activity
+	 */
 	private Activity currentActivity;
 
+	/**
+	 * When creating a new Activity, do set it as the active one.
+	 *
+	 * @param activity           inherited
+	 * @param savedInstanceState inherited
+	 */
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState)
 	{
@@ -39,7 +53,6 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 	@Override
 	public void onActivityStarted(Activity activity)
 	{
-
 
 	}
 
@@ -68,6 +81,12 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 	}
 
 
+	/**
+	 * When an activity is destroyed, do not keep any reference to it, just in case there won't
+	 * be any new activity in the future.
+	 *
+	 * @param activity inherited
+	 */
 	@Override
 	public void onActivityDestroyed(Activity activity)
 	{

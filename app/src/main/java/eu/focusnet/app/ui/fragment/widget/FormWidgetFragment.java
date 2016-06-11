@@ -84,7 +84,7 @@ public class FormWidgetFragment extends WidgetFragment
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
-			layoutLabel.rightMargin = UiHelper.dp_to_pixels(10, this.context);
+			layoutLabel.rightMargin = UiHelper.dpToPixels(10, this.context);
 			label.setLayoutParams(layoutLabel);
 
 			tr.addView(label);
@@ -128,7 +128,7 @@ public class FormWidgetFragment extends WidgetFragment
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
-			layoutLabel.rightMargin = UiHelper.dp_to_pixels(10, this.context);
+			layoutLabel.rightMargin = UiHelper.dpToPixels(10, this.context);
 			label.setLayoutParams(layoutLabel);
 
 			tr.addView(label);
@@ -198,7 +198,7 @@ public class FormWidgetFragment extends WidgetFragment
 		label.setText(f.getLabel());
 		label.setGravity(Gravity.TOP);
 		TableRow.LayoutParams layout = new TableRow.LayoutParams();
-		layout.rightMargin = UiHelper.dp_to_pixels(10, this.context);
+		layout.rightMargin = UiHelper.dpToPixels(10, this.context);
 		label.setLayoutParams(layout);
 
 		EditText textfield = new EditText(this.context);

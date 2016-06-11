@@ -25,6 +25,8 @@ import android.app.FragmentTransaction;
 
 import eu.focusnet.app.R;
 
+// FIXME TODO JAVADOC
+
 /**
  * Manage fragments
  * <p/>
@@ -46,6 +48,7 @@ public class FragmentManager
 		}
 	}
 
+	// this only adds widget fragments, so probably not same purpose.
 	public static void addFragment(int containerViewId, Fragment fragment, android.app.FragmentManager fragmentManager)
 	{
 		FragmentTransaction fragTrans = fragmentManager.beginTransaction();

@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import eu.focusnet.app.R;
@@ -78,8 +77,8 @@ public class TableWidgetFragment extends WidgetFragment
 	@Override
 	protected void alterReferenceHeight()
 	{
-		int computed = UiHelper.dp_to_pixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
-		int max = UiHelper.dp_to_pixels((int) this.getDisplayHeightInDp(), this.getActivity());
+		int computed = UiHelper.dpToPixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
+		int max = UiHelper.dpToPixels((int) this.getDisplayHeightInDp(), this.getActivity());
 		this.referenceHeight = Math.min(computed, max);
 	}
 

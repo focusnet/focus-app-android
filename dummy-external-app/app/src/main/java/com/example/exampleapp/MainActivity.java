@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity
 	 * All applications being used as FOCUS Mobile external apps follow this convention
 	 */
 	private static final String
-			FOCUS_INPUT_EXTRA = "FOCUS_INPUT",
-			FOCUS_OUTPUT_EXTRA = "FOCUS_OUTPUT";
+			FOCUS_INPUT_EXTRA = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT",
+			FOCUS_OUTPUT_EXTRA = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT";
 
 	/**
 	 * Instantiate the activity.
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 		setSupportActionBar(toolbar);
 
 		// acquire the input extra
-		// this is a JSON string, that can be converted using GSON FIXME TODO Add example
+		// this is a JSON string, that can be converted using GSON
 		String inputExtraValue = getIntent().getStringExtra(FOCUS_INPUT_EXTRA);
 		if (inputExtraValue == null) {
 			inputExtraValue = "";

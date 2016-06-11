@@ -66,8 +66,8 @@ public class TableWidgetInstance extends WidgetInstance
 	{
 		this.numberOfColumns = 0;
 		this.maxNumberOfRows = 0;
-		ArrayList<String> tmp_headers = new ArrayList<>();
-		ArrayList<ArrayList<String>> tmp_values = new ArrayList<>();
+		ArrayList<String> tmpHeaders = new ArrayList<>();
+		ArrayList<ArrayList<String>> tmpValues = new ArrayList<>();
 		ArrayList<Map> map = (ArrayList<Map>) this.config.get(CONFIG_LABEL_COLUMNS);
 
 		// try {
@@ -76,15 +76,15 @@ public class TableWidgetInstance extends WidgetInstance
 			String header;
 			ArrayList<String> values;
 
-			Object raw_header = m.get(CONFIG_LABEL_HEADER);
-			Object raw_values = m.get(CONFIG_LABEL_VALUES);
-			if (raw_header == null || raw_values == null) {
+			Object rawHeader = m.get(CONFIG_LABEL_HEADER);
+			Object rawValues = m.get(CONFIG_LABEL_VALUES);
+			if (rawHeader == null || rawValues == null) {
 				this.markAsInvalid();
 				return;
 			}
 			try {
-				header = TypesHelper.asString(raw_header);
-				values = TypesHelper.asArrayOfStrings(raw_values);
+				header = TypesHelper.asString(rawHeader);
+				values = TypesHelper.asArrayOfStrings(rawValues);
 			}
 			catch (FocusBadTypeException e) {
 				this.markAsInvalid();
@@ -110,8 +110,8 @@ public class TableWidgetInstance extends WidgetInstance
 				}
 			}
 
-			tmp_headers.add(header);
-			tmp_values.add(values);
+			tmpHeaders.add(header);
+			tmpValues.add(values);
 			this.maxNumberOfRows = (this.maxNumberOfRows >= values.size()) ? this.maxNumberOfRows : values.size();
 			++this.numberOfColumns;
 		}
@@ -119,8 +119,8 @@ public class TableWidgetInstance extends WidgetInstance
 
 		// transform the headers into the format that the TableWidgetFragment is expecting
 		// an array of Strings
-		this.headers = new String[tmp_headers.size()];
-		this.headers = tmp_headers.toArray(this.headers);
+		this.headers = new String[tmpHeaders.size()];
+		this.headers = tmpHeaders.toArray(this.headers);
 
 		// transform the values into a format that the TableWidgetFragment is expecting
 		// an array of array of Strings, i.e. one array per row of data
@@ -130,7 +130,7 @@ public class TableWidgetInstance extends WidgetInstance
 		for (int i = 0; i < this.maxNumberOfRows; ++i) {
 			for (int j = 0; j < this.numberOfColumns; ++j) {
 				try {
-					this.values[i][j] = tmp_values.get(j).get(i);
+					this.values[i][j] = tmpValues.get(j).get(i);
 				}
 				catch (IndexOutOfBoundsException e) {
 					this.values[i][j] = "";

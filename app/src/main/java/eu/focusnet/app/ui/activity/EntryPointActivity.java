@@ -71,10 +71,10 @@ public class EntryPointActivity extends Activity
 		// Give more information about the currently pending operation
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			String loading_text = (String) extras.get(Constant.UI_EXTRA_LOADING_INFO_TEXT);
-			if (loading_text != null) {
-				TextView load_info = (TextView) findViewById(R.id.load_info);
-				load_info.setText(loading_text);
+			String loadingText = (String) extras.get(Constant.UI_EXTRA_LOADING_INFO_TEXT);
+			if (loadingText != null) {
+				TextView loadInfo = (TextView) findViewById(R.id.load_info);
+				loadInfo.setText(loadingText);
 			}
 		}
 
@@ -142,7 +142,7 @@ public class EntryPointActivity extends Activity
 		protected void onPostExecute(Void v)
 		{
 			// sleep() is blocking, so let's create a new thread
-			final Thread wait_and_redirect = new Thread()
+			final Thread waitAndRedirect = new Thread()
 			{
 				public void run()
 				{
@@ -171,17 +171,17 @@ public class EntryPointActivity extends Activity
 					}
 				}
 			};
-			wait_and_redirect.start();
+			waitAndRedirect.start();
 
 			// display the remediation dialog if necessary
 			if (this.remediationDialog) {
 				LayoutInflater inflater = LayoutInflater.from(context);
-				TextView dialog_content = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
-				dialog_content.setText(getString(R.string.connected_to_web));
+				TextView dialogContent = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
+				dialogContent.setText(getString(R.string.connected_to_web));
 
 				FocusDialogBuilder builder = new FocusDialogBuilder(this.context)
 						.setTitle(getString(R.string.fail_load_content_title))
-						.insertContent(dialog_content)
+						.insertContent(dialogContent)
 						.removeNegativeButton()
 						.removeNeutralButton()
 						.setCancelable(false)

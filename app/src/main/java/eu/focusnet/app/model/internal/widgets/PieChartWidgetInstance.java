@@ -87,25 +87,25 @@ public class PieChartWidgetInstance extends WidgetInstance
 			Double value;
 			String label;
 			try {
-				Object value_raw = m.get(CONFIG_LABEL_VALUE);
-				if (value_raw == null) {
+				Object valueRaw = m.get(CONFIG_LABEL_VALUE);
+				if (valueRaw == null) {
 					this.markAsInvalid();
 					return;
 				}
 				value = TypesHelper.asDouble(
 						this.dataContext.resolve(
-								TypesHelper.asString(value_raw)
+								TypesHelper.asString(valueRaw)
 						)
 				);
 
-				Object label_raw = m.get(CONFIG_LABEL_LABEL);
-				if (label_raw == null) {
+				Object labelRaw = m.get(CONFIG_LABEL_LABEL);
+				if (labelRaw == null) {
 					label = "";
 				}
 				else {
 					label = TypesHelper.asString(
 							this.dataContext.resolve(
-									TypesHelper.asString(label_raw)
+									TypesHelper.asString(labelRaw)
 							)
 					);
 				}

@@ -157,8 +157,8 @@ public class ProjectInstance extends AbstractInstance
 		}
 
 		for (PageReference s : source) {
-			String page_id = s.getPageid();
-			PageTemplate pageTpl = this.template.findPage(page_id);
+			String pageid = s.getPageid();
+			PageTemplate pageTpl = this.template.findPage(pageid);
 
 			// if we have an iterator, this means that we must construct multiple times the same page,
 			// but with a different data context each time
@@ -180,9 +180,9 @@ public class ProjectInstance extends AbstractInstance
 					continue;
 				}
 				for (String url : urls) {
-					DataContext new_page_ctx = new DataContext(this.dataContext);
+					DataContext newPageCtx = new DataContext(this.dataContext);
 					try {
-						new_page_ctx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
+						newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
 					}
 					catch (FocusMissingResourceException ex) {
 						// should not happen, but let's continue silently
@@ -193,7 +193,7 @@ public class ProjectInstance extends AbstractInstance
 					// the guid is adapted in the PageInstance constructor
 					PageInstance page;
 					try {
-						page = new PageInstance(pageTpl, type, new_page_ctx);
+						page = new PageInstance(pageTpl, type, newPageCtx);
 					}
 					catch (FocusMissingResourceException ex) {
 						FocusApplication.reportError(ex);
@@ -203,8 +203,8 @@ public class ProjectInstance extends AbstractInstance
 					for (WidgetReference wr : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
 
-						DataContext new_widget_ctx = new DataContext(page.getDataContext());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
+						DataContext newWidgetCtx = new DataContext(page.getDataContext());
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newWidgetCtx); // FIXME we may just pass the context without creating a new one
 						page.addWidget(wi.getGuid(), wi);
 					}
 
@@ -216,9 +216,9 @@ public class ProjectInstance extends AbstractInstance
 			else {
 				// no iterator, render a simple PageInstance
 				PageInstance page;
-				DataContext new_page_ctx = new DataContext(this.dataContext);
+				DataContext newPageCtx = new DataContext(this.dataContext);
 				try {
-					page = new PageInstance(pageTpl, type, new_page_ctx);
+					page = new PageInstance(pageTpl, type, newPageCtx);
 				}
 				catch (FocusMissingResourceException ex) {
 					FocusApplication.reportError(ex);
@@ -227,8 +227,8 @@ public class ProjectInstance extends AbstractInstance
 
 				for (WidgetReference wr : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
-					DataContext new_widget_ctx = new DataContext(page.getDataContext());
-					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), new_widget_ctx);
+					DataContext newWidgetCtx = new DataContext(page.getDataContext());
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newWidgetCtx);// FIXME we may just pass the context without creating a new one
 					page.addWidget(wi.getGuid(), wi);
 				}
 
@@ -246,21 +246,17 @@ public class ProjectInstance extends AbstractInstance
 	 * - my-project
 	 * - my-project[http://www.example.org/data/123]
 	 *
-	 * @param expanded_guid
+	 * @param expandedGuid
 	 * @param type          Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
 	 * @return
 	 */
-	public PageInstance getPageFromGuid(String expanded_guid, String type)
+	public PageInstance getPageFromGuid(String expandedGuid, String type)
 	{
-		PageInstance.PageType p1 = PageInstance.PageType.DASHBOARD;
-		String t = type;
-		String t2 = p1.toString();
 		if (type.equals(PageInstance.PageType.DASHBOARD.toString())) {
-			PageInstance p = this.dashboards.get(expanded_guid);
-			return p;
+			return this.dashboards.get(expandedGuid);
 		}
 		if (type.equals(PageInstance.PageType.TOOL.toString())) {
-			return this.tools.get(expanded_guid);
+			return this.tools.get(expandedGuid);
 		}
 		return null;
 	}

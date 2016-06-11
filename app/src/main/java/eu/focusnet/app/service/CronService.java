@@ -153,10 +153,10 @@ public class CronService extends Service
 		// FIXME also we may not be in the application yet (e.g. login screen) -> DataManager->getAppRead()
 		// Acquire a CPU lock to avoid our service to stop running when going into sleep mode
 
-		DataManager old_dm = FocusApplication.getInstance().getDataManager();
+		DataManager oldDm = FocusApplication.getInstance().getDataManager();
 
 		try {
-			old_dm.syncData();
+			oldDm.syncData();
 		}
 		catch (FocusMissingResourceException e) {
 			++this.failures;
@@ -166,7 +166,7 @@ public class CronService extends Service
 			}
 		}
 
-		if (old_dm != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
+		if (oldDm != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
 			FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working? //Answer: I have to take a look at it in details
 			// FIXME what happens if current path does not exist anymore? We may redirect to projects listing in this case (and display sth to user)
 		}

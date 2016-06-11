@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.internal;
 
+import android.support.annotation.Nullable;
+
 import java.util.LinkedHashMap;
 
 import eu.focusnet.app.FocusApplication;
@@ -66,12 +68,13 @@ public class PageInstance extends AbstractInstance
 		this.guid = pageTpl.getGuid();
 		this.type = type;
 		this.widgets = new LinkedHashMap<>();
-		if (dataCtx.get(LABEL_PAGE_ITERATOR) != null) {
-			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
-		}
 		this.dataContext = dataCtx;
 		if (this.dataContext == null) {
 			this.dataContext = new DataContext();
+		}
+
+		if (this.dataContext.get(LABEL_PAGE_ITERATOR) != null) {
+			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
 
 		// register page-specific data to our current data context

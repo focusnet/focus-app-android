@@ -221,13 +221,13 @@ public class SampleDao
 		DataManager dm = FocusApplication.getInstance().getDataManager();
 
 		// Build the list of URLs that we use in our data contexts
-		Set<String> used_urls = new HashSet<>();
+		Set<String> usedUrls = new HashSet<>();
 
 		// register our configuration URLs, which are not part of data contexts
 		try {
-			used_urls.add(dm.getUser().getUrl());
-			used_urls.add(dm.getUserPreferences().getUrl());
-			used_urls.add(dm.getAppContentTemplate().getUrl());
+			usedUrls.add(dm.getUser().getUrl());
+			usedUrls.add(dm.getUserPreferences().getUrl());
+			usedUrls.add(dm.getAppContentTemplate().getUrl());
 		}
 		catch (FocusMissingResourceException e) {
 			// safe to ignore in this case, the clean up will simply not take these exceptions
@@ -236,7 +236,7 @@ public class SampleDao
 
 		// populate the URLs set with the ones we have in the different DataContexts
 		for (Map.Entry<String, String> e : dm.getAppContentInstance().getDataContext().entrySet()) {
-			used_urls.add(e.getValue());
+			usedUrls.add(e.getValue());
 		}
 
 		// foreach project
@@ -245,7 +245,7 @@ public class SampleDao
 
 			// Project data context
 			for (Map.Entry<String, String> e_dc : pi.getDataContext().entrySet()) {
-				used_urls.add(e_dc.getValue());
+				usedUrls.add(e_dc.getValue());
 			}
 
 			// foreach page
@@ -253,7 +253,7 @@ public class SampleDao
 				PageInstance page_instance = e_page.getValue();
 				// Dashboards data context
 				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
-					used_urls.add(e_dc.getValue());
+					usedUrls.add(e_dc.getValue());
 				}
 
 				// foreach widget
@@ -264,7 +264,7 @@ public class SampleDao
 						continue;
 					}
 					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
-						used_urls.add(e_dc.getValue());
+						usedUrls.add(e_dc.getValue());
 					}
 				}
 			}
@@ -272,7 +272,7 @@ public class SampleDao
 				PageInstance page_instance = e_page.getValue();
 				// Tools data context
 				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
-					used_urls.add(e_dc.getValue());
+					usedUrls.add(e_dc.getValue());
 				}
 
 				// foreach widget
@@ -283,7 +283,7 @@ public class SampleDao
 						continue;
 					}
 					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
-						used_urls.add(e_dc.getValue());
+						usedUrls.add(e_dc.getValue());
 					}
 				}
 			}
@@ -326,9 +326,9 @@ public class SampleDao
 		 */
 
 		// register quotes around urls
-		String[] urls_list = (String[]) used_urls.toArray();
-		for (int i = 0; i < urls_list.length; ++i) {
-			urls_list[i] = "'" + urls_list[i] + "'";
+		String[] urlsList = (String[]) usedUrls.toArray();
+		for (int i = 0; i < urlsList.length; ++i) {
+			urlsList[i] = "'" + urlsList[i] + "'";
 		}
 
 		// FIXME better format()

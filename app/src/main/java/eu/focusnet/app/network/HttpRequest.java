@@ -45,8 +45,6 @@ public class HttpRequest
 
 	public static final String PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX = "http-request-header-modification.";
 
-
-
 	public static final String HTTP_METHOD_GET = "GET";
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_PUT = "PUT";

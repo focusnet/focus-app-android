@@ -133,7 +133,7 @@ public class AppContentInstance extends AbstractInstance
 				}
 
 				for (String url : urls) {
-					DataContext new_ctx = new DataContext(this.dataContext);
+					DataContext newCtx = new DataContext(this.dataContext);
 					try {
 						this.dataManager.getSample(url);
 					}
@@ -144,7 +144,7 @@ public class AppContentInstance extends AbstractInstance
 					}
 
 					try {
-						new_ctx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
+						newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 					}
 					catch (FocusMissingResourceException ex) {
 						// should not happen, but let's continue silently
@@ -152,7 +152,7 @@ public class AppContentInstance extends AbstractInstance
 						continue;
 					}
 					// the guid is adapted in the ProjectInstance constructor
-					ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
+					ProjectInstance p = new ProjectInstance(projTpl, newCtx);
 					if (!p.isValid()) {
 						this.markAsInvalid();
 					}
@@ -160,8 +160,8 @@ public class AppContentInstance extends AbstractInstance
 				}
 			}
 			else {
-				DataContext new_ctx = new DataContext(this.dataContext);
-				ProjectInstance p = new ProjectInstance(projTpl, new_ctx);
+				DataContext newCtx = new DataContext(this.dataContext);
+				ProjectInstance p = new ProjectInstance(projTpl, newCtx);
 				if (!p.isValid()) {
 					this.markAsInvalid();
 				}

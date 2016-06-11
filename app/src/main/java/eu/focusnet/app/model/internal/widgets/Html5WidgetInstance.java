@@ -61,13 +61,13 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 	protected void processSpecificConfig()
 	{
 		// webapp identifier
-		Object raw_identifier = this.config.get(CONFIG_WEB_APP_IDENTIFIER_FIELD);
-		if (raw_identifier == null) {
+		Object rawIdentifier = this.config.get(CONFIG_WEB_APP_IDENTIFIER_FIELD);
+		if (rawIdentifier == null) {
 			this.markAsInvalid();
 			return;
 		}
 		try {
-			this.webAppIdentifier = TypesHelper.asString(raw_identifier);
+			this.webAppIdentifier = TypesHelper.asString(rawIdentifier);
 		}
 		catch (FocusBadTypeException ex) {
 			this.markAsInvalid();
@@ -75,36 +75,35 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		}
 
 		// check that the asset exists
-		boolean asset_found = false;
+		boolean assetFound = false;
 		try {
 			AssetManager am = FocusApplication.getInstance().getAssets();
-			asset_found = Arrays.asList(am.list(ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier)).contains(ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
+			assetFound = Arrays.asList(am.list(ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier)).contains(ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
 		}
 		catch (IOException ex) {
 			// ok, asset_found defaults to false.
 		}
-		if (!asset_found) {
+		if (!assetFound) {
 			this.markAsInvalid();
 			return;
 		}
 
 		// context
 		// the context can basically be any string, but is likely to be a unique identifier such as a URI
-		Object raw_context = this.config.get(CONFIG_CONTEXT_FIELD);
-		if (raw_context == null) {
+		Object rawContext = this.config.get(CONFIG_CONTEXT_FIELD);
+		if (rawContext == null) {
 			this.context = "";
 		}
 		else {
 			try {
 				this.context = TypesHelper.asString(
 						this.dataContext.resolve(
-								TypesHelper.asString(raw_context)
+								TypesHelper.asString(rawContext)
 						)
 				);
 			}
 			catch (FocusBadTypeException | FocusMissingResourceException ex) {
 				this.markAsInvalid();
-				return;
 			}
 		}
 	}

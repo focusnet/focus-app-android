@@ -11,6 +11,7 @@ android {
         versionName "v0.9.1"
 
         multiDexEnabled true
+
     }
     productFlavors {
         dev {

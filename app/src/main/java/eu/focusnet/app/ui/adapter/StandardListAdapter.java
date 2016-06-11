@@ -134,9 +134,9 @@ public class StandardListAdapter extends BaseAdapter
 
 							// Dialog payload
 							LayoutInflater inflater = LayoutInflater.from(context);
-							View dialog_content = inflater.inflate(R.layout.dialog_content_bookmark, null);
-							final TextView bookmarkTitle = (TextView) dialog_content.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
-							TextView alternateField = (TextView) dialog_content.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
+							View dialogContent = inflater.inflate(R.layout.dialog_content_bookmark, null);
+							final TextView bookmarkTitle = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
+							TextView alternateField = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
 							alternateField.setVisibility(View.GONE);
 							bookmarkTitle.setVisibility(View.VISIBLE);
 							bookmarkTitle.setText(standardListItem.getTitle());
@@ -145,7 +145,7 @@ public class StandardListAdapter extends BaseAdapter
 							// Dialog building
 							FocusDialogBuilder builder = new FocusDialogBuilder(context)
 									.setTitle(res.getString(isExistingBookmark ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
-									.insertContent(dialog_content)
+									.insertContent(dialogContent)
 									.removeNeutralButton()
 									.setCancelable(false)
 									.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete_bookmark : R.string.ok)))

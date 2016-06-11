@@ -41,7 +41,6 @@ public class DatabaseAdapter
 
 	private DatabaseHelper databaseHelper;
 	private SQLiteDatabase db;
-	private Object sampleDao;
 
 	/**
 	 * A unique identifier for that instance, based on time.
@@ -57,7 +56,6 @@ public class DatabaseAdapter
 	 * is not an incremental version number, but only an instance identifier.
 	 */
 	final private long uniqueInstanceIdentifier;
-
 
 	/**
 	 * Constructor.

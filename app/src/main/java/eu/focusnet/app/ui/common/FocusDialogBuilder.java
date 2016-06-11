@@ -44,35 +44,44 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 	public FocusDialogBuilder setTitle(String title)
 	{
 		TextView dialogTitle = ((TextView) this.rootView.findViewById(R.id.dialog_title));
-		dialogTitle.setText(title);
+		if (dialogTitle != null) {
+			dialogTitle.setText(title);
+		}
 		return this;
 	}
 
 	public FocusDialogBuilder insertContent(View content)
 	{
 		ViewGroup vg = (ViewGroup) this.rootView.findViewById(R.id.dialog_content);
-		vg.addView(content);
-		return this;
+		if (vg != null) {
+			vg.addView(content);
+		}		return this;
 	}
 
 	public FocusDialogBuilder removeNegativeButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_negative);
-		((ViewGroup) b.getParent()).removeView(b);
+		if (b != null) {
+			((ViewGroup) b.getParent()).removeView(b);
+		}
 		return this;
 	}
 
 	public FocusDialogBuilder removeNeutralButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_neutral);
-		((ViewGroup) b.getParent()).removeView(b);
+		if (b != null) {
+			((ViewGroup) b.getParent()).removeView(b);
+		}
 		return this;
 	}
 
 	public FocusDialogBuilder removePositiveButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_positive);
-		((ViewGroup) b.getParent()).removeView(b);
+		if (b != null) {
+			((ViewGroup) b.getParent()).removeView(b);
+		}
 		return this;
 	}
 
@@ -80,21 +89,27 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 	public FocusDialogBuilder setPositiveButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_positive);
-		b.setText(label);
+		if (b != null) {
+			b.setText(label);
+		}
 		return this;
 	}
 
 	public FocusDialogBuilder setNeutralButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_neutral);
-		b.setText(label);
+		if (b != null) {
+			b.setText(label);
+		}
 		return this;
 	}
 
 	public FocusDialogBuilder setNegativeButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_negative);
-		b.setText(label);
+		if (b != null) {
+			b.setText(label);
+		}
 		return this;
 	}
 

@@ -148,12 +148,12 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 
 		ArrayList<AbstractListItem> drawerItems = new ArrayList<AbstractListItem>();
 
-		String app_version = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
+		String appVersion = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
 
 		// FIXME if not in Demo mode we should use be the below line - but we should rewrite this UI component anyway
 		// User user = FocusApplication.getInstance().getDataManager().getUser();
 		// drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), app_version, "", ""));
+		drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), appVersion, "", ""));
 
 		for (int i = 0; i < navMenuTitles.length; i++) {
 			String menuTitle = navMenuTitles[i];
@@ -282,7 +282,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 				drawerLayout.closeDrawer(drawerListMenu); // FIXME would be better to have a proper page.
 				break;
 			case Constant.UI_MENU_ENTRY_LOGOUT:
-				final Thread logout_thread = new Thread()
+				final Thread logoutThread = new Thread()
 				{
 					public void run()
 					{
@@ -297,7 +297,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 						}
 					}
 				};
-				logout_thread.start();
+				logoutThread.start();
 				break;
 			default:
 				break;
@@ -343,7 +343,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 				}
 
 				LayoutInflater inflater = LayoutInflater.from(this);
-				final LinearLayout dialog_content = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
+				final LinearLayout dialogContent = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
 
 				final Context context = this;
 				final FocusDialogBuilder builder = new FocusDialogBuilder(context)
@@ -351,7 +351,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 						.setNegativeButtonText(getString(R.string.cancel))
 						.setPositiveButtonText(getString(R.string.start))
 						.setCancelable(false)
-						.insertContent(dialog_content)
+						.insertContent(dialogContent)
 						.setTitle(getString(R.string.data_sync_title));
 				final AlertDialog dialog = builder.create();
 				dialog.show();
@@ -367,27 +367,27 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 					}
 				});
 
-				final View instructions = dialog_content.findViewById(R.id.dialog_sync_instructions);
-				final View progress = dialog_content.findViewById(R.id.dialog_sync_progress);
-				final View status = dialog_content.findViewById(R.id.dialog_sync_status);
+				final View instructions = dialogContent.findViewById(R.id.dialog_sync_instructions);
+				final View progress = dialogContent.findViewById(R.id.dialog_sync_progress);
+				final View status = dialogContent.findViewById(R.id.dialog_sync_status);
 				final TextView instructionsField = (TextView) instructions.findViewById(R.id.dialog_sync_instructions_msg);
 				final TextView progressField = (TextView) progress.findViewById(R.id.dialog_sync_progress_field);
 				final TextView statusField = (TextView) status.findViewById(R.id.dialog_sync_status_field);
 
 				// update dynamic content (last sync and last data volume)
-				String last_sync;
+				String lastSync;
 				if (this.cronService.getLastSync() == 0) {
-					last_sync = getString(R.string.n_a);
+					lastSync = getString(R.string.n_a);
 				}
 				else {
 					SimpleDateFormat dateFormat = new SimpleDateFormat(eu.focusnet.app.model.util.Constant.DATE_FORMAT);
-					last_sync = dateFormat.format(new Date(this.cronService.getLastSync()));
+					lastSync = dateFormat.format(new Date(this.cronService.getLastSync()));
 				}
 				TextView lastSyncField = (TextView) instructions.findViewById(R.id.dialog_sync_last_sync_field);
-				lastSyncField.setText(getString(R.string.last_sync_label) + last_sync);
+				lastSyncField.setText(getString(R.string.last_sync_label) + lastSync);
 				TextView lastDataVolumeField = (TextView) instructions.findViewById(R.id.dialog_sync_data_volume_field);
-				long raw_db_size = FocusApplication.getInstance().getDataManager().getDatabaseSize();
-				lastDataVolumeField.setText(getString(R.string.last_sync_data_volume_label) + (raw_db_size == 0 ? "N/A" : UiHelper.getFileSize(raw_db_size)));
+				long rawDbSize = FocusApplication.getInstance().getDataManager().getDatabaseSize();
+				lastDataVolumeField.setText(getString(R.string.last_sync_data_volume_label) + (rawDbSize == 0 ? "N/A" : UiHelper.getFileSize(rawDbSize)));
 
 
 				// too early since last sync
@@ -423,7 +423,7 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 							progress.setVisibility(View.VISIBLE);
 
 							// we careful, cannot start if already started !!! FIXME
-							new SyncTask(builder, dialog_content).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							new SyncTask(builder, dialogContent).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						}
 					});
 				}
@@ -448,10 +448,10 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 		private final LinearLayout dialogContent;
 		private final FocusDialogBuilder builder;
 
-		public SyncTask(FocusDialogBuilder builder, LinearLayout dialog_content)
+		public SyncTask(FocusDialogBuilder builder, LinearLayout dialogContent)
 		{
 			this.builder = builder;
-			this.dialogContent = dialog_content;
+			this.dialogContent = dialogContent;
 		}
 
 		@Override
@@ -461,10 +461,10 @@ public class ProjectsListingActivity extends BaseDrawerActivity
 			if (!cronBound) {
 				return null;
 			}
-			boolean new_sync = cronService.manuallySyncData();
+			boolean newSync = cronService.manuallySyncData();
 
 			// if already started (periodic execution), let's just wait for completion
-			if (!new_sync) {
+			if (!newSync) {
 				while(cronService.getSyncInProgress()) {
 					try {
 						Thread.sleep(1000);

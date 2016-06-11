@@ -101,11 +101,11 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 			final Thread login = new Thread() {
 				public void run()
 				{
-					String[] use_cases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
-					String selected_use_case = use_cases[selectedUseCase];
+					String[] useCases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
+					String selectedUseCase = useCases[DemoUseCaseSelectionActivity.this.selectedUseCase];
 
 					try {
-						FocusApplication.getInstance().getDataManager().demoLogin(selected_use_case);
+						FocusApplication.getInstance().getDataManager().demoLogin(selectedUseCase);
 					}
 					catch (IOException ex) {
 						throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");

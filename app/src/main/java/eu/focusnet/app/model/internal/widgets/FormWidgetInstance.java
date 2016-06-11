@@ -59,20 +59,20 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 		this.fields = new LinkedHashMap<>();
 		for (Map.Entry e : this.config.entrySet()) {
 			String fieldName = (String) e.getKey();
-			LinkedTreeMap<String, Object> fieldConfig = (LinkedTreeMap<String, Object>) e.getValue();
+			LinkedTreeMap<String, Object> fieldConfig = (LinkedTreeMap<String, Object>) e.getValue(); // FIXME warning for casting
 			if (fieldConfig == null) {
 				this.markAsInvalid();
 				return;
 			}
-			FieldInstance new_field = null;
+			FieldInstance newField;
 			String type;
-			Object raw_type = fieldConfig.get(FieldInstance.FIELD_LABEL_TYPE);
-			if (raw_type == null) {
+			Object rawType = fieldConfig.get(FieldInstance.FIELD_LABEL_TYPE);
+			if (rawType == null) {
 				markAsInvalid();
 				return;
 			}
 			try {
-				type = TypesHelper.asString(raw_type);
+				type = TypesHelper.asString(rawType);
 			}
 			catch (FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -80,24 +80,24 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 			}
 			switch (type) {
 				case FieldInstance.FIELD_TYPE_TEXTFIELD:
-					new_field = new TextfieldFieldInstance(fieldName, fieldConfig, this.dataContext);
+					newField = new TextfieldFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_TEXTAREA:
-					new_field = new TextareaFieldInstance(fieldName, fieldConfig, this.dataContext);
+					newField = new TextareaFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_CHECKBOX:
-					new_field = new CheckboxFieldInstance(fieldName, fieldConfig, this.dataContext);
+					newField = new CheckboxFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				case FieldInstance.FIELD_TYPE_SELECT:
-					new_field = new SelectFieldInstance(fieldName, fieldConfig, this.dataContext);
+					newField = new SelectFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				default:
 					this.markAsInvalid();
 					return;
 			}
 
-			this.fields.put(fieldName, new_field);
-			if (!new_field.isValid()) {
+			this.fields.put(fieldName, newField);
+			if (!newField.isValid()) {
 				this.markAsInvalid();
 			}
 		}

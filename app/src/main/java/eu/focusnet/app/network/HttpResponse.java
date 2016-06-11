@@ -36,8 +36,8 @@ import java.util.Map;
  */
 public class HttpResponse
 {
-	private String data = "";
-	private int returnCode = 0;
+	private String data;
+	private int returnCode;
 
 	/**
 	 * An HttpResponse contains all information that may be useful by the application to
@@ -49,8 +49,10 @@ public class HttpResponse
 	 */
 	public HttpResponse(HttpURLConnection connection) throws IOException
 	{
-		// String method = connection.getRequestMethod();
+		// String method = connection.getRequestMethod(); // FIXME if required.
 		this.returnCode = connection.getResponseCode();
+		this.data = "";
+
 		if (!this.isSuccessful()) {
 			return;
 		}
@@ -59,24 +61,23 @@ public class HttpResponse
 		InputStream inputStream = connection.getInputStream();
 
 		// depending on the content type, we decide whether the object is binary or text.
-		List<String> content_types = headers.get("Content-Type");
+		List<String> contentTypes = headers.get("Content-Type");
 
 		// basically, only application/json is text
-		if (content_types.contains("application/json")) {
+		if (contentTypes.contains("application/json")) {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 			StringBuffer buffer = new StringBuffer();
-			String line = "";
+			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				buffer.append(line);
 			}
 			bufferedReader.close();
 			this.data = buffer.toString();
-			return;
 		}
 		// the rest is considered as data
 		else {
 			byte[] buffer = new byte[4096];
-			int n = -1;
+			int n;
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			while ((n = inputStream.read(buffer)) != -1) {
 				output.write(buffer, 0, n);
@@ -86,7 +87,6 @@ public class HttpResponse
 
 			// convert the output stream into a base64-encoded string
 			this.data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
-			return;
 		}
 	}
 

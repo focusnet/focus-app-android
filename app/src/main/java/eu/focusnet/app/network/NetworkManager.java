@@ -331,6 +331,7 @@ public class NetworkManager
 	 *
 	 * If required, put in NetworkManager constructor
 	 * HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
+	 * @deprecated prototpye
 	 *
 	 */
 	private static class DummyHostNameVerifier implements HostnameVerifier

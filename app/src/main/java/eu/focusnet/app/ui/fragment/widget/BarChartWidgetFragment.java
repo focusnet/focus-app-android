@@ -104,17 +104,14 @@ public class BarChartWidgetFragment extends WidgetFragment
 		l.setXEntrySpace(4f);
 
 		// x-axis configuration
-		XAxis x_axis = mChart.getXAxis();
-		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		x_axis.setSpaceBetweenLabels(1);
-		ArrayList<String> x_vals = ((BarChartWidgetInstance) this.widgetInstance).getxAxisValues();
+		ArrayList<String> xVals = ((BarChartWidgetInstance) this.widgetInstance).getxAxisValues();
 
 		// limits
 		float yAxisMinValue = 0;
 		float yAxisMaxValue = 0;
 
 		int[] rainbow = ColorTemplate.COLORFUL_COLORS;
-		int current_color = 0;
+		int currentColor = 0;
 
 		// series
 		ArrayList<IBarDataSet> datasets = new ArrayList<>();
@@ -136,12 +133,12 @@ public class BarChartWidgetFragment extends WidgetFragment
 			}
 			BarDataSet set = new BarDataSet(vals, ((BarChartWidgetInstance) this.widgetInstance).getSerieLabel(i));
 
-			set.setColor(rainbow[current_color]);
+			set.setColor(rainbow[currentColor]);
 			set.setValueTextSize(9f);
 			set.setDrawValues(true);
 			datasets.add(set);
 
-			current_color = (current_color + 1) % rainbow.length;
+			currentColor = (currentColor + 1) % rainbow.length;
 		}
 
 
@@ -173,7 +170,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		}
 
 		// create a data object with the datasets
-		BarData data = new BarData(x_vals, datasets);
+		BarData data = new BarData(xVals, datasets);
 		mChart.setData(data);
 
 		//	mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
@@ -184,7 +181,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 	@Override
 	protected void alterReferenceHeight()
 	{
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		int widthCols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * widthCols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

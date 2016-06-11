@@ -50,6 +50,8 @@ import eu.focusnet.app.ui.util.UiHelper;
  * We may need to adapt these functions, though.
  * <p/>
  * NOTE: the caption is not rendered. We use this UI location to display the x-axis label instead.
+ *
+ * FIXME very similar to BarChartWidget -> modularize?
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {
@@ -85,18 +87,14 @@ public class LineChartWidgetFragment extends WidgetFragment
 		lineChart.setPinchZoom(true);
 		lineChart.getAxisRight().setEnabled(false);
 
-		// x-axis configuration
-		XAxis x_axis = lineChart.getXAxis();
-		x_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		x_axis.setSpaceBetweenLabels(1);
-		ArrayList<String> x_vals = ((LineChartWidgetInstance) this.widgetInstance).getxAxisValues();
+		ArrayList<String> xVals = ((LineChartWidgetInstance) this.widgetInstance).getxAxisValues();
 
 		// limits
 		float yAxisMinValue = 0;
 		float yAxisMaxValue = 0;
 
 		int[] rainbow = ColorTemplate.COLORFUL_COLORS;
-		int current_color = 0;
+		int currentColor = 0;
 
 		// series
 		ArrayList<ILineDataSet> datasets = new ArrayList<>();
@@ -119,18 +117,18 @@ public class LineChartWidgetFragment extends WidgetFragment
 			LineDataSet set = new LineDataSet(vals, ((LineChartWidgetInstance) this.widgetInstance).getSerieLabel(i));
 
 			set.enableDashedLine(10f, 5f, 0f);
-			set.setColor(rainbow[current_color]);
-			set.setCircleColor(rainbow[current_color]);
+			set.setColor(rainbow[currentColor]);
+			set.setCircleColor(rainbow[currentColor]);
 			set.setLineWidth(1f);
 			set.setCircleRadius(3f);
 			set.setDrawCircleHole(false);
 			set.setValueTextSize(9f);
 			set.setFillAlpha(65);
-			set.setFillColor(rainbow[current_color]);
+			set.setFillColor(rainbow[currentColor]);
 			set.setDrawValues(false);
 			datasets.add(set);
 
-			current_color = (current_color + 1) % rainbow.length;
+			currentColor = (currentColor + 1) % rainbow.length;
 		}
 
 		// Yaxis and limits
@@ -161,7 +159,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 		}
 
 		// create a data object with the datasets
-		LineData data = new LineData(x_vals, datasets);
+		LineData data = new LineData(xVals, datasets);
 		lineChart.setData(data);
 
 		//	lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
@@ -179,7 +177,7 @@ public class LineChartWidgetFragment extends WidgetFragment
 	@Override
 	protected void alterReferenceHeight()
 	{
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		int widthCols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * widthCols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

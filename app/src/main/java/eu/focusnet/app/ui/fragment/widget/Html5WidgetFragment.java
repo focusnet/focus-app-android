@@ -51,8 +51,8 @@ import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.ui.util.PropertiesHelper;
 
-// FIXME should use DataManager instead of NetworkManager!
-// FIXME FIXME FIXME TODO
+
+
 
 public class Html5WidgetFragment extends WidgetFragment
 {

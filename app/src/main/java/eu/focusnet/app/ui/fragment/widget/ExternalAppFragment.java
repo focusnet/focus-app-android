@@ -92,10 +92,10 @@ public class ExternalAppFragment extends WidgetFragment
 				if (((ExternalAppWidgetInstance) widgetInstance).updateAppAvailability()) {
 					Intent intent = new Intent(((ExternalAppWidgetInstance) widgetInstance).getAppIdentifier());
 
-					FocusSample input_object = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
-					if (input_object != null) {
-						String json_input = FocusApplication.getInstance().getDataManager().getGson().toJson(input_object);
-						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, json_input);
+					FocusSample inputObject = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
+					if (inputObject != null) {
+						String jsonInput = FocusApplication.getInstance().getDataManager().getGson().toJson(inputObject);
+						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, jsonInput);
 					}
 					UiHelper.displayToast(getActivity(), r.getString(R.string.launching_ext_app));
 					startActivityForResult(intent, ((ExternalAppWidgetInstance) widgetInstance).getRequestCode());

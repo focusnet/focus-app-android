@@ -120,16 +120,16 @@ public abstract class WidgetFragment extends Fragment
 		Bundle arguments = getArguments();
 		int width = 0; // width is determined by the weight only
 		int height = arguments.getInt(Constant.UI_EXTRA_LAYOUT_HEIGHT);
-		int num_of_cols = arguments.getInt(Constant.UI_EXTRA_LAYOUT_WEIGHT);
-		int position_in_row = arguments.getInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, num_of_cols);
+		int numOfCols = arguments.getInt(Constant.UI_EXTRA_LAYOUT_WEIGHT);
+		int positionInRow = arguments.getInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, numOfCols);
 
 		// set a reasonable margin between fragments
 		int margin = UiHelper.dpToPixels(UI_MARGIN_SIZE, this.getActivity());
 		params.setMargins(
-				position_in_row == 0 ? margin : margin / 2,
+				positionInRow == 0 ? margin : margin / 2,
 				margin,
-				position_in_row + num_of_cols == Constant.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
+				positionInRow + numOfCols == Constant.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
 				margin
 		);
 
@@ -189,8 +189,7 @@ public abstract class WidgetFragment extends Fragment
 		display.getMetrics(outMetrics);
 
 		float density = getResources().getDisplayMetrics().density;
-		float dpHeight = outMetrics.heightPixels / density;
-		return dpHeight;
+		return (outMetrics.heightPixels / density);
 	}
 
 }

@@ -61,8 +61,8 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 
 		// --------------------------------- debug FIXME DEBUG TODO
 		LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		boolean gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		boolean network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		boolean networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 		// set widget title
 		TextView textTitle = (TextView) this.rootView.findViewById(R.id.textTitle);

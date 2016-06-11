@@ -48,6 +48,7 @@ import eu.focusnet.app.model.internal.widgets.FormWidgetInstance;
 import eu.focusnet.app.ui.util.UiHelper;
 
 /**
+ * FIXME better modularity
  */
 public class FormWidgetFragment extends WidgetFragment
 {
@@ -76,11 +77,11 @@ public class FormWidgetFragment extends WidgetFragment
 	{
 		TableRow tr = new TableRow(this.context);
 
-		boolean no_label = false;
-		String label_txt = f.getLabel();
-		if (!label_txt.equals("")) {
+		boolean noLabel = false;
+		String labelTxt = f.getLabel();
+		if (!labelTxt.equals("")) {
 			TextView label = new TextView(this.context);
-			label.setText(label_txt);
+			label.setText(labelTxt);
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
@@ -90,7 +91,7 @@ public class FormWidgetFragment extends WidgetFragment
 			tr.addView(label);
 		}
 		else {
-			no_label = true;
+			noLabel = true;
 		}
 
 		Spinner spinner = new Spinner(this.context);
@@ -102,7 +103,7 @@ public class FormWidgetFragment extends WidgetFragment
 		// select the appropriate element
 		spinner.setSelection(((SelectFieldInstance) f).getValues().indexOf(f.getDefaultValue()));
 
-		if (no_label) {
+		if (noLabel) {
 			TableRow.LayoutParams layoutSpinner = new TableRow.LayoutParams();
 			layoutSpinner.column = 1;
 			spinner.setLayoutParams(layoutSpinner);
@@ -120,11 +121,11 @@ public class FormWidgetFragment extends WidgetFragment
 	{
 		TableRow tr = new TableRow(this.context);
 
-		boolean no_label = false;
-		String label_txt = f.getLabel();
-		if (!label_txt.equals("")) {
+		boolean noLabel = false;
+		String labelTxt = f.getLabel();
+		if (!labelTxt.equals("")) {
 			TextView label = new TextView(this.context);
-			label.setText(label_txt);
+			label.setText(labelTxt);
 			label.setGravity(Gravity.TOP);
 
 			TableRow.LayoutParams layoutLabel = new TableRow.LayoutParams();
@@ -134,7 +135,7 @@ public class FormWidgetFragment extends WidgetFragment
 			tr.addView(label);
 		}
 		else {
-			no_label = true;
+			noLabel = true;
 		}
 
 		CheckBox checkBox = new CheckBox(this.context);
@@ -149,7 +150,7 @@ public class FormWidgetFragment extends WidgetFragment
 			checkBox.setEnabled(false);
 		}
 
-		if (no_label) {
+		if (noLabel) {
 			TableRow.LayoutParams layoutCheckbox = new TableRow.LayoutParams();
 			layoutCheckbox.column = 1;
 			checkBox.setLayoutParams(layoutCheckbox);
@@ -205,26 +206,26 @@ public class FormWidgetFragment extends WidgetFragment
 
 		// type of input
 		TextfieldFieldInstance.ValidType type = ((TextfieldFieldInstance) f).getInputType();
-		int editor_type;
+		int editorType;
 		switch (type) {
 			case TEXTFIELD_TYPE_DECIMAL:
-				editor_type = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_DECIMAL | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
+				editorType = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_DECIMAL | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
 				break;
 			case TEXTFIELD_TYPE_EMAIL:
-				editor_type = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS; // FIXME NOT SURE IT WORKS
+				editorType = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS; // FIXME NOT SURE IT WORKS
 				break;
 			case TEXTFIELD_TYPE_NUMBER:
-				editor_type = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
+				editorType = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
 				break;
 			case TEXTFIELD_TYPE_PHONE:
-				editor_type = EditorInfo.TYPE_CLASS_PHONE;
+				editorType = EditorInfo.TYPE_CLASS_PHONE;
 				break;
 			case TEXTFIELD_TYPE_TEXT:
 			default:
-				editor_type = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_AUTO_CORRECT;
+				editorType = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_AUTO_CORRECT;
 				break;
 		}
-		textfield.setInputType(editor_type);
+		textfield.setInputType(editorType);
 		textfield.setMaxLines(1);
 		textfield.setText(f.getDefaultValue());
 		textfield.setGravity(Gravity.TOP);

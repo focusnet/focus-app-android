@@ -118,7 +118,7 @@ public class PieChartWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		// Alter reference height of the widget
-		int width_cols = this.widgetInstance.getNumberOfColumnsInUi();
-		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * width_cols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
+		int widthCols = this.widgetInstance.getNumberOfColumnsInUi();
+		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * widthCols / WidgetInstance.WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS, this.getActivity());
 	}
 }

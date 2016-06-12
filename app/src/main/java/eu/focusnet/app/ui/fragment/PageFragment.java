@@ -32,6 +32,8 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
@@ -69,8 +71,14 @@ public class PageFragment extends Fragment
 
 		DataManager dm = FocusApplication.getInstance().getDataManager();
 		AppContentInstance appContentInstance = dm.getAppContentInstance();
-		this.projectInstance = appContentInstance.getProjectFromPath(projectPath);
-		this.pageInstance = appContentInstance.getPageFromPath(pagePath);
+		try {
+			this.projectInstance = appContentInstance.getProjectFromPath(projectPath);
+			this.pageInstance = appContentInstance.getPageFromPath(pagePath);
+		}
+		catch(FocusMissingResourceException ex) {
+			// FIXME do something smarter, e.g. reload Home activity and display an error
+			throw new FocusInternalErrorException("Cannot access project/page via its path.");
+		}
 
 		// useful for our custom garbage collection in DataManager
 		dm.registerActiveInstance(this.pageInstance);

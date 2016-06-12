@@ -36,6 +36,8 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
@@ -108,7 +110,13 @@ public class ProjectFragment extends ListFragment
 		protected NavigationListAdapter doInBackground(String... params)
 		{
 			DataManager dm = FocusApplication.getInstance().getDataManager();
-			projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
+			try {
+				projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
+			}
+			catch(FocusMissingResourceException ex) {
+				// FIXME do something smarter, e.g. reload Home activity and display an error
+				throw new FocusInternalErrorException("Cannot access project via its path.");
+			}
 
 			// useful for our custom garbage collection in DataManager
 			dm.registerActiveInstance(projectInstance);

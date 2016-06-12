@@ -189,13 +189,13 @@ public class AppContentInstance extends AbstractInstance
 	 * @param path
 	 * @return
 	 */
-	public ProjectInstance getProjectFromPath(String path)
+	public ProjectInstance getProjectFromPath(String path) throws FocusMissingResourceException
 	{
 		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 1) {
 			return this.projects.get(parts[0]);
 		}
-		throw new FocusInternalErrorException("Invalid project path");
+		throw new FocusMissingResourceException("Invalid project path");
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class AppContentInstance extends AbstractInstance
 	 * @param path
 	 * @return
 	 */
-	public PageInstance getPageFromPath(String path)
+	public PageInstance getPageFromPath(String path) throws FocusMissingResourceException
 	{
 		ProjectInstance pr = this.getProjectFromPath(path);
 		if (pr == null) {
@@ -218,7 +218,7 @@ public class AppContentInstance extends AbstractInstance
 		if (parts.length >= 3) {
 			return pr.getPageFromGuid(parts[2], parts[1]);
 		}
-		throw new FocusInternalErrorException("Invalid page path");
+		throw new FocusMissingResourceException("Invalid page path");
 	}
 
 
@@ -233,7 +233,7 @@ public class AppContentInstance extends AbstractInstance
 	 * @param path
 	 * @return
 	 */
-	public WidgetInstance getWidgetFromPath(String path)
+	public WidgetInstance getWidgetFromPath(String path) throws FocusMissingResourceException
 	{
 		PageInstance p = this.getPageFromPath(path);
 		if (p == null) {
@@ -243,7 +243,7 @@ public class AppContentInstance extends AbstractInstance
 		if (parts.length >= 4) {
 			return p.widgets.get(parts[3]);
 		}
-		throw new FocusInternalErrorException("Invalid widget path");
+		throw new FocusMissingResourceException("Invalid widget path");
 	}
 
 

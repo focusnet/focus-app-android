@@ -134,5 +134,6 @@
     <string name="get_position">Get Position</string>
     <string name="submit">Submit</string>
     <string name="not_available">Not available.</string>
+    <string name="bookmark">Bookmark</string>
 
 </resources>

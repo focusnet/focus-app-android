@@ -405,7 +405,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					return false;
 				}
 
-
 				LayoutInflater inflater = getLayoutInflater();
 				final LinearLayout dialogContent = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
 
@@ -486,7 +485,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 							instructions.setVisibility(View.GONE);
 							progress.setVisibility(View.VISIBLE);
 
-							// we careful, cannot start if already started !!! FIXME
+							// Run the periodic task
+							// FIXME pass the MenuItem item, such that we can change its drawablet to an animation (or start the animation)
 							new SyncTask(builder, dialogContent).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						}
 					});
@@ -551,6 +551,9 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * Task responsible for synchronizing data
 	 * <p/>
 	 * Called when the user explicitly launches data sync via the dialog
+	 *
+	 * FIXME: if we pass the MenuItem, we can change its icon to an animation (Drawable) or start an animation.
+	 * FIXME: we must then stop/revert when the operation is completed, and we would then need a Listener on the Service
 	 */
 	private class SyncTask extends AsyncTask<Void, Void, Void>
 	{

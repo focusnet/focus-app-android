@@ -164,7 +164,11 @@ public class NavigationListAdapter extends BaseAdapter
 		// Set values to our Views
 		switch (itemType) {
 			case LIST_TYPE_LINK:
-				itemViewSet.getDescription().setText(((FeaturedListItem)listItem).getDescription());
+				String description = ((FeaturedListItem)listItem).getDescription();
+				if (description != null && !description.equals("")) {
+					itemViewSet.getDescription().setText(description);
+					itemViewSet.getDescription().setVisibility(View.VISIBLE);
+				}
 				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem)listItem).getSecondaryIcon());
 				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:

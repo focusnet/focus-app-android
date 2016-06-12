@@ -9,5 +9,5 @@
         android:background="@color/list_item_background"
         android:choiceMode="singleChoice"
         android:dividerHeight="1dp"
-        android:listSelector="@drawable/list_item_selector"/>
+       />
 </FrameLayout>

@@ -34,9 +34,12 @@ import java.util.ArrayList;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.model.json.BookmarksList;
+import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.Bookmark;
+import eu.focusnet.app.model.json.BookmarksList;
 import eu.focusnet.app.model.json.UserPreferences;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
@@ -102,6 +105,8 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void updateListAdapter()
 	{
+
+
 		UserPreferences preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
 		BookmarksList bookmark = preference.getBookmarks();
@@ -109,48 +114,63 @@ public class BookmarkFragment extends ListFragment
 		ArrayList<Bookmark> tools = bookmark.getTools();
 
 		listItems = new ArrayList<>();
-		SimpleListItem headerProjectsListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
-				getResources().getString(R.string.bookmark_header_dashboard));
-		listItems.add(headerProjectsListItem);
-
-		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
-
-		if (!pages.isEmpty()) {
-			for (Bookmark bl : pages) {
-				FeaturedListItem drawListItem = new FeaturedListItem(
-						bl.getPath(),
-						UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(),
-						bl.getPath(),
-						rightIcon,
-						true,
-						Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()
-				);
-				listItems.add(drawListItem);
-			}
-		}
-		else {
-			listItems.add(new EmptyListItem());
-		}
-
-		SimpleListItem headerToolListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
-				getString(R.string.bookmark_header_tool));
-		listItems.add(headerToolListItem);
-
-		if (!tools.isEmpty()) {
-			for (Bookmark bl : tools) {
-				FeaturedListItem drawListItem = new FeaturedListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
-				listItems.add(drawListItem);
-			}
-		}
-		else {
-			listItems.add(new EmptyListItem());
-		}
+		this.addListItems(pages, R.drawable.ic_category_dashboard_negative, R.string.bookmark_header_dashboard);
+		this.addListItems(tools, R.drawable.ic_category_tool_negative, R.string.bookmark_header_tool);
 
 		NavigationListAdapter adapter = new NavigationListAdapter(getActivity(), listItems);
 
 		setListAdapter(adapter);
+	}
+
+
+	private void addListItems(ArrayList<Bookmark> source, int icon, int label)
+	{
+		AppContentInstance appContentInstance =  FocusApplication.getInstance().getDataManager().getAppContentInstance();
+
+		// header
+		SimpleListItem headerProjectsListItem = new SimpleListItem(
+				UiHelper.getBitmap(getActivity(), icon),
+				getResources().getString(label)
+		);
+		listItems.add(headerProjectsListItem);
+
+		// links
+		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
+		if (!source.isEmpty()) {
+			for (Bookmark bl : source) {
+				String originalTitle;
+				String path = bl.getPath();
+				String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
+				try {
+					if (parts.length >= 3) {
+						originalTitle = appContentInstance.getPageFromPath(path).getTitle();
+					}
+					else {
+						originalTitle = appContentInstance.getProjectFromPath(path).getTitle();
+					}
+				}
+				catch (FocusMissingResourceException ex) {
+					// the project/page does not exist, that may be because the data evolved and
+					// this bookmark is not valid anymore. So let's skip it.
+					continue;
+				}
+
+				FeaturedListItem listItem = new FeaturedListItem(
+						bl.getPath(),
+						UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+						bl.getName(),
+						originalTitle.equals(bl.getName()) ? "" : originalTitle,
+						rightIcon,
+						true,
+						Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()
+				);
+				listItems.add(listItem);
+			}
+		}
+		else {
+			listItems.add(new EmptyListItem());
+		}
+
 	}
 }
 

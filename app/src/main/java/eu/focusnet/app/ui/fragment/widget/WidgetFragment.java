@@ -32,6 +32,8 @@ import android.widget.TextView;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
@@ -161,7 +163,13 @@ public abstract class WidgetFragment extends Fragment
 		// may happen that we have no path (e.g. EmptyWidgetFragment)
 		if (path != null) {
 			DataManager dm = FocusApplication.getInstance().getDataManager();
-			this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
+			try {
+				this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
+			}
+			catch(FocusMissingResourceException ex) {
+				// FIXME do something smarter, e.g. reload Home activity and display an error
+				throw new FocusInternalErrorException("Cannot access widget via its path.");
+			}
 			dm.registerActiveInstance(this.widgetInstance);
 		}
 

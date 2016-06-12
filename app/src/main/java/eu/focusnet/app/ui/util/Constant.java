@@ -48,7 +48,8 @@ public class Constant
 			UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.app.extra.EXTERNAL_APP_OUTPUT";
 
 	// fragments identifiers
-	public static final int UI_MENU_ENTRY_PROJECTS_LISTING = 1,
+	public static final int UI_MENU_ENTRY_HEADER_NON_CLICKABLE = 0,
+			UI_MENU_ENTRY_PROJECTS_LISTING = 1,
 			UI_MENU_ENTRY_BOOKMARK = 2,
 			UI_MENU_ENTRY_ABOUT = 3,
 			UI_MENU_ENTRY_LOGOUT = 4;

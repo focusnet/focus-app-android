@@ -35,7 +35,7 @@ import javax.net.ssl.SSLSocketFactory;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
-import eu.focusnet.app.ui.util.PropertiesHelper;
+import eu.focusnet.app.util.PropertiesHelper;
 
 /**
  * An HTTP request to be issued to the REST server

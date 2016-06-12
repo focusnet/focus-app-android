@@ -49,7 +49,7 @@ import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.ui.util.PropertiesHelper;
+import eu.focusnet.app.util.PropertiesHelper;
 
 /**
  * The DataManager is responsible for building the application content and data management.

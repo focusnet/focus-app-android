@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/focus_default_spacing">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/focus_default_spacing_x1_5"
+        android:layout_marginStart="@dimen/focus_default_spacing_x0_5"
+        android:src="@drawable/ic_chevron_right"
+        android:visibility="invisible"/>
+
+    <TextView
+        style="@style/FocusListItem.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/focus_default_spacing_x0_25"
+        android:text="@string/not_available"/>
+
+</LinearLayout>

@@ -25,8 +25,39 @@ import android.widget.TextView;
 
 public class FeaturedListItemViewSet extends SimpleListItemViewSet
 {
-	public ImageView leftIcon;
-	public TextView title;
-	public TextView description;
-	public ImageView rightIcon;
+	private TextView title;
+	private TextView description;
+	private ImageView secondaryIcon;
+
+	@Override
+	public TextView getTitle()
+	{
+		return title;
+	}
+
+	@Override
+	public void setTitle(TextView title)
+	{
+		this.title = title;
+	}
+
+	public TextView getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(TextView description)
+	{
+		this.description = description;
+	}
+
+	public ImageView getSecondaryIcon()
+	{
+		return secondaryIcon;
+	}
+
+	public void setSecondaryIcon(ImageView secondaryIcon)
+	{
+		this.secondaryIcon = secondaryIcon;
+	}
 }

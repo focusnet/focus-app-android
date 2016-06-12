@@ -22,6 +22,9 @@ package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 
+import eu.focusnet.app.R;
+
+
 /**
  * Standard list item which contains
  * This is the standard item from a list
@@ -33,30 +36,30 @@ public class FeaturedListItem extends SimpleListItem
 
 	private String path;
 	private String description;
-	private Bitmap rightIcon;
+	private Bitmap secondaryIcon;
 	private boolean isBookmarked;
 	private String typeOfBookmark;
 
 
-	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap rightIcon, boolean isBookmarked, String typeOfBookmark)
+	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isBookmarked, String typeOfBookmark)
 	{
 		super(icon, title);
 		this.description = description;
 		this.path = path;
-		this.rightIcon = rightIcon;
+		this.secondaryIcon = secondaryIcon;
 		this.isBookmarked = isBookmarked;
 		this.typeOfBookmark = typeOfBookmark;
 	}
 
 
-	public Bitmap getRightIcon()
+	public Bitmap getSecondaryIcon()
 	{
-		return rightIcon;
+		return secondaryIcon;
 	}
 
-	public void setRightIcon(Bitmap rightIcon)
+	public void setSecondaryIcon(Bitmap secondaryIcon)
 	{
-		this.rightIcon = rightIcon;
+		this.secondaryIcon = secondaryIcon;
 	}
 
 	public String getDescription()
@@ -74,7 +77,7 @@ public class FeaturedListItem extends SimpleListItem
 		return isBookmarked;
 	}
 
-	public void setIsRightIconActive(boolean isBookarmed)
+	public void setIsBookmarked(boolean isBookarmed)
 	{
 		this.isBookmarked = isBookarmed;
 	}
@@ -93,5 +96,4 @@ public class FeaturedListItem extends SimpleListItem
 	{
 		this.path = path;
 	}
-
 }

@@ -1,11 +1,5 @@
 package eu.focusnet.app.ui.common;
 
-import android.graphics.Bitmap;
-
-import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.R;
-import eu.focusnet.app.ui.util.UiHelper;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -32,9 +26,8 @@ public class EmptyListItem extends SimpleListItem
 
 	public EmptyListItem()
 	{
-		super(
-				UiHelper.getBitmap(FocusApplication.getInstance(), R.drawable.ic_chevron_right),
-				FocusApplication.getInstance().getString(R.string.n_a)
-		);
+		super(null, null);
 	}
+
+
 }

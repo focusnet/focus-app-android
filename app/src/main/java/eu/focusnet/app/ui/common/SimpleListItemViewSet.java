@@ -24,6 +24,26 @@ import android.widget.TextView;
  */
 public class SimpleListItemViewSet
 {
-	public ImageView icon;
-	public TextView title;
+	private ImageView primaryIcon;
+	private TextView title;
+
+	public ImageView getPrimaryIcon()
+	{
+		return primaryIcon;
+	}
+
+	public void setPrimaryIcon(ImageView primaryIcon)
+	{
+		this.primaryIcon = primaryIcon;
+	}
+
+	public TextView getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(TextView title)
+	{
+		this.title = title;
+	}
 }

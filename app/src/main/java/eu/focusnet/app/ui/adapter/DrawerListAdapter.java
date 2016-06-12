@@ -72,14 +72,15 @@ public class DrawerListAdapter extends BaseAdapter
 	{
 		View row;
 		SimpleListItemViewSet itemViewSet;
+		SimpleListItem listItem = listItems.get(position);
 
 		// Test is the view is already created. If this is the case retrieve Views from
 		// the tag. Otherwise create it.
 		if (convertView == null) {
 			itemViewSet = new SimpleListItemViewSet();
-			row = inflater.inflate(R.layout.standard_list_item, parent, false); // FIXME change inflated view
-			itemViewSet.icon = (ImageView) row.findViewById(R.id.icon);
-			itemViewSet.title = (TextView) row.findViewById(R.id.title);
+			row = inflater.inflate(R.layout.list_item_drawer, parent, false);
+			itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
+			itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
 			row.setTag(itemViewSet);
 		}
 		else {
@@ -88,9 +89,8 @@ public class DrawerListAdapter extends BaseAdapter
 		}
 
 		// Set values to our Views
-		SimpleListItem listItem = listItems.get(position);
-		itemViewSet.icon.setImageBitmap(listItem.getIcon());
-		itemViewSet.title.setText(listItem.getTitle());
+		itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());
+		itemViewSet.getTitle().setText(listItem.getTitle());
 
 		return row;
 	}

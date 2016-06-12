@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -39,11 +38,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -97,7 +94,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			cronBound = false;
 		}
 	};
-
 
 
 	/**
@@ -168,7 +164,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 
 		// get the header and add it to the ListView
-		LinearLayout menuHeader = (LinearLayout) inflater.inflate(R.layout.view_drawer_header, null); // FIXME context?
+		LinearLayout menuHeader = (LinearLayout) inflater.inflate(R.layout.include_drawer_header, null); // FIXME context?
 		menuHeader.setEnabled(false);
 		menuHeader.setOnClickListener(null);
 		this.drawerListMenu.addHeaderView(menuHeader, null, false);
@@ -278,7 +274,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				}
 				break;
 			case Constant.UI_MENU_ENTRY_BOOKMARK:
-				this.fragment = new BookmarkFragment(); // FIXME clicking on BOOKMARKS in Menu -> MY FOCUS is displayed, but not the subtitle
+				this.fragment = new BookmarkFragment();
 				if (this.actionBar != null) {
 					this.actionBar.setTitle(R.string.bookmarks_title);
 				}
@@ -302,20 +298,23 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				// do not reload sections when clicking the same menu entry
-				if (position == 0) {
-					// we clicked the ListView's header
-				}
-				else if (position == sectionToRender && fragment != null) {
-					// we do not allow reloading of sections that push a fragment in the
-					// main content to avoid issues with the BACK button. Howeever if no fragment
-					// is pushed, as this is the case with the About dialog, then we allow to
-					// reload.
+				if (position != Constant.UI_MENU_ENTRY_HEADER_NON_CLICKABLE) {
+					boolean doIt = true;
+					switch (position) {
+						case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
+						case Constant.UI_MENU_ENTRY_BOOKMARK:
+							if (position == sectionToRender) {
+								doIt = false;
+							}
+						case Constant.UI_MENU_ENTRY_ABOUT:
+							sectionToRender = doIt ? position : 0;
+							applyUiChanges();
+							break;
+						case Constant.UI_MENU_ENTRY_LOGOUT:
+						default:
+							break;
+					}
 					drawerLayout.closeDrawer(drawerListMenu);
-				}
-				else {
-					sectionToRender = position;
-					applyUiChanges();
 				}
 			}
 		};

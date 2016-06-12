@@ -39,8 +39,8 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.ui.util.FocusApplicationActivityLifecycleHandler;
-import eu.focusnet.app.ui.util.PropertiesHelper;
+import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
+import eu.focusnet.app.util.PropertiesHelper;
 
 /**
  * FOCUS Application

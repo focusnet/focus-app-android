@@ -4,16 +4,18 @@
     <color name="colorPrimaryDark">#3aa170</color>
     <color name="defaultBackground">#ffffff</color>
     <color name="defaultTextColor">#000000</color>
-    <color name="defaultTextColorNegative">@android:color/white</color>
-
+    <color name="defaultTextColorNegative">#ffffff</color>
+    <color name="textColorDiscrete">#888888</color>
     <color name="listDividerColor">#e8e8e8</color>
     <color name="lightGreenForSelectedElement">#daf1d9</color>
+
+
+
 
     <color name="table_header_text">@android:color/white</color>
     <color name="table_data_row_even">@android:color/white</color>
     <color name="table_data_row_odd">@color/lightGreenForSelectedElement</color>
 
-    <color name="list_item_title">#aaaaaa</color>
     <color name="list_item_background">@android:color/white</color>
     <color name="list_item_background_pressed">@color/lightGreenForSelectedElement</color>
 

@@ -22,8 +22,10 @@ package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 
+import eu.focusnet.app.R;
+
 /**
- * Drawer list item which contains an icon, a title and an description
+ * Drawer list item which contains an primaryIcon, a title and an description
  * This is the standard list drawer list item
  *
  * FIFXME used for headers in navigation list and for drawer menu
@@ -31,17 +33,17 @@ import android.graphics.Bitmap;
 public class SimpleListItem
 {
 	private final String title;
-	private final Bitmap icon;
+	private final Bitmap primaryIcon;
 
-	public SimpleListItem(Bitmap icon, String title)
+	public SimpleListItem(Bitmap primaryIcon, String title)
 	{
-		this.icon = icon;
+		this.primaryIcon = primaryIcon;
 		this.title = title;
 	}
 
-	public Bitmap getIcon()
+	public Bitmap getPrimaryIcon()
 	{
-		return icon;
+		return primaryIcon;
 	}
 
 	public String getTitle()

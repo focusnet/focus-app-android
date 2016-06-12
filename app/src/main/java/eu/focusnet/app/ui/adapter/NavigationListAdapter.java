@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.common.EmptyListItem;
@@ -122,19 +123,35 @@ public class NavigationListAdapter extends BaseAdapter
 		if (convertView == null) {
 			// create new view holder
 			itemViewSet = new FeaturedListItemViewSet();
-			row = inflater.inflate(R.layout.standard_list_item, parent, false); // FIXME change inflated view depending on view type.
 
-			itemViewSet.title = (TextView) row.findViewById(R.id.title);
-			itemViewSet.icon = (ImageView) row.findViewById(R.id.icon);
+			// resource to inflate depends on current itemType
+			int resourceToInflate;
+			switch(itemType) {
+				case LIST_TYPE_EMPTY:
+					resourceToInflate = R.layout.list_item_empty;
+					break;
+				case LIST_TYPE_HEADER:
+					resourceToInflate = R.layout.list_item_header;
+					break;
+				case LIST_TYPE_LINK:
+					resourceToInflate = R.layout.list_item_link;
+					break;
+				default:
+					throw new FocusInternalErrorException("No view to inflate for list item.");
+			}
+			row = inflater.inflate(resourceToInflate, parent, false);
+
+			itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
+			itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
 			 // not for EMPTY, FIXME
 			if (itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY) {
 				row.setEnabled(false);
 				row.setOnClickListener(null);
 			}
 			else {
-				itemViewSet.description = (TextView) row.findViewById(R.id.description);
-				itemViewSet.rightIcon = (ImageView) row.findViewById(R.id.right_icon);
-				itemViewSet.rightIcon.setOnClickListener(getClickBookmarkListener((FeaturedListItem) listItem));
+				itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
+				itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
+				itemViewSet.getSecondaryIcon().setOnClickListener(getClickBookmarkListener((FeaturedListItem) listItem));
 			}
 			row.setTag(itemViewSet);
 		}
@@ -147,13 +164,14 @@ public class NavigationListAdapter extends BaseAdapter
 		// Set values to our Views
 		switch (itemType) {
 			case LIST_TYPE_LINK:
-				itemViewSet.description.setText(((FeaturedListItem)listItem).getDescription());
-				itemViewSet.rightIcon.setImageBitmap(((FeaturedListItem)listItem).getRightIcon());
-				// no break, we share attributes with LIST_TYPE_HEADER and EMPTY
+				itemViewSet.getDescription().setText(((FeaturedListItem)listItem).getDescription());
+				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem)listItem).getSecondaryIcon());
+				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:
+				itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());
+				itemViewSet.getTitle().setText(listItem.getTitle());
+				break;
 			case LIST_TYPE_EMPTY:
-				itemViewSet.icon.setImageBitmap(listItem.getIcon());
-				itemViewSet.title.setText(listItem.getTitle());
 				break;
 		}
 
@@ -170,7 +188,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 		{
 		//	final FeaturedListItem featuredListItem = (FeaturedListItem) listItems.get(position);
 
-			if (featuredListItem.getRightIcon() != null) {
+			if (featuredListItem.getSecondaryIcon() != null) {
 				final ImageView imageView = (ImageView) v;
 
 				Resources res = FocusApplication.getInstance().getResources();
@@ -216,17 +234,17 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 						UserPreferences userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
 
 						if (isExistingBookmark) {
-							featuredListItem.setIsRightIconActive(false);
+							featuredListItem.setIsBookmarked(false);
 							Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
-							featuredListItem.setRightIcon(rightIcon);
+							featuredListItem.setSecondaryIcon(rightIcon);
 							imageView.setImageBitmap(rightIcon);
 							bookmarkTitle.setEnabled(false);
 							userPreference.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
 						}
 						else {
-							featuredListItem.setIsRightIconActive(true);
+							featuredListItem.setIsBookmarked(true);
 							Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
-							featuredListItem.setRightIcon(rightIcon);
+							featuredListItem.setSecondaryIcon(rightIcon);
 							imageView.setImageBitmap(rightIcon);
 							Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
 							userPreference.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());

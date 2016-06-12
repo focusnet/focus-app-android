@@ -52,7 +52,7 @@
     <string name="header_dashboard">Dashboards</string>
     <string name="header_tool">Tools</string>
 
-    <string name="bookmark_header_dashboard">Projects / Dashboards</string>
+    <string name="bookmark_header_dashboard">Projects &amp; Dashboards</string>
     <string name="bookmark_header_tool">Tools</string>
 
     <string name="title_activity_page">PageActivity</string>
@@ -133,5 +133,6 @@
     <string name="accuracy">Accuracy:</string>
     <string name="get_position">Get Position</string>
     <string name="submit">Submit</string>
+    <string name="not_available">Not available.</string>
 
 </resources>

@@ -48,7 +48,7 @@ import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpRequest;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
-import eu.focusnet.app.ui.util.PropertiesHelper;
+import eu.focusnet.app.util.PropertiesHelper;
 
 
 

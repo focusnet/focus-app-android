@@ -94,16 +94,12 @@ public class UserPreferences extends FocusObject
 
 	public void removeBookmarkLink(String path, String title, String bookmarkType)
 	{
-		if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
-			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
-			if (found != -1) {
+		int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
+		if (found != -1) {
+			if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
 				bookmarks.getPages().remove(found);
 			}
-		}
-		else {
-			ArrayList<Bookmark> tools = bookmarks.getTools();
-			int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
-			if (found != -1) {
+			else {
 				bookmarks.getTools().remove(found);
 			}
 		}

@@ -1,9 +1,8 @@
 <resources>
 
 
-
     <style name="HeaderTextAppearance">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/background_material_light</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -18,21 +17,26 @@
 
 
 
+
     <!-- validated below this comment -->
 
     <!-- Base application theme. -->
     <style name="FocusTheme" parent="Theme.AppCompat.Light">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
 
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/colorPrimary</item>
 
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:listViewStyle">@style/FocusListStyle</item>
+
+        <item name="android:colorBackground">@color/defaultBackground</item>
+        <item name="android:textColorPrimary">@color/defaultTextColor</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+
     </style>
 
     <style name="FocusText">
@@ -74,10 +78,30 @@
         <item name="android:layout_width">@dimen/focus_drawer_width</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/defaultBackground</item>
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:dividerHeight">@dimen/focus_divider_height</item>
     </style>
 
+    <style name="FocusDrawerHeader">
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="FocusDrawerLogo">
+        <item name="android:src">@drawable/focus_logo_small</item>
+        <item name="android:contentDescription">@string/caption_focus_logo</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="FocusDrawerHeaderInfoItem">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="FocusListStyle">
+        <item name="android:dividerHeight">@dimen/focus_divider_height</item>
+        <item name="android:divider">@color/listDividerColor</item>
+    </style>
 
 </resources>

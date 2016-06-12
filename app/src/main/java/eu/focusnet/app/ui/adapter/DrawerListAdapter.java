@@ -31,47 +31,34 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.ui.common.DrawerListItem;
-import eu.focusnet.app.ui.common.HeaderDrawerListItem;
+import eu.focusnet.app.ui.common.SimpleListItem;
+import eu.focusnet.app.ui.common.SimpleListItemViewSet;
 
 /**
- * FIXME TODO JULIEN To be reviewed
+ * ok
  */
 public class DrawerListAdapter extends BaseAdapter
 {
 
 	private LayoutInflater inflater;
-	private ArrayList<AbstractListItem> drawerListItems;
+	private ArrayList<SimpleListItem> listItems;
 
-	public DrawerListAdapter(Context context, ArrayList<AbstractListItem> drawerListItems)
+	public DrawerListAdapter(Context context, ArrayList<SimpleListItem> listItems)
 	{
 		this.inflater = LayoutInflater.from(context);
-		this.drawerListItems = drawerListItems;
-	}
-
-	@Override
-	public int getViewTypeCount()
-	{
-		return 2;
-	} //return two types of views
-
-	@Override
-	public int getItemViewType(int position)
-	{
-		return drawerListItems.get(position).getType();
+		this.listItems = listItems;
 	}
 
 	@Override
 	public int getCount()
 	{
-		return drawerListItems.size();
+		return this.listItems.size();
 	}
 
 	@Override
 	public Object getItem(int position)
 	{
-		return drawerListItems.get(position);
+		return listItems.get(position);
 	}
 
 	@Override
@@ -84,57 +71,29 @@ public class DrawerListAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 		View row;
-		ViewHolder holder;
-		int itemViewType = getItemViewType(position);
+		SimpleListItemViewSet itemViewSet;
 
-		//Test is the view is already created
+		// Test is the view is already created. If this is the case retrieve Views from
+		// the tag. Otherwise create it.
 		if (convertView == null) {
-			holder = new ViewHolder();
-
-			//Find out the item view type and set the corresponding layout
-			if (itemViewType == HeaderDrawerListItem.TYPE_HEADER_DRAWER) {
-				row = inflater.inflate(R.layout.list_item_drawer_header, parent, false);
-				holder.icon = (ImageView) row.findViewById(R.id.logo);
-				holder.title = (TextView) row.findViewById(R.id.user);
-			//	holder.email = (TextView) row.findViewById(R.id.email);
-			//	holder.company = (TextView) row.findViewById(R.id.company);
-			}
-			else {
-				row = inflater.inflate(R.layout.standard_list_item, parent, false);
-				//Present in R.layout.drawer_list_item layout
-				holder.icon = (ImageView) row.findViewById(R.id.icon);
-				holder.title = (TextView) row.findViewById(R.id.title);
-				holder.info = (TextView) row.findViewById(R.id.info);
-			}
-
-			row.setTag(holder);
+			itemViewSet = new SimpleListItemViewSet();
+			row = inflater.inflate(R.layout.standard_list_item, parent, false); // FIXME change inflated view
+			itemViewSet.icon = (ImageView) row.findViewById(R.id.icon);
+			itemViewSet.title = (TextView) row.findViewById(R.id.title);
+			row.setTag(itemViewSet);
 		}
 		else {
 			row = convertView;
-			holder = (ViewHolder) row.getTag();
+			itemViewSet = (SimpleListItemViewSet) row.getTag();
 		}
 
-		AbstractListItem drawerListItem = drawerListItems.get(position);
-		if (itemViewType == HeaderDrawerListItem.TYPE_HEADER_DRAWER) {
-			HeaderDrawerListItem headerDrawerListItem = (HeaderDrawerListItem) drawerListItem;
-//			holder.email.setText(headerDrawerListItem.getEmail());
-//			holder.company.setText(headerDrawerListItem.getCompany());
-		}
-		else {
-			holder.info.setText(((DrawerListItem) drawerListItem).getInfo());
-		}
-
-		//Present in all menu items
-		holder.icon.setImageBitmap(drawerListItem.getIcon());
-		holder.title.setText(drawerListItem.getTitle());
+		// Set values to our Views
+		SimpleListItem listItem = listItems.get(position);
+		itemViewSet.icon.setImageBitmap(listItem.getIcon());
+		itemViewSet.title.setText(listItem.getTitle());
 
 		return row;
 	}
 
-	private class ViewHolder
-	{
 
-		public ImageView icon;
-		public TextView title, info, email, company;
-	}
 }

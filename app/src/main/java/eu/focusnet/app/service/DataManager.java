@@ -366,7 +366,7 @@ public class DataManager
 		this.appContentUrl = "FIXME";
 		/* end of FIXME */
 
-		// if all ok, save info to local database for later loading
+		// if all ok, save description to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);
@@ -437,7 +437,7 @@ public class DataManager
 		String[] uris = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_app_content_uris);
 		this.appContentUrl = uris[foundIdx];
 
-		// if all ok, save info to local database for later loading
+		// if all ok, save description to local database for later loading
 		FocusSample fs = new FocusSample(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_USERNAME, this.loginUser);
 		fs.add(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION_LOGIN_PASSWORD, this.loginPassword);

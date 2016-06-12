@@ -159,7 +159,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 				packageInfo = pm.getPackageInfo(activityInfo.activityInfo.packageName, 0);
 			}
 			catch (PackageManager.NameNotFoundException ex) {
-				throw new FocusInternalErrorException("Cannot get package info for application, but we just checked that the application exists");
+				throw new FocusInternalErrorException("Cannot get package description for application, but we just checked that the application exists");
 			}
 			this.installedVersion = packageInfo.versionName;
 		}

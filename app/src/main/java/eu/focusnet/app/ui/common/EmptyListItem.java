@@ -1,3 +1,11 @@
+package eu.focusnet.app.ui.common;
+
+import android.graphics.Bitmap;
+
+import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.R;
+import eu.focusnet.app.ui.util.UiHelper;
+
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -18,43 +26,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.ui.common;
-
-import android.graphics.Bitmap;
-
-/**
- */
-public abstract class AbstractListItem
+// used if no entry found for list. default placeholder.
+public class EmptyListItem extends SimpleListItem
 {
 
-	protected String title;
-	protected Bitmap icon;
-
-	public AbstractListItem(Bitmap icon, String title)
+	public EmptyListItem()
 	{
-		this.icon = icon;
-		this.title = title;
+		super(
+				UiHelper.getBitmap(FocusApplication.getInstance(), R.drawable.ic_chevron_right),
+				FocusApplication.getInstance().getString(R.string.n_a)
+		);
 	}
-
-	public String getTitle()
-	{
-		return title;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
-	public Bitmap getIcon()
-	{
-		return icon;
-	}
-
-	public void setIcon(Bitmap icon)
-	{
-		this.icon = icon;
-	}
-
-	public abstract int getType();
 }

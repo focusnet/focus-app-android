@@ -11,5 +11,6 @@
     <dimen name="focus_drawer_width">300dp</dimen>
     <dimen name="focus_max_image_preview_height">250dp</dimen>
     <dimen name="focus_divider_height">1dp</dimen>
+    <dimen name="focus_min_drawer_intro_height">100dp</dimen>
 
 </resources>

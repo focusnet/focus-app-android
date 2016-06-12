@@ -173,15 +173,14 @@ public abstract class WidgetFragment extends Fragment
 
 		// and finally set the title
 		TextView textTitle = (TextView) this.rootView.findViewById(R.id.widget_title);
-		if (this.widgetInstance == null || this.widgetInstance.getTitle() == null) {
-			if (textTitle != null) {
+		if (textTitle != null) {
+			if (this.widgetInstance == null || this.widgetInstance.getTitle() == null) {
 				((ViewGroup) textTitle.getParent()).removeView(textTitle);
 			}
+			else {
+				textTitle.setText(this.widgetInstance.getTitle());
+			}
 		}
-		else {
-			textTitle.setText(this.widgetInstance.getTitle());
-		}
-
 	}
 
 	/**

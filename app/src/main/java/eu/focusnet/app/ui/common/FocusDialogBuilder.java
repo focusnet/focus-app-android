@@ -37,7 +37,7 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 	{
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
-		this.rootView = inflater.inflate(R.layout.dialog_layout_custom, null);
+		this.rootView = inflater.inflate(R.layout.dialog_layout, null);
 		this.setView(this.rootView);
 	}
 

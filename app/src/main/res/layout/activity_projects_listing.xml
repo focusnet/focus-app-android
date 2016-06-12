@@ -20,6 +20,5 @@
         <ListView 
             android:id="@+id/focus_drawer"
             style="@style/FocusDrawer"/>
-
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

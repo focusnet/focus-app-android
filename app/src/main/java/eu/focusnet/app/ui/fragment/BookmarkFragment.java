@@ -39,10 +39,10 @@ import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
-import eu.focusnet.app.ui.adapter.StandardListAdapter;
-import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.ui.common.HeaderListItem;
-import eu.focusnet.app.ui.common.StandardListItem;
+import eu.focusnet.app.ui.adapter.NavigationListAdapter;
+import eu.focusnet.app.ui.common.EmptyListItem;
+import eu.focusnet.app.ui.common.FeaturedListItem;
+import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -52,7 +52,7 @@ import eu.focusnet.app.ui.util.UiHelper;
 public class BookmarkFragment extends ListFragment
 {
 
-	private ArrayList<AbstractListItem> abstractItems;
+	private ArrayList<SimpleListItem> listItems;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -71,10 +71,10 @@ public class BookmarkFragment extends ListFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
-		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
 
 			Intent intent;
-			StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 
 			String path = selectedItem.getPath();
 			String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
@@ -108,40 +108,47 @@ public class BookmarkFragment extends ListFragment
 		ArrayList<Bookmark> pages = bookmark.getPages();
 		ArrayList<Bookmark> tools = bookmark.getTools();
 
-		abstractItems = new ArrayList<>();
-		AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
-				getResources().getString(R.string.bookmark_header_dashboard), null);
-		abstractItems.add(headerProjectsListItem);
+		listItems = new ArrayList<>();
+		SimpleListItem headerProjectsListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
+				getResources().getString(R.string.bookmark_header_dashboard));
+		listItems.add(headerProjectsListItem);
 
 		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 		if (!pages.isEmpty()) {
 			for (Bookmark bl : pages) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
-						bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
-				abstractItems.add(drawListItem);
+				FeaturedListItem drawListItem = new FeaturedListItem(
+						bl.getPath(),
+						UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+						bl.getName(),
+						bl.getPath(),
+						rightIcon,
+						true,
+						Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()
+				);
+				listItems.add(drawListItem);
 			}
 		}
 		else {
-			// FIXME add empty list item (non-clickable) if no pages found
+			listItems.add(new EmptyListItem());
 		}
 
-		AbstractListItem headerToolListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
-				getString(R.string.bookmark_header_tool), null);
-		abstractItems.add(headerToolListItem);
+		SimpleListItem headerToolListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
+				getString(R.string.bookmark_header_tool));
+		listItems.add(headerToolListItem);
 
 		if (!tools.isEmpty()) {
 			for (Bookmark bl : tools) {
-				StandardListItem drawListItem = new StandardListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
+				FeaturedListItem drawListItem = new FeaturedListItem(bl.getPath(), UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right),
 						bl.getName(), bl.getPath(), rightIcon, true, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
-				abstractItems.add(drawListItem);
+				listItems.add(drawListItem);
 			}
 		}
 		else {
-			// FIXME add empty list item (non-clickable) if no pages found
+			listItems.add(new EmptyListItem());
 		}
 
-		StandardListAdapter adapter = new StandardListAdapter(getActivity(), abstractItems);
+		NavigationListAdapter adapter = new NavigationListAdapter(getActivity(), listItems);
 
 		setListAdapter(adapter);
 	}

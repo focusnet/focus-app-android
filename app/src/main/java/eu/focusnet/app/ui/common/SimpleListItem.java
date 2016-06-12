@@ -1,13 +1,3 @@
-package eu.focusnet.app.ui.fragment;
-
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import eu.focusnet.app.R;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -27,29 +17,36 @@ import eu.focusnet.app.R;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-public class AboutFragment extends DialogFragment
+
+package eu.focusnet.app.ui.common;
+
+import android.graphics.Bitmap;
+
+/**
+ * Drawer list item which contains an icon, a title and an description
+ * This is the standard list drawer list item
+ *
+ * FIFXME used for headers in navigation list and for drawer menu
+ */
+public class SimpleListItem
 {
+	private final String title;
+	private final Bitmap icon;
 
-	// FIXME FIXM TO INCLUDE:
-	/*
-
-	version number
-	app name
-	consortium member
-	licenses of all libs
-	description of project
-	link to webpage
-	copyright
-
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public SimpleListItem(Bitmap icon, String title)
 	{
-		super.onCreate(savedInstanceState);
-		this.getDialog().setTitle(R.string.about_focus_title);
-		View viewRoot = inflater.inflate(R.layout.fixme_todo_fragment_page_about, container, false);
-		// FIXME TODO	setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Dialog);
-		return viewRoot;
+		this.icon = icon;
+		this.title = title;
 	}
 
+	public Bitmap getIcon()
+	{
+		return icon;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
 }
+

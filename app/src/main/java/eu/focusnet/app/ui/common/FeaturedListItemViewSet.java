@@ -20,31 +20,13 @@
 
 package eu.focusnet.app.ui.common;
 
-import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-/**
- * Header list item which contains a left icon, a title and a right icon
- * This is the header item from a list
- */
-public class HeaderListItem extends AbstractListItem
+public class FeaturedListItemViewSet extends SimpleListItemViewSet
 {
-
-	public static final int TYPE_HEADER = 0;
-	private Bitmap rightIcon;
-
-	public HeaderListItem(Bitmap icon, String title, Bitmap rightIcon)
-	{
-		super(icon, title);
-		this.rightIcon = rightIcon;
-	}
-
-	public Bitmap getRightIcon()
-	{
-		return rightIcon;
-	}
-
-	public int getType()
-	{
-		return TYPE_HEADER;
-	}
+	public ImageView leftIcon;
+	public TextView title;
+	public TextView description;
+	public ImageView rightIcon;
 }

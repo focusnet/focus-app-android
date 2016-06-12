@@ -66,7 +66,7 @@ public class ExternalAppFragment extends WidgetFragment
 		}
 		else {
 			textStatus.setText(R.string.not_installed);
-			textStatus.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+			textStatus.setTextColor(getResources().getColor(R.color.red));
 			button.setText(R.string.install_via_google_play);
 		}
 

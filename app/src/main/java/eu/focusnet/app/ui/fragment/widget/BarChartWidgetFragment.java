@@ -143,7 +143,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMinLimits(); ++i) {
 			LimitLine limitLineLowerYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMinLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMinLimitLabel(i));
 			limitLineLowerYAxis.setLineWidth(4f);
-			limitLineLowerYAxis.setLineColor(getResources().getColor(android.R.color.holo_green_dark));
+			limitLineLowerYAxis.setLineColor(getResources().getColor(R.color.green));
 			limitLineLowerYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineLowerYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineLowerYAxis);
@@ -152,7 +152,7 @@ public class BarChartWidgetFragment extends WidgetFragment
 		for (int i = 0; i < ((BarChartWidgetInstance) this.widgetInstance).getNumberOfMaxLimits(); ++i) {
 			LimitLine limitLineUpperYAxis = new LimitLine(((BarChartWidgetInstance) this.widgetInstance).getMaxLimitValue(i).floatValue(), ((BarChartWidgetInstance) this.widgetInstance).getMaxLimitLabel(i));
 			limitLineUpperYAxis.setLineWidth(4f);
-			limitLineUpperYAxis.setLineColor(getResources().getColor(android.R.color.holo_red_light));
+			limitLineUpperYAxis.setLineColor(getResources().getColor(R.color.red));
 			limitLineUpperYAxis.enableDashedLine(10f, 10f, 0f);
 			limitLineUpperYAxis.setTextSize(10f);
 			leftAxis.addLimitLine(limitLineUpperYAxis);

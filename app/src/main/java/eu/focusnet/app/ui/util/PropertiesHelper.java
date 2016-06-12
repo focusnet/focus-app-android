@@ -29,6 +29,8 @@ import java.util.Properties;
 
 /**
  * A helper class used for retrieving Properties.
+ *
+ * FIXME should not be in UI package
  */
 public class PropertiesHelper
 {

@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009966</color> <!-- used dans applats 88CC88 -->
+    <color name="colorPrimary">#009966</color>
     <color name="colorPrimaryDark">#3aa170</color>
+    <color name="defaultBackground">#ffffff</color>
+    <color name="defaultTextColor">#000000</color>
+    <color name="defaultTextColorNegative">@android:color/white</color>
+
+    <color name="listDividerColor">#e8e8e8</color>
+    <color name="lightGreenForSelectedElement">#daf1d9</color>
 
     <color name="table_header_text">@android:color/white</color>
     <color name="table_data_row_even">@android:color/white</color>
-    <color name="table_data_row_odd">#daf1d9</color>
+    <color name="table_data_row_odd">@color/lightGreenForSelectedElement</color>
 
     <color name="list_item_title">#aaaaaa</color>
     <color name="list_item_background">@android:color/white</color>
-    <color name="list_item_background_pressed">#daf1d9</color>
+    <color name="list_item_background_pressed">@color/lightGreenForSelectedElement</color>
 
-    <color name="text_on_dark_background">@android:color/white</color>
-    <color name="text_on_light_background">@android:color/black</color>
+    <color name="red">@android:color/holo_red_dark</color>
+    <color name="green">@color/colorPrimary</color>
+    <color name="orange">@android:color/holo_orange_dark</color>
 </resources>

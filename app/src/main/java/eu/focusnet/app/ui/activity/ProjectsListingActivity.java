@@ -20,27 +20,30 @@
 
 package eu.focusnet.app.ui.activity;
 
-import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -50,17 +53,14 @@ import java.util.Date;
 import eu.focusnet.app.BuildConfig;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.ui.adapter.DrawerListAdapter;
-import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.ui.common.DrawerListItem;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
-import eu.focusnet.app.ui.common.HeaderDrawerListItem;
-import eu.focusnet.app.ui.fragment.AboutFragment;
+import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelper;
 
 /**
@@ -68,14 +68,13 @@ import eu.focusnet.app.ui.util.UiHelper;
  */
 public class ProjectsListingActivity extends ToolbarEnabledActivity
 {
+	private static final String ASSETS_ABOUT_PAGE = "documentation/about.html";
+
 	protected DrawerLayout drawerLayout;
 	protected ListView drawerListMenu;
 	protected ActionBarDrawerToggle drawerToggle;
-	protected ArrayList<AbstractListItem> drawerItems;
-	private CharSequence drawerTitle;
-	private CharSequence savedTitle;
+	protected ArrayList<SimpleListItem> drawerItems;
 	private int sectionToRender;
-	private String[] navMenuTitles;
 	private CronService cronService;
 	private boolean cronBound = false;
 	/**
@@ -84,8 +83,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	private ServiceConnection cronServiceConnection = new ServiceConnection()
 	{
 		@Override
-		public void onServiceConnected(ComponentName className,
-									   IBinder service)
+		public void onServiceConnected(ComponentName className, IBinder service)
 		{
 			// We've bound to LocalService, cast the IBinder and get CronService instance
 			CronService.CronBinder binder = (CronService.CronBinder) service;
@@ -99,6 +97,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			cronBound = false;
 		}
 	};
+
 
 
 	/**
@@ -116,6 +115,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		// bind cron service
 		Intent intent = new Intent(this, CronService.class);
 		bindService(intent, this.cronServiceConnection, Context.BIND_AUTO_CREATE);
+
 	}
 
 	@Override
@@ -150,20 +150,12 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	}
 
 
-	// FIXME problems with the title. to be checked.
-	@Override
-	public void setTitle(CharSequence title)
-	{
-		savedTitle = title;
-		toolbar.setTitle(savedTitle);
-	}
-
-
-
 	// called just after setting view
 	@Override
 	protected void setupSpecificUiElements()
 	{
+		LayoutInflater inflater = getLayoutInflater();
+
 		// set the default section that will initially be loaded
 		this.sectionToRender = Constant.UI_MENU_ENTRY_PROJECTS_LISTING;
 
@@ -171,6 +163,33 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		this.drawerItems = this.getDrawerItems();
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerListMenu = (ListView) findViewById(R.id.focus_drawer);
+		if (this.drawerListMenu == null) {
+			throw new FocusInternalErrorException("Cannot retrieve drawer view.");
+		}
+
+		// get the header and add it to the ListView
+		LinearLayout menuHeader = (LinearLayout) inflater.inflate(R.layout.view_drawer_header, null); // FIXME context?
+		menuHeader.setEnabled(false);
+		menuHeader.setOnClickListener(null);
+		this.drawerListMenu.addHeaderView(menuHeader, null, false);
+		// adjust content of header
+		String appVersion = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
+		TextView appInfo = (TextView) findViewById(R.id.drawer_app_info);
+		if (appInfo != null) {
+			appInfo.setText(appVersion); // FIXME for production version, we should put the name/email of the user
+		}
+		// scroll the menu to the very top (at the top of the header)
+		// set in a runnable such that this is called when the system decides, an not too early.
+		this.drawerListMenu.post(new Runnable()
+								 {
+									 @Override
+									 public void run()
+									 {
+										 drawerListMenu.smoothScrollToPositionFromTop(0, 0);
+									 }
+								 }
+		);
+
 		this.drawerLayout.bringToFront();
 		this.drawerListMenu.bringToFront();
 		this.drawerListMenu.setOnItemClickListener(this.getOnClickDrawerItemListener());
@@ -178,9 +197,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		// Assign a ListAdapter to our Drawer
 		DrawerListAdapter adapter = new DrawerListAdapter(getApplicationContext(), this.drawerItems);
 		drawerListMenu.setAdapter(adapter);
-
-		// Save the title // FIXME problems with title
-		this.savedTitle = this.drawerTitle = getTitle();
 
 		this.drawerToggle = new ActionBarDrawerToggle(
 				this,
@@ -207,9 +223,20 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	protected void doInPageUiOperations()
 	{
 		switch (this.sectionToRender) {
-			case Constant.UI_MENU_ENTRY_ABOUT: // this fragment will not replace
-				AboutFragment f = new AboutFragment();
-				f.show(getSupportFragmentManager(), getString(R.string.about_focus));
+			case Constant.UI_MENU_ENTRY_ABOUT:
+				LayoutInflater inflater = LayoutInflater.from(this);
+				// LayoutInflater inflater = getLayoutInflater();
+				final WebView dialogContent = (WebView) inflater.inflate(R.layout.dialog_content_about, null);
+				dialogContent.loadUrl("file:///android_asset/" + ASSETS_ABOUT_PAGE);
+				final FocusDialogBuilder builder = new FocusDialogBuilder(this)
+						.removeNeutralButton()
+						.removeNegativeButton()
+						.removePositiveButton()
+						.setCancelable(true)
+						.insertContent(dialogContent)
+						.setTitle(getString(R.string.about_focus_title));
+				AlertDialog dialog = builder.create();
+				dialog.show();
 				break;
 			case Constant.UI_MENU_ENTRY_LOGOUT:
 				final Thread logoutThread = new Thread()
@@ -235,9 +262,9 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				break;
 		}
 
-
-		drawerLayout.closeDrawer(this.drawerListMenu); // should be after replaceFragment
-
+		if (this.sectionToRender != 0) {
+			drawerLayout.closeDrawer(this.drawerListMenu);
+		}
 	}
 
 	@Override
@@ -262,15 +289,11 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	}
 
 
-
-
-
 	/**
 	 * Register a click listener for drawer items
 	 *
 	 * @return a ListView
-	 *
-	 * // FIXME the header (image + infos) is clickable, which may not be good.
+	 * <p/>
 	 */
 	private ListView.OnItemClickListener getOnClickDrawerItemListener()
 	{
@@ -279,8 +302,21 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				sectionToRender = position;
-				applyUiChanges();
+				// do not reload sections when clicking the same menu entry
+				if (position == 0) {
+					// we clicked the ListView's header
+				}
+				else if (position == sectionToRender && fragment != null) {
+					// we do not allow reloading of sections that push a fragment in the
+					// main content to avoid issues with the BACK button. Howeever if no fragment
+					// is pushed, as this is the case with the About dialog, then we allow to
+					// reload.
+					drawerLayout.closeDrawer(drawerListMenu);
+				}
+				else {
+					sectionToRender = position;
+					applyUiChanges();
+				}
 			}
 		};
 	}
@@ -288,23 +324,26 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 	/**
 	 * Listener for the back button
-	 *
+	 * <p/>
 	 * FIXME if we have more than 2 menu entries in the Drawer that load their fragments in the
 	 * main content, that may be more complicated.
-	 *
+	 * <p/>
 	 * FIXME no animation?
+	 * <p/>
+	 * also, we block reloading the same page in the clicklistener of the menu such that we don't have problems here.
 	 */
 	@Override
 	public void onBackPressed()
 	{
 		//Navigate back to the last Fragment or exit the application
-		android.app.FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 		// If we have more than one fragments in the stack remove the last inserted
 		// This is the case where we move from Bookmarks back to the home page via the BACK button
 		if (fragmentManager.getBackStackEntryCount() > 1) {
 			//remove the last inserted fragment from the stack
 			fragmentManager.popBackStackImmediate();
 
+			int b = fragmentManager.getBackStackEntryCount();
 			// hard coded things is ok as we are only playing with 2 possible targets, and
 			// hence hitting the BACK button will always make us go back to the home page
 			// (if we hit the BACK button on the home page, we exit the app)
@@ -312,16 +351,13 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			highlightSelectedMenuItem(Constant.UI_MENU_ENTRY_PROJECTS_LISTING);
 
 			// close the drawer
-			this.drawerLayout.closeDrawer(drawerListMenu);
+			this.drawerLayout.closeDrawer(this.drawerListMenu);
 		}
 		else {
 			// Exit the application
 			super.onBackPressed();
 		}
 	}
-
-
-
 
 
 	/**
@@ -360,7 +396,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	}
 
 
-
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -371,7 +406,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					return false;
 				}
 
-				LayoutInflater inflater = LayoutInflater.from(this);
+
+				LayoutInflater inflater = getLayoutInflater();
 				final LinearLayout dialogContent = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
 
 				final Context context = this;
@@ -433,7 +469,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					builder.setNegativeButtonText(getString(R.string.close));
 
 					statusField.setText(R.string.sync_already_in_progress);
-					statusField.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+					statusField.setTextColor(getResources().getColor(R.color.orange));
 
 					instructions.setVisibility(View.GONE);
 					status.setVisibility(View.VISIBLE);
@@ -485,6 +521,31 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	{
 		getMenuInflater().inflate(R.menu.menu_projects_listing, menu);
 		return true;
+	}
+
+	/**
+	 * This method gives a list of items to display in the left drawer.
+	 *
+	 * @return An array list of items to display in the drawer
+	 */
+	private ArrayList<SimpleListItem> getDrawerItems()
+	{
+		// load menu items and icons
+		String[] navMenuTitles = getResources().getStringArray(R.array.drawer_items);
+		TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.drawer_icons);
+
+		ArrayList<SimpleListItem> drawerItems = new ArrayList<>();
+
+		for (int i = 0; i < navMenuTitles.length; i++) {
+			String menuTitle = navMenuTitles[i];
+			SimpleListItem drawListItem = new SimpleListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle);
+			drawerItems.add(drawListItem);
+		}
+
+		// Release the typed array
+		navMenuIcons.recycle();
+
+		return drawerItems;
 	}
 
 	/**
@@ -542,45 +603,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			this.builder.getNegativeButton().setText(R.string.close);
 		}
 	}
-
-
-	/**
-	 * This method gives a list of items to display in the left drawer.
-	 *
-	 * @return An array list of items to display in the drawer
-	 *
-	 * FIXME I don't liek this method. see if can be improved.
-	 */
-	private ArrayList<AbstractListItem> getDrawerItems()
-	{
-		// load menu items
-		navMenuTitles = getResources().getStringArray(R.array.drawer_items);
-
-		// load menu icons
-		TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.drawer_icons);
-
-		ArrayList<AbstractListItem> drawerItems = new ArrayList<>();
-
-		String appVersion = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
-
-		// FIXME if not in Demo mode we should use be the below line - but we should rewrite this UI component anyway
-		// User user = FocusApplication.getInstance().getDataManager().getUser();
-		// drawerItems.add(new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), user.getFirstName() + " " + user.getLastName(), user.getCompany(), user.getEmail()));
-		HeaderDrawerListItem header = new HeaderDrawerListItem(UiHelper.getBitmap(this, R.drawable.focus_logo_small), appVersion, "", "");
-		drawerItems.add(header);
-
-		for (int i = 0; i < navMenuTitles.length; i++) {
-			String menuTitle = navMenuTitles[i];
-			DrawerListItem drawListItem = new DrawerListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle, null); //Null for info
-			drawerItems.add(drawListItem);
-		}
-
-		// Recycle the typed array
-		navMenuIcons.recycle();
-
-		return drawerItems;
-	}
-
 
 
 }

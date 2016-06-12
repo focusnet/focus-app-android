@@ -42,10 +42,10 @@ import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.ProjectActivity;
-import eu.focusnet.app.ui.adapter.StandardListAdapter;
-import eu.focusnet.app.ui.common.AbstractListItem;
-import eu.focusnet.app.ui.common.HeaderListItem;
-import eu.focusnet.app.ui.common.StandardListItem;
+import eu.focusnet.app.ui.adapter.NavigationListAdapter;
+import eu.focusnet.app.ui.common.EmptyListItem;
+import eu.focusnet.app.ui.common.FeaturedListItem;
+import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -57,7 +57,7 @@ import eu.focusnet.app.ui.util.UiHelper;
 public class ProjectsListingFragment extends ListFragment
 {
 
-	private ArrayList<AbstractListItem> abstractItems;
+	private ArrayList<SimpleListItem> listItems;
 
 
 	@Override
@@ -75,14 +75,14 @@ public class ProjectsListingFragment extends ListFragment
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
 		//Test where the user has clicked and navigate to this project or notifications
-		if (l.getAdapter().getItemViewType(position) != HeaderListItem.TYPE_HEADER) {
+		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
 			/* if (position > notifHeaderPosition) {
 				//TODO navigate to notifications ...
 			}
 
 			else {*/
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
-			StandardListItem selectedItem = (StandardListItem) abstractItems.get(position);
+			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
 			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
@@ -95,44 +95,55 @@ public class ProjectsListingFragment extends ListFragment
 	 * This class loads all projects from the database belonging to the logged user and displays
 	 * the project title and a small description of the project
 	 */
-	private class ProjectsListingBuilderTask extends AsyncTask<Void, Void, StandardListAdapter>
+	private class ProjectsListingBuilderTask extends AsyncTask<Void, Void, NavigationListAdapter>
 	{
 
 		@Override
-		protected StandardListAdapter doInBackground(Void... voids)
+		protected NavigationListAdapter doInBackground(Void... voids)
 		{
-			abstractItems = new ArrayList<>();
-			AbstractListItem headerProjectsListItem = new HeaderListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_project_negative),
-					getString(R.string.focus_header_project),
-					null); // filter icon: ViewUtil.getBitmap(getActivity(), R.drawable.ic_filter)
+			listItems = new ArrayList<>();
+			SimpleListItem headerProjectsListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_project_negative),
+					getString(R.string.focus_header_project));
 
-			abstractItems.add(headerProjectsListItem);
+			listItems.add(headerProjectsListItem);
 			DataManager dm = FocusApplication.getInstance().getDataManager();
 			UserPreferences preference = dm.getUserPreferences();
 
 			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
-			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
-			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
+			Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
+			Bitmap rightIconIfActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
-			for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
-				ProjectInstance p = entry.getValue();
+			if (!projects.isEmpty()) {
+				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
+					ProjectInstance p = entry.getValue();
 
-				// FIXME for now simply ignore the special __welcome__ project that may contain tool-pages.
-				if (p.getGuid().equals(ProjectInstance.WELCOME_PROJECT_IDENTIFIER)) {
-					continue;
+					// FIXME for now simply ignore the special __welcome__ project that may contain tool-pages.
+					if (p.getGuid().equals(ProjectInstance.WELCOME_PROJECT_IDENTIFIER)) {
+						continue;
+					}
+
+					String projectPath = AppContentInstance.buildPath(p);
+					String projectTitle = p.getTitle();
+					String projectDesc = p.getDescription();
+
+					String bookmarkLinkType = Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
+					// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
+
+					FeaturedListItem drawListItem = new FeaturedListItem(
+							projectPath,
+							UiHelper.getBitmap(getActivity(), R.drawable.ic_project),
+							projectTitle,
+							projectDesc,
+							checkedBookmark ? rightIconIfActive : rightIconIfNotActive,
+							checkedBookmark,
+							bookmarkLinkType
+					);
+					listItems.add(drawListItem);
 				}
-
-				String projectId = AppContentInstance.buildPath(p);
-				String projectTitle = p.getTitle();
-				String projectDesc = p.getDescription();
-
-				String bookmarkLinkType = Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
-				// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
-				boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectId, projectTitle, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
-
-				StandardListItem drawListItem = new StandardListItem(projectId, UiHelper.getBitmap(getActivity(), R.drawable.ic_project), projectTitle, projectDesc,
-						checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, bookmarkLinkType);
-				abstractItems.add(drawListItem);
+			}
+			else {
+				listItems.add(new EmptyListItem());
 			}
 
 			// FIXME TOOLS of __welcome__ should be here.; for now not implemented.
@@ -144,9 +155,9 @@ public class ProjectsListingFragment extends ListFragment
 			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelper.getBitm(ap(getActivity(), R.drawable.ic_notification),
 					getString(R.string.focus_header_notification),
 					null);
-			abstractItems.add(headerNotificationListItem);
+			listItems.add(headerNotificationListItem);
 
-			notifHeaderPosition = abstractItems.size() - 1;
+			notifHeaderPosition = listItems.size() - 1;
 
 			notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
 			// load icons
@@ -155,19 +166,19 @@ public class ProjectsListingFragment extends ListFragment
 			for (int i = 0; i < notificationTitels.length; i++) {
 				String notifTitle = notificationTitels[i];
 				//TODO set correct path (for now the title is set as the path)
-				StandardListItem drawListItem = new StandardListItem(notifTitle, UiHelper.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "N/A");
-				abstractItems.add(drawListItem);
+				FeaturedListItem drawListItem = new FeaturedListItem(notifTitle, UiHelper.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "N/A");
+				listItems.add(drawListItem);
 			}
 
 */
 
-			return new StandardListAdapter(getActivity(), abstractItems);
+			return new NavigationListAdapter(getActivity(), listItems);
 		}
 
 		@Override
-		protected void onPostExecute(StandardListAdapter standardListAdapter)
+		protected void onPostExecute(NavigationListAdapter navigationListAdapter)
 		{
-			setListAdapter(standardListAdapter);
+			setListAdapter(navigationListAdapter);
 		}
 	}
 

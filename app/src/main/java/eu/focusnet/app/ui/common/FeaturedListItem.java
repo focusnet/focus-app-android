@@ -23,35 +23,75 @@ package eu.focusnet.app.ui.common;
 import android.graphics.Bitmap;
 
 /**
- * Drawer header item which contains an icon, the username, email and the company, the user belongs to
- * This is the header drawer item
+ * Standard list item which contains
+ * This is the standard item from a list
+ * <p/>
+ * FIXME used for clickable entries in navigationn lists
  */
-public class HeaderDrawerListItem extends AbstractListItem
+public class FeaturedListItem extends SimpleListItem
 {
 
-	public static final int TYPE_HEADER_DRAWER = 0;
-	private String email, company;
+	private String path;
+	private String description;
+	private Bitmap rightIcon;
+	private boolean isBookmarked;
+	private String typeOfBookmark;
 
-	public HeaderDrawerListItem(Bitmap logo, String user, String email, String company)
+
+	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap rightIcon, boolean isBookmarked, String typeOfBookmark)
 	{
-		super(logo, user);
-		this.email = email;
-		this.company = company;
+		super(icon, title);
+		this.description = description;
+		this.path = path;
+		this.rightIcon = rightIcon;
+		this.isBookmarked = isBookmarked;
+		this.typeOfBookmark = typeOfBookmark;
 	}
 
-	public String getEmail()
+
+	public Bitmap getRightIcon()
 	{
-		return email;
+		return rightIcon;
 	}
 
-	public String getCompany()
+	public void setRightIcon(Bitmap rightIcon)
 	{
-		return company;
+		this.rightIcon = rightIcon;
 	}
 
-	@Override
-	public int getType()
+	public String getDescription()
 	{
-		return TYPE_HEADER_DRAWER;
+		return description;
 	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public boolean isExistingBookmark()
+	{
+		return isBookmarked;
+	}
+
+	public void setIsRightIconActive(boolean isBookarmed)
+	{
+		this.isBookmarked = isBookarmed;
+	}
+
+	public String getTypeOfBookmark()
+	{
+		return typeOfBookmark;
+	}
+
+	public String getPath()
+	{
+		return path;
+	}
+
+	public void setPath(String path)
+	{
+		this.path = path;
+	}
+
 }

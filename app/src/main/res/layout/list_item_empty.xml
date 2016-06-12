@@ -11,10 +11,11 @@
         android:visibility="invisible"/>
 
     <TextView
+        style="@style/FocusListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/focus_default_spacing_x0_375"
+        android:layout_marginStart="@dimen/focus_adjust_for_pixel_perfect_with_actionbar_icon"
         android:text="@string/not_available"
         android:textColor="@color/textColorDiscrete"/>
 

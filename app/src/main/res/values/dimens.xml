@@ -3,7 +3,7 @@
     <dimen name="focus_default_spacing">16dp</dimen>
     <dimen name="focus_default_spacing_x1_5">24dp</dimen>
     <dimen name="focus_default_spacing_x0_5">8dp</dimen>
-    <dimen name="focus_default_spacing_x0_375">6dp</dimen>
+    <dimen name="focus_adjust_for_pixel_perfect_with_actionbar_icon">6dp</dimen>
     <dimen name="focus_default_spacing_x0_25">4dp</dimen>
     <dimen name="focus_default_spacing_x1_25">20dp</dimen>
     <dimen name="focus_default_spacing_x0_75">12dp</dimen>

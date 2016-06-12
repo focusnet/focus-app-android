@@ -307,10 +307,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 								doIt = false;
 							}
 						case Constant.UI_MENU_ENTRY_ABOUT:
+						case Constant.UI_MENU_ENTRY_LOGOUT:
 							sectionToRender = doIt ? position : 0;
 							applyUiChanges();
 							break;
-						case Constant.UI_MENU_ENTRY_LOGOUT:
 						default:
 							break;
 					}

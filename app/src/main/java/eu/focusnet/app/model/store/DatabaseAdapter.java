@@ -37,6 +37,9 @@ import eu.focusnet.app.model.util.Constant;
 public class DatabaseAdapter
 {
 
+	/**
+	 * Current version of the database
+	 */
 	private static final int DATABASE_VERSION = 1;
 
 	private DatabaseHelper databaseHelper;
@@ -97,11 +100,11 @@ public class DatabaseAdapter
 		databaseHelper.close();
 	}
 
-	public SQLiteDatabase getDb()
-	{
-		return this.db;
-	}
-
+	/**
+	 * Helper function to obtain a Sample Data Access Object
+	 *
+	 * @return
+	 */
 	public SampleDao getSampleDao()
 	{
 		return new SampleDao(this.openWritableDatabase(), this.uniqueInstanceIdentifier);

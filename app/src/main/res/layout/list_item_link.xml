@@ -44,6 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/bookmark"
-        android:padding="16dp"/>
+        android:padding="@dimen/focus_default_spacing"/>
 
 </LinearLayout>

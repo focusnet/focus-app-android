@@ -48,7 +48,7 @@ import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpRequest;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
-import eu.focusnet.app.util.PropertiesHelper;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 
 
@@ -268,7 +268,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		{
 			String header = null;
 			try {
-				header = PropertiesHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
+				header = ConfigurationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
 			}
 			catch (IOException e) {
 				throw new FocusInternalErrorException("Impossible to retrieve access token in properties.");

@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by admin on 03.08.2015.
  */
+@SuppressWarnings("unused")
 public class PageTemplate
 {
 

@@ -49,7 +49,7 @@ import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.HttpResponse;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
-import eu.focusnet.app.util.PropertiesHelper;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 /**
  * The DataManager is responsible for building the application content and data management.
@@ -418,7 +418,7 @@ public class DataManager
 		this.demoUseCase = useCase;
 
 		// user and preferences URIs
-		String testServer = PropertiesHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER, FocusApplication.getInstance());
+		String testServer = ConfigurationHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER, FocusApplication.getInstance());
 		this.userUrl = testServer + "/data/focus-user/" + userId;
 		this.prefUrl = testServer + "/data/focus-user/" + userId + "/focus-mobile-app-preferences/" + this.demoUseCase;
 
@@ -547,6 +547,8 @@ public class DataManager
 		DataManager newDm = new DataManager();
 		try {
 			newDm.retrieveApplicationData();
+
+			// FIXME update language
 		}
 		catch (FocusMissingResourceException ex) {
 			mustRecover = true;

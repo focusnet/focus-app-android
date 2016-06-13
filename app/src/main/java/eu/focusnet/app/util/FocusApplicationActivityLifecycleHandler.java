@@ -104,4 +104,29 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 			this.currentActivity.startActivity(intent);
 		}
 	}
+
+	// FIXME goback to home activity
+
+	// FIXME restart app
+
+	/* FIXME change language
+	Locale locale = new Locale("en_US");
+Locale.setDefault(locale);
+Configuration config = new Configuration();
+config.locale = locale;
+context.getApplicationContext().getResources().updateConfiguration(config, null);
+
+Locale locale = new Locale("ru");
+Locale.setDefault(locale);
+Configuration config = new Configuration();
+config.locale = locale;
+getBaseContext().getResources().updateConfiguration(config,
+      getBaseContext().getResources().getDisplayMetrics());
+
+
+
+      getResources.getConfiguration() -> update it
+
+
+	 */
 }

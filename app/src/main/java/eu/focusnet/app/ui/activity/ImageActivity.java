@@ -46,7 +46,7 @@ public class ImageActivity extends Activity
 		if (extras == null) {
 			throw new FocusInternalErrorException("ImageActivity MUST have an extra.");
 		}
-		Uri imageUri = (Uri) extras.get(Constant.UI_EXTRA_IMAGE_URI);
+		Uri imageUri = (Uri) extras.get(Constant.UI_EXTRA_IMAGE_URI); // might come from savedInstance
 		tookImage.setImageURI(imageUri);
 	}
 }

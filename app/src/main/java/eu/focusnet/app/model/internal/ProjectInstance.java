@@ -108,25 +108,36 @@ public class ProjectInstance extends AbstractInstance
 			return;
 		}
 
+		// 2x same same FIXME
 		if (this.template.getDashboards() != null) {
 			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
-			// if any page is invalid, mark this project as invalid.
-			for (LinkedHashMap.Entry<String, PageInstance> entry : this.dashboards.entrySet()) {
-				if (!entry.getValue().isValid()) {
-					this.markAsInvalid();
-					break;
+			if (this.dashboards == null) {
+				this.markAsInvalid();
+			}
+			else {
+				// if any page is invalid, mark this project as invalid.
+				for (LinkedHashMap.Entry<String, PageInstance> entry : this.dashboards.entrySet()) {
+					if (!entry.getValue().isValid()) {
+						this.markAsInvalid();
+						break;
+					}
 				}
 			}
 		}
 
 		if (this.template.getTools() != null) {
 			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
-			// if any page is invalid, mark this project as invalid.
-			if (this.isValid()) {
-				for (LinkedHashMap.Entry<String, PageInstance> entry : this.tools.entrySet()) {
-					if (!entry.getValue().isValid()) {
-						this.markAsInvalid();
-						break;
+			if (this.tools == null) {
+				this.markAsInvalid();
+			}
+			else {
+				// if any page is invalid, mark this project as invalid.
+				if (this.isValid()) {
+					for (LinkedHashMap.Entry<String, PageInstance> entry : this.tools.entrySet()) {
+						if (!entry.getValue().isValid()) {
+							this.markAsInvalid();
+							break;
+						}
 					}
 				}
 			}
@@ -247,7 +258,7 @@ public class ProjectInstance extends AbstractInstance
 	 * - my-project[http://www.example.org/data/123]
 	 *
 	 * @param expandedGuid
-	 * @param type          Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
+	 * @param type         Either PageInstance.PageType.DASHBOARD or PageInstance.PageType.TOOL
 	 * @return
 	 */
 	public PageInstance getPageFromGuid(String expandedGuid, String type)

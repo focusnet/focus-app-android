@@ -60,8 +60,11 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 
 		// populate the spinner with values
 		Spinner spinner = (Spinner) findViewById(R.id.login_demo_field_select_use_case);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-				R.array.demo_use_cases_labels, android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this,
+				R.array.demo_use_cases_labels,
+				android.R.layout.simple_spinner_item
+		);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(this);
@@ -94,7 +97,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 * <p/>
 	 * This logic requires a network connection.
 	 */
-	public void onClick(View view)
+	public void onClickStartDemo(View view)
 	{
 		if (FocusApplication.getInstance().getNetworkManager().isNetworkAvailable()) {
 

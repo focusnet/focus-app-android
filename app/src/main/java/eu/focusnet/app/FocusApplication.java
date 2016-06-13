@@ -34,13 +34,15 @@ import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
-import eu.focusnet.app.util.PropertiesHelper;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 /**
  * FOCUS Application
@@ -149,9 +151,9 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 			try {
-				form_uri = PropertiesHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
-				user = PropertiesHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
-				pass = PropertiesHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
+				form_uri = ConfigurationHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
+				user = ConfigurationHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
+				pass = ConfigurationHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
 			}
 			catch (IOException ex) {
 				throw new FocusInternalErrorException("Cannot get property in focus.properties");
@@ -307,4 +309,6 @@ public class FocusApplication extends Application
 		super.onLowMemory();
 		this.dataManager.freeMemory();
 	}
+
+
 }

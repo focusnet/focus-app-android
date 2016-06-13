@@ -52,6 +52,7 @@ import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
 /**
+ * FIXME we don't use savedInstance mechanism. useful?S
  */
 public abstract class WidgetFragment extends Fragment
 {

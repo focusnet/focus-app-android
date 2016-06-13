@@ -37,6 +37,7 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 /**
  * Entry point activity
@@ -124,6 +125,8 @@ public class EntryPointActivity extends Activity
 			if (dm.isLoggedIn()) {
 				try {
 					dm.retrieveApplicationData();
+
+					ConfigurationHelper.loadLanguage();
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available

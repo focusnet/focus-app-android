@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,6 +63,8 @@ import eu.focusnet.app.ui.util.UiHelper;
 
 /**
  * This Activity contains the list of available projects.
+ *
+ * FIXME a bit messy, to be reorganized.
  */
 public class ProjectsListingActivity extends ToolbarEnabledActivity
 {
@@ -338,7 +341,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * FIXME if we have more than 2 menu entries in the Drawer that load their fragments in the
 	 * main content, that may be more complicated.
 	 * <p/>
-	 * FIXME no animation?
+	 * FIXME no animation? init.setFlags ( ANIMATION ) may help
 	 * <p/>
 	 * also, we block reloading the same page in the clicklistener of the menu such that we don't have problems here.
 	 */
@@ -456,7 +459,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					lastSync = getString(R.string.n_a);
 				}
 				else {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(eu.focusnet.app.model.util.Constant.DATE_FORMAT);
+					DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
 					lastSync = dateFormat.format(new Date(this.cronService.getLastSync()));
 				}
 				TextView lastSyncField = (TextView) instructions.findViewById(R.id.dialog_sync_last_sync_field);

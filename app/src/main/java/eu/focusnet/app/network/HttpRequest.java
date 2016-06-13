@@ -35,7 +35,7 @@ import javax.net.ssl.SSLSocketFactory;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
-import eu.focusnet.app.util.PropertiesHelper;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 /**
  * An HTTP request to be issued to the REST server
@@ -134,7 +134,7 @@ public class HttpRequest
 		}
 
 		// add custom headers when necessary
-		String headers = PropertiesHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost() , app);
+		String headers = ConfigurationHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost() , app);
 		// FIXME For now, multiple headers per host are not supported.
 		if (headers != null) {
 			Pattern p = Pattern.compile("^([^\\s:]+):\\s*(.*)$");

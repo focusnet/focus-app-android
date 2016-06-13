@@ -52,7 +52,7 @@
                 android:id="@+id/login_demo_button_start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClick"
+                android:onClick="onClickStartDemo"
                 android:text="@string/start_demo"
                 />
         </LinearLayout>

@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * Created by admin on 03.08.2015.
  */
+@SuppressWarnings("unused")
 public class WidgetReference
 {
 

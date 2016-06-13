@@ -143,7 +143,6 @@ public class NavigationListAdapter extends BaseAdapter
 
 			itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
 			itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
-			 // not for EMPTY, FIXME
 			if (itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY) {
 				row.setEnabled(false);
 				row.setOnClickListener(null);
@@ -214,7 +213,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 						.insertContent(dialogContent)
 						.removeNeutralButton()
 						.setCancelable(false)
-						.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete_bookmark : R.string.ok)))
+						.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete : R.string.ok)))
 						.setNegativeButtonText(res.getString(R.string.cancel));
 
 				// instantiate
@@ -270,6 +269,8 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 
 	/**
 	 * This class is used for testing if the given credential are correct
+	 *
+	 * FIXME might be used elsewhere, create own file
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>
 	{

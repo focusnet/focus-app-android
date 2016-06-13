@@ -22,6 +22,7 @@ package eu.focusnet.app.model.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -44,6 +45,7 @@ public class AppContentInstance extends AbstractInstance
 	private AppContentTemplate appTemplate;
 	private LinkedHashMap<String, ProjectInstance> projects;
 	private String title;
+	private String language;
 
 	/**
 	 * C'tor
@@ -97,6 +99,9 @@ public class AppContentInstance extends AbstractInstance
 	 */
 	private void build()
 	{
+		// Get the language if available
+		this.language = this.appTemplate.getLanguage();
+
 		// Get the global app content title
 		this.title = this.appTemplate.getTitle();
 
@@ -250,5 +255,13 @@ public class AppContentInstance extends AbstractInstance
 	public String getTitle()
 	{
 		return title;
+	}
+
+	public String getLanguage()
+	{
+		if (this.language == null) {
+			return Locale.ENGLISH.toString();
+		}
+		return this.language;
 	}
 }

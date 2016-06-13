@@ -45,12 +45,14 @@ import java.util.LinkedHashMap;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+@SuppressWarnings("unused")
 public class AppContentTemplate extends FocusObject
 {
 
 	private String title;
 	private LinkedHashMap<String, String> data;
 	private ArrayList<ProjectTemplate> projects;
+	private String language;
 
 	public ArrayList<ProjectTemplate> getProjects()
 	{
@@ -65,5 +67,10 @@ public class AppContentTemplate extends FocusObject
 	public String getTitle()
 	{
 		return title;
+	}
+
+	public String getLanguage()
+	{
+		return language;
 	}
 }

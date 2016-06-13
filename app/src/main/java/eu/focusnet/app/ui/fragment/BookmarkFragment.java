@@ -113,8 +113,8 @@ public class BookmarkFragment extends ListFragment
 		ArrayList<Bookmark> tools = bookmark.getTools();
 
 		listItems = new ArrayList<>();
-		this.addListItems(pages, R.drawable.ic_category_dashboard_negative, R.string.bookmark_header_dashboard);
-		this.addListItems(tools, R.drawable.ic_category_tool_negative, R.string.bookmark_header_tool);
+		this.addListItems(pages, R.drawable.ic_category_dashboard_negative, R.string.header_dashboard_and_projects);
+		this.addListItems(tools, R.drawable.ic_category_tool_negative, R.string.header_tools);
 
 		NavigationListAdapter adapter = new NavigationListAdapter(getActivity(), listItems);
 

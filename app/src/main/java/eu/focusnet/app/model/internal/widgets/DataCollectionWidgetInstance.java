@@ -26,9 +26,6 @@ import eu.focusnet.app.model.json.WidgetTemplate;
  */
 abstract public class DataCollectionWidgetInstance extends WidgetInstance
 {
-
-	protected final static String CONFIG_LABEL_FIELD = "field";
-
 	private String fieldName;
 
 	public DataCollectionWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)

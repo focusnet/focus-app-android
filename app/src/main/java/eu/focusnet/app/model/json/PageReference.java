@@ -23,9 +23,9 @@ package eu.focusnet.app.model.json;
 /**
  * Created by admin on 03.08.2015.
  */
+@SuppressWarnings("unused")
 public class PageReference
 {
-
 	private String pageid;
 
 	public String getPageid()

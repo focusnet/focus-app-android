@@ -126,7 +126,7 @@ public class ProjectFragment extends ListFragment
 
 			SimpleListItem headerProjectsListItem = new SimpleListItem(
 					UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
-					getString(R.string.header_dashboard)
+					getString(R.string.header_dashboards)
 			);
 			listItems.add(headerProjectsListItem);
 
@@ -154,7 +154,7 @@ public class ProjectFragment extends ListFragment
 
 			SimpleListItem headerToolListItem = new SimpleListItem(
 					UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
-					getString(R.string.header_tool)
+					getString(R.string.header_tools)
 			);
 			listItems.add(headerToolListItem);
 

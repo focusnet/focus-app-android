@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
@@ -68,7 +69,9 @@ public class ConfigurationHelper
 	/**
 	 * Load the proper language based on the value found in the {@link AppContentInstance}
 	 * and modify the current {@link Configuration}. This method must be called when appropriate,
-	 * but will impact all the rest of the life of the application.
+	 * but will impact all the rest of the life of the application. It does not impact the UI
+	 * directly but is typically called from an Activity's on Resume() method, or just before
+	 * redirecting to another Activity.
 	 */
 	public static void loadLanguage()
 	{
@@ -85,7 +88,7 @@ public class ConfigurationHelper
 			// perhaps we have a cousin locale (e.g. fr if fr_CH was requested)?
 			//
 			// FIXME FIXME FIXME
-			// that is not optimall. We change the language but also the l10n
+			// that is not optimal. We change the language but also the l10n
 			// For Switzerland, for example, we may prefer to keep the fr_CH locale
 			// (so that Date/number formatting is like we do in CH), but only change the
 			// language to French or German
@@ -99,7 +102,13 @@ public class ConfigurationHelper
 			if (m.matches()) {
 				targetLocale = new Locale(m.group(1));
 			}
+			else {
+				FocusApplication.reportError(
+						new FocusNotImplementedException("Non fatal: Attempting to initialize an application content with unsupported language |" + language + "|")
+				);
+			}
 		}
+
 
 		// set the language
 		Locale.setDefault(targetLocale);

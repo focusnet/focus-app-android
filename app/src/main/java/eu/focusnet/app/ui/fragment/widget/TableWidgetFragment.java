@@ -52,10 +52,13 @@ public class TableWidgetFragment extends WidgetFragment
 		SimpleTableHeaderAdapter adapter = new SimpleTableHeaderAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableHeaders());
 		adapter.setPaddingTop(25);
 		adapter.setPaddingBottom(25);
-		adapter.setTextColor(getResources().getColor(R.color.table_header_text));
+		adapter.setTextColor(getResources().getColor(R.color.defaultTextColorNegative));
 		tableView.setHeaderAdapter(adapter);
 		tableView.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
-		TableDataRowColorizer<Object> colorizer = TableDataRowColorizers.alternatingRows(R.color.table_data_row_even, R.color.table_data_row_odd);
+		TableDataRowColorizer<Object> colorizer = TableDataRowColorizers.alternatingRows(
+				getResources().getColor(R.color.defaultBackground),
+				getResources().getColor(R.color.lightGreenForSelectedElement)
+		);
 		tableView.setDataRowColorizer(colorizer);
 		tableView.setDataAdapter(new SimpleTableDataAdapter(getActivity(), ((TableWidgetInstance) this.widgetInstance).getTableData()));
 		return this.rootView;

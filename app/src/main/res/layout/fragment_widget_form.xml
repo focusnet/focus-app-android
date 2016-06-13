@@ -6,7 +6,6 @@
 
     <include layout="@layout/include_widget_title" />
 
-
     <TableLayout
         android:id="@+id/formTableLayout"
         android:layout_width="match_parent"

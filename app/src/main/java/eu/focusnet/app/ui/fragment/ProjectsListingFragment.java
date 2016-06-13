@@ -126,9 +126,9 @@ public class ProjectsListingFragment extends ListFragment
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
 
-					String bookmarkLinkType = Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString(); // useless
+					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless
 					// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
-					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(
 							projectPath,

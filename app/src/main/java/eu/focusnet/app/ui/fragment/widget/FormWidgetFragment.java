@@ -53,7 +53,9 @@ import eu.focusnet.app.ui.util.UiHelper;
 public class FormWidgetFragment extends WidgetFragment
 {
 	private static final int TEXTAREA_MAX_NUM_OF_LINES = 10;
+	private static final int UI_DEFAULT_PADDING_BOTTOM = 16;
 	Context context;
+	private int defaultPaddingInPixels;
 
 
 	private void addFieldToUI(FieldInstance f, TableLayout tl)
@@ -76,6 +78,7 @@ public class FormWidgetFragment extends WidgetFragment
 	private void addSelectToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
+		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels);
 
 		boolean noLabel = false;
 		String labelTxt = f.getLabel();
@@ -120,6 +123,7 @@ public class FormWidgetFragment extends WidgetFragment
 	private void addCheckboxToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
+		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels);
 
 		boolean noLabel = false;
 		String labelTxt = f.getLabel();
@@ -166,7 +170,9 @@ public class FormWidgetFragment extends WidgetFragment
 		layout.span = 2;
 
 		TableRow tr = new TableRow(this.context);
+		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels/2);
 		TableRow tr2 = new TableRow(this.context);
+		tr2.setPadding(0, 0, 0, this.defaultPaddingInPixels);
 
 		TextView label = new TextView(this.context);
 		label.setText(f.getLabel());
@@ -194,6 +200,7 @@ public class FormWidgetFragment extends WidgetFragment
 	private void addTextfieldToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
+		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels);
 
 		TextView label = new TextView(this.context);
 		label.setText(f.getLabel());
@@ -249,7 +256,7 @@ public class FormWidgetFragment extends WidgetFragment
 		this.setupWidget(inflater.inflate(R.layout.fragment_widget_form, container, false));
 
 		this.context = this.rootView.getContext();
-
+		this.defaultPaddingInPixels = UiHelper.dpToPixels(UI_DEFAULT_PADDING_BOTTOM, this.context);
 
 		TableLayout tl = (TableLayout) this.rootView.findViewById(R.id.formTableLayout);
 		for (Map.Entry e : ((FormWidgetInstance) this.widgetInstance).getFields().entrySet()) {

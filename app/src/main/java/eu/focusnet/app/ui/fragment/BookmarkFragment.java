@@ -39,7 +39,6 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarksList;
 import eu.focusnet.app.model.json.UserPreferences;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
@@ -162,7 +161,7 @@ public class BookmarkFragment extends ListFragment
 						originalTitle.equals(bl.getName()) ? "" : originalTitle,
 						rightIcon,
 						true,
-						Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()
+						Bookmark.BookmarkLinkType.PAGE.toString()
 				);
 				listItems.add(listItem);
 			}

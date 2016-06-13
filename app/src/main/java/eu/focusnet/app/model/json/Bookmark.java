@@ -26,7 +26,7 @@ package eu.focusnet.app.model.json;
 public class Bookmark
 {
 
-	public enum BOOKMARK_LINK_TYPE
+	public enum BookmarkLinkType
 	{
 		PAGE, TOOL
 	}

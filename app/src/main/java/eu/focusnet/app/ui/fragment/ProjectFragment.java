@@ -140,10 +140,10 @@ public class ProjectFragment extends ListFragment
 					PageInstance dashboard = entry.getValue();
 					String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
 
-					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
-							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString());
+							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.PAGE.toString());
 					listItems.add(drawListItem);
 				}
 			}
@@ -164,10 +164,10 @@ public class ProjectFragment extends ListFragment
 					PageInstance tool = entry.getValue();
 					String toolId = AppContentInstance.buildPath(projectInstance, tool);
 
-					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString()));
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
-							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BOOKMARK_LINK_TYPE.TOOL.toString());
+							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.TOOL.toString());
 					listItems.add(drawListItem);
 				}
 			}

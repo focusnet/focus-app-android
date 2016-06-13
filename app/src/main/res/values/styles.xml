@@ -1,9 +1,5 @@
 <resources>
 
-
-
-
-    <!-- Base application theme. -->
     <style name="FocusTheme" parent="Theme.AppCompat.Light">
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorPrimary">@color/colorPrimary</item>
@@ -14,18 +10,17 @@
         <item name="android:listViewStyle">@style/FocusListStyle</item>
 
         <item name="android:colorBackground">@color/defaultBackground</item>
-        <item name="android:textColorPrimary">@color/defaultTextColor</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="FocusText">
-
     </style>
 
     <style name="FocusText.Medium">
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:lineSpacingMultiplier">@dimen/focus_line_height_multiplier</item>
     </style>
 
     <style name="FocusText.Big">
@@ -44,7 +39,7 @@
     <style name="FocusSpinner.Big">
         <item name="android:layout_marginTop">@dimen/focus_spinner_vertical_margin_big</item>
         <item name="android:layout_marginBottom">@dimen/focus_spinner_vertical_margin_big</item>
-        <item name="android:padding">@dimen/focus_spinner_padding</item>
+        <item name="android:padding">@dimen/focus_spinner_vertical_margin</item>
     </style>
 
     <style name="FocusToolBar">
@@ -85,8 +80,7 @@
         <item name="android:dividerHeight">@dimen/focus_divider_height</item>
         <item name="android:divider">@color/listDividerColor</item>
         <item name="android:textColor">@color/defaultTextColor</item>
-       <item name="android:listSelector">@drawable/list_item_selector</item>
-
+        <item name="android:listSelector">@drawable/list_item_selector</item>
     </style>
 
 
@@ -109,6 +103,4 @@
         <item name="android:paddingTop">@dimen/focus_default_spacing</item>
         <item name="android:paddingBottom">@dimen/focus_default_spacing</item>
     </style>
-
-
 </resources>

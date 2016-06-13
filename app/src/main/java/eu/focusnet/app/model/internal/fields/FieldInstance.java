@@ -28,7 +28,7 @@ import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * NOTE: this is not a child of AbstractInstance
+ * NOTE: this is not a child of AbstractInstance,
  */
 abstract public class FieldInstance
 {

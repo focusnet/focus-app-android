@@ -94,6 +94,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			cronBound = false;
 		}
 	};
+	private int previouslySelectedToRender;
 
 
 	/**
@@ -153,7 +154,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		LayoutInflater inflater = getLayoutInflater();
 
 		// set the default section that will initially be loaded
-		this.sectionToRender = Constant.UI_MENU_ENTRY_PROJECTS_LISTING;
+		this.sectionToRender = this.previouslySelectedToRender = Constant.UI_MENU_ENTRY_PROJECTS_LISTING;
 
 		// create a Drawer
 		this.drawerItems = this.getDrawerItems();
@@ -219,6 +220,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	protected void doInPageUiOperations()
 	{
 		switch (this.sectionToRender) {
+			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
+			case Constant.UI_MENU_ENTRY_BOOKMARK:
+					highlightSelectedMenuItem(this.sectionToRender);
+					break;
 			case Constant.UI_MENU_ENTRY_ABOUT:
 				LayoutInflater inflater = LayoutInflater.from(this);
 				// LayoutInflater inflater = getLayoutInflater();
@@ -253,13 +258,18 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				logoutThread.start();
 				break;
 			default:
-				// if fragment will be created, update sectionToRender
-				highlightSelectedMenuItem(this.sectionToRender);
 				break;
 		}
 
 		if (this.sectionToRender != 0) {
 			drawerLayout.closeDrawer(this.drawerListMenu);
+
+			// do not keep selection on the current item
+			switch(this.sectionToRender) {
+				case Constant.UI_MENU_ENTRY_ABOUT:
+					highlightSelectedMenuItem(this.previouslySelectedToRender);
+					break;
+			}
 		}
 	}
 
@@ -306,13 +316,14 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 							if (position == sectionToRender) {
 								doIt = false;
 							}
-						case Constant.UI_MENU_ENTRY_ABOUT:
-						case Constant.UI_MENU_ENTRY_LOGOUT:
-							sectionToRender = doIt ? position : 0;
-							applyUiChanges();
 							break;
 						default:
 							break;
+					}
+					if (doIt) {
+						previouslySelectedToRender = sectionToRender;
+						sectionToRender = position;
+						applyUiChanges();
 					}
 					drawerLayout.closeDrawer(drawerListMenu);
 				}
@@ -363,6 +374,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * Highlight the selected menu item
 	 *
 	 * @param position
+	 *
+	 * FIXME does not have any effect
 	 */
 	private void highlightSelectedMenuItem(int position)
 	{

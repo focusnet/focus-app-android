@@ -7,11 +7,11 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
+        android:layout_marginBottom="@dimen/focus_default_spacing_x0_75"
         android:gravity="center"
         android:text="@string/invalid_configuration_for_widget"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ff0000"/>
+        android:textColor="@color/red"/>
 
     <TextView
         android:id="@+id/invalid_widget_info"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/unknown_path"
-        android:textColor="#000000"
-        android:textSize="14sp"
+        android:textColor="@color/defaultTextColor"
+        android:textSize="@dimen/focus_text_size_medium"
         android:textStyle="italic"/>
 </LinearLayout>

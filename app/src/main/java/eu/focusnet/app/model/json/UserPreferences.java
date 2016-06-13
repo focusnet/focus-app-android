@@ -50,7 +50,7 @@ public class UserPreferences extends FocusObject
 			bookmarks = new BookmarksList();
 		}
 
-		if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+		if (bookmarkType.equals(Bookmark.BookmarkLinkType.PAGE.toString())) {
 			bookmarks.getPages().add(bookmark);
 		}
 		else {
@@ -70,7 +70,7 @@ public class UserPreferences extends FocusObject
 	{
 		int foundIndex = -1;
 		if (bookmarks != null) {
-			if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+			if (bookmarkType.equals(Bookmark.BookmarkLinkType.PAGE.toString())) {
 				ArrayList<Bookmark> pages = bookmarks.getPages();
 				for (int i = 0; i < pages.size(); i++) {
 					Bookmark page = pages.get(i);
@@ -96,7 +96,7 @@ public class UserPreferences extends FocusObject
 	{
 		int found = this.findBookmarkLinkInSpecificSet(path, title, bookmarkType);
 		if (found != -1) {
-			if (bookmarkType.equals(Bookmark.BOOKMARK_LINK_TYPE.PAGE.toString())) {
+			if (bookmarkType.equals(Bookmark.BookmarkLinkType.PAGE.toString())) {
 				bookmarks.getPages().remove(found);
 			}
 			else {

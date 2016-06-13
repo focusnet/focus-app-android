@@ -9,13 +9,6 @@
     <color name="listDividerColor">#e8e8e8</color>
     <color name="lightGreenForSelectedElement">#daf1d9</color>
 
-    <color name="table_header_text">@android:color/white</color>
-    <color name="table_data_row_even">@android:color/white</color>
-    <color name="table_data_row_odd">@color/orange</color>
-
-    <color name="list_item_background">@android:color/white</color>
-    <color name="list_item_background_pressed">@color/red</color>
-
     <color name="red">@android:color/holo_red_dark</color>
     <color name="green">@color/colorPrimary</color>
     <color name="orange">@android:color/holo_orange_dark</color>

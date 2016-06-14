@@ -1,14 +1,17 @@
 package eu.focusnet.app.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +55,46 @@ public class ConfigurationHelper
 	private static final String PROPERTY_DEFAULT_LOCALE = "i18n.default-locale";
 	private static final String LOCALE_FALLBACK_LANGUAGE = "en";
 	private static final String LOCALE_FALLBACK_COUNTRY = "";
+	
+	/**
+	 * Name of the file for SharedPreferences
+	 */
+	public static final String SHARED_PREFERENCES_STORE_NAME = "eu.focusnet.app.INTERNAL_CONFIGURATION";
+	/**
+	 * Key name for Server name as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_LOGIN_SERVER = "login-server";
+	/**
+	 * Key name for Username for authentication as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_LOGIN_USERNAME = "login-username";
+	/**
+	 * Key name for Password for authentication as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_LOGIN_PASSWORD = "login-password";
+	/**
+	 * Key name for URI to user information as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_USER_INFOS = "user-infos";
+	/**
+	 * Key name for URI to application preferences as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_APPLICATION_SETTINGS = "user-preferences";
+	/**
+	 * Key name for URI to application content as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_APPLICATION_CONTENT = "application-content";
+	/**
+	 * Key name for URI to demo use case ID as stored in the SharedPreferences.
+	 *
+	 * @deprecated Used only in the prototype. Can be safely removed in production version.
+	 */
+	public static final String SHARED_PREFERENCES_DEMO_USE_CASE = "demo-use-case";
+	/**
+	 * Key name for Last data synchronization as stored in the SharedPreferences.
+	 */
+	public static final String SHARED_PREFERENCES_LAST_SYNC = "last-sync";
+
 
 	/**
 	 * Retrieve a property.
@@ -173,4 +216,46 @@ public class ConfigurationHelper
 		}
 		return new Locale(ret[0], ret[1]);
 	}
+
+	/**
+	 * Save provided preferences into the SharedPreferences store.
+	 *
+	 * @param pref A key-value pair set to save. All saved values are String.
+	 */
+	public static void savePreferences(HashMap<String, String> pref)
+	{
+		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = store.edit();
+		for(Map.Entry e : pref.entrySet()) {
+			editor.putString((String) e.getKey(), (String) e.getValue());
+		}
+		editor.apply();
+	}
+
+	/**
+	 * Get all values for the SharedPreferences store
+	 */
+	public static HashMap<String, String> getPreferences()
+	{
+		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+
+		HashMap<String, String> ret = new HashMap<>();
+		Map<String, ?> prefs = store.getAll();
+	 	for(Map.Entry e : prefs.entrySet()) {
+			ret.put((String)e.getKey(), (String)e.getValue());
+		}
+		return ret;
+	}
+
+	/**
+	 * Delete all values from the SharedPreferences
+	 */
+	public static void resetPreferences()
+	{
+		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = store.edit();
+		editor.clear();
+		editor.apply();
+	}
+
 }

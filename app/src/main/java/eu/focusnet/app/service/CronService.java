@@ -26,12 +26,14 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 
 // TOOD FIXME also clean SQL db from old entries (i.e. ones that are not refered by fully loaded instances (? to check ?)
@@ -57,7 +59,7 @@ public class CronService extends Service
 {
 
 
-	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
+	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 1 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning FIXME
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 200; // 2 minutes FIXME
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MS = 30 * 60 * 1_000;//30; // 30 min
 	private static final String CRON_WAKE_LOCK_NAME ="FOCUS_CRON_TASK";
@@ -75,7 +77,10 @@ public class CronService extends Service
 		this.scheduleTaskExecutor = Executors.newScheduledThreadPool(3);
 		this.powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		this.syncInProgress = false;
-		this.lastSync = 0;
+
+		HashMap<String, String> prefs = ConfigurationHelper.getPreferences();
+		String l = prefs.get(ConfigurationHelper.SHARED_PREFERENCES_LAST_SYNC);
+		this.lastSync = l == null ? 0 : Long.parseLong(l);
 		this.failures = 0;
 	}
 
@@ -93,17 +98,6 @@ public class CronService extends Service
 	 * Sync data operations
 	 * <p/>
 	 * 	 * return false if already in progress OR application nto ready, true otherwise
-
-
-
-	 // FIXME we don't really need that. instead, detect invalid path resolution at project/page-level and
-	 // reload HOME activity then.
-	 if (originalDataManager != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
-	 FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working? //Answer: I have to take a look at it in details
-	 // FIXME what happens if current path does not exist anymore? We may redirect to projects listing in this case (and display sth to user)
-
-	 }
-
 	 */
 	public boolean syncData()
 	{
@@ -142,6 +136,9 @@ public class CronService extends Service
 
 		// Update information about the last sync
 		this.lastSync = System.currentTimeMillis();
+		HashMap<String, String> toSave = new HashMap<>();
+		toSave.put(ConfigurationHelper.SHARED_PREFERENCES_LAST_SYNC, Long.toString(this.lastSync));
+		ConfigurationHelper.savePreferences(toSave);
 
 		// release CPU lock
 		wakeLock.release();
@@ -254,6 +251,7 @@ public class CronService extends Service
 	public void reset()
 	{
 		// FIXME TODO kill any pending process
+		// no need to commit the modification in the SharedPreferences. This is the job of DataManager.logout()
 		this.lastSync = 0;
 		this.failures = 0;
 	}

@@ -33,6 +33,7 @@ import java.io.IOException;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -99,7 +100,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 */
 	public void onClickStartDemo(View view)
 	{
-		if (FocusApplication.getInstance().getNetworkManager().isNetworkAvailable()) {
+		if (NetworkManager.isNetworkAvailable()) {
 
 			final Thread login = new Thread() {
 				public void run()

@@ -53,7 +53,7 @@ public class Constant
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
 			"(" + ID + " INTEGER AUTO INCREMENT," +
-			URL + " TEXT PRIMARY KEY, " +
+			URL + " TEXT, " +
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +

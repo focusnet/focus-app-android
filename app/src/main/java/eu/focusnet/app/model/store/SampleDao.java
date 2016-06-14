@@ -204,7 +204,7 @@ public class SampleDao
 		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
 		contentValues.put(Constant.TO_UPDATE, sample.isToPut());
 		contentValues.put(Constant.TO_CREATE, sample.isToPost());
-		contentValues.put(Constant.DATA_SET_ID, this.dataSyncSetId);
+		contentValues.put(Constant.DATA_SET_ID, Long.toString(this.dataSyncSetId));
 		return contentValues;
 	}
 

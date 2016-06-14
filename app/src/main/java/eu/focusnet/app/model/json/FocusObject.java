@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by admin on 06.07.2015.
@@ -72,11 +71,7 @@ public class FocusObject implements Serializable
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
 		User user = null;
-		if (url.startsWith(DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX)) {
-			owner = "";
-			editor = "";
-		}
-		else if (owner == null || editor == null) {
+		if (owner == null || editor == null) {
 			user = FocusApplication.getInstance().getDataManager().getUser();
 		}
 

@@ -206,7 +206,7 @@ public class NetworkManager
 	 *
 	 * @return true if network is available, false otherwise.
 	 */
-	public boolean isNetworkAvailable() throws RuntimeException
+	public static boolean isNetworkAvailable() throws RuntimeException
 	{
 		ConnectivityManager connMgr = (ConnectivityManager)
 				FocusApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);

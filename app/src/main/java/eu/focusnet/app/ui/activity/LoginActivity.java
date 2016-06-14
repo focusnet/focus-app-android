@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
+import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -71,7 +72,7 @@ public class LoginActivity extends Activity
 		//test If the device is connected to the internet, if true
 		// test then the given credentials otherwise display an error message(toast) to the user
 
-		if (FocusApplication.getInstance().getNetworkManager().isNetworkAvailable()) {
+		if (NetworkManager.isNetworkAvailable()) {
 			String username = ((EditText) findViewById(R.id.login_username_edit)).getText().toString();
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
 			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();

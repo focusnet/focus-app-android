@@ -32,9 +32,9 @@ public class Constant
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"; // ISO 8601
 
-	public static final String DATABASE_NAME = "Focus_DB";
+	public static final String DATABASE_NAME = "focus";
 
-	public static final String DATABASE_TABLE_SAMPLES = "samples";
+	public static final String DATABASE_TABLE_SAMPLES = "sample";
 
 	public static final String ID = "id",
 			TYPE = "type",
@@ -46,10 +46,10 @@ public class Constant
 			VERSION = "version",
 			ACTIVE = "active",
 			DATA = "data",
-			TO_DELETE = "toDelete",
-			TO_PUT = "toPut",
-			TO_POST = "toPost",
-			DATA_SYNC_SET_ID = "dataSetId";
+			TO_DELETE = "to_delete",
+			TO_UPDATE = "to_update",
+			TO_CREATE = "to_create",
+			DATA_SET_ID = "data_set_id";
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
 			"(" + ID + " INTEGER AUTO INCREMENT," +
@@ -62,11 +62,11 @@ public class Constant
 			EDITOR + " TEXT, " +
 			DATA + " TEXT, " +
 			TO_DELETE + " BOOL, " +
-			TO_PUT + " BOOL, " +
-			TO_POST + " BOOL," +
-			DATA_SYNC_SET_ID + " INTEGER," +
+			TO_UPDATE + " BOOL, " +
+			TO_CREATE + " BOOL," +
+			DATA_SET_ID + " INTEGER," +
 			ACTIVE + " BOOL NOT NULL DEFAULT TRUE," +
-			"UNIQUE(" + Constant.URL + ", " + Constant.VERSION + ") ON CONFLICT REPLACE)";
+			"UNIQUE(" + Constant.URL + ", " + Constant.VERSION + ", " + Constant.DATA_SET_ID + ") ON CONFLICT REPLACE)";
 
 	public static final String PATH_SEPARATOR = "|",
 			PATH_SEPARATOR_PATTERN = "\\|",

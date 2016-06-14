@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -306,6 +306,8 @@ public class DataManager
 		FocusSample internalConfig = null;
 		try {
 			internalConfig = (FocusSample) (this.get(FOCUS_DATA_MANAGER_INTERNAL_CONFIGURATION, FocusSample.class));
+			// FIXME get() only on our current data set, so we dont get any data. conclusion: internal config should be stored somewhere else.
+			// sharedpreferences??????
 		}
 		catch (IOException ignored) {
 			// ok to ignore, no network access for internal configuration (saved in local db)
@@ -504,7 +506,7 @@ public class DataManager
 		this.registerActiveInstance(this.appContentInstance);
 
 		// we don't need the cache anymore
-		this.cache = new HashMap<>(); // FIXME should we keep it anyway? maybe useful for periodic operations?
+		this.cache = new HashMap<>(); // FIXME should we keep it anyway? maybe useful for periodic operations? cannot think why.
 
 		this.applicationReady = true;
 	}
@@ -541,7 +543,7 @@ public class DataManager
 	 * FIXME bug: it looks like the data come from the local databse, not from the network. To check.
 	 * FIXME behavior: what if one of the 3 basic types has changed? relaod full app?
 	 */
-	public void rebuildApplicationData()
+	private void rebuildApplicationData()
 	{
 		boolean mustRecover = false;
 		DataManager newDm = new DataManager();
@@ -549,6 +551,7 @@ public class DataManager
 			newDm.retrieveApplicationData();
 
 			// FIXME update language
+
 		}
 		catch (FocusMissingResourceException ex) {
 			mustRecover = true;
@@ -1061,28 +1064,70 @@ public class DataManager
 	 * Sync data currently on the client side with the ones of the backends,
 	 * and then retrieve latest versions of resources.
 	 *
-	 * @return true on successful completion, false if the operation could not be performed at all.
-	 * @throws FocusMissingResourceException if any of the data could not FIXME check why we have this exception. I should catch it and return false?
+	 * all errors are handling by throwing exceptions that MUST be caught. If an exception is not caught,
+	 * then the error is acceptable (e.g. no network or application not ready for sync)
+	 *
+	 * On success, this method will replace the Application datamanager by a new one, and the current DataManager object
+	 * from which we call this method will be garbage collected.
+	 *
+	 * @return true on successful completion, false if the operation could not be performed for a normal reason (e.g. no network).
+	 * This function may also trigger an exception, which must be handled as fatal, and it is a less normal reason for failing
+	 * @throws FocusMissingResourceException if any of the data could not be accessed (for read or write).
 	 */
-	public boolean syncData() throws FocusMissingResourceException
+	public void syncData() throws FocusMissingResourceException
 	{
 		if (!this.isApplicationReady()) {
-			return false;
+			return;
 		}
 
 		if (!this.net.isNetworkAvailable()) {
-			return false;
+			return;
 		}
 
-		this.pushLocalModifications(); // FIXME this one returns the FocusMissingResourceException
-		this.rebuildApplicationData();
-		return true;
+		// FIXME to enable and check.
+//this.pushLocalModifications(); // will trow an exception on failure
+
+		// for now we do not allow loading new data if the pending modification
+		// have not been submitted. This may cause application lock (i.e. impossible to retrieve
+		// new data because pending modifications never succeed). To work around that, just logout
+		// and log in again: the local data will be wiped.
+		// FIXME find a smarter strategy (***)
+
+		// create a new DataManager with basic information required to sync
+		DataManager newDataManager = new DataManager();
+		newDataManager.init();
+
+		// retrieve all data again
+		newDataManager.retrieveApplicationData();
+
+		if (newDataManager.isApplicationReady()) {
+			// replace the application-wide DataManager by the new one
+			FocusApplication.getInstance().replaceDataManager(newDataManager);
+
+			// do clean the local database from past entrie
+			// basic logic: delete any entry that has not sync_id === uniqueInstanceIdentifier
+			// FIXME while we do this, we should not be able to do any database operation.
+			// FIXME we need a locking mechanism at some point.
+			//
+			// Problemtic scenario:
+			// - start to edit
+			// - move to next sync set
+			// - finish to edit
+			// - edition is on a non existing object -> problem mentioned earlier (***)
+			// Solution: save the data set id along with the operation -> feasible?
+			newDataManager.cleanDataStore();
+		}
 	}
 
 	/**
 	 * Push local modifications to the network
 	 *
+	 * @return true on success, false on failure
 	 * @throws FocusMissingResourceException FIXME complete documentation
+	 *
+	 * FIXME do check if logic is ok.
+	 *
+	 * @deprecated to check logic
 	 */
 	private void pushLocalModifications() throws FocusMissingResourceException
 	{
@@ -1158,6 +1203,7 @@ public class DataManager
 		if (reportFailure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
 			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + reportFailure);
 		}
+
 	}
 
 	/**

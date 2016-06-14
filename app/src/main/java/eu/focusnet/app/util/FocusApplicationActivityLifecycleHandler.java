@@ -109,24 +109,4 @@ public class FocusApplicationActivityLifecycleHandler implements Application.Act
 
 	// FIXME restart app
 
-	/* FIXME change language
-	Locale locale = new Locale("en_US");
-Locale.setDefault(locale);
-Configuration config = new Configuration();
-config.locale = locale;
-context.getApplicationContext().getResources().updateConfiguration(config, null);
-
-Locale locale = new Locale("ru");
-Locale.setDefault(locale);
-Configuration config = new Configuration();
-config.locale = locale;
-getBaseContext().getResources().updateConfiguration(config,
-      getBaseContext().getResources().getDisplayMetrics());
-
-
-
-      getResources.getConfiguration() -> update it
-
-
-	 */
 }

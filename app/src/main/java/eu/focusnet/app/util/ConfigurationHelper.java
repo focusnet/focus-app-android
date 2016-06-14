@@ -14,22 +14,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -39,7 +40,7 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
  * A helper class used for retrieving Properties.
- *
+ * <p>
  * FIXME might contain methods for accessing getResource(), getAppContext, ...
  */
 public class ConfigurationHelper
@@ -48,21 +49,29 @@ public class ConfigurationHelper
 	 * Name of our properties file in the assets directory.
 	 */
 	private static final String ASSETS_PROPERTY_FILE = "focus.properties";
+	private static final String PROPERTY_DEFAULT_LOCALE = "i18n.default-locale";
+	private static final String LOCALE_FALLBACK_LANGUAGE = "en";
+	private static final String LOCALE_FALLBACK_COUNTRY = "";
 
 	/**
 	 * Retrieve a property.
 	 *
-	 * @param key The key of the property to retrieve
+	 * @param key     The key of the property to retrieve
 	 * @param context The Context from which we acquire the {@link AssetManager}
 	 * @return A String containing the value of the property, or {@code null} on failure.
 	 * @throws IOException If the properties file could not be open
 	 */
-	public static String getProperty(String key, Context context) throws IOException
+	public static String getProperty(String key, Context context)
 	{
 		Properties properties = new Properties();
 		AssetManager assetManager = context.getAssets();
-		InputStream inputStream = assetManager.open(ASSETS_PROPERTY_FILE);
-		properties.load(inputStream);
+		try {
+			InputStream inputStream = assetManager.open(ASSETS_PROPERTY_FILE);
+			properties.load(inputStream);
+		}
+		catch (IOException ex) {
+			throw new FocusInternalErrorException("IO error when accessing property file."); // FIXME throw ex
+		}
 		return properties.getProperty(key);
 	}
 
@@ -72,6 +81,8 @@ public class ConfigurationHelper
 	 * but will impact all the rest of the life of the application. It does not impact the UI
 	 * directly but is typically called from an Activity's on Resume() method, or just before
 	 * redirecting to another Activity.
+	 *
+	 * FIXME strange behaviors in emulator. Sometimes does not work. See if any problem on real device.
 	 */
 	public static void loadLanguage()
 	{
@@ -79,7 +90,7 @@ public class ConfigurationHelper
 		String language = FocusApplication.getInstance()
 				.getDataManager().getAppContentInstance()
 				.getLanguage();
-		Locale targetLocale = Locale.ENGLISH; // default if none found
+		Locale targetLocale = ConfigurationHelper.getDefaultLocale();
 		if (ConfigurationHelper.getSupportedLanguages().contains(language)) {
 			// ok
 			targetLocale = new Locale(language);
@@ -109,7 +120,6 @@ public class ConfigurationHelper
 			}
 		}
 
-
 		// set the language
 		Locale.setDefault(targetLocale);
 		Configuration config = new Configuration();
@@ -125,14 +135,42 @@ public class ConfigurationHelper
 	 *
 	 * @return An array consisting of supported languages.
 	 * The languages can be also local versions, e.g. fr_CH instead of fr.
-	 *
+	 * <p>
 	 * FIXME should we put this elsewhere / e.g. in util.ConfigurationHelper
 	 */
-	public static List<String> getSupportedLanguages()
+	private static List<String> getSupportedLanguages()
 	{
 		return Arrays.asList(
 				"en",
 				"fr"
 		);
+	}
+
+	/**
+	 * Reset language to the default language
+	 */
+	public static void resetLanguage()
+	{
+		Locale defaultLocale = ConfigurationHelper.getDefaultLocale();
+		Locale.setDefault(defaultLocale);
+		Configuration config = new Configuration();
+		config.locale = defaultLocale;
+		FocusApplication.getInstance().getResources().updateConfiguration(
+				config,
+				FocusApplication.getInstance().getResources().getDisplayMetrics()
+		);
+	}
+
+	private static Locale getDefaultLocale()
+	{
+		String defaultLocale = ConfigurationHelper.getProperty(PROPERTY_DEFAULT_LOCALE, FocusApplication.getInstance());
+		String[] parts = defaultLocale.split("_");
+		String[] ret = new String[]{LOCALE_FALLBACK_LANGUAGE, LOCALE_FALLBACK_COUNTRY};
+		for (int i = 0; i < 2; ++i) {
+			if (parts.length > i && !parts[i].isEmpty()) {
+				ret[i] = parts[i];
+			}
+		}
+		return new Locale(ret[0], ret[1]);
 	}
 }

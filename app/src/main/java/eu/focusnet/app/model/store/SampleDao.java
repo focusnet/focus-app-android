@@ -26,25 +26,23 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.internal.DataContext;
-import eu.focusnet.app.model.internal.PageInstance;
-import eu.focusnet.app.model.internal.ProjectInstance;
-import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.util.Constant;
-import eu.focusnet.app.service.DataManager;
 
 /**
  * SQL Sample Data Access Object
+ *
+ * All samples being recorded belong to a specific data set id ({@link #dataSyncSetId}
+ * instance variable) that is unique to each {@link DatabaseAdapter} being created. Most operations
+ * are constrained on this set, hence allowing us to have different versions of the data set. This
+ * is particularily useful for easily cleaning the database after data synchronisation.
  */
 public class SampleDao
 {
 
-	private final long dataSyncSetId;
+
 	private String[] columnsToRetrieve = {
 			Constant.URL,
 			Constant.VERSION,
@@ -56,11 +54,10 @@ public class SampleDao
 			Constant.ACTIVE,
 			Constant.DATA,
 			Constant.TO_DELETE,
-			Constant.TO_PUT,
-			Constant.TO_POST,
-			Constant.DATA_SYNC_SET_ID
+			Constant.TO_UPDATE,
+			Constant.TO_CREATE
 	};
-
+	private final long dataSyncSetId;
 	private SQLiteDatabase database;
 
 	/**
@@ -101,9 +98,10 @@ public class SampleDao
 
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
-		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_PUT)) > 0);
+		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_UPDATE)) > 0);
 
-		// we don't need the dataSyncSetId in the sample. It is used for maintenance operations only
+		// we don't need the dataSyncSetId in the sample. It is used for maintenance operations
+		// only and should be kept hidden
 
 		return sample;
 	}
@@ -123,12 +121,13 @@ public class SampleDao
 	public Sample get(String url)
 	{
 		String[] params = {
+				Long.toString(this.dataSyncSetId),
 				url
 		};
 		Cursor cursor = this.database.query(true,
 				Constant.DATABASE_TABLE_SAMPLES,
 				this.columnsToRetrieve,
-				Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0 AND " + Constant.ACTIVE + " = 1",
+				Constant.DATA_SET_ID + " = ? AND " + Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0 AND " + Constant.ACTIVE + " = 1",
 				params,
 				null,
 				null,
@@ -147,9 +146,10 @@ public class SampleDao
 	public void markForDeletion(String url)
 	{
 		String[] params = {
+				Long.toString(this.dataSyncSetId),
 				url
 		};
-		String where = Constant.URL + "= ?";
+		String where = Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "= ?";
 		ContentValues updatedValues = new ContentValues();
 		updatedValues.put(Constant.TO_DELETE, true);
 		updatedValues.put(Constant.EDITION_EPOCH, new Date().getTime() / 1000L);
@@ -164,9 +164,10 @@ public class SampleDao
 	public boolean delete(String url)
 	{
 		String[] params = {
+				Long.toString(this.dataSyncSetId),
 				url
 		};
-		return this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.URL + "= ? ", params) > 0;
+		return this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "= ? ", params) > 0;
 	}
 
 	/**
@@ -177,9 +178,10 @@ public class SampleDao
 	public void update(Sample sample)
 	{
 		String[] params = {
+				Long.toString(this.dataSyncSetId),
 				sample.getUrl()
 		};
-		String where = Constant.URL + "=?";
+		String where = Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "=?";
 		ContentValues updatedValues = this.createContentValues(sample);
 		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
@@ -200,9 +202,9 @@ public class SampleDao
 		contentValues.put(Constant.ACTIVE, sample.isActive());
 		contentValues.put(Constant.DATA, sample.getData());
 		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
-		contentValues.put(Constant.TO_PUT, sample.isToPut());
-		contentValues.put(Constant.TO_POST, sample.isToPost());
-		contentValues.put(Constant.DATA_SYNC_SET_ID, this.dataSyncSetId);
+		contentValues.put(Constant.TO_UPDATE, sample.isToPut());
+		contentValues.put(Constant.TO_CREATE, sample.isToPost());
+		contentValues.put(Constant.DATA_SET_ID, this.dataSyncSetId);
 		return contentValues;
 	}
 
@@ -211,148 +213,10 @@ public class SampleDao
 	 */
 	public void cleanTable()
 	{
-		/**
-		 * FIXME DEPRECATED
-		 *
-		 * instead of that: add a field to db, that contains the current sync_version_number (INCREMENT)
-		 * -> when we have finished creating a DataManager, then DELETE FROM samples WHERE sync_version_number != $version
-		 */
-
-		DataManager dm = FocusApplication.getInstance().getDataManager();
-
-		// Build the list of URLs that we use in our data contexts
-		Set<String> usedUrls = new HashSet<>();
-
-		// register our configuration URLs, which are not part of data contexts
-		try {
-			usedUrls.add(dm.getUser().getUrl());
-			usedUrls.add(dm.getUserPreferences().getUrl());
-			usedUrls.add(dm.getAppContentTemplate().getUrl());
-		}
-		catch (FocusMissingResourceException e) {
-			// safe to ignore in this case, the clean up will simply not take these exceptions
-			// into consideration, but not a problem as they apparently do not exist.
-		}
-
-		// populate the URLs set with the ones we have in the different DataContexts
-		for (Map.Entry<String, String> e : dm.getAppContentInstance().getDataContext().entrySet()) {
-			usedUrls.add(e.getValue());
-		}
-
-		// foreach project
-		for (Map.Entry<String, ProjectInstance> e_project : dm.getAppContentInstance().getProjects().entrySet()) {
-			ProjectInstance pi = e_project.getValue();
-
-			// Project data context
-			for (Map.Entry<String, String> e_dc : pi.getDataContext().entrySet()) {
-				usedUrls.add(e_dc.getValue());
-			}
-
-			// foreach page
-			for (Map.Entry<String, PageInstance> e_page : pi.getDashboards().entrySet()) {
-				PageInstance page_instance = e_page.getValue();
-				// Dashboards data context
-				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
-					usedUrls.add(e_dc.getValue());
-				}
-
-				// foreach widget
-				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
-					WidgetInstance wi = e_widget.getValue();
-					DataContext dc = wi.getDataContext();
-					if (dc == null) {
-						continue;
-					}
-					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
-						usedUrls.add(e_dc.getValue());
-					}
-				}
-			}
-			for (Map.Entry<String, PageInstance> e_page : pi.getTools().entrySet()) {
-				PageInstance page_instance = e_page.getValue();
-				// Tools data context
-				for (Map.Entry<String, String> e_dc : page_instance.getDataContext().entrySet()) {
-					usedUrls.add(e_dc.getValue());
-				}
-
-				// foreach widget
-				for (Map.Entry<String, WidgetInstance> e_widget : page_instance.getWidgets().entrySet()) {
-					WidgetInstance wi = e_widget.getValue();
-					DataContext dc = wi.getDataContext();
-					if (dc == null) {
-						continue;
-					}
-					for (Map.Entry<String, String> e_dc : dc.entrySet()) {
-						usedUrls.add(e_dc.getValue());
-					}
-				}
-			}
-		}
-
-		// At this point, we have the list of URLs that we must keep
-		//
-		// Now let's delete the useless ones from the database:
-		// - resources that are not in the above-created 'urls' set
-		// - toPut | toPost | toPut is set, and editionDateTime is > 1 week
-		// - for remaining resources, delete the not-last versions
-		//
-		// But we must keep:
-		// - Internal configuration
-		//
-		// This operation is transactional
-		/*
-			DELETE FROM samples WHERE
-				url NOT LIKE '...'
-			AND
-				(
-					url NOT IN (...urls...)
-				OR
-					(
-						(
-							toPut = 1
-							OR toPost = 1
-							OR toDelete = 1
-						)
-						AND
-							editionTime > ...
-					)
-					OR
-					(
-						id NOT IN (
-							SELECT id FROM samples GROUP BY url ORDER BY MAX(version);
-						)
-					)
-				);
-		 */
-
-		// register quotes around urls
-		String[] urlsList = (String[]) usedUrls.toArray();
-		for (int i = 0; i < urlsList.length; ++i) {
-			urlsList[i] = "'" + urlsList[i] + "'";
-		}
-
-		// FIXME better format()
-		// 	String.format(sql, Constant.DATABASE_TABLE_SAMPLES, Constant.URL, DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX, Constant.URL, TextUtils.join(",", urls_list), Constant.TO_PUT, Constant.TO_POST,
-		//		Constant.TO_DELETE, Constant.EDITION_EPOCH, SAMPLES_OUTDATED_AFTER, Constant.URL, Constant.URL , Constant.DATABASE_TABLE_SAMPLES, Constant.URL, Constant.VERSION)
-
-	/*	String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES
-				+ " WHERE "
-				+ Constant.URL + " NOT LIKE '" + DataManager.FOCUS_DATA_MANAGER_INTERNAL_DATA_PREFIX + "%'"
-				+ " AND "
-				+ " ( "
-				+ Constant.URL + " NOT IN (" + TextUtils.join(",", urls_list) + ") "
-				+ " OR "
-				+ " ( "
-				+ "   ( " + Constant.TO_PUT + " = 1 OR " + Constant.TO_POST + " = 1 OR " + Constant.TO_DELETE + " = 1 ) AND "
-				+ Constant.EDITION_EPOCH + " > (strftime('%s','now') - " + SAMPLES_OUTDATED_AFTER + ")"
-				+ " ) "
-				+ " OR "
-				+ " ( "
-				+ Constant.URL + " NOT IN ("
-				+ "  SELECT " + Constant.URL + " FROM " + Constant.DATABASE_TABLE_SAMPLES + " GROUP BY " + Constant.URL + " ORDER BY MAX(" + Constant.VERSION + ")"
-				+ " ) ";
-		this.database.execSQL(sql);
-		*/
+		String[] params = {
+				Long.toString(this.dataSyncSetId)
+		};
+		this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.DATA_SET_ID + " != ?", params);
 	}
 
 	/**
@@ -363,16 +227,33 @@ public class SampleDao
 	 */
 	private String[] getAllMarked(String type)
 	{
+		switch(type) {
+			case Constant.TO_CREATE:
+			case Constant.TO_UPDATE:
+			case Constant.TO_DELETE:
+				break;
+			default:
+				throw new FocusInternalErrorException("Invalid type for marking operation.");
+		}
+
 		Set<String> result = new HashSet<>();
 
 		String[] cols = {
-				Constant.URL
+				Constant.URL,
+				Long.toString(this.dataSyncSetId)
+		};
+		String[] params = {
+				Long.toString(this.dataSyncSetId),
+				type
 		};
 		Cursor cursor = this.database.query(
 				Constant.DATABASE_TABLE_SAMPLES,
 				cols,
-				type + " = 1",
-				null, null, null, null
+				Constant.DATA_SET_ID + " = ? AND ? = 1",
+				params,
+				null,
+				null,
+				null
 		);
 		while (cursor.moveToNext()) {
 			result.add(cursor.getString(cursor.getColumnIndex(Constant.URL)));
@@ -389,7 +270,7 @@ public class SampleDao
 	 */
 	public String[] getAllMarkedForPost()
 	{
-		return this.getAllMarked(Constant.TO_POST);
+		return this.getAllMarked(Constant.TO_CREATE);
 	}
 
 	/**
@@ -399,7 +280,7 @@ public class SampleDao
 	 */
 	public String[] getAllMarkedForPut()
 	{
-		return this.getAllMarked(Constant.TO_PUT);
+		return this.getAllMarked(Constant.TO_UPDATE);
 	}
 
 	/**
@@ -414,6 +295,9 @@ public class SampleDao
 
 	/**
 	 * Delete all entries from the database
+	 *
+	 * This really deletes all rows, not only the ones belong to the current data set
+	 * {@code this.dataSyncSetId}
 	 */
 	public void deleteAll()
 	{

@@ -266,13 +266,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getAccessControlToken(String which)
 		{
-			String header = null;
-			try {
-				header = ConfigurationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
-			}
-			catch (IOException e) {
-				throw new FocusInternalErrorException("Impossible to retrieve access token in properties.");
-			}
+			String header = ConfigurationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
 			if (header != null) {
 				return header;
 			}

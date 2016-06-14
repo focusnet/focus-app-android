@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -33,16 +33,11 @@ import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
 import eu.focusnet.app.util.ConfigurationHelper;
+import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
 
 /**
  * FOCUS Application
@@ -147,22 +142,18 @@ public class FocusApplication extends Application
 		// ACRA init, only in release mode
 		if (!BuildConfig.DEBUG) {
 			// Get ACRA's configuration parameters from the focus.properties file
-			String form_uri;
+			String formUri;
 			String user;
 			String pass;
-			try {
-				form_uri = ConfigurationHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
-				user = ConfigurationHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
-				pass = ConfigurationHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
-			}
-			catch (IOException ex) {
-				throw new FocusInternalErrorException("Cannot get property in focus.properties");
-			}
+
+			formUri = ConfigurationHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
+			user = ConfigurationHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
+			pass = ConfigurationHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
 
 			// fully programmatic ACRA configuration (no annotation)
 			try {
 				final ACRAConfiguration config = new ConfigurationBuilder(this)
-						.setFormUri(form_uri)
+						.setFormUri(formUri)
 						.setFormUriBasicAuthLogin(user)
 						.setFormUriBasicAuthPassword(pass)
 						.setReportType(org.acra.sender.HttpSender.Type.JSON)

@@ -59,16 +59,14 @@ public class CronService extends Service
 
 	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 200; // 2 minutes FIXME
-	private static final int CRON_SERVICE_CLEAN_SQL_PERIOD_IN_MS = 6 * 60 * 60 * 1_000; // 6 hours
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MS = 30 * 60 * 1_000;//30; // 30 min
+	private static final String CRON_WAKE_LOCK_NAME ="FOCUS_CRON_TASK";
 	private final IBinder cronBinder = new CronBinder();
 	PowerManager powerManager;
 	private long lastSync;
-	private long lastClean;
 	private ScheduledExecutorService scheduleTaskExecutor;
 	private int failures;
 	private boolean syncInProgress; // does not apply to db cleaning
-	private boolean dbCleaningInProgress;
 
 	@Override
 	public void onCreate()
@@ -78,7 +76,6 @@ public class CronService extends Service
 		this.powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		this.syncInProgress = false;
 		this.lastSync = 0;
-		this.lastClean = 0;
 		this.failures = 0;
 	}
 
@@ -91,98 +88,69 @@ public class CronService extends Service
 	}
 
 
+
 	/**
-	 * User-triggered sync of data
+	 * Sync data operations
 	 * <p/>
-	 * return false if already in progress, true otherwise
+	 * 	 * return false if already in progress OR application nto ready, true otherwise
+
+
+
+	 // FIXME we don't really need that. instead, detect invalid path resolution at project/page-level and
+	 // reload HOME activity then.
+	 if (originalDataManager != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
+	 FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working? //Answer: I have to take a look at it in details
+	 // FIXME what happens if current path does not exist anymore? We may redirect to projects listing in this case (and display sth to user)
+
+	 }
+
 	 */
-	public boolean manuallySyncData()
+	public boolean syncData()
 	{
-
-
-		// DEBUG FIXME
-		if (1==1) {
-			if (!setSyncInProgress(true)) {
-				// already work in progress, let's discard this execution
-				return false;
-			}
-
-			try {
-				Thread.sleep(10_000)
-				;
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			setSyncInProgress(false);
-			return true;
+		// Applicaiton is not ready, nothing to sync
+		if (!FocusApplication.getInstance().getDataManager().isApplicationReady()) {
+			return false;
 		}
 
+
+		// acquire the synchronization lock
 		if (!setSyncInProgress(true)) {
-			// already work in progress, let's discard this execution
 			return false;
 		}
 
 		// acquire CPU lock
 		PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				"FOCUS_EXPLICIT_SYNC_DATA");
+				CRON_WAKE_LOCK_NAME);
 		wakeLock.acquire();
 
+		// perform the sync
+		boolean success = false;
+		try {
+			FocusApplication.getInstance().getDataManager().syncData();
+			success = true;
+		}
+		catch (FocusMissingResourceException ex) {
+			// report once in a while, but do not crash the app
+			// perhaps on next run it will be better?
+			// {success} is left to false
+			++this.failures;
+			if (failures % 10 == 0) {
+				FocusApplication.reportError(ex);
+			}
+		}
 
-		this.syncData();
-
+		// Update information about the last sync
+		this.lastSync = System.currentTimeMillis();
 
 		// release CPU lock
 		wakeLock.release();
 
+		// And finally release the synchronization lock
 		setSyncInProgress(false);
-		return true;
-	}
 
-	/**
-	 * Sync data operations
-	 * <p/>
-	 * no CPU lock or work in progress flag set here.
-	 */
-	private void syncData()
-	{
-		if (1 == 1) {
-
-			try {
-				Thread.sleep(1000 * 60); // 1 min
-			}
-			catch (InterruptedException ignored) {
-
-			}
-			this.lastSync = System.currentTimeMillis();
-
-			return;
-		}
-
-
-		// FIXME also we may not be in the application yet (e.g. login screen) -> DataManager->getAppRead()
-		// Acquire a CPU lock to avoid our service to stop running when going into sleep mode
-
-		DataManager oldDm = FocusApplication.getInstance().getDataManager();
-
-		try {
-			oldDm.syncData();
-		}
-		catch (FocusMissingResourceException e) {
-			++this.failures;
-			if (this.failures % 10 == 0) {
-				// if too many failures, let's report them, just in case that may me an important problem.
-				FocusApplication.reportError(e);
-			}
-		}
-
-		if (oldDm != FocusApplication.getInstance().getDataManager()) { // if the DataManager has changed (= a new sync has been correctly performed), then reload UI
-			FocusApplication.getInstance().restartCurrentActivity(); // FIXME YANDY is that working? //Answer: I have to take a look at it in details
-			// FIXME what happens if current path does not exist anymore? We may redirect to projects listing in this case (and display sth to user)
-		}
-
-		this.lastSync = System.currentTimeMillis();
+		// Everything went fine
+		return success;
 	}
 
 	/**
@@ -206,72 +174,10 @@ public class CronService extends Service
 					return;
 				}
 
-				if (!setSyncInProgress(true)) {
-					// already work in progress, let's discard this execution
-					return;
-				}
-
-				PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-						"FOCUS_SYNC_DATA");
-				wakeLock.acquire();
-
-
 				syncData();
 
-
-				// release CPU lock
-				wakeLock.release();
-
-				setSyncInProgress(false);
 			}
 		}, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
-	}
-
-	/**
-	 * Clean the database
-	 */
-	private void periodicallyCleanDatabase()
-	{
-		this.scheduleTaskExecutor.scheduleWithFixedDelay(new Runnable()
-														 {
-															 @Override
-															 public void run()
-															 {
-
-
-																 if (!FocusApplication.getInstance().getDataManager().isApplicationReady()) {
-																	 return;
-																 }
-
-																 // last db cleaning is too recent, let's wait more
-																 if (lastClean == 0 || lastClean >= System.currentTimeMillis() - CRON_SERVICE_CLEAN_SQL_PERIOD_IN_MS) {
-																	 return;
-																 }
-
-																 if (!setDbCleaningInProgress(true)) {
-																	 // already work in progress, let's discard this execution
-																	 return;
-																 }
-
-																 // Acquire a CPU lock to avoid our service to stop running when going into sleep mode
-																 PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-																		 "FOCUS_CLEAN_DB");
-
-																 wakeLock.acquire();
-
-																 FocusApplication.getInstance().getDataManager().cleanDataStore();
-
-																 lastClean = System.currentTimeMillis();
-
-																 // release CPU lock
-																 wakeLock.release();
-
-																 setDbCleaningInProgress(false);
-															 }
-
-														 }
-
-				, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
 	}
 
 
@@ -310,19 +216,6 @@ public class CronService extends Service
 	}
 
 
-	/**
-	 * Set the work-in-progress flag
-	 */
-	synchronized private boolean setDbCleaningInProgress(boolean flag)
-	{
-		if (this.dbCleaningInProgress == flag) {
-			return false;
-		}
-
-		this.dbCleaningInProgress = flag;
-		return true;
-	}
-
 
 	/**
 	 * Kill the scheduler on service destruction
@@ -353,6 +246,16 @@ public class CronService extends Service
 	public IBinder onBind(Intent intent)
 	{
 		return this.cronBinder;
+	}
+
+	/**
+	 * Called when we change of application context, i.e. logout
+	 */
+	public void reset()
+	{
+		// FIXME TODO kill any pending process
+		this.lastSync = 0;
+		this.failures = 0;
 	}
 
 

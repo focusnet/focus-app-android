@@ -125,8 +125,7 @@ public class EntryPointActivity extends Activity
 			if (dm.isLoggedIn()) {
 				try {
 					dm.retrieveApplicationData();
-
-					ConfigurationHelper.loadLanguage();
+					ConfigurationHelper.loadLanguage(); // FIXME apparently does not work!
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available

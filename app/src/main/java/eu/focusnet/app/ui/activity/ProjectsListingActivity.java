@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
@@ -60,6 +61,7 @@ import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ConfigurationHelper;
 
 /**
  * This Activity contains the list of available projects.
@@ -248,6 +250,9 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					public void run()
 					{
 						FocusApplication.getInstance().getDataManager().logout();
+						cronService.reset();
+						ConfigurationHelper.resetLanguage();
+
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
 							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
@@ -460,6 +465,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				}
 				else {
 					DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+					// FIXME set the correct locale. no, apparnetly is correct, but i18n is broken ???
+					// DateFormat dateformat = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT, Locale locale);
 					lastSync = dateFormat.format(new Date(this.cronService.getLastSync()));
 				}
 				TextView lastSyncField = (TextView) instructions.findViewById(R.id.dialog_sync_last_sync_field);
@@ -590,7 +597,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			if (!cronBound) {
 				return null;
 			}
-			boolean newSync = cronService.manuallySyncData();
+			boolean newSync = cronService.syncData();
 
 			// if already started (periodic execution), let's just wait for completion
 			if (!newSync) {

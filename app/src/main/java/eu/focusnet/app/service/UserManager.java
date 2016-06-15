@@ -31,7 +31,7 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.json.UserPreferences;
-import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.util.ApplicationHelper;
 
 public class UserManager implements ApplicationStatusObserver

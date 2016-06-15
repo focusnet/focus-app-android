@@ -52,14 +52,12 @@ import eu.focusnet.app.util.ApplicationHelper;
  * - we use wake locks to ensure that started tasks are indeed finished
  * - when waking up, the device will wait for CRON_SERVICE_POLLING_PERIOD_IN_MINUTES before executing the tasks again
  * - in tasks, we then make sure we do now execute the sync/clean tasks too often
- * (CRON_SERVICE_CLEAN_SQL_PERIOD, CRON_SERVICE_REFRESH_DATA_PERIOD)
+ * (, CRON_SERVICE_REFRESH_DATA_PERIOD)
  * - this way, we don't expect the user to work with the app for CRON_SERVICE_REFRESH_DATA_PERIOD minutes,
  * the periodic tasks are run as long as he is on the app for more than CRON_SERVICE_POLLING_PERIOD_IN_MINUTES minutes
  */
 public class CronService extends Service implements ApplicationStatusObserver
 {
-
-
 	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 2; // 2 minutes
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 30; // 30 min

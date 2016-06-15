@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.model.store;
+package eu.focusnet.app.service.datastore;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -322,7 +322,7 @@ public class SampleDao
 				null,
 				null,
 				null,
-				Constant.DATA_SET_ID + "DESC",
+				Constant.DATA_SET_ID + " DESC",
 				"1"
 		);
 

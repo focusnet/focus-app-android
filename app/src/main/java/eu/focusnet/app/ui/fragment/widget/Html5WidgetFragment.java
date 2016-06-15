@@ -41,7 +41,7 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.network.HttpRequest;
+import eu.focusnet.app.service.network.HttpRequest;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.util.ApplicationHelper;

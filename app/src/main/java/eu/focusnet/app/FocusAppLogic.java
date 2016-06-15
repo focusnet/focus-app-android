@@ -35,7 +35,7 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
-import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.service.UserManager;

@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.model.store;
+package eu.focusnet.app.service.datastore;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -147,10 +147,10 @@ public class DatabaseAdapter
 		 */
 		public static long generateNewDataSetIdentifier()
 		{
-			String time = Long.toString(System.currentTimeMillis());
-			int rand = new Random().nextInt(1_000);
-			time = time.substring(4) + Integer.toString(rand);
-			return Long.parseLong(time);
+			// get a somehow random number between 1000 and 9999
+			int rand = 1_000 + new Random().nextInt(9_000);
+			String timeAndRand = Long.toString(System.currentTimeMillis()) + Integer.toString(rand);
+			return Long.parseLong(timeAndRand);
 		}
 
 		/**

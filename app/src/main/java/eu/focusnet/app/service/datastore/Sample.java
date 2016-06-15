@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.model.store;
+package eu.focusnet.app.service.datastore;
 
 import java.util.Date;
 

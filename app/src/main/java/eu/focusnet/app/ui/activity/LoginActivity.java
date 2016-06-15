@@ -34,7 +34,7 @@ import java.io.IOException;
 
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 

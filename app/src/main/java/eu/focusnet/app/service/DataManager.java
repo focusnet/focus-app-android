@@ -32,11 +32,11 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.model.store.DatabaseAdapter;
-import eu.focusnet.app.model.store.Sample;
-import eu.focusnet.app.model.store.SampleDao;
-import eu.focusnet.app.network.HttpResponse;
-import eu.focusnet.app.network.NetworkManager;
+import eu.focusnet.app.service.datastore.DatabaseAdapter;
+import eu.focusnet.app.service.datastore.Sample;
+import eu.focusnet.app.service.datastore.SampleDao;
+import eu.focusnet.app.service.network.HttpResponse;
+import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.util.ApplicationHelper;
 
 /**

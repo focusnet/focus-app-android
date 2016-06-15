@@ -45,7 +45,6 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * C'tor
-	 *
 	 */
 	public FormWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

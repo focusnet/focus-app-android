@@ -64,7 +64,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * This Activity contains the list of available projects.
- *
+ * <p/>
  * FIXME a bit messy, to be reorganized.
  */
 public class ProjectsListingActivity extends ToolbarEnabledActivity
@@ -230,8 +230,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		switch (this.sectionToRender) {
 			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
 			case Constant.UI_MENU_ENTRY_BOOKMARK:
-					highlightSelectedMenuItem(this.sectionToRender);
-					break;
+				highlightSelectedMenuItem(this.sectionToRender);
+				break;
 			case Constant.UI_MENU_ENTRY_ABOUT:
 				LayoutInflater inflater = LayoutInflater.from(this);
 				// LayoutInflater inflater = getLayoutInflater();
@@ -275,7 +275,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			drawerLayout.closeDrawer(this.drawerListMenu);
 
 			// do not keep selection on the current item
-			switch(this.sectionToRender) {
+			switch (this.sectionToRender) {
 				case Constant.UI_MENU_ENTRY_ABOUT:
 					highlightSelectedMenuItem(this.previouslySelectedToRender);
 					break;
@@ -383,9 +383,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Highlight the selected menu item
 	 *
-	 * @param position
-	 *
-	 * FIXME does not have any effect
+	 * @param position FIXME does not have any effect
 	 */
 	private void highlightSelectedMenuItem(int position)
 	{
@@ -577,7 +575,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * Task responsible for synchronizing data
 	 * <p/>
 	 * Called when the user explicitly launches data sync via the dialog
-	 *
+	 * <p/>
 	 * FIXME: if we pass the MenuItem, we can change its icon to an animation (Drawable) or start an animation.
 	 * FIXME: we must then stop/revert when the operation is completed, and we would then need a Listener on the Service
 	 */

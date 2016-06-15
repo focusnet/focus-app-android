@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
@@ -61,8 +60,6 @@ public class DataContext extends HashMap<String, String>
 	/**
 	 * Construct a new DataContext from another one.
 	 *
-	 *
-	 *
 	 * @param c - we use the datamanager of this context as we will build the new context on top of the old one, so using the same data manager makes sense
 	 */
 	public DataContext(@NonNull DataContext c)
@@ -83,29 +80,29 @@ public class DataContext extends HashMap<String, String>
 	 * - a simple URL, e.g. http://data.example.org/test/123
 	 * - a reference to an existing entry in this data context, with a selector to the
 	 * appropriate key in its data object; e.g. <ctx/machine-ABC/woodpile-url>
-	 *
-	 *     TODO
+	 * <p/>
+	 * TODO
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a lookup request, e.g. <lookup:http://schemas.focusnet.eu/my-special-type|URL>
-	 *     	 * where URL is the "context" of the FocusObject.
+	 * * where URL is the "context" of the FocusObject.
 	 * - above services with references to context:
 	 * <history|ctx/machine-ABC/woodpile-url|since=now-86400;until=now;every=240>
-	 *
-	 *
-	 *
+	 * <p/>
+	 * <p/>
+	 * <p/>
 	 * Examples:
 	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
 	 * "referenced-url": "<ctx/simple-url/url1>",
-	 *
+	 * <p/>
 	 * FIXME TODO
 	 * "history-test": "<history|http://focus.yatt.ch/debug/focus-sample-1.json|params>",
 	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
 	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
-	 *lookup: no context for now.
-	 *
-	 *
-	 *
+	 * lookup: no context for now.
+	 * <p/>
+	 * <p/>
+	 * <p/>
 	 * FIXME FIXME TODO the value of the .register() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
 	 * for history / lookup, that's less easy (?)
 	 */

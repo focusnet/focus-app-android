@@ -36,7 +36,6 @@ import eu.focusnet.app.model.json.WidgetReference;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
-import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by julien on 12.01.16.
@@ -59,8 +58,7 @@ public class ProjectInstance extends AbstractInstance
 	 * C'tor
 	 *
 	 * @param tpl
-	 * @param dataContext  we use the datamanager of this context as we will build the new instance on top of the old context, so using the same data manager makes sense
-
+	 * @param dataContext we use the datamanager of this context as we will build the new instance on top of the old context, so using the same data manager makes sense
 	 */
 	public ProjectInstance(ProjectTemplate tpl, @NonNull DataContext dataContext)
 	{
@@ -68,9 +66,6 @@ public class ProjectInstance extends AbstractInstance
 
 		this.template = tpl;
 		this.dataContext = dataContext;
-		if (this.dataContext == null) {
-			this.dataContext = new DataContext(this.dataManager);
-		}
 		this.guid = tpl.getGuid();
 		this.dashboards = new LinkedHashMap<>();
 		this.tools = new LinkedHashMap<>();

@@ -22,12 +22,10 @@ package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 
-import eu.focusnet.app.R;
-
 /**
  * Drawer list item which contains an primaryIcon, a title and an description
  * This is the standard list drawer list item
- *
+ * <p/>
  * FIFXME used for headers in navigation list and for drawer menu
  */
 public class SimpleListItem

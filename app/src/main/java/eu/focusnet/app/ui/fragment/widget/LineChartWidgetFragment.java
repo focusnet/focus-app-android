@@ -48,7 +48,7 @@ import eu.focusnet.app.ui.util.UiHelper;
  * We may need to adapt these functions, though.
  * <p/>
  * NOTE: the caption is not rendered. We use this UI location to display the x-axis label instead.
- *
+ * <p/>
  * FIXME very similar to BarChartWidget -> modularize?
  */
 public class LineChartWidgetFragment extends WidgetFragment

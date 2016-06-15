@@ -108,11 +108,12 @@ public class Html5WidgetFragment extends WidgetFragment
 		/**
 		 * FIXME FIXME DEBUG TODO
 		 * remove this if all certificates have a proper CA. Or handle errors properly!! BIG SECURITY ISSUE
+		 *
 		 * @param view
 		 * @param handler
 		 * @param error
 		 */
-	 @Override
+		@Override
 		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error)
 		{
 			handler.proceed(); // if set, I get 403, but i should get 200
@@ -165,7 +166,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		WebAppInterface(Context c)
 		{
 			this.dm = widgetInstance.getDataManager();
-		//	this.dm = FocusAppLogic.getDataManager();
+			//	this.dm = FocusAppLogic.getDataManager();
 			this.context = c;
 		}
 

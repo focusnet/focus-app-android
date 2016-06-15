@@ -47,7 +47,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  * <p/>
  * FIXME review all methods and set synchronize / volatile when appropriate
  * FIXME ACRA make sure it works in production. I noticed that sometimes the interactive dialog is not shown emulator (real-time issue?) / Probably only when debugger is attached.
- *
+ * <p/>
  * FIXME see FocusAppLogic, which acts as the controller in  MVC
  */
 public class FocusApplication extends Application

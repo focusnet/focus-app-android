@@ -25,5 +25,6 @@ public interface ApplicationStatusObserver
 {
 
 	void observeApplicationStatus(boolean appStatus);
+
 	void handleLogout();
 }

@@ -27,9 +27,9 @@ import eu.focusnet.app.service.DataManager;
 
 abstract public class AbstractInstance
 {
+	protected final DataManager dataManager;
 	protected DataContext dataContext;
 	private boolean valid;
-	protected final DataManager dataManager;
 
 	public AbstractInstance(@NonNull DataManager dm)
 	{

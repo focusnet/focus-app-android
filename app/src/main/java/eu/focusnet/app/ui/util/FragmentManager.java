@@ -31,7 +31,7 @@ import eu.focusnet.app.R;
  * Manage fragments
  * <p/>
  * FIXME i don't understand the purpose of this class YANDY -- ? probably for handling navigation
- *
+ * <p/>
  * animations do not always work!
  */
 public class FragmentManager

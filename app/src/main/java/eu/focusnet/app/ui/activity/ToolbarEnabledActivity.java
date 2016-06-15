@@ -26,7 +26,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
@@ -40,9 +39,9 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	protected Toolbar toolbar;
 	protected Fragment fragment;
 	protected String title;
+	protected ActionBar actionBar;
 	private String projectPath;
 	private String pathPath;
-	protected ActionBar actionBar;
 
 	/**
 	 * Override creation method. Add a toolbar.

@@ -127,7 +127,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 			// resource to inflate depends on current itemType
 			int resourceToInflate;
-			switch(itemType) {
+			switch (itemType) {
 				case LIST_TYPE_EMPTY:
 					resourceToInflate = R.layout.list_item_empty;
 					break;
@@ -164,12 +164,12 @@ public class NavigationListAdapter extends BaseAdapter
 		// Set values to our Views
 		switch (itemType) {
 			case LIST_TYPE_LINK:
-				String description = ((FeaturedListItem)listItem).getDescription();
+				String description = ((FeaturedListItem) listItem).getDescription();
 				if (description != null && !description.equals("")) {
 					itemViewSet.getDescription().setText(description);
 					itemViewSet.getDescription().setVisibility(View.VISIBLE);
 				}
-				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem)listItem).getSecondaryIcon());
+				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem) listItem).getSecondaryIcon());
 				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:
 				itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());
@@ -182,95 +182,93 @@ public class NavigationListAdapter extends BaseAdapter
 		return row;
 	}
 
-private View.OnClickListener getClickBookmarkListener(final FeaturedListItem featuredListItem)
-{
-
-	return new View.OnClickListener()
+	private View.OnClickListener getClickBookmarkListener(final FeaturedListItem featuredListItem)
 	{
-		@Override
-		public void onClick(View v)
+
+		return new View.OnClickListener()
 		{
-		//	final FeaturedListItem featuredListItem = (FeaturedListItem) listItems.get(position);
+			@Override
+			public void onClick(View v)
+			{
+				//	final FeaturedListItem featuredListItem = (FeaturedListItem) listItems.get(position);
 
-			if (featuredListItem.getSecondaryIcon() != null) {
-				final ImageView imageView = (ImageView) v;
+				if (featuredListItem.getSecondaryIcon() != null) {
+					final ImageView imageView = (ImageView) v;
 
-				Resources res = ApplicationHelper.getResources();
-				final boolean isExistingBookmark = featuredListItem.isExistingBookmark();
+					Resources res = ApplicationHelper.getResources();
+					final boolean isExistingBookmark = featuredListItem.isExistingBookmark();
 
-				// Dialog payload
-				LayoutInflater inflater = LayoutInflater.from(context);
-				View dialogContent = inflater.inflate(R.layout.dialog_content_bookmark, null); // FIXME context?
-				final TextView bookmarkTitle = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
-				TextView alternateField = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
-				alternateField.setVisibility(View.GONE);
-				bookmarkTitle.setVisibility(View.VISIBLE);
-				bookmarkTitle.setText(featuredListItem.getTitle());
+					// Dialog payload
+					LayoutInflater inflater = LayoutInflater.from(context);
+					View dialogContent = inflater.inflate(R.layout.dialog_content_bookmark, null); // FIXME context?
+					final TextView bookmarkTitle = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
+					TextView alternateField = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
+					alternateField.setVisibility(View.GONE);
+					bookmarkTitle.setVisibility(View.VISIBLE);
+					bookmarkTitle.setText(featuredListItem.getTitle());
 
 
-				// Dialog building
-				FocusDialogBuilder builder = new FocusDialogBuilder(context)
-						.setTitle(res.getString(isExistingBookmark ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
-						.insertContent(dialogContent)
-						.removeNeutralButton()
-						.setCancelable(false)
-						.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete : R.string.ok)))
-						.setNegativeButtonText(res.getString(R.string.cancel));
+					// Dialog building
+					FocusDialogBuilder builder = new FocusDialogBuilder(context)
+							.setTitle(res.getString(isExistingBookmark ? R.string.focus_remove_bookmark_question : R.string.focus_add_bookmark_question))
+							.insertContent(dialogContent)
+							.removeNeutralButton()
+							.setCancelable(false)
+							.setPositiveButtonText(res.getString((isExistingBookmark ? R.string.delete : R.string.ok)))
+							.setNegativeButtonText(res.getString(R.string.cancel));
 
-				// instantiate
-				final AlertDialog dialog = builder.create();
+					// instantiate
+					final AlertDialog dialog = builder.create();
 
-				// Add click listeners on buttons
-				builder.getNegativeButton().setOnClickListener(new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
+					// Add click listeners on buttons
+					builder.getNegativeButton().setOnClickListener(new View.OnClickListener()
 					{
-						dialog.dismiss();
-					}
-				});
+						@Override
+						public void onClick(View v)
+						{
+							dialog.dismiss();
+						}
+					});
 
-				builder.getPositiveButton().setOnClickListener(new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View view)
+					builder.getPositiveButton().setOnClickListener(new View.OnClickListener()
 					{
-						UserPreferences userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
+						@Override
+						public void onClick(View view)
+						{
+							UserPreferences userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
 
-						if (isExistingBookmark) {
-							featuredListItem.setIsBookmarked(false);
-							Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
-							featuredListItem.setSecondaryIcon(rightIcon);
-							imageView.setImageBitmap(rightIcon);
-							bookmarkTitle.setEnabled(false);
-							userPreferences.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
+							if (isExistingBookmark) {
+								featuredListItem.setIsBookmarked(false);
+								Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
+								featuredListItem.setSecondaryIcon(rightIcon);
+								imageView.setImageBitmap(rightIcon);
+								bookmarkTitle.setEnabled(false);
+								userPreferences.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
+							}
+							else {
+								featuredListItem.setIsBookmarked(true);
+								Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
+								featuredListItem.setSecondaryIcon(rightIcon);
+								imageView.setImageBitmap(rightIcon);
+								Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
+								userPreferences.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
+							}
+
+							new SaveUserPreferencesTask(userPreferences, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							dialog.dismiss();
 						}
-						else {
-							featuredListItem.setIsBookmarked(true);
-							Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
-							featuredListItem.setSecondaryIcon(rightIcon);
-							imageView.setImageBitmap(rightIcon);
-							Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
-							userPreferences.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
-						}
+					});
 
-						new SaveUserPreferencesTask(userPreferences, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						dialog.dismiss();
-					}
-				});
-
-				dialog.show();
+					dialog.show();
+				}
 			}
-		}
-	};
-}
-
-
+		};
+	}
 
 
 	/**
 	 * This class is used for testing if the given credential are correct
-	 *
+	 * <p/>
 	 * FIXME might be used elsewhere, create own file
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>

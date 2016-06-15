@@ -23,7 +23,6 @@ package eu.focusnet.app.model.store;
 import java.util.Date;
 
 import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 

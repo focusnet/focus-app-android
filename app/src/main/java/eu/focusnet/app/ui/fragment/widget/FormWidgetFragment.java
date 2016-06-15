@@ -170,7 +170,7 @@ public class FormWidgetFragment extends WidgetFragment
 		layout.span = 2;
 
 		TableRow tr = new TableRow(this.context);
-		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels/2);
+		tr.setPadding(0, 0, 0, this.defaultPaddingInPixels / 2);
 		TableRow tr2 = new TableRow(this.context);
 		tr2.setPadding(0, 0, 0, this.defaultPaddingInPixels);
 

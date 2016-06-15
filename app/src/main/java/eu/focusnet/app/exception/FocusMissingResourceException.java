@@ -39,9 +39,9 @@ public class FocusMissingResourceException extends Exception
 
 	/**
 	 * Constructor with more details on the missing resource
-	 *  @param detailMessage Message summarizing the encountered issue
-	 * @param missingRessource A String describing the missing resource
 	 *
+	 * @param detailMessage    Message summarizing the encountered issue
+	 * @param missingRessource A String describing the missing resource
 	 */
 	public FocusMissingResourceException(String detailMessage, FocusInternalErrorException missingRessource)
 	{

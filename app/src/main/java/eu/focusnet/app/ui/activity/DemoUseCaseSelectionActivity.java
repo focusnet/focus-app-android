@@ -103,7 +103,8 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	{
 		if (NetworkManager.isNetworkAvailable()) {
 
-			final Thread login = new Thread() {
+			final Thread login = new Thread()
+			{
 				public void run()
 				{
 					String[] useCases = ApplicationHelper.getResources().getStringArray(R.array.demo_use_cases_values);

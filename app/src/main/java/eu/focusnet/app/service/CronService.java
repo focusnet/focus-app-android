@@ -60,9 +60,10 @@ public class CronService extends Service implements ApplicationStatusObserver
 {
 
 
-	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 1 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning FIXME
-	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 200; // 2 minutes FIXME
-	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MS = 30 * 60 * 1_000;//30; // 30 min
+	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
+	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 2; // 2 minutes
+	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 30; // 30 min
+	private static final int CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES = 30;
 	private static final String CRON_WAKE_LOCK_NAME = "FOCUS_CRON_TASK";
 	private final IBinder cronBinder = new CronBinder();
 	PowerManager powerManager;
@@ -123,8 +124,8 @@ public class CronService extends Service implements ApplicationStatusObserver
 		// perform the sync
 		boolean success = false;
 		try {
-			// FIXME might be better than static
-			FocusAppLogic.triggerSync();
+			// FIXME how to make it NOT static? not really possible
+			FocusAppLogic.getInstance().sync();
 			success = true;
 		}
 		catch (FocusMissingResourceException ex) {
@@ -169,7 +170,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 				}
 
 				// last sync is too recent, let's wait more
-				long limit = System.currentTimeMillis() - CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MS;
+				long limit = System.currentTimeMillis() - (CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES * 60 * 1_000);
 				if (lastSync == 0 || lastSync >= limit) {
 					return;
 				}
@@ -177,7 +178,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 				syncData();
 
 			}
-		}, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
+		}, CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
 	}
 
 

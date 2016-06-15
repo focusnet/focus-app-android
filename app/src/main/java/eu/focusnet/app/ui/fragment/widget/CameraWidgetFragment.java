@@ -43,7 +43,7 @@ import eu.focusnet.app.ui.util.Constant;
 
 /**
  * Created by yandypiedra on 13.01.16.
- *
+ * <p/>
  * FIXME FIXME
  * FIXME change of configuration during capture (e.g. change orentiation) make app crash.
  * Probably because we don't handle savedInstance correctly everywhere.

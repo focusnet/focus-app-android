@@ -35,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -44,7 +43,6 @@ import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
@@ -113,13 +111,13 @@ public class ProjectFragment extends ListFragment
 			try {
 				projectInstance = FocusAppLogic.getCurrentApplicationContent().getProjectFromPath(projectId);
 			}
-			catch(FocusMissingResourceException ex) {
+			catch (FocusMissingResourceException ex) {
 				// FIXME do something smarter, e.g. reload Home activity and display an error
 				throw new FocusInternalErrorException("Cannot access project via its path.");
 			}
 
 			// useful for our custom garbage collection in DataManager
-	// FIXME uesless?		dm.registerActiveInstance(projectInstance);
+			// FIXME uesless?		dm.registerActiveInstance(projectInstance);
 			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
 
 			listItems = new ArrayList<>();

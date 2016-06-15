@@ -41,7 +41,7 @@ import eu.focusnet.app.ui.util.UiHelper;
 /**
  * Login Activity: this activity displays the login screen
  * and log the user in the application
- *
+ * <p/>
  * FIXME review when relesing production version
  */
 public class LoginActivity extends Activity

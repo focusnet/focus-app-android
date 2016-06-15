@@ -22,8 +22,6 @@ package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 
-import eu.focusnet.app.R;
-
 
 /**
  * Standard list item which contains

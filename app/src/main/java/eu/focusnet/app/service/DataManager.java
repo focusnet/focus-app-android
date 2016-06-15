@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
@@ -87,6 +86,7 @@ public class DataManager implements ApplicationStatusObserver
 		 */
 		ERROR
 	}
+
 	boolean applicationReady;
 	/**
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
@@ -284,6 +284,7 @@ public class DataManager implements ApplicationStatusObserver
 
 			// try to get it from the network
 			if (NetworkManager.isNetworkAvailable()) {
+				// FIXME this is blocking! do solve that.
 				HttpResponse response = this.net.get(url);
 				if (response.isSuccessful()) {
 					String json = response.getData();
@@ -517,7 +518,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * return new app instance if success or null on failure.
 	 *
 	 * @return
-	 * @throws FocusMissingResourceException
+	 * @throws FocusMissingResourceException FIXME this should rather go elsewhere, in FocusAppLogic
 	 */
 
 	public AppContentInstance retrieveApplicationData() throws FocusMissingResourceException
@@ -667,6 +668,15 @@ public class DataManager implements ApplicationStatusObserver
 	public void observeApplicationStatus(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
+	}
+
+	/**
+	 * Acquire the last data set id that was used in the local database
+	 * and assign it to our DatabaseAdapter
+	 */
+	public void useExistingDataSet()
+	{
+		this.databaseAdapter.useExistingDataSet();
 	}
 }
 

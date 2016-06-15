@@ -47,7 +47,7 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 
 	/**
 	 * Constructor.
-	 *
+	 * <p/>
 	 * We initialize our Date formatter here.
 	 */
 	@SuppressLint("SimpleDateFormat")
@@ -59,8 +59,8 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	/**
 	 * Serialization of a date into JSON
 	 *
-	 * @param date The {@link Date} to serialize
-	 * @param type inherited
+	 * @param date                     The {@link Date} to serialize
+	 * @param type                     inherited
 	 * @param jsonSerializationContext inherited
 	 * @return a GSON {@link JsonElement} representing the date
 	 */
@@ -74,8 +74,8 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	/**
 	 * Deserialization
 	 *
-	 * @param jsonElement The GSON {@link JsonElement} to deserialize into at {@link Date}
-	 * @param type inherited
+	 * @param jsonElement                The GSON {@link JsonElement} to deserialize into at {@link Date}
+	 * @param type                       inherited
 	 * @param jsonDeserializationContext inherited
 	 * @return A {@link Date} object
 	 */

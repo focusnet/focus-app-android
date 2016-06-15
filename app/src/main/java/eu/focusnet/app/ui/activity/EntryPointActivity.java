@@ -125,6 +125,10 @@ public class EntryPointActivity extends Activity
 			if (accessControl.isLoggedIn()) {
 				try {
 					FocusAppLogic.getInstance().acquireApplicationData();
+
+					// A new sync will be requested after
+					// {@link CronService.CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC}
+
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available

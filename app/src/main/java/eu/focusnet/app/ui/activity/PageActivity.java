@@ -20,8 +20,6 @@
 
 package eu.focusnet.app.ui.activity;
 
-import android.app.Fragment;
-
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.PageFragment;
 

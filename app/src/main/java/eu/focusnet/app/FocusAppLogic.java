@@ -36,9 +36,9 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.network.NetworkManager;
-import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.util.ApplicationHelper;
 
@@ -46,7 +46,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * singleton : only static methods if the operation affects the current state of the app. E.g. triggerSync, replaceDataManager(), getAppStatus, etc.
- * <p>
+ * <p/>
  * hence all methods called from UI are static or via getInstance
  */
 public class FocusAppLogic
@@ -113,7 +113,7 @@ public class FocusAppLogic
 
 	/**
 	 * Get the GSON object used for data conversion in our app
-	 * <p>
+	 * <p/>
 	 * The GSON configuration never changes, so its safe to refer to it statically.
 	 *
 	 * @return a pointer to the GSON object, which is already properly configured for our
@@ -121,19 +121,15 @@ public class FocusAppLogic
 	 */
 	public static Gson getGson()
 	{
-		return FocusAppLogic.instance.gson;
+		return instance.gson;
 	}
 
 
 	public static DataManager getDataManager()
 	{
-		return FocusAppLogic.instance.dataManager;
+		return instance.dataManager;
 	}
 
-	public static void triggerSync() throws FocusMissingResourceException
-	{
-		instance.sync();
-	}
 
 	/**
 	 * We need the context for some static method operations, such as NetworkManager.isNetworkAvailable()
@@ -142,7 +138,7 @@ public class FocusAppLogic
 	 */
 	public static Context getApplicationContext()
 	{
-		return FocusAppLogic.instance.context;
+		return instance.context;
 	}
 
 	/**
@@ -154,6 +150,11 @@ public class FocusAppLogic
 	public static AppContentInstance getCurrentApplicationContent()
 	{
 		return instance.currentApplicationContent;
+	}
+
+	public static UserManager getUserManager()
+	{
+		return instance.userManager;
 	}
 
 	/**
@@ -168,23 +169,25 @@ public class FocusAppLogic
 
 		// setup DataManager
 		this.dataManager = new DataManager();
+		// if at first run there is already something in the database, then we should use it
+		// and not overwrite it by refetching data.
+		this.dataManager.useExistingDataSet();
 
 		// Access control facility
 		this.userManager = new UserManager(this.dataManager);
 
 		// bind to cron service
 		// bind cron service
-		Intent intent = new Intent(getApplicationContext(), CronService.class);
-		getApplicationContext().bindService(intent, this.cronServiceConnection, Context.BIND_AUTO_CREATE);
+		Intent intent = new Intent(this.context, CronService.class);
+		this.context.bindService(intent, this.cronServiceConnection, Context.BIND_AUTO_CREATE);
 
 		// we are not fully ready, yet.
 		this.applicationReady = false;
 	}
 
 	/**
-	 *
 	 * do the full login.
-	 *
+	 * <p/>
 	 * Get the 3 basic objects, and then instantiate the Application content as a
 	 * {@link AppContentInstance}, based on the Application template ({@link AppContentTemplate}).
 	 *
@@ -212,14 +215,13 @@ public class FocusAppLogic
 		this.dataManager.freeMemory();
 	}
 
-
 	/**
 	 * We do a local copy of the whole initialization procedure and then copy back into
 	 * the real object in case of success
 	 *
 	 * @throws FocusMissingResourceException if any error happens
 	 */
-	private void sync() throws FocusMissingResourceException
+	public void sync() throws FocusMissingResourceException
 	{
 		if (!this.applicationReady) {
 			return;
@@ -276,7 +278,7 @@ public class FocusAppLogic
 
 	/**
 	 * Reset whole app (delete everything)
-	 *
+	 * <p/>
 	 * Note: this method called when crashing, so bugs in there won't be reportedby ACRA. Pay extra attention to it.
 	 */
 	public void reset()
@@ -298,10 +300,5 @@ public class FocusAppLogic
 		this.dataManager.freeMemory();
 
 		// any other service/memory eater?
-	}
-
-	public static UserManager getUserManager()
-	{
-		return instance.userManager;
 	}
 }

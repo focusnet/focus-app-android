@@ -33,7 +33,7 @@ import eu.focusnet.app.model.util.Constant;
 
 /**
  * SQL Sample Data Access Object
- *
+ * <p/>
  * All samples being recorded belong to a specific data set id ({@link #dataSyncSetId}
  * instance variable) that is unique to each {@link DatabaseAdapter} being created. Most operations
  * are constrained on this set, hence allowing us to have different versions of the data set. This
@@ -43,6 +43,7 @@ public class SampleDao
 {
 
 
+	private final long dataSyncSetId;
 	private String[] columnsToRetrieve = {
 			Constant.URL,
 			Constant.VERSION,
@@ -57,7 +58,6 @@ public class SampleDao
 			Constant.TO_UPDATE,
 			Constant.TO_CREATE
 	};
-	private final long dataSyncSetId;
 	private SQLiteDatabase database;
 
 	/**
@@ -227,7 +227,7 @@ public class SampleDao
 	 */
 	private String[] getAllMarked(String type)
 	{
-		switch(type) {
+		switch (type) {
 			case Constant.TO_CREATE:
 			case Constant.TO_UPDATE:
 			case Constant.TO_DELETE:
@@ -239,8 +239,7 @@ public class SampleDao
 		Set<String> result = new HashSet<>();
 
 		String[] cols = {
-				Constant.URL,
-				Long.toString(this.dataSyncSetId)
+				Constant.URL
 		};
 		String[] params = {
 				Long.toString(this.dataSyncSetId),
@@ -295,7 +294,7 @@ public class SampleDao
 
 	/**
 	 * Delete all entries from the database
-	 *
+	 * <p/>
 	 * This really deletes all rows, not only the ones belong to the current data set
 	 * {@code this.dataSyncSetId}
 	 */
@@ -303,6 +302,38 @@ public class SampleDao
 	{
 		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES;
 		this.database.execSQL(sql);
+	}
+
+	/**
+	 * Return the most recent data set identifier that exists in the database.
+	 *
+	 * @return the found identifier or 0 if non found
+	 */
+	public long getMostRecentDataSetIdentifier()
+	{
+
+		String[] cols = {
+				Constant.DATA_SET_ID
+		};
+		Cursor cursor = this.database.query(
+				Constant.DATABASE_TABLE_SAMPLES,
+				cols,
+				null,
+				null,
+				null,
+				null,
+				Constant.DATA_SET_ID + "DESC",
+				"1"
+		);
+
+		if (cursor.getCount() == 0) {
+			return 0;
+		}
+		cursor.moveToFirst();
+		long res = cursor.getLong(cursor.getColumnIndex(Constant.DATA_SET_ID));
+
+		cursor.close();
+		return res;
 	}
 
 }

@@ -31,22 +31,20 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.json.UserPreferences;
-import eu.focusnet.app.model.store.SampleDao;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.util.ApplicationHelper;
 
 public class UserManager implements ApplicationStatusObserver
 {
 
-	private DataManager dataManager;
-	private User user;
-	private UserPreferences userPreferences;
 	/**
 	 * This property defines the endpoint where our application-specific data are stored
 	 * (User information, User preferences)
 	 */
 	private static final String PROPERTY_TARGET_PERMANENT_STORAGE_SERVER = "resource-server.endpoint";
-
+	private DataManager dataManager;
+	private User user;
+	private UserPreferences userPreferences;
 	/**
 	 * Login-related input information: username
 	 */
@@ -70,7 +68,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * URI to resource holding user information.
-	 * <p>
+	 * <p/>
 	 * URIs to resources that are used for building the application. 3 objects are of special
 	 * importance and mandatory for the application to work properly:
 	 * - userUrl points to a {@link User} object, which contains basic information such as the
@@ -124,8 +122,6 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 
-
-
 	/**
 	 * Tells whether the user has already logged in.
 	 *
@@ -137,11 +133,10 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 
-
 	/**
 	 * Login and if successful, save the login information in the permanent store, as the internal
 	 * configuration resource.
-	 * <p>
+	 * <p/>
 	 * FIXME TODO implementation to be completed once we have an authentication server.
 	 *
 	 * @param user     The login user
@@ -295,6 +290,7 @@ public class UserManager implements ApplicationStatusObserver
 			this.applicationReady = false;
 		}
 	}
+
 	/**
 	 * Delete login information and any locally stored data
 	 */
@@ -305,12 +301,11 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 
-
 	/**
 	 * The {@link User} is one of the 3 mandatory objects for the application to run. This method
 	 * retrieves this object based on the URI that has been obtained during the login procedure.
 	 * If the object does not exist, a new one is created on the network.
-	 * <p>
+	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
@@ -351,7 +346,7 @@ public class UserManager implements ApplicationStatusObserver
 	 * The {@link UserPreferences} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object does not exist, a new one is created on the network.
-	 * <p>
+	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
@@ -389,7 +384,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Those 2 objects are mandatory, and fatal exception is triggered if sth goes wrong.
-	 *
+	 * <p/>
 	 * Access control setup should come here, too (if not already done in login() )
 	 */
 	public void getUserData()

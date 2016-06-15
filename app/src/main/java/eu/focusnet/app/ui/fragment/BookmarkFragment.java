@@ -32,7 +32,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -123,7 +122,7 @@ public class BookmarkFragment extends ListFragment
 
 	private void addListItems(ArrayList<Bookmark> source, int icon, int label)
 	{
-		AppContentInstance appContentInstance =  FocusAppLogic.getCurrentApplicationContent();
+		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
 
 		// header
 		SimpleListItem headerProjectsListItem = new SimpleListItem(

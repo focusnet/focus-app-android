@@ -10,7 +10,6 @@ import com.google.gson.JsonSyntaxException;
 import java.util.Map;
 import java.util.Random;
 
-import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -155,7 +154,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		}
 		else {
 			appAvailable = true;
-			PackageInfo packageInfo = null;
+			PackageInfo packageInfo;
 			try {
 				packageInfo = pm.getPackageInfo(activityInfo.activityInfo.packageName, 0);
 			}

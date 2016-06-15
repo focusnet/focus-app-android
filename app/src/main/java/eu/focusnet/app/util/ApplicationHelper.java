@@ -48,7 +48,7 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
  * A helper class used for retrieving Properties.
- * <p>
+ * <p/>
  * FIXME might contain methods for accessing getResource(), getAppContext, ...
  */
 public class ApplicationHelper
@@ -102,7 +102,7 @@ public class ApplicationHelper
 	/**
 	 * Retrieve a property.
 	 *
-	 * @param key     The key of the property to retrieve
+	 * @param key The key of the property to retrieve
 	 * @return A String containing the value of the property, or {@code null} on failure.
 	 * @throws IOException If the properties file could not be open
 	 */
@@ -126,7 +126,7 @@ public class ApplicationHelper
 	 * but will impact all the rest of the life of the application. It does not impact the UI
 	 * directly but is typically called from an Activity's on Resume() method, or just before
 	 * redirecting to another Activity.
-	 *
+	 * <p/>
 	 * FIXME strange behaviors in emulator. Sometimes does not work. See if any problem on real device.
 	 */
 	public static void changeLannguage(String language)
@@ -176,7 +176,7 @@ public class ApplicationHelper
 	 *
 	 * @return An array consisting of supported languages.
 	 * The languages can be also local versions, e.g. fr_CH instead of fr.
-	 * <p>
+	 * <p/>
 	 * FIXME should we put this elsewhere / e.g. in util.ApplicationHelper
 	 */
 	private static List<String> getSupportedLanguages()
@@ -284,5 +284,10 @@ public class ApplicationHelper
 	public static boolean checkPermission(String what)
 	{
 		return ActivityCompat.checkSelfPermission(getApplicationContext(), what) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	public static Object getSystemService(String name)
+	{
+		return getApplicationContext().getSystemService(name);
 	}
 }

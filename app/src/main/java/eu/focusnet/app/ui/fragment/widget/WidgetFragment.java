@@ -115,7 +115,7 @@ public abstract class WidgetFragment extends Fragment
 	@Override
 	public void onDestroyView()
 	{
-	// FIXME useless?	FocusAppLogic.getDataManager().unregisterActiveInstance(this.widgetInstance);
+		// FIXME useless?	FocusAppLogic.getDataManager().unregisterActiveInstance(this.widgetInstance);
 		super.onDestroyView();
 	}
 
@@ -165,11 +165,11 @@ public abstract class WidgetFragment extends Fragment
 			try {
 				this.widgetInstance = FocusAppLogic.getCurrentApplicationContent().getWidgetFromPath(path);
 			}
-			catch(FocusMissingResourceException ex) {
+			catch (FocusMissingResourceException ex) {
 				// FIXME do something smarter, e.g. reload Home activity and display an error
 				throw new FocusInternalErrorException("Cannot access widget via its path.");
 			}
-	// FIXME useful????		dm.registerActiveInstance(this.widgetInstance);
+			// FIXME useful????		dm.registerActiveInstance(this.widgetInstance);
 		}
 
 		// alter the reference height if necessary

@@ -34,13 +34,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
@@ -106,10 +105,9 @@ public class ProjectsListingFragment extends ListFragment
 					getString(R.string.focus_header_project));
 
 			listItems.add(headerProjectsListItem);
-			DataManager dm = FocusApplication.getInstance().getDataManager();
-			UserPreferences preference = dm.getUserPreferences();
+			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
 
-			LinkedHashMap<String, ProjectInstance> projects = dm.getAppContentInstance().getProjects();
+			LinkedHashMap<String, ProjectInstance> projects = FocusAppLogic.getCurrentApplicationContent().getProjects();
 			Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
 			Bitmap rightIconIfActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 

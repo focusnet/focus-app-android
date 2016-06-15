@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/include_widget_title" />
+    <include layout="@layout/include_widget_title"/>
 
     <eu.focusnet.app.ui.common.TouchTableView
         android:id="@+id/tableView"

@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.internal.widgets;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.Constant;
 
 /**
@@ -78,18 +81,15 @@ public abstract class WidgetInstance extends AbstractInstance
 	 * @param layoutConfig
 	 * @param dataCtx
 	 */
-	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
+	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, @NonNull DataContext dataCtx)
 	{
-		super();
+		super(dataCtx.getDataManager());
 
 		this.guid = wTpl.getGuid();
 		this.type = wTpl.getType();
 		this.template = wTpl;
 		this.layoutConfig = (layoutConfig == null ? WidgetInstance.layoutConfigDefaults : layoutConfig);
 		this.dataContext = dataCtx;
-		if (this.dataContext == null) {
-			this.dataContext = new DataContext();
-		}
 
 		Object cfg = wTpl.getConfig();
 		if (cfg != null) {
@@ -105,9 +105,9 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Dummy c'tor for InvalidWidgetInstance
 	 */
-	public WidgetInstance(Map<String, String> layoutConfig)
+	public WidgetInstance(Map<String, String> layoutConfig, DataManager dm)
 	{
-		super();
+		super(dm);
 
 		this.layoutConfig = (layoutConfig == null ? WidgetInstance.layoutConfigDefaults : layoutConfig);
 	}

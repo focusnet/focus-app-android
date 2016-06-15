@@ -30,12 +30,13 @@ import android.widget.Spinner;
 
 import java.io.IOException;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * Demo use case activity
@@ -105,11 +106,11 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 			final Thread login = new Thread() {
 				public void run()
 				{
-					String[] useCases = FocusApplication.getInstance().getResources().getStringArray(R.array.demo_use_cases_values);
+					String[] useCases = ApplicationHelper.getResources().getStringArray(R.array.demo_use_cases_values);
 					String selectedUseCase = useCases[DemoUseCaseSelectionActivity.this.selectedUseCase];
 
 					try {
-						FocusApplication.getInstance().getDataManager().demoLogin(selectedUseCase);
+						FocusAppLogic.getUserManager().demoLogin(selectedUseCase);
 					}
 					catch (IOException ex) {
 						throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");

@@ -3,9 +3,10 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".ui.activity.ProjectsListingActivity">
 
-    <item android:id="@+id/action_sync"
-          android:title="@string/synchronize_data"
-          app:showAsAction="always"
-          android:icon="@drawable/ic_refresh_negative"
+    <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_refresh_negative"
+        android:title="@string/synchronize_data"
+        app:showAsAction="always"
         />
 </menu>

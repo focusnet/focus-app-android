@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  */
@@ -77,7 +77,7 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		// check that the asset exists
 		boolean assetFound = false;
 		try {
-			AssetManager am = FocusApplication.getInstance().getAssets();
+			AssetManager am = ApplicationHelper.getAssets();
 			assetFound = Arrays.asList(am.list(ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier)).contains(ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
 		}
 		catch (IOException ex) {

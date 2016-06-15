@@ -29,7 +29,8 @@ android {
         release {
             // FIXME TODO enable
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro' // FIXME TODO
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // FIXME TODO
         }
         debug {
             debuggable true

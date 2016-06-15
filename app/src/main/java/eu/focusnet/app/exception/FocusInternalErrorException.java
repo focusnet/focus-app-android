@@ -37,4 +37,9 @@ public class FocusInternalErrorException extends RuntimeException
 	{
 		super(detailMessage);
 	}
+
+	public FocusInternalErrorException(Exception ex)
+	{
+		super(ex);
+	}
 }

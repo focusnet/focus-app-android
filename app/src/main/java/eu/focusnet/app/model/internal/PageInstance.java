@@ -20,6 +20,7 @@
 
 package eu.focusnet.app.model.internal;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.LinkedHashMap;
@@ -60,18 +61,15 @@ public class PageInstance extends AbstractInstance
 	 * @param pageTpl
 	 * @param dataCtx
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, DataContext dataCtx) throws FocusMissingResourceException
+	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx) throws FocusMissingResourceException
 	{
-		super();
+		super(dataCtx.getDataManager());
 
 		this.template = pageTpl;
 		this.guid = pageTpl.getGuid();
 		this.type = type;
 		this.widgets = new LinkedHashMap<>();
 		this.dataContext = dataCtx;
-		if (this.dataContext == null) {
-			this.dataContext = new DataContext();
-		}
 
 		if (this.dataContext.get(LABEL_PAGE_ITERATOR) != null) {
 			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;

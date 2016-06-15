@@ -41,7 +41,6 @@ import eu.focusnet.app.service.DataManager;
  */
 public class AppContentInstance extends AbstractInstance
 {
-	private DataManager dataManager;
 	private AppContentTemplate appTemplate;
 	private LinkedHashMap<String, ProjectInstance> projects;
 	private String title;
@@ -52,14 +51,13 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @param tpl
 	 */
-	public AppContentInstance(AppContentTemplate tpl)
+	public AppContentInstance(AppContentTemplate tpl, DataManager dm)
 	{
-		super();
+		super(dm);
 
 		this.appTemplate = tpl;
 		this.projects = new LinkedHashMap<>();
-		this.dataManager = FocusApplication.getInstance().getDataManager();
-		this.dataContext = new DataContext();
+		this.dataContext = new DataContext(this.dataManager);
 		this.build();
 		this.freeDataContext();
 

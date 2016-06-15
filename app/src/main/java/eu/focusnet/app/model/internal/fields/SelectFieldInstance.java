@@ -4,13 +4,13 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * The MIT License (MIT)
@@ -125,7 +125,7 @@ public class SelectFieldInstance extends FieldInstance
 		}
 
 		if (!this.isMandatory()) {
-			this.texts.add(0, FocusApplication.getInstance().getString(R.string.select_no_selection));
+			this.texts.add(0, ApplicationHelper.getResources().getString(R.string.select_no_selection));
 			this.values.add(0, "");
 		}
 

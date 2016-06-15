@@ -21,15 +21,20 @@
 package eu.focusnet.app.model.internal;
 
 
+import android.support.annotation.NonNull;
+
+import eu.focusnet.app.service.DataManager;
 
 abstract public class AbstractInstance
 {
 	protected DataContext dataContext;
 	private boolean valid;
+	protected final DataManager dataManager;
 
-	public AbstractInstance()
+	public AbstractInstance(@NonNull DataManager dm)
 	{
 		this.valid = true;
+		this.dataManager = dm;
 	}
 
 	public DataContext getDataContext()
@@ -63,5 +68,10 @@ abstract public class AbstractInstance
 	public void freeDataContext()
 	{
 		this.dataContext = null;
+	}
+
+	public DataManager getDataManager()
+	{
+		return this.dataManager;
 	}
 }

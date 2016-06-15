@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.internal;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -34,6 +36,7 @@ import eu.focusnet.app.model.json.WidgetReference;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.service.DataManager;
 
 /**
  * Created by julien on 12.01.16.
@@ -56,20 +59,21 @@ public class ProjectInstance extends AbstractInstance
 	 * C'tor
 	 *
 	 * @param tpl
-	 * @param dataContext
+	 * @param dataContext  we use the datamanager of this context as we will build the new instance on top of the old context, so using the same data manager makes sense
+
 	 */
-	public ProjectInstance(ProjectTemplate tpl, DataContext dataContext)
+	public ProjectInstance(ProjectTemplate tpl, @NonNull DataContext dataContext)
 	{
-		super();
+		super(dataContext.getDataManager());
 
 		this.template = tpl;
 		this.dataContext = dataContext;
 		if (this.dataContext == null) {
-			this.dataContext = new DataContext();
+			this.dataContext = new DataContext(this.dataManager);
 		}
 		this.guid = tpl.getGuid();
-		this.dashboards = new LinkedHashMap<String, PageInstance>();
-		this.tools = new LinkedHashMap<String, PageInstance>();
+		this.dashboards = new LinkedHashMap<>();
+		this.tools = new LinkedHashMap<>();
 		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
 			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}

@@ -31,13 +31,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.util.Constant;
-import eu.focusnet.app.util.ConfigurationHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * Entry point activity
@@ -120,12 +120,11 @@ public class EntryPointActivity extends Activity
 			// if (1==1)return null;
 
 
-			DataManager dm = FocusApplication.getInstance().getDataManager();
-			dm.init();
-			if (dm.isLoggedIn()) {
+			UserManager accessControl = FocusAppLogic.getUserManager();
+			accessControl.quickLoginInfoAcquisition();
+			if (accessControl.isLoggedIn()) {
 				try {
-					dm.retrieveApplicationData();
-					ConfigurationHelper.loadLanguage(); // FIXME apparently does not work!
+					FocusAppLogic.getInstance().acquireApplicationData();
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available
@@ -154,7 +153,8 @@ public class EntryPointActivity extends Activity
 						}
 						// we either redirect to the login page or the projects listing
 						if (!tryAgain) {
-							if (FocusApplication.getInstance().getDataManager().isLoggedIn()) {
+							if (FocusAppLogic.getUserManager().isLoggedIn()) {
+								ApplicationHelper.changeLannguage(FocusAppLogic.getCurrentApplicationContent().getLanguage());
 								startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 							}
 							else {
@@ -169,7 +169,8 @@ public class EntryPointActivity extends Activity
 					}
 					// restart this activity if necessary
 					if (tryAgain) {
-						FocusApplication.getInstance().restartCurrentActivity();
+						finish();
+						startActivity(getIntent());
 					}
 				}
 			};

@@ -32,10 +32,10 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
-import eu.focusnet.app.util.ConfigurationHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * An HTTP request to be issued to the REST server
@@ -49,14 +49,12 @@ public class HttpRequest
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_PUT = "PUT";
 	public static final String HTTP_METHOD_DELETE = "DELETE";
-	private SSLContext sslContext;
-
-
 	String method = null;
 	URL url = null;
 	String payload = "";
 	HttpResponse response = null;
 	int errors = 0; // we count number of errors.
+	private SSLContext sslContext;
 
 	/**
 	 * A simple Request without payload (GET or DELETE)
@@ -86,7 +84,7 @@ public class HttpRequest
 	 */
 	public HttpRequest(String method, String url, FocusObject payload)
 	{
-		this(method, url, FocusApplication.getInstance().getDataManager().getGson().toJson(payload));
+		this(method, url, FocusAppLogic.getGson().toJson(payload));
 	}
 
 	/**
@@ -123,18 +121,13 @@ public class HttpRequest
 		connection.setRequestMethod(httpMethod);
 		// When appropriate, HTTPS-related configuration
 		// Works out of the box if certificates are valid (with valid and registered CA)
-		FocusApplication app = FocusApplication.getInstance();
 		if (url.toString().startsWith("https://")) {
-			SSLSocketFactory socket_factory =
-					app
-					.getNetworkManager()
-					.getSSLContext()
-					.getSocketFactory();
+			SSLSocketFactory socket_factory = NetworkManager.getSslContext().getSocketFactory();
 			((HttpsURLConnection) connection).setSSLSocketFactory(socket_factory);
 		}
 
 		// add custom headers when necessary
-		String headers = ConfigurationHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost() , app);
+		String headers = ApplicationHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost());
 		// FIXME For now, multiple headers per host are not supported.
 		if (headers != null) {
 			Pattern p = Pattern.compile("^([^\\s:]+):\\s*(.*)$");
@@ -200,7 +193,6 @@ public class HttpRequest
 
 		return response;
 	}
-
 
 
 }

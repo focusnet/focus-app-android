@@ -31,9 +31,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.util.ConfigurationHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 
 // TOOD FIXME also clean SQL db from old entries (i.e. ones that are not refered by fully loaded instances (? to check ?)
@@ -55,31 +56,33 @@ import eu.focusnet.app.util.ConfigurationHelper;
  * - this way, we don't expect the user to work with the app for CRON_SERVICE_REFRESH_DATA_PERIOD minutes,
  * the periodic tasks are run as long as he is on the app for more than CRON_SERVICE_POLLING_PERIOD_IN_MINUTES minutes
  */
-public class CronService extends Service
+public class CronService extends Service implements ApplicationStatusObserver
 {
 
 
 	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 1 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning FIXME
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 200; // 2 minutes FIXME
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MS = 30 * 60 * 1_000;//30; // 30 min
-	private static final String CRON_WAKE_LOCK_NAME ="FOCUS_CRON_TASK";
+	private static final String CRON_WAKE_LOCK_NAME = "FOCUS_CRON_TASK";
 	private final IBinder cronBinder = new CronBinder();
 	PowerManager powerManager;
 	private long lastSync;
 	private ScheduledExecutorService scheduleTaskExecutor;
 	private int failures;
 	private boolean syncInProgress; // does not apply to db cleaning
+	private boolean applicationReady;
 
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
+		this.applicationReady = false;
 		this.scheduleTaskExecutor = Executors.newScheduledThreadPool(3);
 		this.powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		this.syncInProgress = false;
 
-		HashMap<String, String> prefs = ConfigurationHelper.getPreferences();
-		String l = prefs.get(ConfigurationHelper.SHARED_PREFERENCES_LAST_SYNC);
+		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
+		String l = prefs.get(ApplicationHelper.SHARED_PREFERENCES_LAST_SYNC);
 		this.lastSync = l == null ? 0 : Long.parseLong(l);
 		this.failures = 0;
 	}
@@ -93,16 +96,15 @@ public class CronService extends Service
 	}
 
 
-
 	/**
 	 * Sync data operations
 	 * <p/>
-	 * 	 * return false if already in progress OR application nto ready, true otherwise
+	 * * return false if already in progress OR application nto ready, true otherwise
 	 */
 	public boolean syncData()
 	{
 		// Applicaiton is not ready, nothing to sync
-		if (!FocusApplication.getInstance().getDataManager().isApplicationReady()) {
+		if (!this.applicationReady) {
 			return false;
 		}
 
@@ -121,7 +123,8 @@ public class CronService extends Service
 		// perform the sync
 		boolean success = false;
 		try {
-			FocusApplication.getInstance().getDataManager().syncData();
+			// FIXME might be better than static
+			FocusAppLogic.triggerSync();
 			success = true;
 		}
 		catch (FocusMissingResourceException ex) {
@@ -137,8 +140,8 @@ public class CronService extends Service
 		// Update information about the last sync
 		this.lastSync = System.currentTimeMillis();
 		HashMap<String, String> toSave = new HashMap<>();
-		toSave.put(ConfigurationHelper.SHARED_PREFERENCES_LAST_SYNC, Long.toString(this.lastSync));
-		ConfigurationHelper.savePreferences(toSave);
+		toSave.put(ApplicationHelper.SHARED_PREFERENCES_LAST_SYNC, Long.toString(this.lastSync));
+		ApplicationHelper.savePreferences(toSave);
 
 		// release CPU lock
 		wakeLock.release();
@@ -161,7 +164,7 @@ public class CronService extends Service
 			public void run()
 			{
 
-				if (!FocusApplication.getInstance().getDataManager().isApplicationReady()) {
+				if (!applicationReady) {
 					return;
 				}
 
@@ -213,7 +216,6 @@ public class CronService extends Service
 	}
 
 
-
 	/**
 	 * Kill the scheduler on service destruction
 	 */
@@ -226,9 +228,10 @@ public class CronService extends Service
 
 	/**
 	 * Get the last sync date
-	 *
+	 * <p/>
 	 * NOTE: only available within a single application instance run. We do not permanently save
 	 * this information (e.g. in the db)
+	 *
 	 * @return
 	 */
 	public long getLastSync()
@@ -245,13 +248,21 @@ public class CronService extends Service
 		return this.cronBinder;
 	}
 
-	/**
-	 * Called when we change of application context, i.e. logout
-	 */
-	public void reset()
+	// If the service was not bound when this method is called, then our applicationReady flag
+	// may be wrong.
+	// FIXME to circumvent that, call this method often?
+	@Override
+	public void observeApplicationStatus(boolean appStatus)
+	{
+		this.applicationReady = appStatus;
+	}
+
+	// FIXME check what happens if called when not bound.
+	@Override
+	public void handleLogout()
 	{
 		// FIXME TODO kill any pending process
-		// no need to commit the modification in the SharedPreferences. This is the job of DataManager.logout()
+		// no need to commit the modification in the SharedPreferences. This is the job of UserManager.logout(), which will clear the whole prefs
 		this.lastSync = 0;
 		this.failures = 0;
 	}

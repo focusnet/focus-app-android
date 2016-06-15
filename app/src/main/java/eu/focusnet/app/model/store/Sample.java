@@ -22,6 +22,7 @@ package eu.focusnet.app.model.store;
 
 import java.util.Date;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
@@ -99,7 +100,7 @@ public class Sample
 				fo.getEditionDateTime(),
 				fo.getEditor(),
 				fo.isActive(),
-				FocusApplication.getInstance().getDataManager().getGson().toJson(fo),
+				FocusAppLogic.getGson().toJson(fo),
 				false,
 				false,
 				false

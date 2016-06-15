@@ -15,8 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.8"
-        android:src="@drawable/focus_logo"
-        android:contentDescription="@string/caption_focus_logo"/>
+        android:contentDescription="@string/caption_focus_logo"
+        android:src="@drawable/focus_logo"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,11 +42,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/login_demo_label_select_use_case" />
+                android:text="@string/login_demo_label_select_use_case"/>
 
             <Spinner
                 android:id="@+id/login_demo_field_select_use_case"
-                style="@style/FocusSpinner.Big" />
+                style="@style/FocusSpinner.Big"/>
 
             <Button
                 android:id="@+id/login_demo_button_start"

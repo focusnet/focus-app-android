@@ -25,7 +25,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
@@ -50,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.service.CronService;
@@ -61,7 +60,7 @@ import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
-import eu.focusnet.app.util.ConfigurationHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * This Activity contains the list of available projects.
@@ -76,6 +75,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	protected ListView drawerListMenu;
 	protected ActionBarDrawerToggle drawerToggle;
 	protected ArrayList<SimpleListItem> drawerItems;
+	private int previouslySelectedToRender;
 	private int sectionToRender;
 	private CronService cronService;
 	private boolean cronBound = false;
@@ -91,6 +91,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			CronService.CronBinder binder = (CronService.CronBinder) service;
 			cronService = binder.getService();
 			cronBound = true;
+			// if we are in this Activity, this means that the application is ready to display
+			// something, so let's update the cron's applicationReady flag that may have not been
+			// set if the service was not bound in FocusAppLogic when we tried to do it.
+			cronService.observeApplicationStatus(true);
 		}
 
 		@Override
@@ -99,7 +103,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			cronBound = false;
 		}
 	};
-	private int previouslySelectedToRender;
 
 
 	/**
@@ -197,7 +200,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		this.drawerListMenu.setOnItemClickListener(this.getOnClickDrawerItemListener());
 
 		// Assign a ListAdapter to our Drawer
-		DrawerListAdapter adapter = new DrawerListAdapter(getApplicationContext(), this.drawerItems);
+		DrawerListAdapter adapter = new DrawerListAdapter(ApplicationHelper.getApplicationContext(), this.drawerItems);
 		drawerListMenu.setAdapter(adapter);
 
 		this.drawerToggle = new ActionBarDrawerToggle(
@@ -217,7 +220,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 		// set a subtitle
 		this.actionBar.setSubtitle(
-				FocusApplication.getInstance().getDataManager().getAppContentInstance().getTitle()
+				FocusAppLogic.getCurrentApplicationContent().getTitle()
 		);
 	}
 
@@ -249,9 +252,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				{
 					public void run()
 					{
-						FocusApplication.getInstance().getDataManager().logout();
-						cronService.reset();
-						ConfigurationHelper.resetLanguage();
+						// reset all when logging out
+						FocusAppLogic.getInstance().reset();
 
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
@@ -472,7 +474,8 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				TextView lastSyncField = (TextView) instructions.findViewById(R.id.dialog_sync_last_sync_field);
 				lastSyncField.setText(getString(R.string.last_sync_label) + lastSync);
 				TextView lastDataVolumeField = (TextView) instructions.findViewById(R.id.dialog_sync_data_volume_field);
-				long rawDbSize = FocusApplication.getInstance().getDataManager().getDatabaseSize();
+
+				long rawDbSize = FocusAppLogic.getDataManager().getDatabaseSize();
 				lastDataVolumeField.setText(getString(R.string.last_sync_data_volume_label) + (rawDbSize == 0 ? "N/A" : UiHelper.getFileSize(rawDbSize)));
 
 

@@ -10,7 +10,7 @@
 
     <dimen name="focus_text_size_big">18sp</dimen>
     <dimen name="focus_text_size_medium">14sp</dimen>
-    <item name="focus_line_height_multiplier" type="dimen" format="float">1.2</item>
+    <item name="focus_line_height_multiplier" format="float" type="dimen">1.2</item>
 
     <dimen name="focus_spinner_vertical_margin">3dp</dimen>
     <dimen name="focus_spinner_vertical_margin_big">6dp</dimen>

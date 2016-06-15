@@ -36,11 +36,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.io.IOException;
-
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
@@ -48,9 +44,7 @@ import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.network.HttpRequest;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
-import eu.focusnet.app.util.ConfigurationHelper;
-
-
+import eu.focusnet.app.util.ApplicationHelper;
 
 
 public class Html5WidgetFragment extends WidgetFragment
@@ -70,7 +64,6 @@ public class Html5WidgetFragment extends WidgetFragment
 		// preferably expressed in vw)
 		super.onCreate(savedInstanceState);
 		this.setupWidget(inflater.inflate(R.layout.fragment_widget_html5_webapp, container, false));
-
 
 		TouchWebView webView = (TouchWebView) this.rootView.findViewById(R.id.webview);
 
@@ -171,7 +164,8 @@ public class Html5WidgetFragment extends WidgetFragment
 		 */
 		WebAppInterface(Context c)
 		{
-			this.dm = FocusApplication.getInstance().getDataManager();
+			this.dm = widgetInstance.getDataManager();
+		//	this.dm = FocusAppLogic.getDataManager();
 			this.context = c;
 		}
 
@@ -266,7 +260,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getAccessControlToken(String which)
 		{
-			String header = ConfigurationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which, FocusApplication.getInstance());
+			String header = ApplicationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which);
 			if (header != null) {
 				return header;
 			}

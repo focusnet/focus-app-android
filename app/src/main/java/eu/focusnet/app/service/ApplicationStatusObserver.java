@@ -1,7 +1,3 @@
-package eu.focusnet.app.model.internal.widgets;
-
-import java.util.Map;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -21,17 +17,13 @@ import java.util.Map;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-public class InvalidWidgetInstance extends WidgetInstance
+
+package eu.focusnet.app.service;
+
+
+public interface ApplicationStatusObserver
 {
 
-	private WidgetInstance originalWidgetInstance;
-
-	public InvalidWidgetInstance(Map<String, String> layoutConfig, WidgetInstance w)
-	{
-		super(layoutConfig, w.getDataManager());
-		this.originalWidgetInstance = w;
-
-		// set the guid, for keeping track of paths
-		this.setGuid(w.getGuid());
-	}
+	void observeApplicationStatus(boolean appStatus);
+	void handleLogout();
 }

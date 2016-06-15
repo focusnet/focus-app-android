@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -69,8 +70,7 @@ public class PageFragment extends Fragment
 		String projectPath = (String) bundle.get(Constant.UI_EXTRA_PROJECT_PATH);
 		String pagePath = (String) bundle.get(Constant.UI_EXTRA_PAGE_PATH);
 
-		DataManager dm = FocusApplication.getInstance().getDataManager();
-		AppContentInstance appContentInstance = dm.getAppContentInstance();
+		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
 		try {
 			this.projectInstance = appContentInstance.getProjectFromPath(projectPath);
 			this.pageInstance = appContentInstance.getPageFromPath(pagePath);
@@ -81,7 +81,7 @@ public class PageFragment extends Fragment
 		}
 
 		// useful for our custom garbage collection in DataManager
-		dm.registerActiveInstance(this.pageInstance);
+	/// FIXME uselss?	dm.registerActiveInstance(this.pageInstance);
 
 
 		//	ViewUtil.buildPageView(this.projectInstance, this.pageInstance, linearLayoutPageInfo, getActivity());
@@ -97,7 +97,7 @@ public class PageFragment extends Fragment
 	public void onDestroyView()
 	{
 		// useful for our custom garbage collection in DataManager
-		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.pageInstance);
+	// FIXME uselss???	FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.pageInstance);
 
 		super.onDestroyView();
 	}

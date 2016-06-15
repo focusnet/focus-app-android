@@ -32,7 +32,7 @@ import android.widget.EditText;
 
 import java.io.IOException;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.ui.util.Constant;
@@ -119,7 +119,7 @@ public class LoginActivity extends Activity
 
 			Boolean hasAccess;
 			try {
-				hasAccess = FocusApplication.getInstance().getDataManager().login(username, password, server);
+				hasAccess = FocusAppLogic.getUserManager().login(username, password, server); // FIXME probably move to UserManager object
 			}
 			catch (IOException ex) {
 				hasAccess = false;

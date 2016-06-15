@@ -31,6 +31,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -104,11 +105,9 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void updateListAdapter()
 	{
+		UserPreferences preferences = FocusAppLogic.getUserManager().getUserPreferences();
 
-
-		UserPreferences preference = FocusApplication.getInstance().getDataManager().getUserPreferences();
-
-		BookmarksList bookmark = preference.getBookmarks();
+		BookmarksList bookmark = preferences.getBookmarks();
 		ArrayList<Bookmark> pages = bookmark.getPages();
 		ArrayList<Bookmark> tools = bookmark.getTools();
 
@@ -124,7 +123,7 @@ public class BookmarkFragment extends ListFragment
 
 	private void addListItems(ArrayList<Bookmark> source, int icon, int label)
 	{
-		AppContentInstance appContentInstance =  FocusApplication.getInstance().getDataManager().getAppContentInstance();
+		AppContentInstance appContentInstance =  FocusAppLogic.getCurrentApplicationContent();
 
 		// header
 		SimpleListItem headerProjectsListItem = new SimpleListItem(

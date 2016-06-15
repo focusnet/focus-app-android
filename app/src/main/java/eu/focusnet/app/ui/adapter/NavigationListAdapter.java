@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.Bookmark;
@@ -45,6 +45,7 @@ import eu.focusnet.app.ui.common.FeaturedListItemViewSet;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * List Adapter, used for drawer and entries in listings pages
@@ -194,7 +195,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 			if (featuredListItem.getSecondaryIcon() != null) {
 				final ImageView imageView = (ImageView) v;
 
-				Resources res = FocusApplication.getInstance().getResources();
+				Resources res = ApplicationHelper.getResources();
 				final boolean isExistingBookmark = featuredListItem.isExistingBookmark();
 
 				// Dialog payload
@@ -234,7 +235,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 					@Override
 					public void onClick(View view)
 					{
-						UserPreferences userPreference = FocusApplication.getInstance().getDataManager().getUserPreferences();
+						UserPreferences userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
 
 						if (isExistingBookmark) {
 							featuredListItem.setIsBookmarked(false);
@@ -242,7 +243,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 							featuredListItem.setSecondaryIcon(rightIcon);
 							imageView.setImageBitmap(rightIcon);
 							bookmarkTitle.setEnabled(false);
-							userPreference.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
+							userPreferences.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
 						}
 						else {
 							featuredListItem.setIsBookmarked(true);
@@ -250,10 +251,10 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 							featuredListItem.setSecondaryIcon(rightIcon);
 							imageView.setImageBitmap(rightIcon);
 							Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
-							userPreference.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
+							userPreferences.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
 						}
 
-						new SaveUserPreferencesTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new SaveUserPreferencesTask(userPreferences, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						dialog.dismiss();
 					}
 				});
@@ -274,11 +275,13 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>
 	{
+		private final UserPreferences userPreferences;
 		private Context context;
 
-		public SaveUserPreferencesTask(Context context)
+		public SaveUserPreferencesTask(UserPreferences userPreferences, Context context)
 		{
 			this.context = context;
+			this.userPreferences = userPreferences;
 		}
 
 		@Override
@@ -290,7 +293,7 @@ private View.OnClickListener getClickBookmarkListener(final FeaturedListItem fea
 		@Override
 		protected Void doInBackground(Void... nil)
 		{
-			FocusApplication.getInstance().getDataManager().saveUserPreferences();
+			FocusAppLogic.getDataManager().update(userPreferences);
 			return null;
 		}
 

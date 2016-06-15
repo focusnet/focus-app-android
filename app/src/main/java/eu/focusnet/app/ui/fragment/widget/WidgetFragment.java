@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -47,7 +47,6 @@ import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
-import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
@@ -116,7 +115,7 @@ public abstract class WidgetFragment extends Fragment
 	@Override
 	public void onDestroyView()
 	{
-		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.widgetInstance);
+	// FIXME useless?	FocusAppLogic.getDataManager().unregisterActiveInstance(this.widgetInstance);
 		super.onDestroyView();
 	}
 
@@ -163,15 +162,14 @@ public abstract class WidgetFragment extends Fragment
 
 		// may happen that we have no path (e.g. EmptyWidgetFragment)
 		if (path != null) {
-			DataManager dm = FocusApplication.getInstance().getDataManager();
 			try {
-				this.widgetInstance = dm.getAppContentInstance().getWidgetFromPath(path);
+				this.widgetInstance = FocusAppLogic.getCurrentApplicationContent().getWidgetFromPath(path);
 			}
 			catch(FocusMissingResourceException ex) {
 				// FIXME do something smarter, e.g. reload Home activity and display an error
 				throw new FocusInternalErrorException("Cannot access widget via its path.");
 			}
-			dm.registerActiveInstance(this.widgetInstance);
+	// FIXME useful????		dm.registerActiveInstance(this.widgetInstance);
 		}
 
 		// alter the reference height if necessary

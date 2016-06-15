@@ -4,12 +4,12 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/include_widget_title" />
+    <include layout="@layout/include_widget_title"/>
 
     <TextView
-        style="@style/FocusText.Medium"
         android:id="@+id/text_content"
+        style="@style/FocusText.Medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

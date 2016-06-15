@@ -14,8 +14,8 @@
         android:layout_marginStart="@dimen/focus_default_spacing_x0_5"/>
 
     <TextView
-        style="@style/FocusListItem"
         android:id="@+id/title"
+        style="@style/FocusListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

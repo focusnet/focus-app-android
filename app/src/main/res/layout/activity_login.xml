@@ -20,8 +20,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:src="@drawable/focus_logo"
-        android:contentDescription="@string/caption_focus_logo"/>
+        android:contentDescription="@string/caption_focus_logo"
+        android:src="@drawable/focus_logo"/>
 
     <View
         android:layout_width="0dp"
@@ -40,8 +40,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
             android:layout_height="wrap_content">
 
             <TextView
-                style="@style/FocusText.Big"
                 android:id="@+id/login_username_label"
+                style="@style/FocusText.Big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_username"

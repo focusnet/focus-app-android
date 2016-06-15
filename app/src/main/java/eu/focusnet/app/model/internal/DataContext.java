@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.model.internal;
 
+import android.support.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,20 +52,23 @@ public class DataContext extends HashMap<String, String>
 	/**
 	 * Default c'tor
 	 */
-	public DataContext()
+	public DataContext(@NonNull DataManager dm)
 	{
-		this.dataManager = FocusApplication.getInstance().getDataManager();
+		super();
+		this.dataManager = dm;
 	}
 
 	/**
 	 * Construct a new DataContext from another one.
 	 *
-	 * @param c
+	 *
+	 *
+	 * @param c - we use the datamanager of this context as we will build the new context on top of the old one, so using the same data manager makes sense
 	 */
-	public DataContext(DataContext c)
+	public DataContext(@NonNull DataContext c)
 	{
 		super(c);
-		this.dataManager = FocusApplication.getInstance().getDataManager();
+		this.dataManager = c.dataManager;
 	}
 
 	/**
@@ -185,7 +190,7 @@ public class DataContext extends HashMap<String, String>
 		if (res == null) {
 			throw new FocusInternalErrorException("invalid object reference");
 		}
-		FocusSample fs = FocusApplication.getInstance().getDataManager().getSample(res);
+		FocusSample fs = this.dataManager.getSample(res);
 		res = fs.getString(parts[2]);
 		if (res == null) {
 			throw new FocusInternalErrorException("Cannot find this field.");
@@ -247,7 +252,7 @@ public class DataContext extends HashMap<String, String>
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve |" + request + "| in the current data context.");
 		}
-		FocusSample fs = FocusApplication.getInstance().getDataManager().getSample(url);
+		FocusSample fs = this.dataManager.getSample(url);
 		if (parts.length > 2) {
 			if (fs == null) {
 				return null;
@@ -257,4 +262,8 @@ public class DataContext extends HashMap<String, String>
 		return fs.getUrl();
 	}
 
+	public DataManager getDataManager()
+	{
+		return this.dataManager;
+	}
 }

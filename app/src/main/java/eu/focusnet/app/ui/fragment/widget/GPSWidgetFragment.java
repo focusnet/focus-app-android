@@ -22,11 +22,9 @@ package eu.focusnet.app.ui.fragment.widget;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +37,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.GPSWidgetInstance;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  */
@@ -128,8 +126,8 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 		locationRequest.setFastestInterval(1500);
 		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-		if (ActivityCompat.checkSelfPermission(FocusApplication.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-				&& ActivityCompat.checkSelfPermission(FocusApplication.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+		if (!ApplicationHelper.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+				&& !ApplicationHelper.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
 			// TODO: Consider calling
 			//    ActivityCompat#requestPermissions
 			// here to request the missing permissions, and then overriding

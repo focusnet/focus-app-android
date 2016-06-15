@@ -4,7 +4,7 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <include layout="@layout/include_widget_title" />
+    <include layout="@layout/include_widget_title"/>
 
     <ImageView
         android:id="@+id/captured_image"

@@ -10,7 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.Map;
 import java.util.Random;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -20,6 +20,7 @@ import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * The MIT License (MIT)
@@ -68,7 +69,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		// button label
 		Object rawLabel = this.config.get(CONFIG_LABEL_BUTTON_LABEL);
 		if (rawLabel == null) {
-			this.buttonLabel = FocusApplication.getInstance().getResources().getString(R.string.focus_external_app_button_label_default);
+			this.buttonLabel = ApplicationHelper.getResources().getString(R.string.focus_external_app_button_label_default);
 		}
 		else {
 			try {
@@ -80,7 +81,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 			}
 
 			if (this.buttonLabel.equals("")) {
-				this.buttonLabel = FocusApplication.getInstance().getResources().getString(R.string.focus_external_app_button_label_default);
+				this.buttonLabel = ApplicationHelper.getResources().getString(R.string.focus_external_app_button_label_default);
 			}
 		}
 
@@ -123,7 +124,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 		if (!url.equals("")) {
 			try {
-				this.inputObject = FocusApplication.getInstance().getDataManager().getSample(url);
+				this.inputObject = this.dataManager.getSample(url);
 			}
 			catch (FocusMissingResourceException ex) {
 				this.markAsInvalid();
@@ -146,7 +147,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		boolean appAvailable;
 		// check that the app is indeed available
 		Intent intent = new Intent(this.appIdentifier);
-		PackageManager pm = FocusApplication.getInstance().getPackageManager();
+		PackageManager pm = ApplicationHelper.getPackageManager();
 		ResolveInfo activityInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (activityInfo == null) {
 			appAvailable = false;
@@ -211,6 +212,6 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	public String getInstalledVersion()
 	{
-		return (this.installedVersion == null ? FocusApplication.getInstance().getResources().getString(R.string.version_unknown) : this.installedVersion);
+		return (this.installedVersion == null ? ApplicationHelper.getResources().getString(R.string.version_unknown) : this.installedVersion);
 	}
 }

@@ -7,16 +7,16 @@
 
 
     <EditText
-        style="@style/FocusText.Medium"
         android:id="@+id/bookmark_field_rw"
+        style="@style/FocusText.Medium"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"/>
 
     <TextView
-        style="@style/FocusText.Medium"
         android:id="@+id/bookmark_field_ro"
+        style="@style/FocusText.Medium"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

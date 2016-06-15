@@ -10,8 +10,8 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/focus_splashscreen_logo_horizontal_image_margin"
         android:layout_marginStart="@dimen/focus_splashscreen_logo_horizontal_image_margin"
-        android:src="@drawable/focus_logo"
-        android:contentDescription="@string/caption_focus_logo"/>
+        android:contentDescription="@string/caption_focus_logo"
+        android:src="@drawable/focus_logo"/>
 
     <TextView
         android:id="@+id/splashscreen_version_number"

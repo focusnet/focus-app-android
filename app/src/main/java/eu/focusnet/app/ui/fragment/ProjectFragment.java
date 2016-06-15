@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
@@ -81,7 +82,7 @@ public class ProjectFragment extends ListFragment
 	public void onDestroyView()
 	{
 		// useful for our custom garbage collection in DataManager
-		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.projectInstance);
+// FIXME useful ?????		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.projectInstance);
 
 		super.onDestroyView();
 	}
@@ -109,9 +110,8 @@ public class ProjectFragment extends ListFragment
 		@Override
 		protected NavigationListAdapter doInBackground(String... params)
 		{
-			DataManager dm = FocusApplication.getInstance().getDataManager();
 			try {
-				projectInstance = dm.getAppContentInstance().getProjectFromPath(projectId);
+				projectInstance = FocusAppLogic.getCurrentApplicationContent().getProjectFromPath(projectId);
 			}
 			catch(FocusMissingResourceException ex) {
 				// FIXME do something smarter, e.g. reload Home activity and display an error
@@ -119,8 +119,8 @@ public class ProjectFragment extends ListFragment
 			}
 
 			// useful for our custom garbage collection in DataManager
-			dm.registerActiveInstance(projectInstance);
-			UserPreferences preference = dm.getUserPreferences();
+	// FIXME uesless?		dm.registerActiveInstance(projectInstance);
+			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
 
 			listItems = new ArrayList<>();
 

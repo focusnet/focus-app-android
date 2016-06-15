@@ -1,9 +1,13 @@
 package eu.focusnet.app.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.support.v4.app.ActivityCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +20,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
@@ -24,16 +29,16 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -46,16 +51,8 @@ import eu.focusnet.app.model.internal.AppContentInstance;
  * <p>
  * FIXME might contain methods for accessing getResource(), getAppContext, ...
  */
-public class ConfigurationHelper
+public class ApplicationHelper
 {
-	/**
-	 * Name of our properties file in the assets directory.
-	 */
-	private static final String ASSETS_PROPERTY_FILE = "focus.properties";
-	private static final String PROPERTY_DEFAULT_LOCALE = "i18n.default-locale";
-	private static final String LOCALE_FALLBACK_LANGUAGE = "en";
-	private static final String LOCALE_FALLBACK_COUNTRY = "";
-	
 	/**
 	 * Name of the file for SharedPreferences
 	 */
@@ -94,20 +91,25 @@ public class ConfigurationHelper
 	 * Key name for Last data synchronization as stored in the SharedPreferences.
 	 */
 	public static final String SHARED_PREFERENCES_LAST_SYNC = "last-sync";
-
+	/**
+	 * Name of our properties file in the assets directory.
+	 */
+	private static final String ASSETS_PROPERTY_FILE = "focus.properties";
+	private static final String PROPERTY_DEFAULT_LOCALE = "i18n.default-locale";
+	private static final String LOCALE_FALLBACK_LANGUAGE = "en";
+	private static final String LOCALE_FALLBACK_COUNTRY = "";
 
 	/**
 	 * Retrieve a property.
 	 *
 	 * @param key     The key of the property to retrieve
-	 * @param context The Context from which we acquire the {@link AssetManager}
 	 * @return A String containing the value of the property, or {@code null} on failure.
 	 * @throws IOException If the properties file could not be open
 	 */
-	public static String getProperty(String key, Context context)
+	public static String getProperty(String key)
 	{
 		Properties properties = new Properties();
-		AssetManager assetManager = context.getAssets();
+		AssetManager assetManager = getAssets();
 		try {
 			InputStream inputStream = assetManager.open(ASSETS_PROPERTY_FILE);
 			properties.load(inputStream);
@@ -127,14 +129,10 @@ public class ConfigurationHelper
 	 *
 	 * FIXME strange behaviors in emulator. Sometimes does not work. See if any problem on real device.
 	 */
-	public static void loadLanguage()
+	public static void changeLannguage(String language)
 	{
-		// acquire language from instance
-		String language = FocusApplication.getInstance()
-				.getDataManager().getAppContentInstance()
-				.getLanguage();
-		Locale targetLocale = ConfigurationHelper.getDefaultLocale();
-		if (ConfigurationHelper.getSupportedLanguages().contains(language)) {
+		Locale targetLocale = ApplicationHelper.getDefaultLocale();
+		if (ApplicationHelper.getSupportedLanguages().contains(language)) {
 			// ok
 			targetLocale = new Locale(language);
 		}
@@ -167,9 +165,9 @@ public class ConfigurationHelper
 		Locale.setDefault(targetLocale);
 		Configuration config = new Configuration();
 		config.locale = targetLocale;
-		FocusApplication.getInstance().getResources().updateConfiguration(
+		getApplicationContext().getResources().updateConfiguration(
 				config,
-				FocusApplication.getInstance().getResources().getDisplayMetrics()
+				getApplicationContext().getResources().getDisplayMetrics()
 		);
 	}
 
@@ -179,7 +177,7 @@ public class ConfigurationHelper
 	 * @return An array consisting of supported languages.
 	 * The languages can be also local versions, e.g. fr_CH instead of fr.
 	 * <p>
-	 * FIXME should we put this elsewhere / e.g. in util.ConfigurationHelper
+	 * FIXME should we put this elsewhere / e.g. in util.ApplicationHelper
 	 */
 	private static List<String> getSupportedLanguages()
 	{
@@ -194,19 +192,19 @@ public class ConfigurationHelper
 	 */
 	public static void resetLanguage()
 	{
-		Locale defaultLocale = ConfigurationHelper.getDefaultLocale();
+		Locale defaultLocale = ApplicationHelper.getDefaultLocale();
 		Locale.setDefault(defaultLocale);
 		Configuration config = new Configuration();
 		config.locale = defaultLocale;
-		FocusApplication.getInstance().getResources().updateConfiguration(
+		getApplicationContext().getResources().updateConfiguration(
 				config,
-				FocusApplication.getInstance().getResources().getDisplayMetrics()
+				getApplicationContext().getResources().getDisplayMetrics()
 		);
 	}
 
 	private static Locale getDefaultLocale()
 	{
-		String defaultLocale = ConfigurationHelper.getProperty(PROPERTY_DEFAULT_LOCALE, FocusApplication.getInstance());
+		String defaultLocale = ApplicationHelper.getProperty(PROPERTY_DEFAULT_LOCALE);
 		String[] parts = defaultLocale.split("_");
 		String[] ret = new String[]{LOCALE_FALLBACK_LANGUAGE, LOCALE_FALLBACK_COUNTRY};
 		for (int i = 0; i < 2; ++i) {
@@ -224,9 +222,9 @@ public class ConfigurationHelper
 	 */
 	public static void savePreferences(HashMap<String, String> pref)
 	{
-		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = store.edit();
-		for(Map.Entry e : pref.entrySet()) {
+		for (Map.Entry e : pref.entrySet()) {
 			editor.putString((String) e.getKey(), (String) e.getValue());
 		}
 		editor.apply();
@@ -237,12 +235,12 @@ public class ConfigurationHelper
 	 */
 	public static HashMap<String, String> getPreferences()
 	{
-		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 
 		HashMap<String, String> ret = new HashMap<>();
 		Map<String, ?> prefs = store.getAll();
-	 	for(Map.Entry e : prefs.entrySet()) {
-			ret.put((String)e.getKey(), (String)e.getValue());
+		for (Map.Entry e : prefs.entrySet()) {
+			ret.put((String) e.getKey(), (String) e.getValue());
 		}
 		return ret;
 	}
@@ -252,10 +250,39 @@ public class ConfigurationHelper
 	 */
 	public static void resetPreferences()
 	{
-		SharedPreferences store = FocusApplication.getInstance().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = store.edit();
 		editor.clear();
 		editor.apply();
 	}
 
+	public static Context getApplicationContext()
+	{
+		return FocusAppLogic.getApplicationContext();
+	}
+
+	public static AssetManager getAssets()
+	{
+		return getApplicationContext().getAssets();
+	}
+
+	public static ContentResolver getContentResolver()
+	{
+		return getApplicationContext().getContentResolver();
+	}
+
+	public static Resources getResources()
+	{
+		return getApplicationContext().getResources();
+	}
+
+	public static PackageManager getPackageManager()
+	{
+		return getApplicationContext().getPackageManager();
+	}
+
+	public static boolean checkPermission(String what)
+	{
+		return ActivityCompat.checkSelfPermission(getApplicationContext(), what) == PackageManager.PERMISSION_GRANTED;
+	}
 }

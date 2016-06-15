@@ -20,7 +20,6 @@
 
 package eu.focusnet.app.model.store;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -30,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * The DatabaseAdapater is a facility that helps interacting with the SQLlite database.
@@ -63,11 +63,10 @@ public class DatabaseAdapter
 	/**
 	 * Constructor.
 	 *
-	 * @param context the application context
 	 */
-	public DatabaseAdapter(Context context)
+	public DatabaseAdapter()
 	{
-		databaseHelper = new DatabaseHelper(context);
+		databaseHelper = new DatabaseHelper();
 
 		String time = Long.toString(System.currentTimeMillis());
 
@@ -130,9 +129,9 @@ public class DatabaseAdapter
 		 *
 		 * @param context The application context
 		 */
-		private DatabaseHelper(Context context)
+		private DatabaseHelper()
 		{
-			super(context, Constant.DATABASE_NAME, null, DATABASE_VERSION);
+			super(ApplicationHelper.getApplicationContext(), Constant.DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
 		/**

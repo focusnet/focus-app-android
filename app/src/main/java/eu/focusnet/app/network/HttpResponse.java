@@ -42,8 +42,9 @@ public class HttpResponse
 	/**
 	 * An HttpResponse contains all information that may be useful by the application to
 	 * decide what to do after a network call.
-	 *
+	 * <p/>
 	 * Returns even in case of on-success (e.g. 404).
+	 *
 	 * @param connection
 	 * @throws IOException
 	 */

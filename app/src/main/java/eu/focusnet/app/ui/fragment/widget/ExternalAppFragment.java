@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
@@ -84,7 +85,7 @@ public class ExternalAppFragment extends WidgetFragment
 
 					FocusSample inputObject = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
 					if (inputObject != null) {
-						String jsonInput = FocusApplication.getInstance().getDataManager().getGson().toJson(inputObject);
+						String jsonInput = FocusAppLogic.getGson().toJson(inputObject);
 						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, jsonInput);
 					}
 					UiHelper.displayToast(getActivity(), r.getString(R.string.launching_ext_app));

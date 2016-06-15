@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,7 +23,7 @@ package eu.focusnet.app.model.json;
 import java.io.Serializable;
 import java.util.Date;
 
-import eu.focusnet.app.FocusApplication;
+import eu.focusnet.app.FocusAppLogic;
 
 /**
  * Created by admin on 06.07.2015.
@@ -34,6 +34,14 @@ import eu.focusnet.app.FocusApplication;
 public class FocusObject implements Serializable
 {
 
+	/**
+	 * Safe to use this user like this, as it will be used for data creation,
+	 * and therefore this User should represent the one that is currently used by the application
+	 * and not another one
+	 *
+	 * FIXME see if we can use a more elegant pattern.
+	 */
+	final private static User user = FocusAppLogic.getUserManager().getUser();
 	private String type,
 			url,
 			owner,
@@ -70,11 +78,6 @@ public class FocusObject implements Serializable
 	 */
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
-		User user = null;
-		if (owner == null || editor == null) {
-			user = FocusApplication.getInstance().getDataManager().getUser();
-		}
-
 		this.type = type;
 		this.url = url;
 		this.owner = owner == null ? user.toString() : owner;
@@ -90,7 +93,7 @@ public class FocusObject implements Serializable
 	 */
 	public static FocusObject factory(String json, Class targetClass)
 	{
-		return (FocusObject) FocusApplication.getInstance().getDataManager().getGson().fromJson(json, targetClass);
+		return (FocusObject) FocusAppLogic.getGson().fromJson(json, targetClass);
 	}
 
 	/**
@@ -101,7 +104,6 @@ public class FocusObject implements Serializable
 	public void updateToNewVersion()
 	{
 		++this.version;
-		User user = FocusApplication.getInstance().getDataManager().getUser();
 		this.editor = user.toString();
 		this.editionDateTime = new Date();
 	}
@@ -147,11 +149,10 @@ public class FocusObject implements Serializable
 	}
 
 
-
 	@Override
 	public String toString()
 	{
-		return FocusApplication.getInstance().getDataManager().getGson().toJson(this);
+		return FocusAppLogic.getGson().toJson(this);
 	}
 
 }

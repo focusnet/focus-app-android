@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
-import android.view.MenuItem;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -33,11 +32,8 @@ import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
-import eu.focusnet.app.network.NetworkManager;
 import eu.focusnet.app.service.CronService;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.util.ConfigurationHelper;
-import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * FOCUS Application
@@ -49,14 +45,10 @@ import eu.focusnet.app.util.FocusApplicationActivityLifecycleHandler;
  * - Defining a custom error reporting system (ACRA)
  * - Defining a custom Activity handler used to
  * <p/>
- * This class also:
- * - provides most application-wide instances, and/or methods for accesing them. It is a Singleton
- * and therefore allows us to refer to these instances efficiently. In fact many single-instance
- * objects are stored in the DataManager, but this class contains helper functions that allow
- * accessing these objects more quickly as it is the only Singleton of the application.
- * <p/>
  * FIXME review all methods and set synchronize / volatile when appropriate
  * FIXME ACRA make sure it works in production. I noticed that sometimes the interactive dialog is not shown emulator (real-time issue?) / Probably only when debugger is attached.
+ *
+ * FIXME see FocusAppLogic, which acts as the controller in  MVC
  */
 public class FocusApplication extends Application
 {
@@ -67,20 +59,7 @@ public class FocusApplication extends Application
 			PROPERTY_ACRA_USERNAME = "acra.username",
 			PROPERTY_ACRA_PASSWORD = "acra.password";
 
-	private static FocusApplication instance;
-	private DataManager dataManager;
-	private FocusApplicationActivityLifecycleHandler activityHandler;
 	private Thread.UncaughtExceptionHandler originalUncaughtExceptionHandler;
-
-	/**
-	 * Acquire the Singleton instance
-	 *
-	 * @return the Singleton instance
-	 */
-	public static FocusApplication getInstance()
-	{
-		return instance;
-	}
 
 	/**
 	 * This function triggers a silent ACRA report to the reporting server.
@@ -108,16 +87,6 @@ public class FocusApplication extends Application
 	}
 
 	/**
-	 * Application-wide current DataManager
-	 *
-	 * @return the current DataManager for the application
-	 */
-	public DataManager getDataManager()
-	{
-		return this.dataManager;
-	}
-
-	/**
 	 * Attach the base Context
 	 * <p/>
 	 * This implementation does:
@@ -133,9 +102,6 @@ public class FocusApplication extends Application
 	{
 		super.attachBaseContext(base);
 
-		// Singleton reference saving
-		instance = this;
-
 		// Enable MultiDex
 		MultiDex.install(this);
 
@@ -146,9 +112,9 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 
-			formUri = ConfigurationHelper.getProperty(PROPERTY_ACRA_FORM_URI, this);
-			user = ConfigurationHelper.getProperty(PROPERTY_ACRA_USERNAME, this);
-			pass = ConfigurationHelper.getProperty(PROPERTY_ACRA_PASSWORD, this);
+			formUri = ApplicationHelper.getProperty(PROPERTY_ACRA_FORM_URI);
+			user = ApplicationHelper.getProperty(PROPERTY_ACRA_USERNAME);
+			pass = ApplicationHelper.getProperty(PROPERTY_ACRA_PASSWORD);
 
 			// fully programmatic ACRA configuration (no annotation)
 			try {
@@ -192,8 +158,8 @@ public class FocusApplication extends Application
 			@Override
 			public void uncaughtException(Thread thread, Throwable ex)
 			{
-				if (FocusApplication.getInstance() != null && FocusApplication.getInstance().getDataManager() != null) {
-					FocusApplication.getInstance().getDataManager().logout();
+				if (FocusAppLogic.getInstance() != null) {
+					FocusAppLogic.getInstance().reset();
 				}
 
 				if (BuildConfig.DEBUG) {
@@ -221,9 +187,6 @@ public class FocusApplication extends Application
 	{
 		super.onCreate();
 
-		this.activityHandler = new FocusApplicationActivityLifecycleHandler();
-		this.registerActivityLifecycleCallbacks(activityHandler);
-
 		// Safety checks in DEBUG mode
 		if (BuildConfig.DEBUG) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -236,8 +199,8 @@ public class FocusApplication extends Application
 					.build());
 		}
 
-		// setup DataManager
-		this.dataManager = new DataManager();
+		// init application logic
+		FocusAppLogic.getInstance().init(this);
 
 		// start the CronService
 		// We should not start the service if the current proces is ACRA's one.
@@ -245,38 +208,7 @@ public class FocusApplication extends Application
 		if (!ACRA.isACRASenderServiceProcess()) {
 			this.startService(new Intent(this, CronService.class));
 		}
-	}
 
-	/**
-	 * Replace the current data manager with a new one. The old one will therefore be
-	 * garbage collected. This is part of the data synchronization procedure.
-	 *
-	 * @param new_dm A new DataManager
-	 * @see CronService The periodic tasks runner
-	 * @see eu.focusnet.app.ui.activity.ProjectsListingActivity#onOptionsItemSelected(MenuItem)
-	 * Where the synchronization task can be manually triggered
-	 */
-	public void replaceDataManager(DataManager new_dm)
-	{
-		this.dataManager = new_dm;
-	}
-
-	/**
-	 * Use the custom FocusApplicationActivityLifecycleHandler to restart the current activity.
-	 */
-	public void restartCurrentActivity()
-	{
-		this.activityHandler.restartCurrentActivity();
-	}
-
-	/**
-	 * Retrieve the NetworkManager
-	 *
-	 * @return the current unique NetworkManager of the application
-	 */
-	public NetworkManager getNetworkManager()
-	{
-		return this.getDataManager().getNetworkManager();
 	}
 
 	/**
@@ -288,7 +220,7 @@ public class FocusApplication extends Application
 	public void onTrimMemory(int level)
 	{
 		super.onTrimMemory(level);
-		this.dataManager.freeMemory();
+		FocusAppLogic.getInstance().freeMemory();
 	}
 
 	/**
@@ -298,7 +230,7 @@ public class FocusApplication extends Application
 	public void onLowMemory()
 	{
 		super.onLowMemory();
-		this.dataManager.freeMemory();
+		FocusAppLogic.getInstance().freeMemory();
 	}
 
 

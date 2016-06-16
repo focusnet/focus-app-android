@@ -88,8 +88,6 @@ public class DataContext extends HashMap<String, String>
 	 * - above services with references to context:
 	 * <history|ctx/machine-ABC/woodpile-url|since=now-86400;until=now;every=240>
 	 * <p/>
-	 * <p/>
-	 * <p/>
 	 * Examples:
 	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
 	 * "referenced-url": "<ctx/simple-url/url1>",
@@ -124,13 +122,9 @@ public class DataContext extends HashMap<String, String>
 				f = this.dataManager.getSample(u);
 			}
 			else {
-				throw new FocusNotImplementedException("DataContext.register() -> services");
-
-				/*
-				FIXME TO BE IMPLEMENTED
 				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
 				if (parts.length != 3) {
-					throw new FocusInternalErrorException("Wrong number of fields for description of data context.");
+					throw new FocusInternalErrorException("Wrong number of fields for description of service.");
 				}
 				if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
 					String u = null;
@@ -142,20 +136,9 @@ public class DataContext extends HashMap<String, String>
 					}
 					f = this.dataManager.getHistory(u, parts[2]);
 				}
-				else if (parts[0].equals(Constant.SELECTOR_SERVICE_LOOKUP)) {
-					String u;
-					if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
-						u = this.resolveReferencedUrl(parts[1]);
-					}
-					else {
-						u = parts[1];
-					}
-					f = this.dataManager.getLookup(parts[2]);
-				}
 				else {
-					throw new FocusInternalErrorException("This data reference is not supported.");
+					throw new FocusNotImplementedException("DataContext.register() -> services");
 				}
-				*/
 			}
 		}
 		else {

@@ -95,7 +95,9 @@ public class ProjectInstance extends AbstractInstance
 			this.dataContext.provideData(this.template.getData());
 		}
 		catch (FocusMissingResourceException ex) {
-			// should not happen, but let's continue silently
+			/**
+			 May happen if malformed URL for example, see {@link HttpRequest#HttpRequest}
+			 */
 			FocusApplication.reportError(ex);
 			return;
 		}

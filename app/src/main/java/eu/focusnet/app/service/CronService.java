@@ -58,7 +58,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class CronService extends Service implements ApplicationStatusObserver
 {
-	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 100 * 24 * 60 * 60 * 1_000; // FIXME set to very high value for demo 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
+	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 0; //100 * 24 * 60 * 60 * 1_000; // FIXME set to very high value for demo 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 2; // 2 minutes
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 30; // 30 min
 	private static final int CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES = 30;

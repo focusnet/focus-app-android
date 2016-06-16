@@ -204,11 +204,16 @@ public class DataManager implements ApplicationStatusObserver
 	 * @param params The parameters to be passed to the history retrieving service
 	 * @return A {@link FocusSample} containing the history of intereset
 	 * <p/>
-	 * TODO to implement
+	 *
+	 * FIXME params are passed without any validation.
+	 *
+	 * FIXME important: the returned FocusSample MUST have a url property that is set to the
+	 * same one as the accessed url.
 	 */
-	public FocusSample getHistory(String url, String params)
+	public FocusSample getHistory(String url, String params) throws FocusMissingResourceException
 	{
-		throw new FocusNotImplementedException("DataManager.getHistory()");
+		url = url + "?" + params;
+		return this.getSample(url);
 	}
 
 	/**

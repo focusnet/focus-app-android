@@ -250,7 +250,12 @@ public class NetworkManager
 	public HttpResponse get(String url) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_GET, url);
-		return request.execute();
+		if (request.errors == 0) {
+			return request.execute();
+		}
+		else {
+			throw new IOException("Malformed URI or other reason for not being able to create an HTTP request.");
+		}
 	}
 
 	/**

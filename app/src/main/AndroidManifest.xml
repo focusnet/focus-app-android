@@ -5,12 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- FIXME review permissions. -->
+
+    <!-- Permissions. FIXME we do not follow the new permissions workflow for Android SDK >=23 ) -->
+    <!-- Locale modification -->
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <!-- Network access -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <!-- Localization -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <!-- Camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <supports-screens
         android:largeScreens="true"

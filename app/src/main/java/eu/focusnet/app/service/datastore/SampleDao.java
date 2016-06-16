@@ -25,8 +25,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.util.Constant;
@@ -70,16 +71,14 @@ public class SampleDao
 	}
 
 	/**
-	 * Create a new Sample based on the provided cursor. We only take the first entry in
-	 * consideration, and this method will move the cursor, so the calling method should not.
+	 * Create a new Sample based on the provided cursor. The cursor is assumed to be already at
+	 * the position of the object from which we will create the Sample.
+	 *
+	 * We assume the query retrieved all columsn (this.columnsToRetrieve)
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
-		if (cursor.getCount() == 0) {
-			return null;
-		}
 		Sample sample = new Sample();
-		cursor.moveToFirst();
 		sample.setUrl(cursor.getString(cursor.getColumnIndex(Constant.URL)));
 		sample.setVersion(cursor.getInt(cursor.getColumnIndex(Constant.VERSION)));
 		sample.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
@@ -98,7 +97,7 @@ public class SampleDao
 
 		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
 		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
-		sample.setToPut(cursor.getInt(cursor.getColumnIndex(Constant.TO_UPDATE)) > 0);
+		sample.setToUpdate(cursor.getInt(cursor.getColumnIndex(Constant.TO_UPDATE)) > 0);
 
 		// we don't need the dataSyncSetId in the sample. It is used for maintenance operations
 		// only and should be kept hidden
@@ -133,7 +132,10 @@ public class SampleDao
 				null,
 				Constant.VERSION + " DESC, " + Constant.EDITION_EPOCH + " DESC",
 				"1");
-		Sample s = SampleDao.buildSampleFromCursor(cursor);
+		Sample s = null;
+		if (cursor.moveToFirst()) {
+			s = SampleDao.buildSampleFromCursor(cursor);
+		}
 		cursor.close();
 		return s;
 	}
@@ -222,12 +224,14 @@ public class SampleDao
 	/**
 	 * Retrieve all urls marked with a certain type of operation
 	 *
-	 * @param type
+	 * We only manipulate FocusSamples here, not other types.
+	 *
+	 * @param flagType
 	 * @return
 	 */
-	private String[] getAllMarked(String type)
+	public HashSet<Sample> getAllMarkedFocusSamples(String flagType)
 	{
-		switch (type) {
+		switch (flagType) {
 			case Constant.TO_CREATE:
 			case Constant.TO_UPDATE:
 			case Constant.TO_DELETE:
@@ -236,60 +240,30 @@ public class SampleDao
 				throw new FocusInternalErrorException("Invalid type for marking operation.");
 		}
 
-		Set<String> result = new HashSet<>();
+		HashSet<Sample> result = new HashSet<>();
 
-		String[] cols = {
-				Constant.URL
-		};
 		String[] params = {
-				Long.toString(this.dataSyncSetId),
-				type
+			//	Long.toString(this.dataSyncSetId),
+			//	flagType,
+				Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE.replaceFirst("[^/]+$", "") // remove the version specifier
 		};
 		Cursor cursor = this.database.query(
 				Constant.DATABASE_TABLE_SAMPLES,
-				cols,
-				Constant.DATA_SET_ID + " = ? AND ? = 1",
-				params,
+				this.columnsToRetrieve,
+				Constant.DATA_SET_ID + " = " + Long.toString(this.dataSyncSetId) + " AND " + flagType + " = 1 AND type = ?", // here does not work if not like this (no placeholder). to check
+				params, // FIXME no good placeholders.
 				null,
 				null,
 				null
 		);
+
 		while (cursor.moveToNext()) {
-			result.add(cursor.getString(cursor.getColumnIndex(Constant.URL)));
+			Sample s  = SampleDao.buildSampleFromCursor(cursor);
+			result.add(s);
 		}
 		cursor.close();
 
-		return (String[]) result.toArray();
-	}
-
-	/**
-	 * Get the list of all urls marked as to be POST as an array of Strings
-	 *
-	 * @return
-	 */
-	public String[] getAllMarkedForPost()
-	{
-		return this.getAllMarked(Constant.TO_CREATE);
-	}
-
-	/**
-	 * Get the list of all urls marked as to be PUT as an array of Strings
-	 *
-	 * @return
-	 */
-	public String[] getAllMarkedForPut()
-	{
-		return this.getAllMarked(Constant.TO_UPDATE);
-	}
-
-	/**
-	 * Get the list of all urls marked as to be DELETEd as an array of Strings
-	 *
-	 * @return
-	 */
-	public String[] getAllMarkedForDeletion()
-	{
-		return this.getAllMarked(Constant.TO_DELETE);
+		return result;
 	}
 
 	/**

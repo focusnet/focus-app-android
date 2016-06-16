@@ -115,9 +115,14 @@ public class DatabaseAdapter
 	 */
 	public void useExistingDataSet()
 	{
-		long foundIdentifier = this.getSampleDao().getMostRecentDataSetIdentifier();
-		if (foundIdentifier != 0) {
-			this.uniqueInstanceIdentifier = foundIdentifier;
+		try {
+			long foundIdentifier = this.getSampleDao().getMostRecentDataSetIdentifier();
+			if (foundIdentifier != 0) {
+				this.uniqueInstanceIdentifier = foundIdentifier;
+			}
+		}
+		finally {
+			this.close();
 		}
 	}
 

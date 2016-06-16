@@ -23,6 +23,7 @@ package eu.focusnet.app.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -32,6 +33,7 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
+import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.datastore.DatabaseAdapter;
 import eu.focusnet.app.service.datastore.Sample;
 import eu.focusnet.app.service.datastore.SampleDao;
@@ -134,6 +136,7 @@ public class DataManager implements ApplicationStatusObserver
 
 		// setup database
 		this.databaseAdapter = new DatabaseAdapter();
+
 	}
 
 
@@ -164,6 +167,7 @@ public class DataManager implements ApplicationStatusObserver
 		if (this.appContentTemplate == null) {
 			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
 		}
+
 		return this.appContentTemplate;
 	}
 
@@ -284,7 +288,6 @@ public class DataManager implements ApplicationStatusObserver
 
 			// try to get it from the network
 			if (NetworkManager.isNetworkAvailable()) {
-				// FIXME this is blocking! do solve that.
 				HttpResponse response = this.net.get(url);
 				if (response.isSuccessful()) {
 					String json = response.getData();
@@ -356,7 +359,7 @@ public class DataManager implements ApplicationStatusObserver
 			netSuccess = false;
 		}
 		if (netSuccess) { // if POST on network, also remove POST flag in local db copy
-			sample.setToPost(false);
+			sample.setToCreate(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
 				dao.update(sample);
@@ -391,7 +394,7 @@ public class DataManager implements ApplicationStatusObserver
 
 		// store in local database, with the "toPut" flag
 		Sample sample = Sample.cloneFromFocusObject(data);
-		sample.setToPut(true);
+		sample.setToUpdate(true);
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
 			dao.update(sample);
@@ -413,7 +416,7 @@ public class DataManager implements ApplicationStatusObserver
 			netSuccess = false;
 		}
 		if (netSuccess) { // if PUT on network, also remove PUT flag in local db copy
-			sample.setToPut(false);
+			sample.setToUpdate(false);
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
 				dao.update(sample);
@@ -537,91 +540,6 @@ public class DataManager implements ApplicationStatusObserver
 		return new AppContentInstance(template, this);
 	}
 
-	/**
-	 * Push local modifications to the network
-	 *
-	 * @return true on success, false on failure
-	 * @throws FocusMissingResourceException FIXME complete documentation
-	 *                                       <p/>
-	 *                                       FIXME do check if logic is ok.
-	 * @deprecated to check logic
-	 */
-	private void pushLocalModifications() throws FocusMissingResourceException
-	{
-		// POST
-		String[] toPostUrls;
-		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS; // report_failure is a bit mask
-		try {
-			SampleDao dao = this.databaseAdapter.getSampleDao();
-			toPostUrls = dao.getAllMarkedForPost();
-			for (String url : toPostUrls) {
-				FocusObject fo = this.getLocalObject(url); // FIXME opens a dao by itself, so 2 dao acquired, which may not be good and we close the db in this method and in the called method
-				if (fo == null) {
-					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (POST).");
-				}
-				Sample sample = Sample.cloneFromFocusObject(fo);
-				try {
-					if (this.net.post(url, fo).isSuccessful()) {
-						sample.setToPost(false);
-						dao.update(sample);
-					}
-					else {
-						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
-					}
-				}
-				catch (IOException e) {
-					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
-				}
-			}
-
-			// PUT
-			String[] toPutUrls;
-			toPutUrls = dao.getAllMarkedForPut();
-			for (String url : toPutUrls) {
-				FocusObject fo = this.getLocalObject(url); // FIXME opens a dao by itself, so 2 dao acquired, which may not be good and we close the db in this method and in the called method
-				if (fo == null) {
-					throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (PUT).");
-				}
-				Sample sample = Sample.cloneFromFocusObject(fo);
-				try {
-					if (this.net.put(url, fo).isSuccessful()) {
-						sample.setToPut(false);
-						dao.update(sample);
-					}
-					else {
-						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
-					}
-				}
-				catch (IOException e) {
-					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
-				}
-			}
-
-			// DELETE
-			String[] toDeleteUrls;
-			toDeleteUrls = dao.getAllMarkedForDeletion();
-			for (String url : toDeleteUrls) {
-				try {
-					if (this.net.delete(url).isSuccessful()) {
-						dao.delete(url);
-					}
-					else {
-						reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
-					}
-				}
-				catch (IOException e) {
-					reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
-				}
-			}
-		}
-		finally {
-			this.databaseAdapter.close();
-		}
-		if (reportFailure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
-			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + reportFailure);
-		}
-
-	}
 
 	/**
 	 * Retrieve the size of the current local database.
@@ -658,16 +576,21 @@ public class DataManager implements ApplicationStatusObserver
 			this.freeMemory();
 
 			// delete the whole database content
-			SampleDao dao = this.databaseAdapter.getSampleDao();
-			dao.deleteAll();
+			try {
+				SampleDao dao = this.databaseAdapter.getSampleDao();
+				dao.deleteAll();
+			}
+			finally {
+				this.databaseAdapter.close();
+			}
 
 			this.applicationReady = false;
 		}
 	}
 
-	public void observeApplicationStatus(boolean appStatus)
+	public void onApplicationLoad(boolean success)
 	{
-		this.applicationReady = appStatus;
+		this.applicationReady = success;
 	}
 
 	/**
@@ -678,5 +601,130 @@ public class DataManager implements ApplicationStatusObserver
 	{
 		this.databaseAdapter.useExistingDataSet();
 	}
+
+
+	/**
+	 * Push local modifications to the network
+	 *
+	 * @throws FocusMissingResourceException If at least one error has been encountered. note that
+	 *                                       this method is resilient: if an error occurs, it will continue to process the queue of
+	 *                                       objects to push. This way, if the problem is temporary due to network conditions, it will
+	 *                                       not have to redo everything on next run. The caller should however take this exception
+	 *                                       in consideration for its logic, e.g. do not overwrite objects that are have not yet been
+	 *                                       transmitted to the final network endpoint.
+	 */
+	public void pushPendingLocalModifications() throws FocusMissingResourceException
+	{
+		// a bitmask for our return value
+		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+
+		try {
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+
+			// POST and PUT are almost the same
+			HashSet<Sample> toPushSamples;
+			for (String typeOfOperation : new String[]{Constant.TO_CREATE, Constant.TO_UPDATE, Constant.TO_DELETE}) {
+				toPushSamples = dao.getAllMarkedFocusSamples(typeOfOperation);
+				for (Sample sample : toPushSamples) {
+					reportFailure |= this.pushLocalModification(sample, FocusSample.class, typeOfOperation, dao);
+				}
+			}
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
+
+
+		// Error reporting
+		if (reportFailure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
+			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + reportFailure);
+		}
+
+	}
+
+	/**
+	 * push modification for a single sample of speciifed class type
+	 *
+	 * @param sample
+	 * @param targetClass
+	 * @param typeOfOperation
+	 * @param dao
+	 * @return
+	 */
+	private int pushLocalModification(Sample sample, Class targetClass, String typeOfOperation, SampleDao dao)
+	{
+		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+
+
+		String networkOperation;
+		switch (typeOfOperation) {
+			case Constant.TO_CREATE:
+				networkOperation = "POST";
+				break;
+			case Constant.TO_UPDATE:
+				networkOperation = "PUT";
+				break;
+			case Constant.TO_DELETE:
+				networkOperation = "DELETE";
+				break;
+			default:
+				throw new FocusInternalErrorException("Invalid operation requested.");
+		}
+
+
+		FocusObject fo = FocusObject.factory(sample.getData(), targetClass);
+		if (fo == null) {
+			throw new FocusInternalErrorException("Could get the data in the database, but could not instantiate it (POST).");
+		}
+		try {
+			String url = sample.getUrl();
+			boolean netResult = this.net.pushModification(networkOperation, url, fo).isSuccessful();
+			if (netResult) {
+				if (typeOfOperation.equals(Constant.TO_DELETE)) {
+					dao.delete(url);
+				}
+				else {
+					sample.setEditionField(typeOfOperation, false);
+					dao.update(sample);
+				}
+			}
+			else {
+				reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
+			}
+		}
+		catch (IOException ex) {
+			reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
+		}
+
+		return reportFailure;
+	}
+
+	/**
+	 * same but public, and hence we create the dao ourselves and fetch the Sample for local store for the caller
+	 *
+	 *
+	 * also, we only allow UPDATE of data.
+	 */
+	public int pushLocalModification(String url, Class targetClass)
+	{
+		try {
+			SampleDao dao = this.databaseAdapter.getSampleDao();
+
+			// get the sample corresponding to the url
+			Sample sample = dao.get(url);
+			// we do the update only an update is scheduled
+			if (sample.isToPut()) {
+				return this.pushLocalModification(sample, targetClass, Constant.TO_UPDATE, dao);
+			}
+			else {
+				// nothing to do.
+				return NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+			}
+		}
+		finally {
+			this.databaseAdapter.close();
+		}
+	}
+
 }
 

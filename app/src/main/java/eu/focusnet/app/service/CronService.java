@@ -58,7 +58,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class CronService extends Service implements ApplicationStatusObserver
 {
-	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
+	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 0; // FIXME 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
 	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 2; // 2 minutes
 	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 30; // 30 min
 	private static final int CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES = 30;
@@ -99,6 +99,8 @@ public class CronService extends Service implements ApplicationStatusObserver
 	 * Sync data operations
 	 * <p/>
 	 * * return false if already in progress OR application nto ready, true otherwise
+	 *
+	 * FIXME if I call this in a separate thread, I can then interrupt it.
 	 */
 	public boolean syncData()
 	{
@@ -122,7 +124,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 		// perform the sync
 		boolean success = false;
 		try {
-			// FIXME how to make it NOT static? not really possible
+			// Call the controller and ask him to start syncing
 			FocusAppLogic.getInstance().sync();
 			success = true;
 		}
@@ -130,6 +132,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 			// report once in a while, but do not crash the app
 			// perhaps on next run it will be better?
 			// {success} is left to false
+			// do not crash. Let the caller decide that.
 			++this.failures;
 			if (failures % 10 == 0) {
 				FocusApplication.reportError(ex);
@@ -251,7 +254,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 	// may be wrong.
 	// FIXME to circumvent that, call this method often?
 	@Override
-	public void observeApplicationStatus(boolean appStatus)
+	public void onApplicationLoad(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
 	}

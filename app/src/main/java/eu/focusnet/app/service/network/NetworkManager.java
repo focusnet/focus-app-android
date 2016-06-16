@@ -281,7 +281,8 @@ public class NetworkManager
 	public HttpResponse put(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_PUT, url, data);
-		return request.execute();
+		HttpResponse r = request.execute();
+		return r;
 	}
 
 	/**
@@ -324,6 +325,17 @@ public class NetworkManager
 	public boolean login(String user, String password, String server) throws IOException
 	{
 		throw new FocusNotImplementedException("NetworkManager.login()");
+	}
+
+	public HttpResponse pushModification(String networkOperation, String url, FocusObject fo) throws IOException
+	{
+		switch(networkOperation) {
+			case "POST":
+				return this.post(url, fo);
+			case "PUT":
+				return this.put(url, fo);
+		}
+		return null;
 	}
 
 

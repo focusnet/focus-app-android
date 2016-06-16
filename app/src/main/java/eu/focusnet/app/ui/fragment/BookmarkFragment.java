@@ -124,12 +124,14 @@ public class BookmarkFragment extends ListFragment
 	{
 		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
 
+		ArrayList<SimpleListItem> newItems = new ArrayList<SimpleListItem>();
+
 		// header
 		SimpleListItem headerProjectsListItem = new SimpleListItem(
 				UiHelper.getBitmap(getActivity(), icon),
 				getResources().getString(label)
 		);
-		listItems.add(headerProjectsListItem);
+		newItems.add(headerProjectsListItem);
 
 		// links
 		Bitmap rightIcon = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
@@ -161,13 +163,17 @@ public class BookmarkFragment extends ListFragment
 						true,
 						Bookmark.BookmarkLinkType.PAGE.toString()
 				);
-				listItems.add(listItem);
+				newItems.add(listItem);
 			}
 		}
-		else {
-			listItems.add(new EmptyListItem());
+
+		// only the header? let's add an empty dummy element
+		if (newItems.size() == 1) {
+			newItems.add(new EmptyListItem());
 		}
 
+		listItems.addAll(newItems);
 	}
+
 }
 

@@ -204,12 +204,13 @@ public class FocusAppLogic
 		}
 		else {
 			this.userManager.handleLogout();
+			this.dataManager.handleLogout();
 		}
 
-		this.dataManager.observeApplicationStatus(this.applicationReady);
-		this.userManager.observeApplicationStatus(this.applicationReady);
+		this.dataManager.onApplicationLoad(this.applicationReady);
+		this.userManager.onApplicationLoad(this.applicationReady);
 		if (cronBound) {
-			this.cronService.observeApplicationStatus(this.applicationReady);
+			this.cronService.onApplicationLoad(this.applicationReady);
 		}
 
 		this.dataManager.freeMemory();
@@ -231,8 +232,12 @@ public class FocusAppLogic
 			return;
 		}
 
-		// FIXME TODO before anything, push modifications of the db to the network
-		// this.dataManager.pushPendingModifications();
+		// first, push pending modifications
+		// if an error occurs, FocusMissingResourceException is thrown by these methods,
+		// and this will be propagated to the caller
+		// So no need for error handling here.
+		this.userManager.pushPendingocalUserData();
+		this.dataManager.pushPendingLocalModifications();
 
 		// New objects creation
 		DataManager newDataManager = new DataManager();
@@ -245,12 +250,11 @@ public class FocusAppLogic
 			throw new FocusInternalErrorException("Inconsistent state reached: we should have enough information for logging in at this point.");
 		}
 		try {
-			newUserManager.getUserData(); // FIXME may crash if cannot retrieve object. define behavior (reportError() but keep going?)
+			newUserManager.getUserData();
 		}
 		catch (FocusInternalErrorException ex) {
 			// if we crash, this is because the user objects could not be retrieved and they are mandatory.
-			// let's report a crash but let the application survive anyway.
-			FocusApplication.reportError(ex);
+			// Let the application survive anyway (we are in a background job, invisible to end user..
 			throw new FocusMissingResourceException("Cannot retrieve user object when syncing data");
 		}
 
@@ -259,8 +263,8 @@ public class FocusAppLogic
 
 		if (newApplicationContent != null) {
 			// advertise that we are ready to our new objects
-			newUserManager.observeApplicationStatus(true);
-			newDataManager.observeApplicationStatus(true);
+			newUserManager.onApplicationLoad(true);
+			newDataManager.onApplicationLoad(true);
 
 			// everything went fine, then replace the current objects by the new ones
 			this.userManager = newUserManager;

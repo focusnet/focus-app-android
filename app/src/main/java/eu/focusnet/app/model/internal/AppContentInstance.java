@@ -191,6 +191,9 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @param path
 	 * @return
+	 *
+	 * these methods throw FocusMissingResourceException to let the caller detect if a page/project/widget
+	 * does not exist anymore.
 	 */
 	public ProjectInstance getProjectFromPath(String path) throws FocusMissingResourceException
 	{
@@ -214,9 +217,6 @@ public class AppContentInstance extends AbstractInstance
 	public PageInstance getPageFromPath(String path) throws FocusMissingResourceException
 	{
 		ProjectInstance pr = this.getProjectFromPath(path);
-		if (pr == null) {
-			return null;
-		}
 		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 3) {
 			return pr.getPageFromGuid(parts[2], parts[1]);
@@ -239,9 +239,6 @@ public class AppContentInstance extends AbstractInstance
 	public WidgetInstance getWidgetFromPath(String path) throws FocusMissingResourceException
 	{
 		PageInstance p = this.getPageFromPath(path);
-		if (p == null) {
-			return null;
-		}
 		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
 		if (parts.length >= 4) {
 			return p.widgets.get(parts[3]);

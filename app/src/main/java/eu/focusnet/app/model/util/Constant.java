@@ -36,8 +36,7 @@ public class Constant
 
 	public static final String DATABASE_TABLE_SAMPLES = "sample";
 
-	public static final String ID = "id",
-			TYPE = "type",
+	public static final String TYPE = "type",
 			URL = "url",
 			OWNER = "owner",
 			EDITOR = "editor",
@@ -52,8 +51,7 @@ public class Constant
 			DATA_SET_ID = "data_set_id";
 
 	public static final String CREATE_TABLE_SAMPLES_QUERY = "CREATE TABLE " + DATABASE_TABLE_SAMPLES + "" +
-			"(" + ID + " INTEGER AUTO INCREMENT," +
-			URL + " TEXT, " +
+			"(" + URL + " TEXT, " +
 			VERSION + " INTEGER, " +
 			TYPE + " TEXT, " +
 			OWNER + " TEXT, " +

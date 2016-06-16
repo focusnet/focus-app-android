@@ -24,6 +24,8 @@ package eu.focusnet.app.ui.common;
 public class EmptyListItem extends SimpleListItem
 {
 
+	// FIXME if items.isEmpty() -> new Emptylistitem() everywhere
+	// FIXME also check that pages/projects ... still exist before calling them in UI
 	public EmptyListItem()
 	{
 		super(null, null);

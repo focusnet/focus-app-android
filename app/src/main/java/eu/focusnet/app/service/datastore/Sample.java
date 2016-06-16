@@ -25,6 +25,7 @@ import java.util.Date;
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
+import eu.focusnet.app.model.util.Constant;
 
 /**
  * A Sample is the object representation of the rows in the "samples" database table
@@ -222,7 +223,7 @@ public class Sample
 		return toPut;
 	}
 
-	public void setToPut(boolean toPut)
+	public void setToUpdate(boolean toPut)
 	{
 		this.toPut = toPut;
 	}
@@ -232,10 +233,24 @@ public class Sample
 		return this.toPost;
 	}
 
-	public void setToPost(boolean toPost)
+	public void setToCreate(boolean toPost)
 	{
 		this.toPost = toPost;
 	}
 
 
+	public void setEditionField(String databaseField, boolean flag)
+	{
+		switch (databaseField) {
+			case Constant.TO_CREATE:
+				this.setToCreate(flag);
+				break;
+			case Constant.TO_UPDATE:
+				this.setToUpdate(flag);
+				break;
+			case Constant.TO_DELETE:
+				this.setToDelete(flag);
+				break;
+		}
+	}
 }

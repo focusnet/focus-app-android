@@ -27,8 +27,10 @@ import java.util.HashMap;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.AppContentTemplate;
+import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.service.network.NetworkManager;
@@ -265,7 +267,7 @@ public class UserManager implements ApplicationStatusObserver
 
 
 	@Override
-	public void observeApplicationStatus(boolean appStatus)
+	public void onApplicationLoad(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
 	}
@@ -396,5 +398,12 @@ public class UserManager implements ApplicationStatusObserver
 	public void registerNewDataManager(DataManager dataManager)
 	{
 		this.dataManager = dataManager;
+	}
+
+	public void pushPendingocalUserData() throws FocusMissingResourceException
+	{
+		// Acquire user and preferencee Dao -> how to to do that?
+		this.dataManager.pushLocalModification(this.userUrl, User.class);
+		this.dataManager.pushLocalModification(this.prefUrl, UserPreferences.class);
 	}
 }

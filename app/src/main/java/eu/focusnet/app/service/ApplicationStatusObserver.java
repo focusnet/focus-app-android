@@ -24,7 +24,7 @@ package eu.focusnet.app.service;
 public interface ApplicationStatusObserver
 {
 
-	void observeApplicationStatus(boolean appStatus);
+	void onApplicationLoad(boolean appStatus);
 
 	void handleLogout();
 }

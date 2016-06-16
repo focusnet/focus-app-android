@@ -87,4 +87,6 @@
     <string name="view">Voir</string>
     <string name="wiping_user_data_logout_msg">Effacement des données locales en cours … </string>
     <string name="you_can_start_data_sync">Vous pouvez démarrer la synchronisation des données ici.</string>
+    <string name="page_not_found">La page que vous avez sélectionnée n\'existe plus.</string>
+    <string name="project_not_found">Le projet que vous avez sélectionné n\'existe plus.</string>
 </resources>

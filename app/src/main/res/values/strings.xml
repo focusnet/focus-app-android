@@ -59,7 +59,7 @@
     <string name="header_dashboards">Dashboards</string>
     <string name="header_tools">Tools</string>
 
-    <string name="header_dashboard_and_projects"><![CDATA[Projects &amp; Dashboards]]></string>
+    <string name="header_dashboard_and_projects"><![CDATA[Projects & Dashboards]]></string>
 
     <string name="focus_crash_toast_text">Oops! FOCUS Mobile has just crashed.</string>
     <string name="focus_crash_dialog_title">FOCUS Mobile has crashed!</string>
@@ -132,5 +132,7 @@
     <string name="submit">Submit</string>
     <string name="not_available">Not available.</string>
     <string name="bookmark">Bookmark</string>
+    <string name="page_not_found">The page you have selected does not exist anymore.</string>
+    <string name="project_not_found">The project you have selected does not exist anymore.</string>
 
 </resources>

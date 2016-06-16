@@ -151,7 +151,7 @@ public class NavigationListAdapter extends BaseAdapter
 			else {
 				itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
 				itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
-				itemViewSet.getSecondaryIcon().setOnClickListener(getClickBookmarkListener((FeaturedListItem) listItem));
+				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
 			}
 			row.setTag(itemViewSet);
 		}
@@ -182,7 +182,7 @@ public class NavigationListAdapter extends BaseAdapter
 		return row;
 	}
 
-	private View.OnClickListener getClickBookmarkListener(final FeaturedListItem featuredListItem)
+	private View.OnClickListener getOnClickBookmarkListener(final FeaturedListItem featuredListItem)
 	{
 
 		return new View.OnClickListener()

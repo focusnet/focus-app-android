@@ -44,12 +44,14 @@ import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
+import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
 import eu.focusnet.app.ui.common.FeaturedListItem;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * This fragment will be loaded from the ProjectActivity and displays
@@ -105,15 +107,20 @@ public class ProjectFragment extends ListFragment
 	private class ProjectBuilderTask extends AsyncTask<String, Void, NavigationListAdapter>
 	{
 
+		// used for delaying redirection to another page to postExecute(), which runs on the
+		// UI thread and therefore can display the associated toast
+		private boolean projectNotFound;
+
 		@Override
 		protected NavigationListAdapter doInBackground(String... params)
 		{
+			this.projectNotFound = false;
 			try {
 				projectInstance = FocusAppLogic.getCurrentApplicationContent().getProjectFromPath(projectId);
 			}
 			catch (FocusMissingResourceException ex) {
-				// FIXME do something smarter, e.g. reload Home activity and display an error
-				throw new FocusInternalErrorException("Cannot access project via its path.");
+				this.projectNotFound = true;
+				return null;
 			}
 
 			// useful for our custom garbage collection in DataManager
@@ -180,7 +187,12 @@ public class ProjectFragment extends ListFragment
 		@Override
 		protected void onPostExecute(NavigationListAdapter navigationListAdapter)
 		{
-			setListAdapter(navigationListAdapter);
+			if (this.projectNotFound) {
+				UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.project_not_found), getActivity());
+			}
+			else {
+				setListAdapter(navigationListAdapter);
+			}
 		}
 	}
 }

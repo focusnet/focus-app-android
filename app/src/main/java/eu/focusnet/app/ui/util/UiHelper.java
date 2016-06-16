@@ -2,6 +2,7 @@ package eu.focusnet.app.ui.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.MotionEvent;
@@ -12,6 +13,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+
+import eu.focusnet.app.ui.activity.ProjectsListingActivity;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * The MIT License (MIT)
@@ -152,4 +156,20 @@ public class UiHelper
 	}
 
 
+	/**
+	 * Close the current activity and redirect the user to another one.
+	 *
+	 * @param targetActivityClass
+	 * @param msg
+	 * @param activity
+	 */
+	public static void redirectTo(Class targetActivityClass, String msg, Activity activity)
+	{
+		// FIXME no toast, other cannot be called from non-ui threads (e.g. onPrepare of async tasks
+		if (msg != null) {
+		 	UiHelper.displayToast(activity, msg);
+		}
+		activity.finish();
+		activity.startActivity(new Intent(activity, targetActivityClass));
+	}
 }

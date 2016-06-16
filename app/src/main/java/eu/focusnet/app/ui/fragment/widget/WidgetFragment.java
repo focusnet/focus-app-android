@@ -47,8 +47,10 @@ import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * FIXME we don't use savedInstance mechanism. useful?S
@@ -166,8 +168,11 @@ public abstract class WidgetFragment extends Fragment
 				this.widgetInstance = FocusAppLogic.getCurrentApplicationContent().getWidgetFromPath(path);
 			}
 			catch (FocusMissingResourceException ex) {
-				// FIXME do something smarter, e.g. reload Home activity and display an error
-				throw new FocusInternalErrorException("Cannot access widget via its path.");
+				// FIXME if a page is not valid anymore and the user wants to access it, this redirection
+				// will be triggered for all widgets contained in the page, not only one.
+				// Possible solution: detect missing page when user clicks on the page link
+				UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.page_not_found), getActivity());
+				return;
 			}
 			// FIXME useful????		dm.registerActiveInstance(this.widgetInstance);
 		}

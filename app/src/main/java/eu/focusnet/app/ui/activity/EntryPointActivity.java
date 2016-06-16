@@ -114,12 +114,6 @@ public class EntryPointActivity extends Activity
 		@Override
 		protected Void doInBackground(Void... data)
 		{
-			// FIXME sometimes the remediation dialog does not show up.
-			// enable next 2 lines to display indefinitely this dialog and try to debug
-			// this.remediationDialog = true;
-			// if (1==1)return null;
-
-
 			UserManager accessControl = FocusAppLogic.getUserManager();
 			accessControl.quickLoginInfoAcquisition();
 			if (accessControl.isLoggedIn()) {
@@ -127,7 +121,7 @@ public class EntryPointActivity extends Activity
 					FocusAppLogic.getInstance().acquireApplicationData();
 
 					// A new sync will be requested after
-					// {@link CronService.CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC}
+					// {@link CronService#CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES}
 
 				}
 				catch (FocusMissingResourceException ex) {

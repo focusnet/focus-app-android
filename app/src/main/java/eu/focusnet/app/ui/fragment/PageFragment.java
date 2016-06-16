@@ -20,7 +20,9 @@
 
 package eu.focusnet.app.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +40,14 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
 import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
+import eu.focusnet.app.ui.activity.EntryPointActivity;
+import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.fragment.widget.EmptyWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
@@ -74,13 +79,12 @@ public class PageFragment extends Fragment
 			this.pageInstance = appContentInstance.getPageFromPath(pagePath);
 		}
 		catch (FocusMissingResourceException ex) {
-			// FIXME do something smarter, e.g. reload Home activity and display an error
-			throw new FocusInternalErrorException("Cannot access project/page via its path.");
+			UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.page_not_found), getActivity());
+			return null;
 		}
 
 		// useful for our custom garbage collection in DataManager
 		/// FIXME uselss?	dm.registerActiveInstance(this.pageInstance);
-
 
 		//	ViewUtil.buildPageView(this.projectInstance, this.pageInstance, linearLayoutPageInfo, getActivity());
 		this.buildPage();

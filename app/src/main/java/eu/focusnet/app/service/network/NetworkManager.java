@@ -281,8 +281,7 @@ public class NetworkManager
 	public HttpResponse put(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_PUT, url, data);
-		HttpResponse r = request.execute();
-		return r;
+		return request.execute();
 	}
 
 	/**
@@ -334,6 +333,8 @@ public class NetworkManager
 				return this.post(url, fo);
 			case "PUT":
 				return this.put(url, fo);
+			case "DELETE":
+				return this.delete(url);
 		}
 		return null;
 	}

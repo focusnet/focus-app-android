@@ -243,15 +243,15 @@ public class SampleDao
 		HashSet<Sample> result = new HashSet<>();
 
 		String[] params = {
-			//	Long.toString(this.dataSyncSetId),
+				Long.toString(this.dataSyncSetId),
 			//	flagType,
-				Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE.replaceFirst("[^/]+$", "") // remove the version specifier
+				Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE.replaceFirst("[^/]+$", "") + "%"// remove the version specifier
 		};
 		Cursor cursor = this.database.query(
 				Constant.DATABASE_TABLE_SAMPLES,
 				this.columnsToRetrieve,
-				Constant.DATA_SET_ID + " = " + Long.toString(this.dataSyncSetId) + " AND " + flagType + " = 1 AND type = ?", // here does not work if not like this (no placeholder). to check
-				params, // FIXME no good placeholders.
+				Constant.DATA_SET_ID + " = ? AND " + flagType + " = 1 AND type LIKE ?", // here does not work if not like this (no placeholder). to check
+				params,
 				null,
 				null,
 				null
@@ -285,7 +285,6 @@ public class SampleDao
 	 */
 	public long getMostRecentDataSetIdentifier()
 	{
-
 		String[] cols = {
 				Constant.DATA_SET_ID
 		};
@@ -300,12 +299,11 @@ public class SampleDao
 				"1"
 		);
 
-		if (cursor.getCount() == 0) {
-			return 0;
+		long res = 0;
+		if (cursor.getCount() != 0) {
+			cursor.moveToFirst();
+			res = cursor.getLong(cursor.getColumnIndex(Constant.DATA_SET_ID));
 		}
-		cursor.moveToFirst();
-		long res = cursor.getLong(cursor.getColumnIndex(Constant.DATA_SET_ID));
-
 		cursor.close();
 		return res;
 	}

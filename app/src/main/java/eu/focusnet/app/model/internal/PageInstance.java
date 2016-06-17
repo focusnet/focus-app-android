@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import eu.focusnet.app.FocusApplication;
@@ -76,7 +77,7 @@ public class PageInstance extends AbstractInstance
 	}
 
 	// FIXME abstract method?
-	public void fillWithRealData()
+	public Future fillWithRealData()
 	{
 		// post-pone setting information after having fetched all resources related to this object
 		Callable todo = new Callable()
@@ -106,8 +107,12 @@ public class PageInstance extends AbstractInstance
 			}
 		};
 
-		this.dataContext.toExecuteWhenReady(new FutureTask<>(todo));
+		FutureTask future = new FutureTask<>(todo);
+		this.dataContext.toExecuteWhenReady(future);
+		return future;
 	}
+
+
 	/**
 	 * Get the current page instance guid.
 	 *

@@ -44,7 +44,8 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activity.DemoUseCaseSelectionActivity"
             android:screenOrientation="landscape"/>(
@@ -62,7 +63,8 @@
             android:name=".ui.activity.PageActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activity.ProjectActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activity.ImageActivity"
             android:screenOrientation="landscape"/>

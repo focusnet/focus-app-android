@@ -296,7 +296,7 @@ public class DataContext extends HashMap<String, String>
 
 	public void toExecuteWhenReady(FutureTask<Boolean> todo)
 	{
-		// block until we have everything.
+		// block until we have everything done the context queue
 		boolean tryAgain = true;
 		while (tryAgain) {
 			boolean waited = false;
@@ -347,45 +347,6 @@ public class DataContext extends HashMap<String, String>
 		@Override
 		public String call() throws Exception
 		{
-			/*
-if (this.description.startsWith("https://core.focusnet.eu:21223/stand/")) {
-	return dataManager.getSample(this.description).getUrl();
-}
-*/
-		//	FocusSample ret = dataManager.getSample(this.description);
-
-			// HttpResponse ret = dataManager.net.get(this.description);
-			/*
-
-
-			System.out.println("FINISHED - " + System.currentTimeMillis() + " - - " + this.description);
-			Thread.sleep(10_000);*/
-/*
-			String result = "";
-			int code = 200;
-			try {
-				URL siteURL = new URL(this.description);
-				HttpURLConnection connection = (HttpURLConnection) siteURL
-						.openConnection();
-				connection.setRequestMethod("GET");
-				connection.connect();
-
-				code = connection.getResponseCode();
-				if (code == 200) {
-					result = "Green\t";
-				}
-				connection.disconnect();
-			}
-			catch (Exception e) {
-				result = "->Red<-\t";
-			}
-			System.out.println(this.description + "\t\tStatus:" + result);
-*/
-			// what kind of data do we have?
-		// 	if (1==1) return "yahoo" + this.description;
-
-
-
 			FocusSample f;
 			try {
 				if (description.startsWith(Constant.SELECTOR_OPEN)
@@ -405,7 +366,7 @@ if (this.description.startsWith("https://core.focusnet.eu:21223/stand/")) {
 						if (parts.length != 3) {
 							throw new FocusInternalErrorException("Wrong number of fields for description of service.");
 						}
-						if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
+						if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) { // FIXME add the special param | last for getting last entry.
 							String u;
 							if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
 								u = resolveReferencedUrl(parts[1]);

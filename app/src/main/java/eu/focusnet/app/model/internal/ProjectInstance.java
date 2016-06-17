@@ -25,6 +25,10 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -39,7 +43,6 @@ import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by julien on 12.01.16.
  */
 public class ProjectInstance extends AbstractInstance
 {
@@ -70,12 +73,49 @@ public class ProjectInstance extends AbstractInstance
 		this.guid = projectTemplate.getGuid();
 		this.dashboards = new LinkedHashMap<>();
 		this.tools = new LinkedHashMap<>();
-		if (projectTemplate.getIterator() != null) {
-			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
-		}
 
 		this.build();
-		this.freeDataContext();
+	}
+
+	// FIXME abstract method?
+	public Future fillWithRealData()
+	{
+		// post-pone setting information after having fetched all resources related to this object
+		Callable todo = new Callable()
+		{
+			@Override
+			public Boolean call() throws Exception
+			{
+				if (template.getIterator() != null) {
+					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
+				}
+
+				// Special case: __welcome__ is a fake project that may contain tools only.
+				if (guid.equals(WELCOME_PROJECT_IDENTIFIER)) {
+					title = "";
+					description = "";
+					return true;
+				}
+
+				try { // FIXME
+					title = TypesHelper.asString(dataContext.resolve(template.getTitle()));
+					description = TypesHelper.asString(dataContext.resolve(template.getDescription()));
+				}
+				catch (FocusMissingResourceException | FocusBadTypeException ex) {
+					// silent skipping
+					FocusApplication.reportError(ex);
+					return false;
+				}
+
+
+				freeDataContext();
+				return true;
+			}
+		};
+
+		FutureTask future = new FutureTask<>(todo);
+		this.dataContext.toExecuteWhenReady(future);
+		return future;
 	}
 
 	/**
@@ -92,31 +132,15 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData());
+		this.dataContext.provideData(this.template.getData()); // FIXME
 
-		// Special case: __welcome__ is a fake project that may contain tools only.
-		if (this.getGuid().equals(WELCOME_PROJECT_IDENTIFIER)) {
-			this.title = "";
-			this.description = "";
-			return;
-		}
-
-		try {
-			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
-			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
-		}
-		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			// silent skipping
-			FocusApplication.reportError(ex);
-			return;
-		}
 
 		if (this.description == null) {
 			this.description = "";
 		}
 
 		// 2x same same FIXME
-		if (this.template.getDashboards() != null) {
+		if (this.template.getDashboards() != null) { // FIXME
 			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
 			if (this.dashboards == null) {
 				this.markAsInvalid();
@@ -237,11 +261,23 @@ public class ProjectInstance extends AbstractInstance
 		// for the same reason.
 		// Ideally, no datacontext.get() (or resolve()) should occure before this point.
 		LinkedHashMap<String, PageInstance> pageInstances = new LinkedHashMap<>();
-		for (PageInstance pi : pageInstancesTmp) {
-			pi.fillWithRealData();
-			// the guid has also been changed
-			pageInstances.put(pi.getGuid(), pi);
+		ArrayList<Future> futures = new ArrayList<>();
+		for(PageInstance pi : pageInstancesTmp) {
+			Future f = pi.fillWithRealData();
+			futures.add(f);
 		}
+		// wait for the future to return such that we have a valid guid.
+		for(int i=0; i < pageInstancesTmp.size(); ++i) {
+			try {
+				futures.get(i).get();
+			}
+			catch (InterruptedException | ExecutionException e) {
+				// application requested interruption, let's not take it personnally.
+				continue; // FIXME check if this is sufficient
+			}
+			pageInstances.put(pageInstancesTmp.get(i).getGuid(), pageInstancesTmp.get(i));
+		}
+
 		return pageInstances;
 	}
 

@@ -47,7 +47,6 @@ import eu.focusnet.app.model.util.TypesHelper;
 public class ProjectInstance extends AbstractInstance
 {
 	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
-	public final static String WELCOME_PROJECT_IDENTIFIER = "__welcome__";
 
 	private String guid;
 	private String title;
@@ -88,13 +87,6 @@ public class ProjectInstance extends AbstractInstance
 			{
 				if (template.getIterator() != null) {
 					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
-				}
-
-				// Special case: __welcome__ is a fake project that may contain tools only.
-				if (guid.equals(WELCOME_PROJECT_IDENTIFIER)) {
-					title = "";
-					description = "";
-					return true;
 				}
 
 				try { // FIXME

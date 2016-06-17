@@ -109,11 +109,6 @@ public class ProjectsListingFragment extends ListFragment
 				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 					ProjectInstance p = entry.getValue();
 
-					// FIXME for now simply ignore the special __welcome__ project that may contain tool-pages.
-					if (p.getGuid().equals(ProjectInstance.WELCOME_PROJECT_IDENTIFIER)) {
-						continue;
-					}
-
 					String projectPath = AppContentInstance.buildPath(p);
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
@@ -136,8 +131,6 @@ public class ProjectsListingFragment extends ListFragment
 			else {
 				listItems.add(new EmptyListItem());
 			}
-
-			// FIXME TOOLS of __welcome__ should be here.; for now not implemented.
 
 			return new NavigationListAdapter(getActivity(), listItems);
 		}

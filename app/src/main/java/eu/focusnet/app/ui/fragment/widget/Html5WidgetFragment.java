@@ -160,6 +160,10 @@ public class Html5WidgetFragment extends WidgetFragment
 	 * Also, webapps may request new resources that are not refered to in the building of the app
 	 * FIXME what do we do with these resources on app syncrhonization? delete? keep? do we need a
 	 * special flag in the database?
+	 *
+	 * In the webapp, these calls are blocking -> use Web Workers
+	 * OR we could implement a non-blocking interface, with Future objects
+	 * That would help overcome the problem of max 6 connections per host in the browser.
 	 */
 	private class WebAppInterface
 	{

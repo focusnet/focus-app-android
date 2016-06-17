@@ -20,6 +20,7 @@
 
 package eu.focusnet.app;
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
+import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.util.ApplicationHelper;
 
 // Singleton (the only one)

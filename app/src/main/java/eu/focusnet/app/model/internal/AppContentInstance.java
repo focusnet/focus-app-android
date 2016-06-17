@@ -23,6 +23,7 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -111,70 +112,13 @@ public class AppContentInstance extends AbstractInstance
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
-		ArrayList<ProjectInstance> projInstancesTmp = new ArrayList<>();
-
-		for (ProjectTemplate projTpl : projectTemplates) {
-
-			// Iterators use application-level data context list of urls
-			// we cannot postpone fetching these ones. Let's do it now.
-			if (projTpl.getIterator() != null) {
-				ArrayList<String> urls;
-				try {
-					urls = TypesHelper.asArrayOfUrls(
-							this.dataContext.resolve(projTpl.getIterator())
-					);
-				}
-				catch (FocusMissingResourceException | FocusBadTypeException e) {
-					// Resource not found or invalid iterator.
-					// should not happen, but let's continue silently
-					FocusApplication.reportError(e);
-					continue;
-				}
-
-				for (String url : urls) {
-					DataContext newCtx = new DataContext(this.dataContext);
-					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
-
-					// the guid is adapted in the ProjectInstance constructor
-					ProjectInstance p = new ProjectInstance(projTpl, newCtx); // FIXME
-					if (!p.isValid()) {
-						this.markAsInvalid();
-					}
-					projInstancesTmp.add(p);
-				}
+		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext);
+		for(Map.Entry e : this.projects.entrySet()) {
+			ProjectInstance pi = (ProjectInstance) e.getValue();
+			if (!pi.isValid()) {
+				this.markAsInvalid();
+				break;
 			}
-			else {
-				DataContext newCtx = new DataContext(this.dataContext);
-				ProjectInstance p = new ProjectInstance(projTpl, newCtx); // FIXME
-				if (!p.isValid()) {
-					this.markAsInvalid();
-				}
-				projInstancesTmp.add(p);
-			}
-		}
-
-
-		// fill projects with real data
-		// FIXME we could imagine putting this part in a separate thread, too, such that
-		// we don't block the main thread.
-		// Let's first see how are performance.
-		// in the present state, it should process all projects in parallel before continuing to
-		// the pages
-		ArrayList<Future> futures = new ArrayList<>();
-		for(ProjectInstance pi : projInstancesTmp) {
-			Future f = pi.fillWithRealData();
-			futures.add(f);
-		}
-		// wait for the future to return such that we have a valid guid.
-		for(int i=0; i < projInstancesTmp.size(); ++i) {
-			try {
-				futures.get(i).get();
-			}
-			catch (InterruptedException | ExecutionException e) {
-				// application requested interruption, let's not take it personnally.
-				continue; // FIXME check if this is sufficient
-			}
-			this.projects.put(projInstancesTmp.get(i).getGuid(), projInstancesTmp.get(i));
 		}
 	}
 

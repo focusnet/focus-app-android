@@ -54,6 +54,7 @@ public class ProjectInstance extends AbstractInstance
 
 	private LinkedHashMap<String, PageInstance> dashboards;
 	private LinkedHashMap<String, PageInstance> tools;
+	private LinkedHashMap<String, ProjectInstance> projects;
 
 	private ProjectTemplate template;
 
@@ -72,6 +73,7 @@ public class ProjectInstance extends AbstractInstance
 		this.guid = projectTemplate.getGuid();
 		this.dashboards = new LinkedHashMap<>();
 		this.tools = new LinkedHashMap<>();
+		this.projects = new LinkedHashMap<>();
 
 		this.build();
 	}
@@ -172,6 +174,8 @@ public class ProjectInstance extends AbstractInstance
 	 *
 	 * @param source
 	 * @return
+	 *
+	 * FIXME a bit strange to have it
 	 */
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
 	{
@@ -312,5 +316,69 @@ public class ProjectInstance extends AbstractInstance
 	public LinkedHashMap<String, PageInstance> getTools()
 	{
 		return this.tools;
+	}
+
+	public static LinkedHashMap<String, ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext baseContext)
+	{
+		ArrayList<ProjectInstance> projInstancesTemp = new ArrayList<>();
+		for (ProjectTemplate projTpl : projectTemplates) {
+
+			// Iterators use application-level data context list of urls
+			// we cannot postpone fetching these ones. Let's do it now.
+			if (projTpl.getIterator() != null) {
+				ArrayList<String> urls;
+				try {
+					urls = TypesHelper.asArrayOfUrls(
+							baseContext.resolve(projTpl.getIterator())
+					);
+				}
+				catch (FocusMissingResourceException | FocusBadTypeException e) {
+					// Resource not found or invalid iterator.
+					// should not happen, but let's continue silently
+					FocusApplication.reportError(e);
+					continue;
+				}
+
+				for (String url : urls) {
+					DataContext newCtx = new DataContext(baseContext);
+					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
+
+					// the guid is adapted in the ProjectInstance constructor
+					ProjectInstance p = new ProjectInstance(projTpl, newCtx);
+					projInstancesTemp.add(p);
+				}
+			}
+			else {
+				DataContext newCtx = new DataContext(baseContext);
+				ProjectInstance p = new ProjectInstance(projTpl, newCtx);
+				projInstancesTemp.add(p);
+			}
+		}
+
+
+		// fill projects with real data
+		// FIXME we could imagine putting this part in a separate thread, too, such that
+		// we don't block the main thread.
+		// Let's first see how are performance.
+		// in the present state, it should process all projects in parallel before continuing to
+		// the pages
+		LinkedHashMap<String, ProjectInstance> projects = new LinkedHashMap<>();
+		ArrayList<Future> futures = new ArrayList<>();
+		for(ProjectInstance pi : projInstancesTemp) {
+			Future f = pi.fillWithRealData();
+			futures.add(f);
+		}
+		// wait for the future to return such that we have a valid guid.
+		for(int i=0; i < projInstancesTemp.size(); ++i) {
+			try {
+				futures.get(i).get();
+			}
+			catch (InterruptedException | ExecutionException e) {
+				// application requested interruption, let's not take it personnally.
+				continue; // FIXME check if this is sufficient
+			}
+			projects.put(projInstancesTemp.get(i).getGuid(), projInstancesTemp.get(i));
+		}
+		return projects;
 	}
 }

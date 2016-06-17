@@ -113,19 +113,21 @@ public class DataContext extends HashMap<String, String>
 	 * lookup: no context for now.
 	 * <p/>
 	 *
-	 * FIXME the register operation must be an AsyncTask(). we keep reference to the task such that this.get() can wait for it.
+	 * the register operation must be an AsyncTask(). we keep reference to the task such that this.get() can wait for it.
 	 *
-	 * FIXME register cannot throw FocusMissingException
+	 * FIXME implement custom queuing
+	 *
 	 */
 	public void register(String key, String description)
 	{
 		AsyncTask<Void, Void, String> task = new DataAcquisitionTask(key, description).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		//	test what happens when I try to download a lot of files at the sametime (>12) -> queue working? -> crashing? -> no, but may be waiting too long
+		// and/or deadlock
+		// FIXME implement my own Executor
 		// FIXME fine-tune this ?
 		// public static final Executor THREAD_POOL_EXECUTOR
 		// = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
 		// 			TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
-
-	//	test what happens when I try to download a lot of files at the sametime (>12) -> queue working? -> crashing?
 		queue.put(key, task);
 	}
 

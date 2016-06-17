@@ -23,6 +23,8 @@ package eu.focusnet.app.model.internal;
 import android.support.annotation.NonNull;
 
 import java.util.LinkedHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -34,7 +36,6 @@ import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
 
 /**
- * Created by julien on 12.01.16.
  */
 public class PageInstance extends AbstractInstance
 {
@@ -70,27 +71,43 @@ public class PageInstance extends AbstractInstance
 		this.widgets = new LinkedHashMap<>();
 		this.dataContext = dataCtx;
 
-		if (pageTpl.getIterator() != null) {
-			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
-		}
-
 		// register page-specific data to our current data context
 		this.dataContext.provideData(this.template.getData());
-
-		try {
-			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
-			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
-		}
-		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			FocusApplication.reportError(ex);
-			return;
-		}
-
-		if (this.description == null) {
-			this.description = "";
-		}
 	}
 
+	// FIXME abstract method?
+	public void fillWithRealData()
+	{
+		// post-pone setting information after having fetched all resources related to this object
+		Callable todo = new Callable()
+		{
+			@Override
+			public Boolean call() throws Exception
+			{
+				if (template.getIterator() != null) {
+					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
+				}
+
+				try {
+					title = TypesHelper.asString(dataContext.resolve(template.getTitle()));
+					description = TypesHelper.asString(dataContext.resolve(template.getDescription()));
+				}
+				catch (FocusMissingResourceException | FocusBadTypeException ex) {
+					FocusApplication.reportError(ex);
+					return false;
+				}
+
+				if (description == null) {
+					description = "";
+				}
+
+				freeDataContext();
+				return true;
+			}
+		};
+
+		this.dataContext.toExecuteWhenReady(new FutureTask<>(todo));
+	}
 	/**
 	 * Get the current page instance guid.
 	 *

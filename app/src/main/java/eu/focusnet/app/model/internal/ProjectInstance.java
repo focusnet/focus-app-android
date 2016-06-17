@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -158,7 +159,7 @@ public class ProjectInstance extends AbstractInstance
 	 */
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
 	{
-		LinkedHashMap<String, PageInstance> pageInstances = new LinkedHashMap<>();
+		ArrayList<PageInstance> pageInstancesTmp = new ArrayList<>();
 
 		for (PageReference s : source) {
 			String pageid = s.getPageid();
@@ -200,9 +201,7 @@ public class ProjectInstance extends AbstractInstance
 						page.addWidget(wi.getGuid(), wi);
 					}
 
-					page.freeDataContext();
-
-					pageInstances.put(page.getGuid(), page);
+					pageInstancesTmp.add(page);
 				}
 			}
 			else {
@@ -226,10 +225,22 @@ public class ProjectInstance extends AbstractInstance
 					page.addWidget(wi.getGuid(), wi);
 				}
 
-				page.freeDataContext();
-
-				pageInstances.put(page.getGuid(), page);
+				pageInstancesTmp.add(page);
 			}
+		}
+
+		// All template information have been gathered, let's know build the actual
+		// objects with real data.
+		// We do that AFTER having filled the basic information in the contructor to avoid
+		// sequences of datacontext.register() / datacontext.get() that would end up in
+		// sequential loading of resources. Also, this function is called outside of the loops
+		// for the same reason.
+		// Ideally, no datacontext.get() (or resolve()) should occure before this point.
+		LinkedHashMap<String, PageInstance> pageInstances = new LinkedHashMap<>();
+		for (PageInstance pi : pageInstancesTmp) {
+			pi.fillWithRealData();
+			// the guid has also been changed
+			pageInstances.put(pi.getGuid(), pi);
 		}
 		return pageInstances;
 	}

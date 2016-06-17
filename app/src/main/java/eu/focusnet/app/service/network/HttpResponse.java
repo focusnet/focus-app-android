@@ -89,6 +89,7 @@ public class HttpResponse
 			// convert the output stream into a base64-encoded string
 			this.data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
 		}
+		inputStream.close();
 	}
 
 

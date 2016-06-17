@@ -75,6 +75,7 @@ public class NetworkManager
 	 */
 	public NetworkManager()
 	{
+		System.setProperty("http.maxConnections", "5");
 
 	}
 
@@ -258,23 +259,6 @@ public class NetworkManager
 		else {
 			throw new IOException("Malformed URI or other reason for not being able to create an HTTP request.");
 		}
-	}
-
-	/**
-	 * Get a specific version of an existing resource
-	 * <p/>
-	 * <p/>
-	 * FIXME any use?
-	 *
-	 * @param url
-	 * @param version
-	 * @return
-	 * @throws IOException
-	 */
-	public HttpResponse get(String url, int version) throws IOException
-	{
-		url = url + "/" + version;
-		return this.get(url);
 	}
 
 	/**

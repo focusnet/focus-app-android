@@ -130,6 +130,7 @@ public class EntryPointActivity extends Activity
 					// if this is the case, we mark the current instance for it to display a remediation dialog in the UI
 					// This remediation dialog will ask the user to connect to the network.
 					this.remediationDialog = true;
+					return null; // finished = false
 				}
 			}
 

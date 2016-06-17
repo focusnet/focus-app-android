@@ -20,10 +20,14 @@
 
 package eu.focusnet.app.model.json;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 
 /**
  * Created by admin on 06.07.2015.

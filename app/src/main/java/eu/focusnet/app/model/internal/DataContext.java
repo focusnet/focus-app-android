@@ -23,10 +23,16 @@ package eu.focusnet.app.model.internal;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.DoubleBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -34,6 +40,7 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.service.network.HttpResponse;
 
 /**
  * Created by julien on 13.01.16.
@@ -50,8 +57,9 @@ public class DataContext extends HashMap<String, String>
 {
 
 	private DataManager dataManager;
-	private HashMap<String, AsyncTask<Void, Void, String>> queue;
+	private HashMap<String, FutureTask<String>> queue;
 
+	private ArrayList<String> a;
 
 	/**
 	 * Default c'tor
@@ -60,7 +68,24 @@ public class DataContext extends HashMap<String, String>
 	{
 		super();
 		this.dataManager = dm;
-		queue = new HashMap<>();
+		this.queue = new HashMap<>();
+
+/*
+
+		a = new ArrayList<>();
+		for (int i = 101; i <= 129; i++) {
+			Callable task = new DataAcquisitionTask("key", "http://focus.yatt.ch/debug/bulk-" + i +".json");
+			FutureTask<String> future = new FutureTask<String>(task);
+			this.dataManager.getDataRetrievingExecutor().execute(future);
+		}
+		this.dataManager.getDataRetrievingExecutor().shutdown();
+		// Wait until all threads are finish
+		while (!this.dataManager.getDataRetrievingExecutor().isTerminated()) {
+
+		}
+		Object u = a;
+		System.out.println("\nFinished all threads");
+*/
 	}
 
 	/**
@@ -76,9 +101,10 @@ public class DataContext extends HashMap<String, String>
 		// keep reference to the existing queue
 		// FIXME should we lock before starting? queue may be expanded while we are copying.
 		this.queue = new HashMap<>();
-		for(Map.Entry e : c.getQueue().entrySet()) {
-			this.queue.put((String) e.getKey(), (AsyncTask<Void, Void, String>) e.getValue());
+		for (Map.Entry e : c.getQueue().entrySet()) {
+			this.queue.put((String) e.getKey(), (FutureTask<String>) e.getValue());
 		}
+		int i = 1;
 	}
 
 	/**
@@ -112,23 +138,18 @@ public class DataContext extends HashMap<String, String>
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
 	 * lookup: no context for now.
 	 * <p/>
-	 *
+	 * <p/>
 	 * the register operation must be an AsyncTask(). we keep reference to the task such that this.get() can wait for it.
-	 *
+	 * <p/>
 	 * FIXME implement custom queuing
-	 *
 	 */
 	public void register(String key, String description)
 	{
-		AsyncTask<Void, Void, String> task = new DataAcquisitionTask(key, description).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		//	test what happens when I try to download a lot of files at the sametime (>12) -> queue working? -> crashing? -> no, but may be waiting too long
-		// and/or deadlock
-		// FIXME implement my own Executor
-		// FIXME fine-tune this ?
-		// public static final Executor THREAD_POOL_EXECUTOR
-		// = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-		// 			TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
-		queue.put(key, task);
+		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
+		FutureTask<String> future =	new FutureTask<>(task);
+		this.dataManager.getDataRetrievingExecutor().execute(future);
+		this.queue.put(key, future);
+		int i = 22;
 	}
 
 	/**
@@ -232,12 +253,88 @@ public class DataContext extends HashMap<String, String>
 	}
 
 	/**
-	 * Acquire data from the DataManager in a background task.
+	 * Queue getter
 	 */
-	private class DataAcquisitionTask extends AsyncTask<Void, Void, String>
+	public HashMap<String, FutureTask<String>> getQueue()
 	{
-		String key;
-		String description;
+		return this.queue;
+	}
+
+	/**
+	 * FIXME TODO override get, make it wait for the pending async operation
+	 * <p/>
+	 * in some situtations, I may need not to wait (UI Thread). to be cchecked.
+	 *
+	 * @param key
+	 * @return the url of the object that is gotten, or null if an error occured and the object
+	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
+	 */
+	@Override
+	public String get(Object key)
+	{
+		if (super.get(key) != null) {
+			return super.get(key);
+		}
+		FutureTask<String> task = this.queue.get(key);
+		if (task == null) {
+			throw new FocusInternalErrorException("No task for requested data. Logic problem.");
+		}
+		if (task.isCancelled()) {
+			return null;
+		}
+		if (task.isDone()) {
+			return super.get(key);
+		}
+		// else wait for completion
+		try {
+			return task.get();
+		}
+		catch (InterruptedException | ExecutionException e) {
+			return null;
+		}
+	}
+
+	public void toExecuteWhenReady(FutureTask<Boolean> todo)
+	{
+		// block until we have everything.
+		boolean tryAgain = true;
+		while (tryAgain) {
+			boolean waited = false;
+			for (Map.Entry e : this.queue.entrySet()) {
+				FutureTask<String> f = (FutureTask<String>) e.getValue();
+				if (f.isDone() || f.isCancelled()) {
+					continue;
+				}
+				else {
+					try {
+						f.get();
+						waited = true;
+					}
+					catch (InterruptedException | ExecutionException e1) {
+						continue;
+					}
+				}
+			}
+			if (!waited) {
+				tryAgain = false;
+			}
+		}
+
+
+		Thread t = new Thread(todo);
+		t.start();
+		try {
+			todo.get();
+		}
+		catch (InterruptedException | ExecutionException e) {
+			// interrupted. Probably by the system, so let's just die gracefully
+		}
+	}
+
+	private class DataAcquisitionTask implements Callable
+	{
+		private String key;
+		private String description;
 
 
 		private DataAcquisitionTask(String key, String description)
@@ -246,10 +343,49 @@ public class DataContext extends HashMap<String, String>
 			this.description = description;
 		}
 
+
 		@Override
-		protected String doInBackground(Void... params)
+		public String call() throws Exception
 		{
+			/*
+if (this.description.startsWith("https://core.focusnet.eu:21223/stand/")) {
+	return dataManager.getSample(this.description).getUrl();
+}
+*/
+		//	FocusSample ret = dataManager.getSample(this.description);
+
+			// HttpResponse ret = dataManager.net.get(this.description);
+			/*
+
+
+			System.out.println("FINISHED - " + System.currentTimeMillis() + " - - " + this.description);
+			Thread.sleep(10_000);*/
+/*
+			String result = "";
+			int code = 200;
+			try {
+				URL siteURL = new URL(this.description);
+				HttpURLConnection connection = (HttpURLConnection) siteURL
+						.openConnection();
+				connection.setRequestMethod("GET");
+				connection.connect();
+
+				code = connection.getResponseCode();
+				if (code == 200) {
+					result = "Green\t";
+				}
+				connection.disconnect();
+			}
+			catch (Exception e) {
+				result = "->Red<-\t";
+			}
+			System.out.println(this.description + "\t\tStatus:" + result);
+*/
 			// what kind of data do we have?
+		// 	if (1==1) return "yahoo" + this.description;
+
+
+
 			FocusSample f;
 			try {
 				if (description.startsWith(Constant.SELECTOR_OPEN)
@@ -286,7 +422,7 @@ public class DataContext extends HashMap<String, String>
 				}
 				else {
 					// simple URL
-					f = dataManager.getSample(description); // e.g. on success -> do something.
+					f = dataManager.getSample(description);
 				}
 			}
 			catch (FocusMissingResourceException ex) {
@@ -295,48 +431,10 @@ public class DataContext extends HashMap<String, String>
 				// receive null, and can act accordingly.
 				return null;
 			}
-			DataContext.super.put(key, f.getUrl()); // synchronized function
+			DataContext.super.put(key, f.getUrl());
 			return f.getUrl();
 		}
 	}
 
-	/**
-	 * Queue getter
-	 */
-	public HashMap<String, AsyncTask<Void, Void, String>> getQueue()
-	{
-		return this.queue;
-	}
-
-	/**
-	 * FIXME TODO override get, make it wait for the pending async operation
-	 *
-	 * in some situtations, I may need not to wait (UI Thread). to be cchecked.
-	 *
-	 * @param key
-	 * @return the url of the object that is gotten, or null if an error occured and the object
-	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
-	 */
-	@Override
-	public String get(Object key)
-	{
-		AsyncTask<Void, Void, String> task = this.queue.get(key);
-		if (task == null) {
-			throw new FocusInternalErrorException("No task for requested data. Logic problem.");
-		}
-		if (task.isCancelled()) {
-			return null;
-		}
-		if (task.getStatus() == AsyncTask.Status.FINISHED) {
-			return super.get(key);
-		}
-		// else wait for completion
-		try {
-			return task.get();
-		}
-		catch (InterruptedException | ExecutionException e) {
-			return null;
-		}
-	}
 
 }

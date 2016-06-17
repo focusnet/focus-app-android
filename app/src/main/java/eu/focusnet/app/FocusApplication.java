@@ -160,6 +160,8 @@ public class FocusApplication extends Application
 			{
 				if (FocusAppLogic.getInstance() != null) {
 				// FIXME disabled for demo; would require to reload all data, and that may take some time.
+					// but in production, that's better to enable. Like this, the app is less prone
+					// to be stuck in an odd state.
 					// 	FocusAppLogic.getInstance().reset();
 				}
 

@@ -21,14 +21,16 @@
 package eu.focusnet.app.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
-import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
@@ -89,7 +91,9 @@ public class DataManager implements ApplicationStatusObserver
 		ERROR
 	}
 
-	boolean applicationReady;
+
+	private boolean applicationReady;
+	final private ExecutorService dataRetrievingExecutor;
 	/**
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
 	 * instanciation of the application content, by avoiding to retrieve many time the same
@@ -102,7 +106,7 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * The object responsible for providing networking facilities
 	 */
-	private NetworkManager net;
+	public NetworkManager net; // FIXME set to private, debugging.
 	/**
 	 * The object responsible for providing local database storage faiclities (SQLite database)
 	 */
@@ -118,15 +122,18 @@ public class DataManager implements ApplicationStatusObserver
 	// private ArrayList<AbstractInstance> activeInstances;
 	private AppContentTemplate appContentTemplate;
 
+
 	/**
 	 * Constructor. Initialize all default values and facilities, but does not perform any
 	 * operation.
 	 */
 	public DataManager()
 	{
-
 		this.applicationReady = false;
 // FIXME		this.activeInstances = new ArrayList<>();
+
+		// queue for retrieving data
+		this.dataRetrievingExecutor = Executors.newFixedThreadPool(Constant.MAX_CONCURRENT_DOWNLOADS);
 
 		// setup network
 		this.net = new NetworkManager();
@@ -136,7 +143,6 @@ public class DataManager implements ApplicationStatusObserver
 
 		// setup database
 		this.databaseAdapter = new DatabaseAdapter();
-
 	}
 
 
@@ -204,9 +210,9 @@ public class DataManager implements ApplicationStatusObserver
 	 * @param params The parameters to be passed to the history retrieving service
 	 * @return A {@link FocusSample} containing the history of intereset
 	 * <p/>
-	 *
+	 * <p/>
 	 * FIXME params are passed without any validation.
-	 *
+	 * <p/>
 	 * FIXME important: the returned FocusSample MUST have a url property that is set to the
 	 * same one as the accessed url.
 	 */
@@ -255,6 +261,7 @@ public class DataManager implements ApplicationStatusObserver
 			// try to get it from the network
 			if (NetworkManager.isNetworkAvailable()) {
 				HttpResponse response = this.net.get(url);
+
 				if (response.isSuccessful()) {
 					String json = response.getData();
 					result = FocusObject.factory(json, targetClass);
@@ -487,12 +494,11 @@ public class DataManager implements ApplicationStatusObserver
 	 * return new app instance if success or null on failure.
 	 *
 	 * @return
-	 * @throws FocusMissingResourceException FIXME this should rather go elsewhere, in FocusAppLogic
+	 * @throws FocusMissingResourceException FIXME this should rather go elsewhere, in FocusAppLogic? this is not strickly speaking data management.
 	 */
 
 	public AppContentInstance retrieveApplicationData() throws FocusMissingResourceException
 	{
-		// then get the user data
 		// the SHARED_PREFERENCES_APPLICATION_CONTENT preference was filled during the
 		// login procedure.
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
@@ -669,8 +675,8 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * same but public, and hence we create the dao ourselves and fetch the Sample for local store for the caller
-	 *
-	 *
+	 * <p/>
+	 * <p/>
 	 * also, we only allow UPDATE of data.
 	 */
 	public int pushLocalModification(String url, Class targetClass)
@@ -693,6 +699,15 @@ public class DataManager implements ApplicationStatusObserver
 			this.databaseAdapter.close();
 		}
 	}
+
+
+
+	public ExecutorService getDataRetrievingExecutor()
+	{
+		return this.dataRetrievingExecutor;
+	}
+
+
 
 }
 

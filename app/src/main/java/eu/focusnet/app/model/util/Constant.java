@@ -78,4 +78,6 @@ public class Constant
 			SELECTOR_SERVICE_LOOKUP = "lookup",
 			SELECTOR_SERVICE_SEPARATOR = "\\|",
 			SELECTOR_CONTEXT_SEPARATOR = "/";
+
+	public static final int MAX_CONCURRENT_DOWNLOADS = 40;
 }

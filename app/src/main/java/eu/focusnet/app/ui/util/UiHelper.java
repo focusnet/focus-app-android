@@ -112,6 +112,8 @@ public class UiHelper
 	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
+	 * also do append text to EditTexts such that the cursor for editing is at the end and not at the beginning.
+	 *
 	 * @param view     The view to parse
 	 * @param activity The Activity where this operation is performed
 	 */
@@ -127,6 +129,12 @@ public class UiHelper
 					return false;
 				}
 			});
+		}
+		else {
+			EditText e = ((EditText) view);
+			String txt = e.getText().toString();
+			e.setText("");
+			e.append(txt);
 		}
 
 		//If a layout container, iterate over children and seed recursion.

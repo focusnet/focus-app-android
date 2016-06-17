@@ -1,15 +1,3 @@
-package eu.focusnet.app.ui.common;
-
-import android.content.Context;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
-import eu.focusnet.app.R;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -29,6 +17,18 @@ import eu.focusnet.app.R;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package eu.focusnet.app.ui.common;
+
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import eu.focusnet.app.R;
+
 public class FocusDialogBuilder extends AlertDialog.Builder
 {
 	private View rootView;

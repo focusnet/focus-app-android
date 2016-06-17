@@ -205,7 +205,8 @@ public class NavigationListAdapter extends BaseAdapter
 					TextView alternateField = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
 					alternateField.setVisibility(View.GONE);
 					bookmarkTitle.setVisibility(View.VISIBLE);
-					bookmarkTitle.setText(featuredListItem.getTitle());
+					bookmarkTitle.setText("");
+					bookmarkTitle.append(featuredListItem.getTitle());
 
 
 					// Dialog building

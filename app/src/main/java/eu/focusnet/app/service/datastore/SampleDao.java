@@ -44,7 +44,7 @@ public class SampleDao
 {
 
 
-	private final long dataSyncSetId;
+	private long dataSyncSetId;
 	private String[] columnsToRetrieve = {
 			Constant.URL,
 			Constant.VERSION,
@@ -186,6 +186,21 @@ public class SampleDao
 		String where = Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "=?";
 		ContentValues updatedValues = this.createContentValues(sample);
 		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
+	}
+
+	/**
+	 * Change the current data set id for another
+	 */
+	public void udpateDataSetId(long newId)
+	{
+		String[] params = {
+				Long.toString(this.dataSyncSetId)
+		};
+		String where = Constant.DATA_SET_ID + " = ?";
+		ContentValues updateValues = new ContentValues();
+		updateValues.put(Constant.DATA_SET_ID, Long.toString(newId));
+		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updateValues, where, params);
+		this.dataSyncSetId = newId;
 	}
 
 	/**

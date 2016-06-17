@@ -564,7 +564,11 @@ public class DataManager implements ApplicationStatusObserver
 
 	public void onApplicationLoad(boolean success)
 	{
-		this.applicationReady = success;
+		if (!this.applicationReady && success) {
+			this.applicationReady = success;
+			this.databaseAdapter.makeDataPersistent();
+		}
+		// otherwise, statu quo
 	}
 
 	/**

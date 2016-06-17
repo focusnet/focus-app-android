@@ -67,7 +67,6 @@ public abstract class WidgetInstance extends AbstractInstance
 	}
 
 	protected LinkedTreeMap<String, Object> config;
-	protected DataContext dataContext;
 	protected WidgetTemplate template;
 	private String guid;
 	private String title;

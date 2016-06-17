@@ -38,6 +38,7 @@ import android.webkit.WebViewClient;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.widgets.Html5WidgetInstance;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
@@ -154,6 +155,11 @@ public class Html5WidgetFragment extends WidgetFragment
 
 	/**
 	 * JavaScript interface definition
+	 *
+	 * FIXME javascript interface will fuly work only if instance data context is fully loaded.
+	 * Also, webapps may request new resources that are not refered to in the building of the app
+	 * FIXME what do we do with these resources on app syncrhonization? delete? keep? do we need a
+	 * special flag in the database?
 	 */
 	private class WebAppInterface
 	{
@@ -238,6 +244,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getResource(String url)
 		{
+			throw new FocusNotImplementedException("Html5WidgetFragment.WebAppInterface.getResource()");
 			/*
 			try {
 				HttpResponse response = this.dm.get(url);
@@ -247,15 +254,13 @@ public class Html5WidgetFragment extends WidgetFragment
 				return null;
 			}
 			*/
-			return "bb";
-
 			//      return "{\"mimetype\": \"image/png\", \"data\":\"base64encodeddata\"}"; // or exception
 		}
 
 		/**
 		 * Get an access control token directly from the application
 		 * <p/>
-		 * FIXME - in the end, this information should come from an Access Control manager, and not
+		 * FIXME - in the end, this information should come from UserManager, and not
 		 * from a simple hard-coded property
 		 */
 		@JavascriptInterface

@@ -57,19 +57,19 @@ public class ProjectInstance extends AbstractInstance
 	/**
 	 * C'tor
 	 *
-	 * @param tpl
+	 * @param projectTemplate
 	 * @param dataContext we use the datamanager of this context as we will build the new instance on top of the old context, so using the same data manager makes sense
 	 */
-	public ProjectInstance(ProjectTemplate tpl, @NonNull DataContext dataContext)
+	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext)
 	{
 		super(dataContext.getDataManager());
 
-		this.template = tpl;
+		this.template = projectTemplate;
 		this.dataContext = dataContext;
-		this.guid = tpl.getGuid();
+		this.guid = projectTemplate.getGuid();
 		this.dashboards = new LinkedHashMap<>();
 		this.tools = new LinkedHashMap<>();
-		if (dataContext.get(LABEL_PROJECT_ITERATOR) != null) {
+		if (projectTemplate.getIterator() != null) {
 			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
 
@@ -91,16 +91,7 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		try {
-			this.dataContext.provideData(this.template.getData());
-		}
-		catch (FocusMissingResourceException ex) {
-			/**
-			 May happen if malformed URL for example, see {@link HttpRequest#HttpRequest}
-			 */
-			FocusApplication.reportError(ex);
-			return;
-		}
+		this.dataContext.provideData(this.template.getData());
 
 		// Special case: __welcome__ is a fake project that may contain tools only.
 		if (this.getGuid().equals(WELCOME_PROJECT_IDENTIFIER)) {
@@ -181,26 +172,14 @@ public class ProjectInstance extends AbstractInstance
 							this.dataContext.resolve(pageTpl.getIterator())
 					);
 				}
-				catch (FocusMissingResourceException e) {
+				catch (FocusMissingResourceException | FocusBadTypeException e) {
 					// should not happen, but let's continue silently
-					FocusApplication.reportError(e);
-					continue;
-				}
-				catch (FocusBadTypeException e) {
-					// invalid iterator. survive by ignoring, but log the event
 					FocusApplication.reportError(e);
 					continue;
 				}
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(this.dataContext);
-					try {
-						newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
-					}
-					catch (FocusMissingResourceException ex) {
-						// should not happen, but let's continue silently
-						FocusApplication.reportError(ex);
-						continue;
-					}
+					newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url);
 
 					// the guid is adapted in the PageInstance constructor
 					PageInstance page;
@@ -215,8 +194,8 @@ public class ProjectInstance extends AbstractInstance
 					for (WidgetReference wr : pageTpl.getWidgets()) {
 						WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
 
-						DataContext newWidgetCtx = new DataContext(page.getDataContext());
-						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newWidgetCtx); // FIXME we may just pass the context without creating a new one
+						// we can simply pass the same DataContext as widgets do not augment it (or alter it)
+						WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newPageCtx);
 						page.addWidget(wi.getGuid(), wi);
 					}
 
@@ -227,6 +206,7 @@ public class ProjectInstance extends AbstractInstance
 			}
 			else {
 				// no iterator, render a simple PageInstance
+				// FIXME almost the same, modularize
 				PageInstance page;
 				DataContext newPageCtx = new DataContext(this.dataContext);
 				try {
@@ -239,8 +219,9 @@ public class ProjectInstance extends AbstractInstance
 
 				for (WidgetReference wr : pageTpl.getWidgets()) {
 					WidgetTemplate wTpl = this.template.findWidget(wr.getWidgetid());
-					DataContext newWidgetCtx = new DataContext(page.getDataContext());
-					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newWidgetCtx);// FIXME we may just pass the context without creating a new one
+
+					// we can simply pass the same DataContext as widgets do not augment it (or alter it)
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newPageCtx);
 					page.addWidget(wi.getGuid(), wi);
 				}
 

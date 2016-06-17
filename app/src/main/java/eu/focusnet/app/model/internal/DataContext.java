@@ -20,10 +20,13 @@
 
 package eu.focusnet.app.model.internal;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.nio.DoubleBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -47,6 +50,8 @@ public class DataContext extends HashMap<String, String>
 {
 
 	private DataManager dataManager;
+	private HashMap<String, AsyncTask<Void, Void, String>> queue;
+
 
 	/**
 	 * Default c'tor
@@ -55,6 +60,7 @@ public class DataContext extends HashMap<String, String>
 	{
 		super();
 		this.dataManager = dm;
+		queue = new HashMap<>();
 	}
 
 	/**
@@ -66,6 +72,13 @@ public class DataContext extends HashMap<String, String>
 	{
 		super(c);
 		this.dataManager = c.dataManager;
+
+		// keep reference to the existing queue
+		// FIXME should we lock before starting? queue may be expanded while we are copying.
+		this.queue = new HashMap<>();
+		for(Map.Entry e : c.getQueue().entrySet()) {
+			this.queue.put((String) e.getKey(), (AsyncTask<Void, Void, String>) e.getValue());
+		}
 	}
 
 	/**
@@ -99,53 +112,21 @@ public class DataContext extends HashMap<String, String>
 	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
 	 * lookup: no context for now.
 	 * <p/>
-	 * <p/>
-	 * <p/>
-	 * FIXME FIXME TODO the value of the .register() call must be the key of the DataManager.cache HashMap -> for simple urls, that's quite easy
-	 * for history / lookup, that's less easy (?)
+	 *
+	 * FIXME the register operation must be an AsyncTask(). we keep reference to the task such that this.get() can wait for it.
+	 *
+	 * FIXME register cannot throw FocusMissingException
 	 */
-	public String register(String key, String description) throws FocusMissingResourceException
+	public void register(String key, String description)
 	{
-		// what kind of data do we have?
-		FocusSample f;
+		AsyncTask<Void, Void, String> task = new DataAcquisitionTask(key, description).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// FIXME fine-tune this ?
+		// public static final Executor THREAD_POOL_EXECUTOR
+		// = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+		// 			TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
-		if (description.startsWith(Constant.SELECTOR_OPEN)
-				&& description.endsWith(Constant.SELECTOR_CLOSE)) {
-
-			description = description
-					.replace(Constant.SELECTOR_OPEN, "")
-					.replace(Constant.SELECTOR_CLOSE, "");
-
-			if (description.startsWith(Constant.SELECTOR_CONTEXT_LABEL
-					+ Constant.SELECTOR_CONTEXT_SEPARATOR)) {
-				String u = this.resolveReferencedUrl(description);
-				f = this.dataManager.getSample(u);
-			}
-			else {
-				String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
-				if (parts.length != 3) {
-					throw new FocusInternalErrorException("Wrong number of fields for description of service.");
-				}
-				if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
-					String u = null;
-					if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
-						u = this.resolveReferencedUrl(parts[1]);
-					}
-					else {
-						u = parts[1];
-					}
-					f = this.dataManager.getHistory(u, parts[2]);
-				}
-				else {
-					throw new FocusNotImplementedException("DataContext.register() -> services");
-				}
-			}
-		}
-		else {
-			// simple URL
-			f = this.dataManager.getSample(description);
-		}
-		return super.put(key, f.getUrl());
+	//	test what happens when I try to download a lot of files at the sametime (>12) -> queue working? -> crashing?
+		queue.put(key, task);
 	}
 
 	/**
@@ -163,9 +144,6 @@ public class DataContext extends HashMap<String, String>
 		}
 
 		String ref = parts[1];
-		if (this.get(ref) == null) {
-			throw new FocusInternalErrorException("no data reference found");
-		}
 		String res = this.get(ref);
 		if (res == null) {
 			throw new FocusInternalErrorException("invalid object reference");
@@ -176,6 +154,7 @@ public class DataContext extends HashMap<String, String>
 			throw new FocusInternalErrorException("Cannot find this field.");
 		}
 		// if that's indeed a url, then we can retrieve it.
+		// FIXME check that this is a url!
 		return res;
 	}
 
@@ -185,7 +164,7 @@ public class DataContext extends HashMap<String, String>
 	 *
 	 * @param data
 	 */
-	public void provideData(HashMap<String, String> data) throws FocusMissingResourceException
+	public void provideData(HashMap<String, String> data)
 	{
 		if (data == null) {
 			return;
@@ -201,7 +180,7 @@ public class DataContext extends HashMap<String, String>
 	 * data being stored under the simple-example entry.
 	 * <ctx/simple-example> -> will return the url of the context identfied by simlpe-example (a FocusSample)
 	 * <p/>
-	 * It is then the responsibility of the caller to create FocusSample's when appropriate.
+	 * It is then the responsibility of the caller to create FocusSample's when appropriate. FIXME FIXME FIXME - i never do it! to test.
 	 * <p/>
 	 * If the request format is not recognized, return it as-is.
 	 * <p/>
@@ -215,13 +194,14 @@ public class DataContext extends HashMap<String, String>
 			return "";
 		}
 
+		// if this is a normal url then just return it.
 		if (!request.startsWith(Constant.SELECTOR_OPEN + Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)
 				|| !request.endsWith(Constant.SELECTOR_CLOSE)) {
 			return request;
 		}
 		request = request
-				.replace(Constant.SELECTOR_OPEN, "")
-				.replace(Constant.SELECTOR_CLOSE, "");
+				.replaceFirst("^" + Constant.SELECTOR_OPEN, "")
+				.replaceFirst(Constant.SELECTOR_CLOSE + "$", "");
 
 		String[] parts = request.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length < 2) {
@@ -232,18 +212,129 @@ public class DataContext extends HashMap<String, String>
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve |" + request + "| in the current data context.");
 		}
-		FocusSample fs = this.dataManager.getSample(url);
-		if (parts.length > 2) {
+		FocusSample fs = this.dataManager.getSample(url); // wait for completion
+		if (parts.length == 3) {
 			if (fs == null) {
 				return null;
 			}
 			return fs.get(parts[2]);
 		}
-		return fs.getUrl();
+		else {
+			return fs.getUrl();
+		}
 	}
 
 	public DataManager getDataManager()
 	{
 		return this.dataManager;
 	}
+
+	/**
+	 * Acquire data from the DataManager in a background task.
+	 */
+	private class DataAcquisitionTask extends AsyncTask<Void, Void, String>
+	{
+		String key;
+		String description;
+
+
+		private DataAcquisitionTask(String key, String description)
+		{
+			this.key = key;
+			this.description = description;
+		}
+
+		@Override
+		protected String doInBackground(Void... params)
+		{
+			// what kind of data do we have?
+			FocusSample f;
+			try {
+				if (description.startsWith(Constant.SELECTOR_OPEN)
+						&& description.endsWith(Constant.SELECTOR_CLOSE)) {
+
+					description = description
+							.replaceFirst("^" + Constant.SELECTOR_OPEN, "")
+							.replaceFirst(Constant.SELECTOR_CLOSE + "$", "");
+
+					if (description.startsWith(Constant.SELECTOR_CONTEXT_LABEL
+							+ Constant.SELECTOR_CONTEXT_SEPARATOR)) {
+						String u = resolveReferencedUrl(description);
+						f = dataManager.getSample(u);
+					}
+					else {
+						String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
+						if (parts.length != 3) {
+							throw new FocusInternalErrorException("Wrong number of fields for description of service.");
+						}
+						if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) {
+							String u;
+							if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
+								u = resolveReferencedUrl(parts[1]);
+							}
+							else {
+								u = parts[1];
+							}
+							f = dataManager.getHistory(u, parts[2]);
+						}
+						else {
+							throw new FocusNotImplementedException("DataContext.register() -> services");
+						}
+					}
+				}
+				else {
+					// simple URL
+					f = dataManager.getSample(description); // e.g. on success -> do something.
+				}
+			}
+			catch (FocusMissingResourceException ex) {
+				// we highlight the fact that we could not retrieve a resource by NOT saving
+				// it into the DataContext. When get()-ing, the caller will
+				// receive null, and can act accordingly.
+				return null;
+			}
+			DataContext.super.put(key, f.getUrl()); // synchronized function
+			return f.getUrl();
+		}
+	}
+
+	/**
+	 * Queue getter
+	 */
+	public HashMap<String, AsyncTask<Void, Void, String>> getQueue()
+	{
+		return this.queue;
+	}
+
+	/**
+	 * FIXME TODO override get, make it wait for the pending async operation
+	 *
+	 * in some situtations, I may need not to wait (UI Thread). to be cchecked.
+	 *
+	 * @param key
+	 * @return the url of the object that is gotten, or null if an error occured and the object
+	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
+	 */
+	@Override
+	public String get(Object key)
+	{
+		AsyncTask<Void, Void, String> task = this.queue.get(key);
+		if (task == null) {
+			throw new FocusInternalErrorException("No task for requested data. Logic problem.");
+		}
+		if (task.isCancelled()) {
+			return null;
+		}
+		if (task.getStatus() == AsyncTask.Status.FINISHED) {
+			return super.get(key);
+		}
+		// else wait for completion
+		try {
+			return task.get();
+		}
+		catch (InterruptedException | ExecutionException e) {
+			return null;
+		}
+	}
+
 }

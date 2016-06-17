@@ -388,6 +388,8 @@ public class UserManager implements ApplicationStatusObserver
 	 * Those 2 objects are mandatory, and fatal exception is triggered if sth goes wrong.
 	 * <p/>
 	 * Access control setup should come here, too (if not already done in login() )
+	 *
+	 * FIXME if fail, crash. not very user-friendly. should gracefully fallback to entry point activity for example.
 	 */
 	public void getUserData()
 	{

@@ -134,7 +134,7 @@ public class FocusAppLogic
 	/**
 	 * We need the context for some static method operations, such as NetworkManager.isNetworkAvailable()
 	 *
-	 * @return
+	 * @return the current ApplicationContext
 	 */
 	public static Context getApplicationContext()
 	{

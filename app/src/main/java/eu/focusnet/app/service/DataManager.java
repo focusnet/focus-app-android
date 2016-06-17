@@ -216,45 +216,6 @@ public class DataManager implements ApplicationStatusObserver
 		return this.getSample(url);
 	}
 
-	/**
-	 * Lookup for data based on their type.
-	 * <p/>
-	 * FIXME give a proper description of the output
-	 *
-	 * @param type The FOCUS object type of interest,
-	 *             e.g. http://reference.focusnet.eu/schemas/focus-data-sample/v1.0
-	 * @return A {@link FocusSample} containing references to resources matching the lookup.
-	 */
-	public FocusSample getLookup(String type)
-	{
-		throw new FocusNotImplementedException("DataManager.getLookup()");
-	}
-
-	/**
-	 * Retrieve a sample that is stored in the local database (or in the cache), but do not
-	 * get it from the network
-	 *
-	 * @param url the URL of the resource to get
-	 * @return a FocusObject
-	 */
-	public FocusObject getLocalObject(String url)
-	{
-		if (this.cache.get(url) != null) {
-			return this.cache.get(url);
-		}
-
-		try {
-			SampleDao dao = this.databaseAdapter.getSampleDao();
-			Sample sample = dao.get(url);
-			if (sample != null) {
-				return FocusObject.factory(sample.getData(), FocusObject.class); // FIXME TODO check if that works for UserPreference object, for example, and for FocusSample's
-			}
-		}
-		finally {
-			// FIXME nested finally -> problem will close the dao but outside we are not finished.
-		}
-		return null;
-	}
 
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
@@ -572,6 +533,30 @@ public class DataManager implements ApplicationStatusObserver
 		this.cache = new HashMap<>();
 	}
 
+	/**
+	 * delete all content of database
+	 * FIXME use for demo mode, not production, to be removed
+	 * @deprecated
+	 */
+	public void DEMO_DeleteAll()
+	{
+		if (this.applicationReady) {
+			this.appContentTemplate = null;
+
+			this.freeMemory();
+
+			// delete the whole database content
+			try {
+				SampleDao dao = this.databaseAdapter.getSampleDao();
+				dao.deleteAll();
+			}
+			finally {
+				this.databaseAdapter.close();
+			}
+
+			this.applicationReady = false;
+		}
+	}
 
 	public void handleLogout()
 	{
@@ -583,7 +568,8 @@ public class DataManager implements ApplicationStatusObserver
 			// delete the whole database content
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
-				dao.deleteAll();
+				/** @deprecated FIXME enable in production environment */
+				// dao.deleteAll();
 			}
 			finally {
 				this.databaseAdapter.close();

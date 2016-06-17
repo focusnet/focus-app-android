@@ -70,7 +70,7 @@ public class PageInstance extends AbstractInstance
 		this.widgets = new LinkedHashMap<>();
 		this.dataContext = dataCtx;
 
-		if (this.dataContext.get(LABEL_PAGE_ITERATOR) != null) {
+		if (pageTpl.getIterator() != null) {
 			this.guid = this.guid + Constant.PATH_SELECTOR_OPEN + dataCtx.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 		}
 

@@ -104,12 +104,7 @@ public class AppContentInstance extends AbstractInstance
 		this.title = this.appTemplate.getTitle();
 
 		// retrieve application-wide data
-		try {
-			this.dataContext.provideData(this.appTemplate.getData());
-		}
-		catch (FocusMissingResourceException ex) {
-			return;
-		}
+		this.dataContext.provideData(this.appTemplate.getData());
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
@@ -123,13 +118,8 @@ public class AppContentInstance extends AbstractInstance
 							this.dataContext.resolve(projTpl.getIterator())
 					);
 				}
-				catch (FocusMissingResourceException e) {
-					// should not happen, but let's continue silently
-					FocusApplication.reportError(e);
-					continue;
-				}
-				catch (FocusBadTypeException e) {
-					// invalid iterator. survive by ignoring, but log the event
+				catch (FocusMissingResourceException | FocusBadTypeException e) {
+					// Resource not found or invalid iterator.
 					// should not happen, but let's continue silently
 					FocusApplication.reportError(e);
 					continue;
@@ -137,23 +127,8 @@ public class AppContentInstance extends AbstractInstance
 
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(this.dataContext);
-					try {
-						this.dataManager.getSample(url);
-					}
-					catch (FocusMissingResourceException ex) {
-						// should not happen, but let's continue silently
-						FocusApplication.reportError(ex);
-						continue;
-					}
+					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
 
-					try {
-						newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url);
-					}
-					catch (FocusMissingResourceException ex) {
-						// should not happen, but let's continue silently
-						FocusApplication.reportError(ex);
-						continue;
-					}
 					// the guid is adapted in the ProjectInstance constructor
 					ProjectInstance p = new ProjectInstance(projTpl, newCtx);
 					if (!p.isValid()) {

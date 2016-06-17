@@ -159,7 +159,8 @@ public class FocusApplication extends Application
 			public void uncaughtException(Thread thread, Throwable ex)
 			{
 				if (FocusAppLogic.getInstance() != null) {
-					FocusAppLogic.getInstance().reset();
+				// FIXME disabled for demo; would require to reload all data, and that may take some time.
+					// 	FocusAppLogic.getInstance().reset();
 				}
 
 				if (BuildConfig.DEBUG) {

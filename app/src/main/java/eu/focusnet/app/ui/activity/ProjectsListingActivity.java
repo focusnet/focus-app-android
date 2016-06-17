@@ -255,9 +255,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 						// reset all when logging out
 						FocusAppLogic.getInstance().reset();
 
-						/** @deprecated FIXME remove when in production. This should be done in reset() */
-						FocusAppLogic.getDataManager().DEMO_DeleteAll();
-
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
 							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));

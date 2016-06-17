@@ -534,30 +534,8 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * delete all content of database
-	 * FIXME use for demo mode, not production, to be removed
-	 * @deprecated
+	 * logout
 	 */
-	public void DEMO_DeleteAll()
-	{
-		if (this.applicationReady) {
-			this.appContentTemplate = null;
-
-			this.freeMemory();
-
-			// delete the whole database content
-			try {
-				SampleDao dao = this.databaseAdapter.getSampleDao();
-				dao.deleteAll();
-			}
-			finally {
-				this.databaseAdapter.close();
-			}
-
-			this.applicationReady = false;
-		}
-	}
-
 	public void handleLogout()
 	{
 		if (this.applicationReady) {
@@ -568,8 +546,7 @@ public class DataManager implements ApplicationStatusObserver
 			// delete the whole database content
 			try {
 				SampleDao dao = this.databaseAdapter.getSampleDao();
-				/** @deprecated FIXME enable in production environment */
-				// dao.deleteAll();
+				dao.deleteAll();
 			}
 			finally {
 				this.databaseAdapter.close();

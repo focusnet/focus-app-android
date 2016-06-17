@@ -20,7 +20,9 @@
 
 package eu.focusnet.app.model.json;
 
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.service.UserManager;
 
 public class User extends FocusObject
 {
@@ -31,7 +33,7 @@ public class User extends FocusObject
 			company;
 
 
-	public User(String targetUrl, String firstName, String lastName, String email, String company)
+	public User(String targetUrl, String firstName, String lastName, String email, String company, UserManager userManager)
 	{
 		// we expicitely give the owner and editor, such that the FocusObject contructor does not need
 		// to call DataManager getUser(). We may be in the case where we try to create the User
@@ -40,6 +42,13 @@ public class User extends FocusObject
 		this.lastName = lastName;
 		this.email = email;
 		this.company = company;
+		if (userManager != null) {
+			this.owner = userManager.getUserIdentification();
+			this.editor = userManager.getUserIdentification();
+		}
+		else {
+			throw new FocusInternalErrorException("User must have been identified first.");
+		}
 	}
 
 	public String getFirstName()

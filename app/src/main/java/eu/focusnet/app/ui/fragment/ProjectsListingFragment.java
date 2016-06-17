@@ -75,17 +75,11 @@ public class ProjectsListingFragment extends ListFragment
 	{
 		//Test where the user has clicked and navigate to this project or notifications
 		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
-			/* if (position > notifHeaderPosition) {
-				//TODO navigate to notifications ...
-			}
-
-			else {*/
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
 			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
-			// }
 		}
 	}
 
@@ -124,8 +118,7 @@ public class ProjectsListingFragment extends ListFragment
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
 
-					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless
-					// FIXME bug: displayed title is not the title of the bookmark but the title of the original project
+					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(
@@ -145,30 +138,6 @@ public class ProjectsListingFragment extends ListFragment
 			}
 
 			// FIXME TOOLS of __welcome__ should be here.; for now not implemented.
-
-			/*
-			FIXME TODO notifications
-			*/
-			/*
-			AbstractListItem headerNotificationListItem = new HeaderListItem(UiHelper.getBitm(ap(getActivity(), R.drawable.ic_notification),
-					getString(R.string.focus_header_notification),
-					null);
-			listItems.add(headerNotificationListItem);
-
-			notifHeaderPosition = listItems.size() - 1;
-
-			notificationTitels = getResources().getStringArray(R.array.focus_notification_items);
-			// load icons
-			notificationIcons = getResources().obtainTypedArray(R.array.focus_notification_icons);
-
-			for (int i = 0; i < notificationTitels.length; i++) {
-				String notifTitle = notificationTitels[i];
-				//TODO set correct path (for now the title is set as the path)
-				FeaturedListItem drawListItem = new FeaturedListItem(notifTitle, UiHelper.getBitmap(getActivity(), notificationIcons.getResourceId(i, -1)), notifTitle, "N/A");
-				listItems.add(drawListItem);
-			}
-
-*/
 
 			return new NavigationListAdapter(getActivity(), listItems);
 		}

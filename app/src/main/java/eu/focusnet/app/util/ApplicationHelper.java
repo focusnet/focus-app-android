@@ -129,7 +129,7 @@ public class ApplicationHelper
 	 * <p/>
 	 * FIXME strange behaviors in emulator. Sometimes does not work. See if any problem on real device.
 	 */
-	public static void changeLannguage(String language)
+	public static void changeLanguage(String language)
 	{
 		Locale targetLocale = ApplicationHelper.getDefaultLocale();
 		if (ApplicationHelper.getSupportedLanguages().contains(language)) {

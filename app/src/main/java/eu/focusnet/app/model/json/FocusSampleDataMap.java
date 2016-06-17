@@ -42,7 +42,11 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 	@Override
 	public Object put(String s, Object o)
 	{
-
+		// it may happen that JSON objects contains null, so let's discard them
+		// FIXME what happens if later accessed in array context?
+		if (o == null) {
+			return null;
+		}
 		if (!this.isValidScalarType(o)) {
 			if (!(o instanceof ArrayList)) {
 				// Fail
@@ -52,10 +56,16 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 				// Because of type erasure, no knowledge of parametrized type at runtime.
 				// So let's guess at runtime.
 				Object first = null;
-				try {
-					first = ((ArrayList) o).get(0);
-				}
-				catch (NullPointerException e) {
+
+				// it may happen that we try to access an object that was not added,
+				// e.g. because it was null at JSON import.
+				if (!((ArrayList) o).isEmpty()) {
+					try {
+						first = ((ArrayList) o).get(0);
+					}
+					catch (NullPointerException e) {
+						// ignore, first is still null
+					}
 				}
 
 				if (first == null) {
@@ -70,7 +80,6 @@ public class FocusSampleDataMap extends HashMap<String, Object>
 				}
 			}
 		}
-
 		return super.put(s, o);
 	}
 

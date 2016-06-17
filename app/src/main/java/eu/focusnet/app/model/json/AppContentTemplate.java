@@ -49,7 +49,7 @@ public class AppContentTemplate extends FocusObject
 
 	private String title;
 	private LinkedHashMap<String, String> data;
-	private ArrayList<ProjectTemplate> projects;
+	private ArrayList<ProjectTemplate> projects = new ArrayList<>();
 	private String language;
 
 	public ArrayList<ProjectTemplate> getProjects()

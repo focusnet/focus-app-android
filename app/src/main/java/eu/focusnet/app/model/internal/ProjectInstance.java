@@ -100,6 +100,20 @@ public class ProjectInstance extends AbstractInstance
 			return;
 		}
 
+		try {
+			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
+			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
+		}
+		catch (FocusMissingResourceException | FocusBadTypeException ex) {
+			// silent skipping
+			FocusApplication.reportError(ex);
+			return;
+		}
+
+		if (this.description == null) {
+			this.description = "";
+		}
+
 		// 2x same same FIXME
 		if (this.template.getDashboards() != null) {
 			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
@@ -145,19 +159,6 @@ public class ProjectInstance extends AbstractInstance
 	private LinkedHashMap<String, PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
 	{
 		LinkedHashMap<String, PageInstance> pageInstances = new LinkedHashMap<>();
-
-		try {
-			this.title = TypesHelper.asString(this.dataContext.resolve(this.template.getTitle()));
-			this.description = TypesHelper.asString(this.dataContext.resolve(this.template.getDescription()));
-		}
-		catch (FocusMissingResourceException | FocusBadTypeException ex) {
-			FocusApplication.reportError(ex);
-			return null;
-		}
-
-		if (this.description == null) {
-			this.description = "";
-		}
 
 		for (PageReference s : source) {
 			String pageid = s.getPageid();

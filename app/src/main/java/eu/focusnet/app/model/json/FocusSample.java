@@ -54,6 +54,10 @@ public class FocusSample extends FocusObject
 	 */
 	public void add(String s, Object o)
 	{
+		// if an added object is null, then do not add it
+		if (o == null) {
+			return;
+		}
 		this.data.put(s, o);
 	}
 

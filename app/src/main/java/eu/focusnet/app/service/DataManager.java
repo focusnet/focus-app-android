@@ -115,7 +115,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * FIXME check that last sentence, I have a doubt now. Not really useful?
 	 */
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	private ArrayList<AbstractInstance> activeInstances;
+	// private ArrayList<AbstractInstance> activeInstances;
 	private AppContentTemplate appContentTemplate;
 
 	/**
@@ -126,7 +126,7 @@ public class DataManager implements ApplicationStatusObserver
 	{
 
 		this.applicationReady = false;
-		this.activeInstances = new ArrayList<>();
+// FIXME		this.activeInstances = new ArrayList<>();
 
 		// setup network
 		this.net = new NetworkManager();
@@ -449,20 +449,20 @@ public class DataManager implements ApplicationStatusObserver
 	 *
 	 * @param i The instance to add
 	 */
-	public void registerActiveInstance(AbstractInstance i)
+	/*public void registerActiveInstance(AbstractInstance i)
 	{
 		this.activeInstances.add(i);
-	}
+	}*/
 
 	/**
 	 * Removes the specified instance from the list of active instances.
 	 *
 	 * @param i the instance to remove
 	 */
-	public void unregisterActiveInstance(AbstractInstance i)
+	/*public void unregisterActiveInstance(AbstractInstance i)
 	{
 		this.activeInstances.remove(i);
-	}
+	}*/
 
 	/**
 	 * Clean the samples table from useless entries.

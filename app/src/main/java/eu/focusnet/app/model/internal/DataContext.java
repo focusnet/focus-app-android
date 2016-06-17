@@ -214,7 +214,7 @@ public class DataContext extends HashMap<String, String>
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve |" + request + "| in the current data context.");
 		}
-		FocusSample fs = this.dataManager.getSample(url); // wait for completion
+		FocusSample fs = this.dataManager.getSample(url);
 		if (parts.length == 3) {
 			if (fs == null) {
 				return null;

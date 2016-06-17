@@ -152,7 +152,7 @@ public class EntryPointActivity extends Activity
 						// we either redirect to the login page or the projects listing
 						if (!tryAgain) {
 							if (FocusAppLogic.getUserManager().isLoggedIn()) {
-								ApplicationHelper.changeLannguage(FocusAppLogic.getCurrentApplicationContent().getLanguage());
+								ApplicationHelper.changeLanguage(FocusAppLogic.getCurrentApplicationContent().getLanguage());
 								startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 							}
 							else {

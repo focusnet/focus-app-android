@@ -41,10 +41,9 @@ public class FocusObject implements Serializable
 	 *
 	 * FIXME see if we can use a more elegant pattern.
 	 */
-	final private static User user = FocusAppLogic.getUserManager().getUser();
 	private String type,
-			url,
-			owner,
+			url;
+	protected String owner,
 			editor;
 	private int version;
 	private Date creationDateTime,
@@ -67,6 +66,8 @@ public class FocusObject implements Serializable
 	/**
 	 * NOTE: if the url is internal, we do not set the following fields to anything: owner, editor
 	 *
+	 * if a user exists, use it. otherwise, just leave the
+	 *
 	 * @param type
 	 * @param url
 	 * @param owner
@@ -78,10 +79,12 @@ public class FocusObject implements Serializable
 	 */
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
+		// FIXME not optimal way of getting the User
+		User user = FocusAppLogic.getUserManager().getUserAsIs();
 		this.type = type;
 		this.url = url;
-		this.owner = owner == null ? user.toString() : owner;
-		this.editor = editor == null ? user.toString() : editor;
+		this.owner = (owner != null ? owner : (user  != null ? user.toString() : ""));
+		this.editor = (editor != null ? editor : (user  != null ? user.toString() : ""));
 		this.version = version;
 		this.creationDateTime = creationDateTime != null ? creationDateTime : new Date();
 		this.editionDateTime = editionDateTime != null ? editionDateTime : new Date();
@@ -103,8 +106,15 @@ public class FocusObject implements Serializable
 	 */
 	public void updateToNewVersion()
 	{
+		// FIXME not optimal way of getting the User
+		User user = FocusAppLogic.getUserManager().getUserAsIs();
 		++this.version;
-		this.editor = user.toString();
+		if (user != null) {
+			this.editor = user.toString();
+		}
+		else {
+			this.editor = "";
+		}
 		this.editionDateTime = new Date();
 	}
 

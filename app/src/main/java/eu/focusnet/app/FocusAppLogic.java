@@ -171,6 +171,8 @@ public class FocusAppLogic
 		this.dataManager = new DataManager();
 		// if at first run there is already something in the database, then we should use it
 		// and not overwrite it by refetching data.
+		// FIXME runs on main thread, warnings in logs
+		// D/StrictMode: StrictMode policy violation; ~duration=147 ms: android.os.StrictMode$StrictModeDiskReadViolation: policy=31 violation=2
 		this.dataManager.useExistingDataSet();
 
 		// Access control facility

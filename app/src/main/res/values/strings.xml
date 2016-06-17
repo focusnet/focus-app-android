@@ -49,7 +49,7 @@
     </string-array>
     <string-array name="demo_use_cases_app_content_uris">
         <item>http://focus.yatt.ch/debug/app-content-4.json</item>
-        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
+        <item>http://focus.yatt.ch/application-contents/pilot-case-1.json</item>
         <item>http://focus.yatt.ch/debug/app-content-5.json</item>
     </string-array>
 

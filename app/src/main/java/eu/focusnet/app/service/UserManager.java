@@ -94,6 +94,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	private boolean loggedIn;
 	private boolean applicationReady;
+	private String userIdentification;
 
 	public UserManager(DataManager dm)
 	{
@@ -313,7 +314,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return A {@link User} object
 	 */
-	public User getUser()
+	public synchronized User getUser()
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -334,13 +335,25 @@ public class UserManager implements ApplicationStatusObserver
 		}
 		if (user == null) {
 			// FIXME information not used for now, must still must be valid to pass JSON Schema valiation on the server-side
-			user = new User(this.userUrl, "first", "last", "email@email.com", "company");
+			user = new User(this.userUrl, "first", "last", "email@email.com", "company", this); // FIXME all information should come from login step -> only pass UserManager to User()
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(user);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
 			}
 		}
 		this.user = user;
+		return this.user;
+	}
+
+	/**
+	 * Return the user in its current state, it may be null
+	 *
+	 * FIXME this is a little trick because we need the user in the FocusObject initiatilization.
+	 * FIXME must fix the logic.
+	 * @return
+	 */
+	public User getUserAsIs()
+	{
 		return this.user;
 	}
 
@@ -354,7 +367,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return A {@link UserPreferences} object
 	 */
-	public UserPreferences getUserPreferences()
+	public synchronized UserPreferences getUserPreferences()
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -407,5 +420,14 @@ public class UserManager implements ApplicationStatusObserver
 		// Acquire user and preferencee Dao -> how to to do that?
 		this.dataManager.pushLocalModification(this.userUrl, User.class);
 		this.dataManager.pushLocalModification(this.prefUrl, UserPreferences.class);
+	}
+
+	/**
+	 * Information obtained from login, such as a user id on the network.
+	 * @return
+	 */
+	public String getUserIdentification()
+	{
+		return this.userUrl;
 	}
 }

@@ -57,9 +57,9 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class NavigationListAdapter extends BaseAdapter
 {
-	public final static int LIST_TYPE_HEADER = 1;
-	public final static int LIST_TYPE_LINK = 2;
-	public final static int LIST_TYPE_EMPTY = 3;
+	public final static int LIST_TYPE_HEADER = 0;
+	public final static int LIST_TYPE_LINK = 1;
+	public final static int LIST_TYPE_EMPTY = 2;
 
 	private final Context context;
 	private final LayoutInflater inflater;
@@ -76,7 +76,7 @@ public class NavigationListAdapter extends BaseAdapter
 	@Override
 	public int getViewTypeCount()
 	{
-		return 3;
+		return LIST_TYPE_EMPTY+1;
 	}
 
 	@Override

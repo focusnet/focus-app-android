@@ -7,5 +7,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:choiceMode="singleChoice"/>
+        android:choiceMode="singleChoice" /> <!-- android:fastScrollAlwaysVisible="true" FIXME layout issues with that. -->
 </FrameLayout>

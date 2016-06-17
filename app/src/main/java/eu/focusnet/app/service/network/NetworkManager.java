@@ -65,7 +65,7 @@ public class NetworkManager
 	public final static int NETWORK_REQUEST_STATUS_NETWORK_FAILURE = 0x1;
 	public final static int NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE = 0x2;
 	private static final String ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER = "self-signed-certificates";
-	private static final SSLContext sslContext = NetworkManager.initSslContext();
+	private final static SSLContext sslContext = NetworkManager.initSslContext();
 
 
 	// FIXME get the root of REST server on first request (such that we have the root of services)
@@ -75,6 +75,7 @@ public class NetworkManager
 	 */
 	public NetworkManager()
 	{
+
 	}
 
 	/**
@@ -94,6 +95,7 @@ public class NetworkManager
 	//
 	private static SSLContext initSslContext()
 	{
+		SSLContext newSslContext;
 		try {
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			tmf.init((KeyStore) null); // null -> use default trust store
@@ -190,20 +192,20 @@ public class NetworkManager
 			};
 
 			// make the SSL context available to the rest of the app
-			SSLContext sslContext = SSLContext.getInstance("TLS");
-			sslContext.init(null, new TrustManager[]{customTrustManager}, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+			newSslContext = SSLContext.getInstance("TLS");
+			newSslContext.init(null, new TrustManager[]{customTrustManager}, null);
+			HttpsURLConnection.setDefaultSSLSocketFactory(newSslContext.getSocketFactory());
 		}
 		catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException ex) {
 			throw new FocusInternalErrorException(ex);
 		}
 
-		return sslContext;
+		return newSslContext;
 	}
 
 	public static SSLContext getSslContext()
 	{
-		return NetworkManager.sslContext;
+		return sslContext;
 	}
 
 
@@ -300,7 +302,8 @@ public class NetworkManager
 	public HttpResponse post(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_POST, url, data);
-		return request.execute();
+		HttpResponse r = request.execute();
+		return r;
 	}
 
 	/**

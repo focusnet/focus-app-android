@@ -144,14 +144,9 @@ public class NavigationListAdapter extends BaseAdapter
 
 			itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
 			itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
-			if (itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY) {
-				row.setEnabled(false);
-				row.setOnClickListener(null);
-			}
-			else {
+			if (!(itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY)) {
 				itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
 				itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
-				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
 			}
 			row.setTag(itemViewSet);
 		}
@@ -170,12 +165,19 @@ public class NavigationListAdapter extends BaseAdapter
 					itemViewSet.getDescription().setVisibility(View.VISIBLE);
 				}
 				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem) listItem).getSecondaryIcon());
+				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
 				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:
 				itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());
 				itemViewSet.getTitle().setText(listItem.getTitle());
 				break;
+		}
+
+		switch(itemType) {
+			case LIST_TYPE_HEADER:
 			case LIST_TYPE_EMPTY:
+				row.setEnabled(false);
+				row.setOnClickListener(null);
 				break;
 		}
 

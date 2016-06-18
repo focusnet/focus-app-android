@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -47,7 +48,7 @@ public class AppContentInstance extends AbstractInstance
 
 	private final static String PATH_ROOT = "FOCUS";
 	private AppContentTemplate appTemplate;
-	private LinkedHashMap<String, ProjectInstance> projects;
+	private ArrayList<ProjectInstance> projects;
 	private String title;
 	private String language;
 
@@ -63,7 +64,7 @@ public class AppContentInstance extends AbstractInstance
 		// set the root path
 
 		this.appTemplate = tpl;
-		this.projects = new LinkedHashMap<>();
+		this.projects = new ArrayList<>();
 		this.dataContext = new DataContext(this.dataManager);
 
 		// build the whole app data model
@@ -71,7 +72,6 @@ public class AppContentInstance extends AbstractInstance
 
 		// when all is done, build the paths of all instances
 		this.buildPaths(null);
-
 
 		if (!this.isValid()) {
 			throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
@@ -99,15 +99,12 @@ public class AppContentInstance extends AbstractInstance
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
 		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext);
-		for(Map.Entry e : this.projects.entrySet()) {
-			ProjectInstance pi = (ProjectInstance) e.getValue();
+		for(ProjectInstance pi : this.projects) {
 			if (!pi.isValid()) {
 				this.markAsInvalid();
 				break;
 			}
 		}
-
-		this.freeDataContext();
 	}
 
 	/**
@@ -115,7 +112,7 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @return
 	 */
-	public LinkedHashMap<String, ProjectInstance> getProjects()
+	public ArrayList<ProjectInstance> getProjects()
 	{
 		return this.projects;
 	}
@@ -139,8 +136,7 @@ public class AppContentInstance extends AbstractInstance
 	@Override
 	protected AbstractInstance propagatePathLookup(String searchedPath)
 	{
-		for (Map.Entry e : this.projects.entrySet()) {
-			ProjectInstance p = (ProjectInstance) e.getValue();
+		for(ProjectInstance p : this.projects) {
 			AbstractInstance ret = p.lookupByPath(searchedPath);
 			if (ret != null) {
 				return ret;
@@ -154,8 +150,20 @@ public class AppContentInstance extends AbstractInstance
 	public void buildPaths(String parentPath)
 	{
 		this.path = PATH_ROOT;
-		for(Map.Entry e : this.projects.entrySet()) {
-			((ProjectInstance)(e.getValue())).buildPaths(this.path);
+		for(ProjectInstance pi : this.projects) {
+			pi.buildPaths(this.path);
 		}
 	}
+
+	public void waitForCompletion() throws InterruptedException
+	{
+		this.dataManager.getDataRetrievingExecutor().shutdown();
+		// Wait for everything to finish.
+		//noinspection StatementWithEmptyBody
+		while (!this.dataManager.getDataRetrievingExecutor().awaitTermination(5, TimeUnit.SECONDS)) {
+				// wait silently
+		}
+		this.freeDataContext();
+	}
+
 }

@@ -146,12 +146,17 @@ public class DatabaseAdapter
 	 */
 	public void makeDataPersistent()
 	{
-		long newId = DatabaseHelper.generateNewDataSetIdentifier();
-		SampleDao dao = this.getSampleDao();
-		// this method also updates the DAO's data set id
-		dao.udpateDataSetId(newId);
+		try {
+			long newId = DatabaseHelper.generateNewDataSetIdentifier();
+			SampleDao dao = this.getSampleDao();
+			// this method also updates the DAO's data set id
+			dao.udpateDataSetId(newId);
 
-		this.uniqueInstanceIdentifier = newId;
+			this.uniqueInstanceIdentifier = newId;
+		}
+		finally {
+			this.close();
+		}
 	}
 
 

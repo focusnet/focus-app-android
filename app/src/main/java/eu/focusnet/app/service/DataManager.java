@@ -23,11 +23,16 @@ package eu.focusnet.app.service;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
@@ -133,7 +138,9 @@ public class DataManager implements ApplicationStatusObserver
 // FIXME		this.activeInstances = new ArrayList<>();
 
 		// queue for retrieving data
-		this.dataRetrievingExecutor = Executors.newFixedThreadPool(Constant.MAX_CONCURRENT_DOWNLOADS);
+		this.dataRetrievingExecutor = new ThreadPoolExecutor(Constant.MAX_CONCURRENT_DOWNLOADS, Constant.MAX_CONCURRENT_DOWNLOADS,
+			0L, TimeUnit.MILLISECONDS,
+			new PriorityBlockingQueue<>(100, new PriorityTaskComparator()));
 
 		// setup network
 		this.net = new NetworkManager();
@@ -509,7 +516,15 @@ public class DataManager implements ApplicationStatusObserver
 		AppContentTemplate template = this.getAppContentTemplate(templateUri);
 		// FIXME useless ? ???this.registerActiveInstance(this.appContentInstance);
 
-		return new AppContentInstance(template, this);
+		AppContentInstance app = new AppContentInstance(template, this); // FIXME wait for completion? required?
+		try {
+			app.waitForCompletion();
+		}
+		catch (InterruptedException e) {
+			// operation has been interrupted.
+			app = null;
+		}
+		return app;
 	}
 
 
@@ -710,7 +725,6 @@ public class DataManager implements ApplicationStatusObserver
 	{
 		return this.dataRetrievingExecutor;
 	}
-
 
 
 }

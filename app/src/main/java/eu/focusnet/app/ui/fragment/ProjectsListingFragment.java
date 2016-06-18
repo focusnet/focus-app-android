@@ -101,13 +101,12 @@ public class ProjectsListingFragment extends ListFragment
 			listItems.add(headerProjectsListItem);
 			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
 
-			LinkedHashMap<String, ProjectInstance> projects = FocusAppLogic.getCurrentApplicationContent().getProjects();
+			ArrayList<ProjectInstance> projects = FocusAppLogic.getCurrentApplicationContent().getProjects();
 			Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
 			Bitmap rightIconIfActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 			if (!projects.isEmpty()) {
-				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
-					ProjectInstance p = entry.getValue();
+				for(ProjectInstance p : projects) {
 
 					String projectPath = p.getPath();
 					String projectTitle = p.getTitle();

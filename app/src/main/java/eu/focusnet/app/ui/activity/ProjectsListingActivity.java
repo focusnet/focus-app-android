@@ -515,7 +515,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 							// Run the periodic task
 							// FIXME pass the MenuItem item, such that we can change its drawablet to an animation (or start the animation)
-							new SyncTask(builder, dialogContent).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							new SyncTask(builder, dialogContent, dialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						}
 					});
 				}
@@ -588,17 +588,18 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 		private final LinearLayout dialogContent;
 		private final FocusDialogBuilder builder;
+		private final AlertDialog dialog;
 
-		public SyncTask(FocusDialogBuilder builder, LinearLayout dialogContent)
+		public SyncTask(FocusDialogBuilder builder, LinearLayout dialogContent, AlertDialog dialog)
 		{
 			this.builder = builder;
 			this.dialogContent = dialogContent;
+			this.dialog = dialog;
 		}
 
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			//if (1==1) return null;
 			if (!cronBound) {
 				return null;
 			}
@@ -631,6 +632,16 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			statusField.setTextColor(getResources().getColor(R.color.colorPrimary));
 
 			this.builder.getNegativeButton().setText(R.string.close);
+			this.builder.getNegativeButton().setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					dialog.dismiss();
+					finish();
+					startActivity(new Intent(ProjectsListingActivity.this, ProjectsListingActivity.class));
+				}
+			});
 		}
 	}
 

@@ -40,6 +40,7 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.service.PriorityTask;
 import eu.focusnet.app.service.network.HttpResponse;
 
 /**
@@ -57,7 +58,7 @@ public class DataContext extends HashMap<String, String>
 {
 
 	private DataManager dataManager;
-	private HashMap<String, FutureTask<String>> queue;
+	private HashMap<String, PriorityTask<String>> queue;
 
 	private ArrayList<String> a;
 
@@ -69,23 +70,6 @@ public class DataContext extends HashMap<String, String>
 		super();
 		this.dataManager = dm;
 		this.queue = new HashMap<>();
-
-/*
-
-		a = new ArrayList<>();
-		for (int i = 101; i <= 129; i++) {
-			Callable task = new DataAcquisitionTask("key", "http://focus.yatt.ch/debug/bulk-" + i +".json");
-			FutureTask<String> future = new FutureTask<String>(task);
-			this.dataManager.getDataRetrievingExecutor().execute(future);
-		}
-		this.dataManager.getDataRetrievingExecutor().shutdown();
-		// Wait until all threads are finish
-		while (!this.dataManager.getDataRetrievingExecutor().isTerminated()) {
-
-		}
-		Object u = a;
-		System.out.println("\nFinished all threads");
-*/
 	}
 
 	/**
@@ -102,9 +86,8 @@ public class DataContext extends HashMap<String, String>
 		// FIXME should we lock before starting? queue may be expanded while we are copying.
 		this.queue = new HashMap<>();
 		for (Map.Entry e : c.getQueue().entrySet()) {
-			this.queue.put((String) e.getKey(), (FutureTask<String>) e.getValue());
+			this.queue.put((String) e.getKey(), (PriorityTask<String>) e.getValue());
 		}
-		int i = 1;
 	}
 
 	/**
@@ -143,13 +126,12 @@ public class DataContext extends HashMap<String, String>
 	 * <p/>
 	 * FIXME implement custom queuing
 	 */
-	public void register(String key, String description)
+	public void register(String key, String description, int priority)
 	{
 		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
-		FutureTask<String> future =	new FutureTask<>(task);
-		this.dataManager.getDataRetrievingExecutor().execute(future);
-		this.queue.put(key, future);
-		int i = 22;
+		PriorityTask p = new PriorityTask(priority, task);
+		this.dataManager.getDataRetrievingExecutor().execute(p);
+		this.queue.put(key, p);
 	}
 
 	/**
@@ -193,7 +175,7 @@ public class DataContext extends HashMap<String, String>
 			return;
 		}
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			this.register(entry.getKey(), entry.getValue());
+			this.register(entry.getKey(), entry.getValue(), 100);
 		}
 	}
 
@@ -255,7 +237,7 @@ public class DataContext extends HashMap<String, String>
 	/**
 	 * Queue getter
 	 */
-	public HashMap<String, FutureTask<String>> getQueue()
+	public HashMap<String, PriorityTask<String>> getQueue()
 	{
 		return this.queue;
 	}
@@ -278,6 +260,7 @@ public class DataContext extends HashMap<String, String>
 		FutureTask<String> task = this.queue.get(key);
 		if (task == null) {
 			throw new FocusInternalErrorException("No task for requested data. Logic problem.");
+// FIXME problem here with nested projects?
 		}
 		if (task.isCancelled()) {
 			return null;
@@ -296,39 +279,8 @@ public class DataContext extends HashMap<String, String>
 
 	public void toExecuteWhenReady(FutureTask<Boolean> todo)
 	{
-		// block until we have everything done the context queue
-		boolean tryAgain = true;
-		while (tryAgain) {
-			boolean waited = false;
-			for (Map.Entry e : this.queue.entrySet()) {
-				FutureTask<String> f = (FutureTask<String>) e.getValue();
-				if (f.isDone() || f.isCancelled()) {
-					continue;
-				}
-				else {
-					try {
-						f.get();
-						waited = true;
-					}
-					catch (InterruptedException | ExecutionException e1) {
-						continue;
-					}
-				}
-			}
-			if (!waited) {
-				tryAgain = false;
-			}
-		}
-
-
 		Thread t = new Thread(todo);
 		t.start();
-		try {
-			todo.get();
-		}
-		catch (InterruptedException | ExecutionException e) {
-			// interrupted. Probably by the system, so let's just die gracefully
-		}
 	}
 
 	private class DataAcquisitionTask implements Callable
@@ -392,7 +344,7 @@ public class DataContext extends HashMap<String, String>
 				// receive null, and can act accordingly.
 				return null;
 			}
-			DataContext.super.put(key, f.getUrl());
+			DataContext.this.put(key, f.getUrl());
 			return f.getUrl();
 		}
 	}

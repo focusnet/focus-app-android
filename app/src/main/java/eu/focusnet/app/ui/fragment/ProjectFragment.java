@@ -143,14 +143,13 @@ public class ProjectFragment extends ListFragment
 			);
 			listItems.add(headerDashboardsListItem);
 
-			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
+			ArrayList<PageInstance> dashboards = projectInstance.getDashboards();
 
 			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
 			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 			if (!dashboards.isEmpty()) {
-				for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
-					PageInstance dashboard = entry.getValue();
+				for (PageInstance dashboard : dashboards) {
 					String path = dashboard.getPath();
 
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, dashboard.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
@@ -171,10 +170,9 @@ public class ProjectFragment extends ListFragment
 			);
 			listItems.add(headerToolListItem);
 
-			LinkedHashMap<String, PageInstance> tools = projectInstance.getTools();
+			ArrayList<PageInstance> tools = projectInstance.getTools();
 			if (!tools.isEmpty()) {
-				for (Map.Entry<String, PageInstance> entry : tools.entrySet()) {
-					PageInstance tool = entry.getValue();
+				for (PageInstance tool : tools) {
 					String path = tool.getPath();
 
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, tool.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
@@ -188,7 +186,7 @@ public class ProjectFragment extends ListFragment
 				listItems.add(new EmptyListItem());
 			}
 
-			LinkedHashMap<String, ProjectInstance> projects = projectInstance.getProjects();
+			ArrayList<ProjectInstance> projects = projectInstance.getProjects();
 			if (!projects.isEmpty()) {
 				SimpleListItem headerProjectsListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_project_negative),
 						getString(R.string.focus_related_projects));
@@ -198,8 +196,7 @@ public class ProjectFragment extends ListFragment
 				Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
 				Bitmap rightIconIfActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
-				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
-					ProjectInstance p = entry.getValue();
+				for(ProjectInstance p : projects) {
 
 					String projectPath = p.getPath();
 					String projectTitle = p.getTitle();

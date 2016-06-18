@@ -97,4 +97,5 @@ abstract public class AbstractInstance
 	}
 
 	public abstract void buildPaths(String parentPath);
+
 }

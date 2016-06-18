@@ -32,19 +32,21 @@ abstract public class AbstractInstance
 	protected DataContext dataContext;
 	private boolean valid;
 	protected String path;
+	// depth in hierarchy is in fact attached to a datacontext.
+	protected int depthInHierarchy;
 
 	public AbstractInstance(@NonNull DataManager dm)
 	{
 		this.path = null;
 		this.valid = true;
 		this.dataManager = dm;
+		this.depthInHierarchy = 0;
 	}
 
 	public DataContext getDataContext()
 	{
 		return this.dataContext;
 	}
-
 
 	/**
 	 * Mark this widget as invalid

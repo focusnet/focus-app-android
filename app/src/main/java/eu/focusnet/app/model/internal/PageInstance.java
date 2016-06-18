@@ -63,7 +63,7 @@ public class PageInstance extends AbstractInstance
 	 * @param pageTpl
 	 * @param dataCtx
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx) throws FocusMissingResourceException
+	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx, int depthInHierarchy) throws FocusMissingResourceException
 	{
 		super(dataCtx.getDataManager());
 
@@ -72,9 +72,10 @@ public class PageInstance extends AbstractInstance
 		this.type = type;
 		this.widgets = new LinkedHashMap<>();
 		this.dataContext = dataCtx;
+		this.depthInHierarchy = depthInHierarchy;
 
 		// register page-specific data to our current data context
-		this.dataContext.provideData(this.template.getData());
+		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy);
 	}
 
 	// FIXME abstract method?

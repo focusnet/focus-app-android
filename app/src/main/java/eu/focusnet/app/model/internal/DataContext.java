@@ -60,6 +60,7 @@ public class DataContext extends HashMap<String, String>
 	private DataManager dataManager;
 	private HashMap<String, PriorityTask<String>> queue;
 
+
 	private ArrayList<String> a;
 
 	/**
@@ -126,10 +127,10 @@ public class DataContext extends HashMap<String, String>
 	 * <p/>
 	 * FIXME implement custom queuing
 	 */
-	public void register(String key, String description, int priority)
+	public void register(String key, String description, int depthInHierarchy)
 	{
 		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
-		PriorityTask p = new PriorityTask(priority, task);
+		PriorityTask p = new PriorityTask((int) (1_000_000 / depthInHierarchy), task);
 		this.dataManager.getDataRetrievingExecutor().execute(p);
 		this.queue.put(key, p);
 	}
@@ -169,13 +170,13 @@ public class DataContext extends HashMap<String, String>
 	 *
 	 * @param data
 	 */
-	public void provideData(HashMap<String, String> data)
+	public void provideData(HashMap<String, String> data, int depthInHierarchy)
 	{
 		if (data == null) {
 			return;
 		}
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			this.register(entry.getKey(), entry.getValue(), 100);
+			this.register(entry.getKey(), entry.getValue(), depthInHierarchy); // just a little bit less important than the iterators -> -1
 		}
 	}
 

@@ -137,18 +137,18 @@ public class ProjectFragment extends ListFragment
 
 			// FIXME TODO modularize
 
-			SimpleListItem headerDashboardsListItem = new SimpleListItem(
-					UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
-					getString(R.string.header_dashboards)
-			);
-			listItems.add(headerDashboardsListItem);
-
 			ArrayList<PageInstance> dashboards = projectInstance.getDashboards();
 
 			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
 			Bitmap rightIconActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
 
 			if (!dashboards.isEmpty()) {
+				SimpleListItem headerDashboardsListItem = new SimpleListItem(
+						UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
+						getString(R.string.header_dashboards)
+				);
+				listItems.add(headerDashboardsListItem);
+
 				for (PageInstance dashboard : dashboards) {
 					String path = dashboard.getPath();
 
@@ -159,19 +159,18 @@ public class ProjectFragment extends ListFragment
 					listItems.add(drawListItem);
 				}
 			}
-			else {
-				listItems.add(new EmptyListItem());
-			}
 
 
-			SimpleListItem headerToolListItem = new SimpleListItem(
-					UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
-					getString(R.string.header_tools)
-			);
-			listItems.add(headerToolListItem);
+
 
 			ArrayList<PageInstance> tools = projectInstance.getTools();
 			if (!tools.isEmpty()) {
+				SimpleListItem headerToolListItem = new SimpleListItem(
+						UiHelper.getBitmap(getActivity(), R.drawable.ic_category_tool_negative),
+						getString(R.string.header_tools)
+				);
+				listItems.add(headerToolListItem);
+
 				for (PageInstance tool : tools) {
 					String path = tool.getPath();
 
@@ -181,9 +180,6 @@ public class ProjectFragment extends ListFragment
 							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.TOOL.toString());
 					listItems.add(drawListItem);
 				}
-			}
-			else {
-				listItems.add(new EmptyListItem());
 			}
 
 			ArrayList<ProjectInstance> projects = projectInstance.getProjects();

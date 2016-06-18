@@ -61,7 +61,7 @@ public class AppContentInstance extends AbstractInstance
 	{
 		super(dm);
 
-		// set the root path
+		this.depthInHierarchy = 1; // root
 
 		this.appTemplate = tpl;
 		this.projects = new ArrayList<>();
@@ -93,12 +93,12 @@ public class AppContentInstance extends AbstractInstance
 		this.title = this.appTemplate.getTitle();
 
 		// retrieve application-wide data
-		this.dataContext.provideData(this.appTemplate.getData());
+		this.dataContext.provideData(this.appTemplate.getData(), this.depthInHierarchy);
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
-		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext);
+		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext, this.depthInHierarchy + 1);
 		for(ProjectInstance pi : this.projects) {
 			if (!pi.isValid()) {
 				this.markAsInvalid();

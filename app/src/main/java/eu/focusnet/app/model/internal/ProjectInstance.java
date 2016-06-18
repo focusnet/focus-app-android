@@ -66,7 +66,7 @@ public class ProjectInstance extends AbstractInstance
 	 * @param projectTemplate
 	 * @param dataContext     we use the datamanager of this context as we will build the new instance on top of the old context, so using the same data manager makes sense
 	 */
-	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext)
+	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext, int depthInHierarchy)
 	{
 		super(dataContext.getDataManager());
 
@@ -76,11 +76,12 @@ public class ProjectInstance extends AbstractInstance
 		this.dashboards = new ArrayList<>();
 		this.tools = new ArrayList<>();
 		this.projects = new ArrayList<>();
+		this.depthInHierarchy = depthInHierarchy;
 
 		this.build();
 	}
 
-	public static ArrayList<ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext baseContext)
+	public static ArrayList<ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext baseContext, int expectedDepthInHierarchy)
 	{
 		ArrayList<ProjectInstance> projInstancesTemp = new ArrayList<>();
 		for (ProjectTemplate projTpl : projectTemplates) {
@@ -104,19 +105,19 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(baseContext);
-					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url, 1000);
+					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url, expectedDepthInHierarchy);
 					contexts.add(newCtx);
 				}
 
 				for (DataContext newCtx : contexts) {
 					// the guid is adapted in the ProjectInstance constructor
-					ProjectInstance p = new ProjectInstance(projTpl, newCtx);
+					ProjectInstance p = new ProjectInstance(projTpl, newCtx, expectedDepthInHierarchy);
 					projInstancesTemp.add(p);
 				}
 			}
 			else {
 				DataContext newCtx = new DataContext(baseContext);
-				ProjectInstance p = new ProjectInstance(projTpl, newCtx);
+				ProjectInstance p = new ProjectInstance(projTpl, newCtx, expectedDepthInHierarchy);
 				projInstancesTemp.add(p);
 			}
 		}
@@ -140,7 +141,7 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData()); // FIXME
+		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy);
 
 		if (this.description == null) {
 			this.description = "";
@@ -148,7 +149,7 @@ public class ProjectInstance extends AbstractInstance
 
 		// 2x same same FIXME modularize better
 		if (this.template.getDashboards() != null) {
-			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD);
+			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD, this.depthInHierarchy+1);
 			if (this.dashboards == null) {
 				this.markAsInvalid();
 			}
@@ -163,7 +164,7 @@ public class ProjectInstance extends AbstractInstance
 		}
 
 		if (this.template.getTools() != null) {
-			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL);
+			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL, this.depthInHierarchy+1);
 			if (this.tools == null) {
 				this.markAsInvalid();
 			}
@@ -179,7 +180,7 @@ public class ProjectInstance extends AbstractInstance
 
 		// possible to have a project within a project
 		if (this.template.getProjects() != null) {
-			this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext);
+			this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext, this.depthInHierarchy + 1);
 			for (ProjectInstance pi : this.projects) {
 				if (!pi.isValid()) {
 					this.markAsInvalid();
@@ -230,7 +231,7 @@ public class ProjectInstance extends AbstractInstance
 	 *
 	 * FIXME this is blocking because of the call at the end.
 	 */
-	private ArrayList<PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type)
+	private ArrayList<PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type, int expectedDepthInHierarchy)
 	{
 		ArrayList<PageInstance> pageInstancesTmp = new ArrayList<>();
 
@@ -256,14 +257,14 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(this.dataContext);
-					newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url, 200);
+					newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url, this.depthInHierarchy);
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
 					// the guid is adapted in the PageInstance constructor
 					PageInstance page;
 					try {
-						page = new PageInstance(pageTpl, type, newPageCtx); // not blocking
+						page = new PageInstance(pageTpl, type, newPageCtx, expectedDepthInHierarchy); // not blocking
 					}
 					catch (FocusMissingResourceException ex) {
 						FocusApplication.reportError(ex);
@@ -287,7 +288,7 @@ public class ProjectInstance extends AbstractInstance
 				PageInstance page;
 				DataContext newPageCtx = new DataContext(this.dataContext);
 				try {
-					page = new PageInstance(pageTpl, type, newPageCtx);
+					page = new PageInstance(pageTpl, type, newPageCtx, expectedDepthInHierarchy);
 				}
 				catch (FocusMissingResourceException ex) {
 					FocusApplication.reportError(ex);

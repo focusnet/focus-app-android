@@ -245,5 +245,17 @@ public abstract class WidgetInstance extends AbstractInstance
 		return Integer.valueOf(width.substring(0, indexOf).trim());
 	}
 
+	@Override
+	protected AbstractInstance propagatePathLookup(String searchedPath)
+	{
+		return null;
+	}
+
+	@Override
+	public void buildPaths(String parentPath)
+	{
+		this.path = parentPath + eu.focusnet.app.model.util.Constant.PATH_SEPARATOR + this.guid;
+	}
+
 
 }

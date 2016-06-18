@@ -44,6 +44,8 @@ import eu.focusnet.app.service.DataManager;
  */
 public class AppContentInstance extends AbstractInstance
 {
+
+	private final static String PATH_ROOT = "FOCUS";
 	private AppContentTemplate appTemplate;
 	private LinkedHashMap<String, ProjectInstance> projects;
 	private String title;
@@ -58,40 +60,24 @@ public class AppContentInstance extends AbstractInstance
 	{
 		super(dm);
 
+		// set the root path
+
 		this.appTemplate = tpl;
 		this.projects = new LinkedHashMap<>();
 		this.dataContext = new DataContext(this.dataManager);
+
+		// build the whole app data model
 		this.build();
-		this.freeDataContext();
+
+		// when all is done, build the paths of all instances
+		this.buildPaths(null);
+
 
 		if (!this.isValid()) {
 			throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
 		}
 	}
 
-	/**
-	 * Build a string used as a path identifier, using the specified instance objects.
-	 */
-	public static String buildPath(ProjectInstance project)
-	{
-		return project.getGuid();
-	}
-
-	/**
-	 * Build a string used as a path identifier, using the specified instance objects.
-	 */
-	public static String buildPath(ProjectInstance project, PageInstance page)
-	{
-		return buildPath(project) + Constant.PATH_SEPARATOR + page.getType() + Constant.PATH_SEPARATOR + page.getGuid();
-	}
-
-	/**
-	 * Build a string used as a path identifier, using the specified instance objects.
-	 */
-	public static String buildPath(ProjectInstance project, PageInstance page, WidgetInstance w)
-	{
-		return buildPath(project, page) + Constant.PATH_SEPARATOR + w.getGuid();
-	}
 
 	/**
 	 * Build the instance based on the template, using the DataManager
@@ -120,6 +106,8 @@ public class AppContentInstance extends AbstractInstance
 				break;
 			}
 		}
+
+		this.freeDataContext();
 	}
 
 	/**
@@ -132,68 +120,7 @@ public class AppContentInstance extends AbstractInstance
 		return this.projects;
 	}
 
-	/**
-	 * Get the project identified by the specified path, which may contain an iterator specifier
-	 * e.g.
-	 * - my-project
-	 * - my-project[http://www.example.org/data/123]
-	 *
-	 * @param path
-	 * @return
-	 *
-	 * these methods throw FocusMissingResourceException to let the caller detect if a page/project/widget
-	 * does not exist anymore.
-	 */
-	public ProjectInstance getProjectFromPath(String path) throws FocusMissingResourceException
-	{
-		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
-		if (parts.length >= 1) {
-			return this.projects.get(parts[0]);
-		}
-		throw new FocusMissingResourceException("Invalid project path");
-	}
 
-	/**
-	 * Get the page identified by the specified path, which may contain iterators specifiers, e.g.
-	 * - my-project|dashboards|my-page
-	 * - my-project[http://www.example.org/data/123]|dashboards|my-page
-	 * - my-project|tools|my-page[http://www.example.org/data/456]
-	 * - my-project[http://www.example.org/data/123]|tools|my-page[http://www.example.org/data/456]
-	 *
-	 * @param path
-	 * @return
-	 */
-	public PageInstance getPageFromPath(String path) throws FocusMissingResourceException
-	{
-		ProjectInstance pr = this.getProjectFromPath(path);
-		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
-		if (parts.length >= 3) {
-			return pr.getPageFromGuid(parts[2], parts[1]);
-		}
-		throw new FocusMissingResourceException("Invalid page path");
-	}
-
-
-	/**
-	 * Get the widget object identified by the specified path. It may contain iterators specifiers
-	 * for the project and page parts, e.g.
-	 * - my-project|dashboards|my-page|widget-id
-	 * - my-project[http://www.example.org/data/123]|dashboards|my-page|widget-id
-	 * - my-project|tools|my-page[http://www.example.org/data/456]|widget-id
-	 * - my-project[http://www.example.org/data/123]|tools|my-page[http://www.example.org/data/456]|widget-id
-	 *
-	 * @param path
-	 * @return
-	 */
-	public WidgetInstance getWidgetFromPath(String path) throws FocusMissingResourceException
-	{
-		PageInstance p = this.getPageFromPath(path);
-		String[] parts = path.split(Constant.PATH_SEPARATOR_PATTERN);
-		if (parts.length >= 4) {
-			return p.widgets.get(parts[3]);
-		}
-		throw new FocusMissingResourceException("Invalid widget path");
-	}
 
 
 	public String getTitle()
@@ -207,5 +134,28 @@ public class AppContentInstance extends AbstractInstance
 			return Locale.ENGLISH.toString();
 		}
 		return this.language;
+	}
+
+	@Override
+	protected AbstractInstance propagatePathLookup(String searchedPath)
+	{
+		for (Map.Entry e : this.projects.entrySet()) {
+			ProjectInstance p = (ProjectInstance) e.getValue();
+			AbstractInstance ret = p.lookupByPath(searchedPath);
+			if (ret != null) {
+				return ret;
+			}
+		}
+		return null;
+	}
+
+
+	@Override
+	public void buildPaths(String parentPath)
+	{
+		this.path = PATH_ROOT;
+		for(Map.Entry e : this.projects.entrySet()) {
+			((ProjectInstance)(e.getValue())).buildPaths(this.path);
+		}
 	}
 }

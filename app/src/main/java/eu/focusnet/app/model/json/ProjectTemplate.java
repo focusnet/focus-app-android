@@ -44,6 +44,7 @@ public class ProjectTemplate implements Serializable
 
 	private ArrayList<PageReference> dashboards;
 	private ArrayList<PageReference> tools;
+	private ArrayList<ProjectTemplate> projects = new ArrayList<>();
 
 	public String getGuid()
 	{
@@ -116,5 +117,10 @@ public class ProjectTemplate implements Serializable
 	public LinkedHashMap<String, String> getData()
 	{
 		return data;
+	}
+
+	public ArrayList<ProjectTemplate> getProjects()
+	{
+		return this.projects;
 	}
 }

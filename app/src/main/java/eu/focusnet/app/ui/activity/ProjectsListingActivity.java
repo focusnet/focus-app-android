@@ -351,6 +351,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * FIXME no animation? init.setFlags ( ANIMATION ) may help
 	 * <p/>
 	 * also, we block reloading the same page in the clicklistener of the menu such that we don't have problems here.
+	 *
+	 * this is the behavior for navigation between fragments of the proejctslistingactivity.
+	 *
+	 * FIXME the logic here is buggy. to be reviewed. for example the selected element is not updated.
 	 */
 	@Override
 	public void onBackPressed()

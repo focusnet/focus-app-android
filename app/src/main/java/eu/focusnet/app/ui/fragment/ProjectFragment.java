@@ -36,7 +36,6 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.internal.PageInstance;
@@ -44,6 +43,8 @@ import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
+import eu.focusnet.app.ui.activity.ProjectActivity;
+import eu.focusnet.app.ui.activity.ProjectInProjectActivity;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
@@ -60,9 +61,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 public class ProjectFragment extends ListFragment
 {
 	private ArrayList<SimpleListItem> listItems;
-	private String projectId;
-
-	private ProjectInstance projectInstance;
+	private String path;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -71,8 +70,8 @@ public class ProjectFragment extends ListFragment
 
 		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 		Bundle bundle = getArguments();
-		//Path is the same as projectId
-		projectId = bundle.getString(Constant.UI_EXTRA_PROJECT_PATH);
+		//Path is the same as path
+		path = bundle.getString(Constant.UI_EXTRA_PATH);
 		new ProjectBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 		return viewRoot;
@@ -92,10 +91,19 @@ public class ProjectFragment extends ListFragment
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
 		if (l.getAdapter().getItemViewType(position) == NavigationListAdapter.LIST_TYPE_LINK) {
-			Intent intent = new Intent(getActivity(), PageActivity.class);
+			// same as in bookmark fragment, modularize
+			Intent intent;
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
-			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, projectId);
-			intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
+
+			String path = selectedItem.getPath();
+			String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
+			String category = parts[parts.length - 2];
+			intent = new Intent(
+					getActivity(),
+					(category.equals(PageInstance.PageType.TOOL.toString()) || category.equals(PageInstance.PageType.DASHBOARD.toString()))
+							? PageActivity.class : ProjectInProjectActivity.class
+			);
+			intent.putExtra(Constant.UI_EXTRA_PATH, path);
 			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
@@ -115,10 +123,8 @@ public class ProjectFragment extends ListFragment
 		protected NavigationListAdapter doInBackground(String... params)
 		{
 			this.projectNotFound = false;
-			try {
-				projectInstance = FocusAppLogic.getCurrentApplicationContent().getProjectFromPath(projectId);
-			}
-			catch (FocusMissingResourceException ex) {
+			ProjectInstance projectInstance = (ProjectInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
+			if (projectInstance == null) {
 				this.projectNotFound = true;
 				return null;
 			}
@@ -129,11 +135,13 @@ public class ProjectFragment extends ListFragment
 
 			listItems = new ArrayList<>();
 
-			SimpleListItem headerProjectsListItem = new SimpleListItem(
+			// FIXME TODO modularize
+
+			SimpleListItem headerDashboardsListItem = new SimpleListItem(
 					UiHelper.getBitmap(getActivity(), R.drawable.ic_category_dashboard_negative),
 					getString(R.string.header_dashboards)
 			);
-			listItems.add(headerProjectsListItem);
+			listItems.add(headerDashboardsListItem);
 
 			LinkedHashMap<String, PageInstance> dashboards = projectInstance.getDashboards();
 
@@ -143,11 +151,11 @@ public class ProjectFragment extends ListFragment
 			if (!dashboards.isEmpty()) {
 				for (Map.Entry<String, PageInstance> entry : dashboards.entrySet()) {
 					PageInstance dashboard = entry.getValue();
-					String dashboardId = AppContentInstance.buildPath(projectInstance, dashboard);
+					String path = dashboard.getPath();
 
-					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(dashboardId, dashboard.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, dashboard.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
-					FeaturedListItem drawListItem = new FeaturedListItem(dashboardId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
+					FeaturedListItem drawListItem = new FeaturedListItem(path, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
 							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.PAGE.toString());
 					listItems.add(drawListItem);
 				}
@@ -167,11 +175,11 @@ public class ProjectFragment extends ListFragment
 			if (!tools.isEmpty()) {
 				for (Map.Entry<String, PageInstance> entry : tools.entrySet()) {
 					PageInstance tool = entry.getValue();
-					String toolId = AppContentInstance.buildPath(projectInstance, tool);
+					String path = tool.getPath();
 
-					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(toolId, tool.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, tool.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
-					FeaturedListItem drawListItem = new FeaturedListItem(toolId, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
+					FeaturedListItem drawListItem = new FeaturedListItem(path, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
 							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.TOOL.toString());
 					listItems.add(drawListItem);
 				}
@@ -180,6 +188,38 @@ public class ProjectFragment extends ListFragment
 				listItems.add(new EmptyListItem());
 			}
 
+			LinkedHashMap<String, ProjectInstance> projects = projectInstance.getProjects();
+			if (!projects.isEmpty()) {
+				SimpleListItem headerProjectsListItem = new SimpleListItem(UiHelper.getBitmap(getActivity(), R.drawable.ic_category_project_negative),
+						getString(R.string.focus_related_projects));
+
+				listItems.add(headerProjectsListItem);
+
+				Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
+				Bitmap rightIconIfActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_selected);
+
+				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
+					ProjectInstance p = entry.getValue();
+
+					String projectPath = p.getPath();
+					String projectTitle = p.getTitle();
+					String projectDesc = p.getDescription();
+
+					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
+					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
+
+					FeaturedListItem drawListItem = new FeaturedListItem(
+							projectPath,
+							UiHelper.getBitmap(getActivity(), R.drawable.ic_project),
+							projectTitle,
+							projectDesc,
+							checkedBookmark ? rightIconIfActive : rightIconIfNotActive,
+							checkedBookmark,
+							bookmarkLinkType
+					);
+					listItems.add(drawListItem);
+				}
+			}
 
 			return new NavigationListAdapter(getActivity(), listItems);
 		}

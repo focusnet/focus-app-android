@@ -23,6 +23,7 @@ package eu.focusnet.app.model.internal;
 import android.support.annotation.NonNull;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -176,5 +177,32 @@ public class PageInstance extends AbstractInstance
 			this.markAsInvalid();
 		}
 		this.widgets.put(guid, wi);
+	}
+
+	@Override
+	protected AbstractInstance propagatePathLookup(String searchedPath)
+	{
+		for (Map.Entry e : this.widgets.entrySet()) {
+			WidgetInstance p = (WidgetInstance) e.getValue();
+			AbstractInstance ret = p.lookupByPath(searchedPath);
+			if (ret != null) {
+				return ret;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void buildPaths(String parentPath)
+	{
+		this.path = parentPath
+				+ Constant.PATH_SEPARATOR
+				+ this.type.toString()
+				+ Constant.PATH_SEPARATOR
+				+ this.guid;
+		for (Map.Entry e : this.widgets.entrySet()) {
+			WidgetInstance p = (WidgetInstance) e.getValue();
+			p.buildPaths(this.path);
+		}
 	}
 }

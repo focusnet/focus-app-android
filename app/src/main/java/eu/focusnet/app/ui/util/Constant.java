@@ -32,9 +32,7 @@ public class Constant
 	public static final String WIDGET_LAYOUT_OF = "of";
 
 	// Extra parameters names
-	public static final String UI_EXTRA_PROJECT_PATH = "eu.focusnet.app.extra.PROJECT_PATH",
-			UI_EXTRA_PAGE_PATH = "eu.focusnet.app.extra.PAGE_PATH",
-			UI_EXTRA_TITLE = "eu.focusnet.app.extra.TITLE",
+	public static final String UI_EXTRA_TITLE = "eu.focusnet.app.extra.TITLE",
 			UI_EXTRA_PATH = "eu.focusnet.app.extra.PATH",
 			UI_EXTRA_IMAGE_URI = "eu.focusnet.app.extra.IMAGE_URI",
 			UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.app.extra.LOADING_INFO_TEXT",

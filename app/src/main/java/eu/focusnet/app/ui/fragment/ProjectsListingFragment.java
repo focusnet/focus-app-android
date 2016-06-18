@@ -77,7 +77,7 @@ public class ProjectsListingFragment extends ListFragment
 		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
-			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, selectedItem.getPath());
+			intent.putExtra(Constant.UI_EXTRA_PATH, selectedItem.getPath());
 			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
@@ -109,7 +109,7 @@ public class ProjectsListingFragment extends ListFragment
 				for (Map.Entry<String, ProjectInstance> entry : projects.entrySet()) {
 					ProjectInstance p = entry.getValue();
 
-					String projectPath = AppContentInstance.buildPath(p);
+					String projectPath = p.getPath();
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
 

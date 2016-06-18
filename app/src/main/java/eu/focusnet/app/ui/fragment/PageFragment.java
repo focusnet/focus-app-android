@@ -70,15 +70,10 @@ public class PageFragment extends Fragment
 		// Inflate the layout for this fragment
 		this.viewRoot = inflater.inflate(R.layout.fragment_page_page, container, false);
 		Bundle bundle = getArguments();
-		String projectPath = (String) bundle.get(Constant.UI_EXTRA_PROJECT_PATH);
-		String pagePath = (String) bundle.get(Constant.UI_EXTRA_PAGE_PATH);
+		String path = (String) bundle.get(Constant.UI_EXTRA_PATH);
 
-		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
-		try {
-			this.projectInstance = appContentInstance.getProjectFromPath(projectPath);
-			this.pageInstance = appContentInstance.getPageFromPath(pagePath);
-		}
-		catch (FocusMissingResourceException ex) {
+		this.pageInstance = (PageInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
+		if (this.pageInstance == null) {
 			UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.page_not_found), getActivity());
 			return null;
 		}
@@ -157,7 +152,7 @@ public class PageFragment extends Fragment
 			// add the new widget fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putString(Constant.UI_EXTRA_PATH, AppContentInstance.buildPath(this.projectInstance, this.pageInstance, widgetInstance));
+			widgetBundle.putString(Constant.UI_EXTRA_PATH, widgetInstance.getPath());
 			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_WEIGHT, requiredSpace);
 			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW, Constant.LAYOUT_NUM_OF_COLUMNS - spaceLeft);
@@ -176,7 +171,6 @@ public class PageFragment extends Fragment
 			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
 			emptyWidgetFragment.setArguments(widgetBundle);
 			FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
-			//	containerLayout.addView(emptyWidgetFragment.getView()); // FIXME??
 		}
 
 		verticalContainerLayout.addView(containerLayout);

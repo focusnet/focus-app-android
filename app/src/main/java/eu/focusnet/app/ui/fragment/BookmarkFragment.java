@@ -35,18 +35,24 @@ import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.model.internal.AbstractInstance;
 import eu.focusnet.app.model.internal.AppContentInstance;
+import eu.focusnet.app.model.internal.PageInstance;
+import eu.focusnet.app.model.internal.ProjectInstance;
 import eu.focusnet.app.model.json.Bookmark;
 import eu.focusnet.app.model.json.BookmarksList;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectActivity;
+import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
 import eu.focusnet.app.ui.common.FeaturedListItem;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+
+import static eu.focusnet.app.model.internal.PageInstance.*;
 
 
 /**
@@ -80,19 +86,12 @@ public class BookmarkFragment extends ListFragment
 
 			String path = selectedItem.getPath();
 			String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
-			switch (parts.length) {
-				case 1:
-					intent = new Intent(getActivity(), ProjectActivity.class);
-					break;
-				case 3:
-					intent = new Intent(getActivity(), PageActivity.class);
-					intent.putExtra(Constant.UI_EXTRA_PAGE_PATH, selectedItem.getPath());
-					break;
-				default:
-					throw new FocusInternalErrorException("Invalid path format.");
-			}
-
-			intent.putExtra(Constant.UI_EXTRA_PROJECT_PATH, parts[0]);
+			String category = parts[parts.length-2];
+			intent = new Intent(
+					getActivity(),
+					(category.equals(PageType.TOOL.toString()) || category.equals(PageType.DASHBOARD.toString())) ? PageActivity.class : ProjectActivity.class
+			);
+			intent.putExtra(Constant.UI_EXTRA_PATH, path);
 			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
@@ -139,18 +138,17 @@ public class BookmarkFragment extends ListFragment
 			for (Bookmark bl : source) {
 				String originalTitle;
 				String path = bl.getPath();
-				String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
-				try {
-					if (parts.length >= 3) {
-						originalTitle = appContentInstance.getPageFromPath(path).getTitle();
-					}
-					else {
-						originalTitle = appContentInstance.getProjectFromPath(path).getTitle();
-					}
+				AbstractInstance instance = appContentInstance.lookupByPath(path);
+				if (instance == null) {
+					continue;
 				}
-				catch (FocusMissingResourceException ex) {
-					// the project/page does not exist, that may be because the data evolved and
-					// this bookmark is not valid anymore. So let's skip it.
+				if (instance instanceof PageInstance) {
+					originalTitle = ((PageInstance) instance).getTitle();
+				}
+				else if (instance instanceof ProjectInstance) {
+					originalTitle = ((ProjectInstance) instance).getTitle();
+				}
+				else {
 					continue;
 				}
 

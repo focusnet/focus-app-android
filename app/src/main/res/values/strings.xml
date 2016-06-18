@@ -134,5 +134,6 @@
     <string name="bookmark">Bookmark</string>
     <string name="page_not_found">The page you have selected does not exist anymore.</string>
     <string name="project_not_found">The project you have selected does not exist anymore.</string>
+    <string name="focus_related_projects">More information</string>
 
 </resources>

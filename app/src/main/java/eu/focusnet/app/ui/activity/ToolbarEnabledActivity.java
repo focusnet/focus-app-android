@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.util.Constant;
@@ -40,8 +41,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	protected Fragment fragment;
 	protected String title;
 	protected ActionBar actionBar;
-	private String projectPath;
-	private String pathPath;
+	private String path;
 
 	/**
 	 * Override creation method. Add a toolbar.
@@ -63,7 +63,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		// configure
 		this.actionBar = getSupportActionBar();
 		if (this.actionBar != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true); // FIXME not same behavior as BACK button.
 		}
 
 		//Get the project title and project id either from the
@@ -71,14 +71,12 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		if (savedInstanceState == null) {
 			this.title = getIntent().getStringExtra(Constant.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			this.projectPath = getIntent().getStringExtra(Constant.UI_EXTRA_PROJECT_PATH);
-			this.pathPath = getIntent().getStringExtra(Constant.UI_EXTRA_PAGE_PATH);
+			this.path = getIntent().getStringExtra(Constant.UI_EXTRA_PATH);
 		}
 		else {
 			this.title = savedInstanceState.getString(Constant.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			this.projectPath = savedInstanceState.getString(Constant.UI_EXTRA_PROJECT_PATH);
-			this.pathPath = savedInstanceState.getString(Constant.UI_EXTRA_PAGE_PATH);
+			this.path = savedInstanceState.getString(Constant.UI_EXTRA_PATH);
 		}
 
 		setTitle(this.title);
@@ -128,8 +126,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	{
 		super.onSaveInstanceState(saveInstanceState);
 		saveInstanceState.putString(Constant.UI_EXTRA_TITLE, this.title);
-		saveInstanceState.putString(Constant.UI_EXTRA_PROJECT_PATH, this.projectPath);
-		saveInstanceState.putString(Constant.UI_EXTRA_PAGE_PATH, this.pathPath);
+		saveInstanceState.putString(Constant.UI_EXTRA_PATH, this.path);
 	}
 
 	final protected void applyUiChanges()
@@ -156,13 +153,24 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		if (this.fragment != null) {
 
 			Bundle bundle = new Bundle();
-			bundle.putString(Constant.UI_EXTRA_PAGE_PATH, pathPath); // may be null
-			bundle.putString(Constant.UI_EXTRA_PROJECT_PATH, projectPath);
+			bundle.putString(Constant.UI_EXTRA_PATH, this.path);
 			this.fragment.setArguments(bundle);
 
 			FragmentManager.replaceFragment(getTargetLayoutContainer(), this.fragment, getFragmentManager());
 		}
 
+	}
+
+	// make the home button behave like the back button.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+		}
+
+		return(super.onOptionsItemSelected(item));
 	}
 
 

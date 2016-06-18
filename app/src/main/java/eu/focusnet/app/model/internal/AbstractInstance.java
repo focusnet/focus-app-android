@@ -23,6 +23,7 @@ package eu.focusnet.app.model.internal;
 
 import android.support.annotation.NonNull;
 
+import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.DataManager;
 
 abstract public class AbstractInstance
@@ -30,9 +31,11 @@ abstract public class AbstractInstance
 	protected final DataManager dataManager;
 	protected DataContext dataContext;
 	private boolean valid;
+	protected String path;
 
 	public AbstractInstance(@NonNull DataManager dm)
 	{
+		this.path = null;
 		this.valid = true;
 		this.dataManager = dm;
 	}
@@ -74,4 +77,24 @@ abstract public class AbstractInstance
 	{
 		return this.dataManager;
 	}
+
+	public AbstractInstance lookupByPath(String searchedPath)
+	{
+		if (searchedPath.equals(this.path)) {
+			return this;
+		}
+		else if (searchedPath.startsWith(this.path)) {
+			return this.propagatePathLookup(searchedPath);
+		}
+		return null;
+	}
+
+	protected abstract AbstractInstance propagatePathLookup(String searchedPath);
+
+	public String getPath()
+	{
+		return this.path;
+	}
+
+	public abstract void buildPaths(String parentPath);
 }

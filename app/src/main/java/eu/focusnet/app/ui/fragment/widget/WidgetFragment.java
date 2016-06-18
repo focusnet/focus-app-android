@@ -164,10 +164,8 @@ public abstract class WidgetFragment extends Fragment
 
 		// may happen that we have no path (e.g. EmptyWidgetFragment)
 		if (path != null) {
-			try {
-				this.widgetInstance = FocusAppLogic.getCurrentApplicationContent().getWidgetFromPath(path);
-			}
-			catch (FocusMissingResourceException ex) {
+			this.widgetInstance = (WidgetInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
+			if (this.widgetInstance == null) {
 				// FIXME if a page is not valid anymore and the user wants to access it, this redirection
 				// will be triggered for all widgets contained in the page, not only one.
 				// Possible solution: detect missing page when user clicks on the page link

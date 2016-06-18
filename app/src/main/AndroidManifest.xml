@@ -57,12 +57,14 @@
         <activity
             android:name=".ui.activity.ProjectActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activity.ProjectsListingActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ui.activity.ProjectInProjectActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.activity.PageActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activity.ProjectActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
         <activity

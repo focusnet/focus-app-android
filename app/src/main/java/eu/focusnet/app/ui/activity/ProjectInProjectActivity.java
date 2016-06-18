@@ -18,27 +18,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.model.json;
+package eu.focusnet.app.ui.activity;
 
-import java.util.Map;
+import eu.focusnet.app.R;
+import eu.focusnet.app.ui.fragment.ProjectFragment;
 
 /**
+ * This class displays (loading the ProjectFragment) the characteristics of a project after
+ * the it was selected in the ProjectsListingActivity
+ *
+ * FIXME exactly the same of ProjetActivity, but redirect to ProjectActivity from ProjectActivity
+ * does not work. to check doc when time. probably due to mode of launching. Also be careful with
+ * Activity stack history.
  */
-@SuppressWarnings("unused")
-public class WidgetReference
+public class ProjectInProjectActivity extends ToolbarEnabledActivity
 {
-
-	private String widgetid;
-	private Map<String, String> layout;
-
-	public String getWidgetid()
+	@Override
+	protected int getTargetLayoutContainer()
 	{
-		return widgetid;
+		return R.id.project_container;
 	}
 
-	public Map<String, String> getLayout()
+	@Override
+	protected void prepareNewFragment()
 	{
-		return layout;
+		this.fragment = new ProjectFragment();
 	}
+
+	@Override
+	protected int getTargetView()
+	{
+		return R.layout.activity_project;
+	}
+
 
 }

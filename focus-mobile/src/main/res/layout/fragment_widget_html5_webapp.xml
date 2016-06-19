@@ -6,7 +6,7 @@
     <include layout="@layout/include_widget_title"/>
 
 
-    <eu.focusnet.focus_mobile.ui.common.TouchWebView
+    <eu.focusnet.app.ui.common.TouchWebView
         android:id="@+id/webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>

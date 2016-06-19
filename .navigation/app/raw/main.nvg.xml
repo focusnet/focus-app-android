@@ -6,7 +6,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.PageActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.PageActivity"/>
       <point      
         x = "2144"      
         y = "292"/>
@@ -14,7 +14,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.LoginActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.LoginActivity"/>
       <point      
         x = "656"      
         y = "2024"/>
@@ -22,7 +22,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.ProjectsListingActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.ProjectsListingActivity"/>
       <point      
         x = "2508"      
         y = "1888"/>
@@ -30,7 +30,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.ProjectActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.ProjectActivity"/>
       <point      
         x = "3408"      
         y = "260"/>
@@ -38,7 +38,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.EntryPointActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.EntryPointActivity"/>
       <point      
         x = "1548"      
         y = "1852"/>
@@ -46,7 +46,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "eu.focusnet.app.ui.activity.ImageActivity"/>
+        className = "eu.focusnet.focus_mobile.ui.activity.ImageActivity"/>
       <point      
         x = "1148"      
         y = "264"/>

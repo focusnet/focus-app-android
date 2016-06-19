@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Our string-arrays contain references to other strings, because it's easier
+         to maintain. However they must all be present in all translation sets
+         for the APK to be built in Release mode without having to disable the MissingTranslation
+         warning, which is a good thing.
+      -->
+    <string-array name="drawer_items">
+        <item>@string/project_listing_title</item>
+        <item>@string/drawer_menu_entry_bookmarks</item>
+        <item>@string/drawer_menu_entry_about</item>
+        <item>@string/drawer_menu_entry_logout</item>
+    </string-array>
+    <string-array name="drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_bookmark_selected</item>
+        <item>@drawable/ic_about</item>
+        <item>@drawable/ic_power_off</item>
+    </string-array>
+    <string-array name="demo_use_cases_values">
+        <item>ui-library</item>
+        <item>pilot-case-1</item>
+        <item>pilot-case-3</item>
+    </string-array>
+    <string-array name="demo_use_cases_labels">
+        <item>@string/use_case_ui_lib</item>
+        <item>@string/use_case_ui_pc1</item>
+        <item>@string/use_case_ui_pc3</item>
+    </string-array>
+    <string-array name="demo_use_cases_app_content_uris">
+        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
+        <item>http://focus.yatt.ch/application-contents/pilot-case-1.json</item>
+        <item>http://focus.yatt.ch/debug/app-content-5.json</item>
+    </string-array>
+
+    <string name="app_name">FOCUS Mobile</string>
+    <string name="about_focus_title">A propos de FOCUS</string>
+    <string name="accuracy">Précision:</string>
+    <string name="activity_image_caption_captured_image">Image capturée</string>
+    <string name="app_identifier">Application</string>
+    <string name="appreturned">L\'application a retourné une valeur.</string>
+    <string name="bookmark">Signet</string>
+    <string name="bookmarks_title">Mes Signets</string>
+    <string name="cancel">Annuler</string>
+    <string name="caption_focus_logo">Logo FOCUS</string>
+    <string name="close">Fermer</string>
+    <string name="connected_to_web">Etes-vous connecté à Internet?</string>
+    <string name="data_sync_title">Synchronisation des données</string>
+    <string name="data_volume_n_a">Volume de données: non disponible.</string>
+    <string name="delete">Effacer</string>
+    <string name="done">Effectué.</string>
+    <string name="drawer_menu_entry_about">A propos</string>
+    <string name="drawer_menu_entry_bookmarks">Signets</string>
+    <string name="drawer_menu_entry_logout">Déconnexion</string>
+    <string name="fail_load_content_title">Le contenu de l\'application  n\'a pas pu être chargé.</string>
+    <string name="focus_add_bookmark_question">Nommez votre signet</string>
+    <string name="focus_crash_dialog_comment_prompt">Vous pouvez nous faire part de vos observations ci-dessous:</string>
+    <string name="focus_crash_dialog_ok_toast">Merci!</string>
+    <string name="focus_crash_dialog_text">Une erreur inattendue s\'est produite et a forcé l\'application à quitter. Veuillez s\'il-vous-plait nous aider à résoudre le problème en nous soumettant un rapport d\'erreur. Pour ce faire, il vous suffit de cliquer sur OK ci-dessous.</string>
+    <string name="focus_crash_dialog_title">FOCUS Mobile a planté!</string>
+    <string name="focus_crash_toast_text">Oups! FOCUS Mobile a planté!</string>
+    <string name="focus_drawer_close_description">Fermer le menu</string>
+    <string name="focus_drawer_open_description">Ouvrir le menu</string>
+    <string name="focus_external_app_button_label_default">Démarrer</string>
+    <string name="focus_header_project">Mes Projets</string>
+    <string name="focus_login_error_bad_credentials">Identifiants non valides.</string>
+    <string name="focus_login_error_no_network">Il n\'y a pas de connexion à Internet. Veuillez vous connecter et réessayer.</string>
+    <string name="focus_login_progress_message">En cours de connexion</string>
+    <string name="focus_remove_bookmark_question">Voulez-vous effacer ce signet?</string>
+    <string name="focus_save_user_pref_after">Préférences de l\'utilisateur sauvées.</string>
+    <string name="focus_save_user_pref_before">Enregistrement …</string>
+    <string name="get_position">Obtenir la position</string>
+    <string name="header_dashboard_and_projects"><![CDATA[Projets & Tableaux de bord]]></string>
+    <string name="header_dashboards">Tableaux de bord</string>
+    <string name="header_tools">Outils</string>
+    <string name="init_app_first_run">Initialisation de FOCUS Mobile …</string>
+    <string name="install_via_google_play">Installer via Google Play</string>
+    <string name="installed_ready_to_be_used">Installé. Version: %s</string>
+    <string name="invalid_configuration_for_widget">Configuration non valide du composant.</string>
+    <string name="last_sync_data_volume_label">"Volume de données: "</string>
+    <string name="last_sync_label">"Dernière synchronisation: "</string>
+    <string name="last_synchronization_n_a">Dernière synchronisation: inconnu</string>
+    <string name="latitude">Latitude:</string>
+    <string name="launching_ext_app">Démarrage de l\'application externe</string>
+    <string name="load_info_load_demo">Chargement des données de démonstration …</string>
+    <string name="loading">Chargement en cours …</string>
+    <string name="login_button">Se connecter</string>
+    <string name="login_demo_label_select_use_case">Sélectionnez une démonstration de cas d\'utilisation</string>
+    <string name="login_password">Mot de passe</string>
+    <string name="login_server">Serveur</string>
+    <string name="login_username">Nom d\'utilisateur</string>
+    <string name="longitude">Longitude:</string>
+    <string name="market_not_installed">Android Market n\'est pas installé</string>
+    <string name="n_a">non disponible</string>
+    <string name="not_acquired_yet">Pas encore obtenu.</string>
+    <string name="not_available">Non disponible.</string>
+    <string name="not_installed">Pas installé. Veuillez installer l\'application avant pour continuer.</string>
+    <string name="ok">OK</string>
+    <string name="progress_wait_message">Veuillez patienter …</string>
+    <string name="project_listing_title">My FOCUS</string>
+    <string name="replace_picture">Remplacer l\'image</string>
+    <string name="select_no_selection">-- Votre sélection --</string>
+    <string name="start">Démarrrer</string>
+    <string name="start_demo">Démarrer la démonstration</string>
+    <string name="status">Statut</string>
+    <string name="submit">Soumettre</string>
+    <string name="sync_already_in_progress">En cours …</string>
+    <string name="sync_continue_background">Continuer en arrière-plan</string>
+    <string name="sync_too_recent">La synchronisation ne peut pas être effectuée maintenant car cette opération a été réalisée trop récemment. Veuillez essayer plus tard.</string>
+    <string name="synchronization_status">Statut de la synchronisation:</string>
+    <string name="synchronize_data">Sychroniser</string>
+    <string name="syncronization_in_progress">En cours …</string>
+    <string name="take_a_picture">Prendre une photo</string>
+    <string name="try_again">ESsayer à nouveau</string>
+    <string name="unknown_path">Chemin inconnu</string>
+    <string name="use_case_ui_lib">Librairies de composants</string>
+    <string name="use_case_ui_pc1">Case d\'utilisation FOCUS 1 - Winterthur</string>
+    <string name="use_case_ui_pc3">Case d\'utilisation FOCUS III - Arnsberg</string>
+    <string name="version_unknown">inconnu</string>
+    <string name="view">Voir</string>
+    <string name="wiping_user_data_logout_msg">Effacement des données locales en cours … </string>
+    <string name="you_can_start_data_sync">Vous pouvez démarrer la synchronisation des données ici.</string>
+    <string name="page_not_found">La page que vous avez sélectionnée n\'existe plus.</string>
+    <string name="project_not_found">Le projet que vous avez sélectionné n\'existe plus.</string>
+    <string name="focus_related_projects">Plus de détails</string>
+    <string name="saved">Sauvegardé</string>
+</resources>

@@ -39,9 +39,9 @@ public class FeaturedListItem extends SimpleListItem
 	private String typeOfBookmark;
 
 
-	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isBookmarked, String typeOfBookmark)
+	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isBookmarked, String typeOfBookmark, boolean disabled)
 	{
-		super(icon, title);
+		super(icon, title, disabled);
 		this.description = description;
 		this.path = path;
 		this.secondaryIcon = secondaryIcon;

@@ -29,6 +29,7 @@ import android.widget.Button;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.SubmitWidgetInstance;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * Created by admin on 28.01.2016.
@@ -52,7 +53,7 @@ public class SubmitWidgetFragment extends WidgetFragment
 			public void onClick(View v)
 			{
 				//TODO FIXME depends on ACTION configuration
-				UiHelper.displayToast(getActivity(), "Submit button clicked");
+				UiHelper.displayToast(getActivity(), ApplicationHelper.getResources().getString(R.string.saved));
 			}
 		});
 

@@ -151,11 +151,21 @@ public class ProjectFragment extends ListFragment
 
 				for (PageInstance dashboard : dashboards) {
 					String path = dashboard.getPath();
+					boolean disabled = dashboard.isDisabled();
 
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, dashboard.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
-					FeaturedListItem drawListItem = new FeaturedListItem(path, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), dashboard.getTitle(), dashboard.getDescription(),
-							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.PAGE.toString());
+					FeaturedListItem drawListItem = new FeaturedListItem(
+							path,
+							UiHelper.getBitmap(getActivity(),
+									R.drawable.ic_chevron_right),
+							dashboard.getTitle(),
+							dashboard.getDescription(),
+							checkedBookmark ? rightIconActive : rightIconNotActive,
+							checkedBookmark,
+							Bookmark.BookmarkLinkType.PAGE.toString(),
+							disabled
+					);
 					listItems.add(drawListItem);
 				}
 			}
@@ -173,11 +183,20 @@ public class ProjectFragment extends ListFragment
 
 				for (PageInstance tool : tools) {
 					String path = tool.getPath();
+					boolean disabled = tool.isDisabled();
 
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(path, tool.getTitle(), Bookmark.BookmarkLinkType.PAGE.toString()));
 
-					FeaturedListItem drawListItem = new FeaturedListItem(path, UiHelper.getBitmap(getActivity(), R.drawable.ic_chevron_right), tool.getTitle(), tool.getDescription(),
-							checkedBookmark ? rightIconActive : rightIconNotActive, checkedBookmark, Bookmark.BookmarkLinkType.TOOL.toString());
+					FeaturedListItem drawListItem = new FeaturedListItem(
+							path,
+							UiHelper.getBitmap(getActivity(),
+									R.drawable.ic_chevron_right),
+							tool.getTitle(),
+							tool.getDescription(),
+							checkedBookmark ? rightIconActive : rightIconNotActive,
+							checkedBookmark,
+							Bookmark.BookmarkLinkType.TOOL.toString(),
+							disabled);
 					listItems.add(drawListItem);
 				}
 			}
@@ -197,6 +216,7 @@ public class ProjectFragment extends ListFragment
 					String projectPath = p.getPath();
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
+					boolean disabled  = p.isDisabled();
 
 					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
@@ -208,7 +228,8 @@ public class ProjectFragment extends ListFragment
 							projectDesc,
 							checkedBookmark ? rightIconIfActive : rightIconIfNotActive,
 							checkedBookmark,
-							bookmarkLinkType
+							bookmarkLinkType,
+							disabled
 					);
 					listItems.add(drawListItem);
 				}

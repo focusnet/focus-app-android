@@ -129,6 +129,11 @@ public class DataContext extends HashMap<String, String>
 	 */
 	public void register(String key, String description, int depthInHierarchy)
 	{
+		// just in case, delete the existing entry in the context
+		// this avoids problems when nesting projects (we share the same variable name, no matter
+		// level of nesting we are).
+		this.put(key, null);
+
 		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
 		PriorityTask p = new PriorityTask((int) (1_000_000 / depthInHierarchy), task);
 		this.dataManager.getDataRetrievingExecutor().execute(p);
@@ -172,9 +177,6 @@ public class DataContext extends HashMap<String, String>
 	 */
 	public void provideData(HashMap<String, String> data, int depthInHierarchy)
 	{
-		if (data == null) {
-			return;
-		}
 		for (Map.Entry<String, String> entry : data.entrySet()) {
 			this.register(entry.getKey(), entry.getValue(), depthInHierarchy); // just a little bit less important than the iterators -> -1
 		}
@@ -260,7 +262,7 @@ public class DataContext extends HashMap<String, String>
 		}
 		FutureTask<String> task = this.queue.get(key);
 		if (task == null) {
-			throw new FocusInternalErrorException("No task for requested data. Logic problem.");
+			throw new FocusInternalErrorException("No task for requested data. Logic problem. Perhaps a badly written JSON file with invalid variables?");
 // FIXME problem here with nested projects?
 		}
 		if (task.isCancelled()) {

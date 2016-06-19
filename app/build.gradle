@@ -39,6 +39,7 @@ android {
         targetCompatibility 1.7
     }
     lintOptions {
+        checkReleaseBuilds false
         enable 'deprecation', 'NewerVersionAvailable' // FIXME does it work?
     }
 

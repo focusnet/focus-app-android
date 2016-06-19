@@ -165,7 +165,16 @@ public class NavigationListAdapter extends BaseAdapter
 					itemViewSet.getDescription().setVisibility(View.VISIBLE);
 				}
 				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem) listItem).getSecondaryIcon());
-				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
+
+				if (listItem.isDisabled()) {
+					row.setEnabled(false);
+					row.setOnClickListener(null);
+					itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(R.color.textColorDiscrete));
+				}
+				else {
+					itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
+				}
+
 				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:
 				itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());

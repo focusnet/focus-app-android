@@ -529,7 +529,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					return true;
 				}
 				// Handle action bar actions click
-				//TODO YANDY analyze this
 				switch (item.getItemId()) {
 					default:
 						return super.onOptionsItemSelected(item);

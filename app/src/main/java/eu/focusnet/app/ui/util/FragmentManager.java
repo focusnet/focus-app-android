@@ -43,7 +43,7 @@ public class FragmentManager
 
 		if (!isFragementPoped) {
 			FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-			fragTrans.setCustomAnimations(R.anim.in_from_down, R.anim.out_to_down);
+			fragTrans.setCustomAnimations(R.animator.in_from_down, R.animator.out_to_down);
 			fragTrans.replace(containerViewId, fragment, fragementName);
 			fragTrans.addToBackStack(fragementName);
 			fragTrans.commit();

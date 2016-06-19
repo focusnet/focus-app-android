@@ -59,6 +59,7 @@ public class ProjectInstance extends AbstractInstance
 	private ArrayList<ProjectInstance> projects;
 
 	private ProjectTemplate template;
+	private boolean disabled;
 
 	/**
 	 * C'tor
@@ -77,6 +78,7 @@ public class ProjectInstance extends AbstractInstance
 		this.tools = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.depthInHierarchy = depthInHierarchy;
+		this.disabled  = this.template.isDisabled();
 
 		this.build();
 	}
@@ -203,8 +205,9 @@ public class ProjectInstance extends AbstractInstance
 					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
 				}
 
-				try { // FIXME
-					title = TypesHelper.asString(dataContext.resolve(template.getTitle()));
+				try {
+					Object x = dataContext.resolve(template.getTitle());
+					title = TypesHelper.asString(x);
 					description = TypesHelper.asString(dataContext.resolve(template.getDescription()));
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
@@ -386,5 +389,10 @@ public class ProjectInstance extends AbstractInstance
 				i.buildPaths(this.path);
 			}
 		}
+	}
+
+	public boolean isDisabled()
+	{
+		return this.disabled;
 	}
 }

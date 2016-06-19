@@ -159,7 +159,8 @@ public class BookmarkFragment extends ListFragment
 						originalTitle.equals(bl.getName()) ? "" : originalTitle,
 						rightIcon,
 						true,
-						Bookmark.BookmarkLinkType.PAGE.toString()
+						Bookmark.BookmarkLinkType.PAGE.toString(),
+						false
 				);
 				newItems.add(listItem);
 			}

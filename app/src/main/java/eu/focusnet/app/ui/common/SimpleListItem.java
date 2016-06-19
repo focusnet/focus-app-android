@@ -32,11 +32,18 @@ public class SimpleListItem
 {
 	private final String title;
 	private final Bitmap primaryIcon;
+	private final boolean disabled;
 
 	public SimpleListItem(Bitmap primaryIcon, String title)
 	{
+		this(primaryIcon, title, false);
+	}
+
+	public SimpleListItem(Bitmap primaryIcon, String title, boolean disabled)
+	{
 		this.primaryIcon = primaryIcon;
 		this.title = title;
+		this.disabled = disabled;
 	}
 
 	public Bitmap getPrimaryIcon()
@@ -47,6 +54,11 @@ public class SimpleListItem
 	public String getTitle()
 	{
 		return title;
+	}
+
+	public boolean isDisabled()
+	{
+		return disabled;
 	}
 }
 

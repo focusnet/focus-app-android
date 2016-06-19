@@ -48,7 +48,7 @@ public class AppContentTemplate extends FocusObject
 {
 
 	private String title;
-	private LinkedHashMap<String, String> data;
+	private LinkedHashMap<String, String> data = new LinkedHashMap<>();
 	private ArrayList<ProjectTemplate> projects = new ArrayList<>();
 	private String language;
 

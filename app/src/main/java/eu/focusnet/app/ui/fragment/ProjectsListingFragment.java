@@ -111,6 +111,7 @@ public class ProjectsListingFragment extends ListFragment
 					String projectPath = p.getPath();
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
+					boolean disabled = p.isDisabled();
 
 					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
@@ -122,7 +123,8 @@ public class ProjectsListingFragment extends ListFragment
 							projectDesc,
 							checkedBookmark ? rightIconIfActive : rightIconIfNotActive,
 							checkedBookmark,
-							bookmarkLinkType
+							bookmarkLinkType,
+							disabled
 					);
 					listItems.add(drawListItem);
 				}

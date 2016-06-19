@@ -21,6 +21,7 @@
 package eu.focusnet.app.ui.fragment.widget;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,8 @@ public class TextWidgetFragment extends WidgetFragment
 		this.setupWidget(inflater.inflate(R.layout.fragment_widget_text, container, false));
 
 		TextView textContent = (TextView) this.rootView.findViewById(R.id.text_content);
-		textContent.setText(((TextWidgetInstance) this.widgetInstance).getContent());
+		String txt = ((TextWidgetInstance) this.widgetInstance).getContent();
+		textContent.setText(Html.fromHtml(txt));
 
 		return this.rootView;
 	}

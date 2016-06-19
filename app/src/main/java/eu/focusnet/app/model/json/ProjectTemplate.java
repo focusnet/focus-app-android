@@ -37,7 +37,7 @@ public class ProjectTemplate implements Serializable
 	private String title;
 	private String description;
 
-	private LinkedHashMap<String, String> data = null;
+	private LinkedHashMap<String, String> data = new LinkedHashMap<>();
 
 	private ArrayList<WidgetTemplate> widgets;
 	private ArrayList<PageTemplate> pages;
@@ -45,6 +45,7 @@ public class ProjectTemplate implements Serializable
 	private ArrayList<PageReference> dashboards;
 	private ArrayList<PageReference> tools;
 	private ArrayList<ProjectTemplate> projects = new ArrayList<>();
+	private boolean disabled;
 
 	public String getGuid()
 	{
@@ -122,5 +123,10 @@ public class ProjectTemplate implements Serializable
 	public ArrayList<ProjectTemplate> getProjects()
 	{
 		return this.projects;
+	}
+
+	public boolean isDisabled()
+	{
+		return this.disabled;
 	}
 }

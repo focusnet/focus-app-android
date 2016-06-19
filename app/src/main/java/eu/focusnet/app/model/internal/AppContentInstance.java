@@ -57,7 +57,7 @@ public class AppContentInstance extends AbstractInstance
 	 *
 	 * @param tpl
 	 */
-	public AppContentInstance(AppContentTemplate tpl, DataManager dm)
+	public AppContentInstance(AppContentTemplate tpl, DataManager dm) throws InterruptedException
 	{
 		super(dm);
 
@@ -69,8 +69,10 @@ public class AppContentInstance extends AbstractInstance
 
 		// build the whole app data model
 		this.build();
+		this.waitForCompletion();
 
 		// when all is done, build the paths of all instances
+		// we MUST wait for completion
 		this.buildPaths(null);
 
 		if (!this.isValid()) {
@@ -157,12 +159,7 @@ public class AppContentInstance extends AbstractInstance
 
 	public void waitForCompletion() throws InterruptedException
 	{
-		this.dataManager.getDataRetrievingExecutor().shutdown();
-		// Wait for everything to finish.
-		//noinspection StatementWithEmptyBody
-		while (!this.dataManager.getDataRetrievingExecutor().awaitTermination(5, TimeUnit.SECONDS)) {
-				// wait silently
-		}
+		this.dataManager.waitForCompletion();
 		this.freeDataContext();
 	}
 

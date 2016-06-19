@@ -36,9 +36,10 @@ public class PageTemplate
 
 	private String iterator;
 
-	private LinkedHashMap<String, String> data = null;
+	private LinkedHashMap<String, String> data = new LinkedHashMap<>();
 
-	private ArrayList<WidgetReference> widgets;
+	private ArrayList<WidgetReference> widgets = new ArrayList<>();
+	private boolean disabled;
 
 	public String getGuid()
 	{
@@ -68,5 +69,10 @@ public class PageTemplate
 	public LinkedHashMap<String, String> getData()
 	{
 		return data;
+	}
+
+	public boolean isDisabled()
+	{
+		return disabled;
 	}
 }

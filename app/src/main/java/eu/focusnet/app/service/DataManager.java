@@ -98,7 +98,7 @@ public class DataManager implements ApplicationStatusObserver
 
 
 	private boolean applicationReady;
-	final private ExecutorService dataRetrievingExecutor;
+	private ExecutorService dataRetrievingExecutor;
 	/**
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
 	 * instanciation of the application content, by avoiding to retrieve many time the same
@@ -123,7 +123,6 @@ public class DataManager implements ApplicationStatusObserver
 	 * <p/>
 	 * FIXME check that last sentence, I have a doubt now. Not really useful?
 	 */
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	// private ArrayList<AbstractInstance> activeInstances;
 	private AppContentTemplate appContentTemplate;
 
@@ -137,19 +136,24 @@ public class DataManager implements ApplicationStatusObserver
 		this.applicationReady = false;
 // FIXME		this.activeInstances = new ArrayList<>();
 
+		// setup database
+		this.databaseAdapter = new DatabaseAdapter();
+
 		// queue for retrieving data
-		this.dataRetrievingExecutor = new ThreadPoolExecutor(Constant.MAX_CONCURRENT_DOWNLOADS, Constant.MAX_CONCURRENT_DOWNLOADS,
-			0L, TimeUnit.MILLISECONDS,
-			new PriorityBlockingQueue<>(100, new PriorityTaskComparator()));
+		this.dataRetrievingExecutor = DataManager.DataPoolFactory();
 
 		// setup network
 		this.net = new NetworkManager();
 
 		// setup cache
 		this.cache = new HashMap<>();
+	}
 
-		// setup database
-		this.databaseAdapter = new DatabaseAdapter();
+	private static ExecutorService DataPoolFactory()
+	{
+		return new ThreadPoolExecutor(Constant.MAX_CONCURRENT_DOWNLOADS, Constant.MAX_CONCURRENT_DOWNLOADS,
+				0L, TimeUnit.MILLISECONDS,
+				new PriorityBlockingQueue<>(100, new PriorityTaskComparator()));
 	}
 
 
@@ -516,14 +520,15 @@ public class DataManager implements ApplicationStatusObserver
 		AppContentTemplate template = this.getAppContentTemplate(templateUri);
 		// FIXME useless ? ???this.registerActiveInstance(this.appContentInstance);
 
-		AppContentInstance app = new AppContentInstance(template, this); // FIXME wait for completion? required?
+		AppContentInstance app = null; // FIXME wait for completion? required?
 		try {
-			app.waitForCompletion();
+			app = new AppContentInstance(template, this);
 		}
 		catch (InterruptedException e) {
-			// operation has been interrupted.
+			// we were interrupted. Let's not return our new object.
 			app = null;
 		}
+
 		return app;
 	}
 
@@ -727,5 +732,16 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 
+	public void waitForCompletion() throws InterruptedException
+	{
+		this.dataRetrievingExecutor.shutdown();
+		// Wait for everything to finish.
+		//noinspection StatementWithEmptyBody
+		while (!this.dataRetrievingExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+			// wait silently
+		}
+		// create a new pool in case we need it in the future (e.g. resync)
+		this.dataRetrievingExecutor = DataManager.DataPoolFactory();
+	}
 }
 

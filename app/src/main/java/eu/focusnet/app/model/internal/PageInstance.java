@@ -56,6 +56,7 @@ public class PageInstance extends AbstractInstance
 	private PageType type;
 	private String title;
 	private String description;
+	private boolean disabled;
 
 	/**
 	 * C'tor
@@ -73,6 +74,7 @@ public class PageInstance extends AbstractInstance
 		this.widgets = new LinkedHashMap<>();
 		this.dataContext = dataCtx;
 		this.depthInHierarchy = depthInHierarchy;
+		this.disabled = this.template.isDisabled();
 
 		// register page-specific data to our current data context
 		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy);
@@ -205,5 +207,10 @@ public class PageInstance extends AbstractInstance
 			WidgetInstance p = (WidgetInstance) e.getValue();
 			p.buildPaths(this.path);
 		}
+	}
+
+	public boolean isDisabled()
+	{
+		return disabled;
 	}
 }

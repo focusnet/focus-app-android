@@ -147,7 +147,7 @@ public class DataManager implements ApplicationStatusObserver
 	{
 		return new ThreadPoolExecutor(Constant.MAX_CONCURRENT_DOWNLOADS, Constant.MAX_CONCURRENT_DOWNLOADS,
 				0L, TimeUnit.MILLISECONDS,
-				new PriorityBlockingQueue<>(100, new PriorityTaskComparator()));
+				new PriorityBlockingQueue<>(Constant.MAX_CONCURRENT_DOWNLOADS, new PriorityTaskComparator()));
 	}
 
 

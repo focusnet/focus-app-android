@@ -138,7 +138,7 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy);
+		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy); // provide data called AFTER projects set iterator
 
 		if (this.description == null) {
 			this.description = "";
@@ -177,6 +177,7 @@ public class ProjectInstance extends AbstractInstance
 
 		// possible to have a project within a project
 		if (this.template.getProjects() != null) {
+
 			this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext, this.depthInHierarchy + 1);
 			for (ProjectInstance pi : this.projects) {
 				if (!pi.isValid()) {
@@ -208,7 +209,7 @@ public class ProjectInstance extends AbstractInstance
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					// silent skipping
 					FocusApplication.reportError(ex);
-					return false;
+					return false; // FIXME real problem may be here. not ready, yet.
 				}
 
 				freeDataContext();

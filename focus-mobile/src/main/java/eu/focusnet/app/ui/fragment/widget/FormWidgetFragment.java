@@ -210,6 +210,8 @@ public class FormWidgetFragment extends WidgetFragment
 		label.setLayoutParams(layout);
 
 		EditText textfield = new EditText(this.context);
+		String value = f.getDefaultValue();
+
 
 		// type of input
 		TextfieldFieldInstance.ValidType type = ((TextfieldFieldInstance) f).getInputType();
@@ -217,6 +219,19 @@ public class FormWidgetFragment extends WidgetFragment
 		switch (type) {
 			case TEXTFIELD_TYPE_DECIMAL:
 				editorType = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_DECIMAL | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
+				// numbers rounding
+				if (value == null || value.equals("")) {
+					value = "0";
+				}
+				int decimals = ((TextfieldFieldInstance) f).getDecimalsNumber();
+				double factor = Math.pow(10, decimals);
+				double newVal = ((int) (Double.parseDouble(value) * factor)) / factor;
+				if (decimals == 0) {
+					value = Integer.toString((int) newVal);
+				}
+				else {
+					value = Double.toString(newVal);
+				}
 				break;
 			case TEXTFIELD_TYPE_EMAIL:
 				editorType = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS; // FIXME NOT SURE IT WORKS
@@ -234,7 +249,7 @@ public class FormWidgetFragment extends WidgetFragment
 		}
 		textfield.setInputType(editorType);
 		textfield.setMaxLines(1);
-		textfield.setText(f.getDefaultValue());
+		textfield.setText(value);
 		textfield.setGravity(Gravity.TOP);
 
 		if (f.isReadOnly()) {

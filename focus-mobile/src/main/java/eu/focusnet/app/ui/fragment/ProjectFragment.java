@@ -208,8 +208,10 @@ public class ProjectFragment extends ListFragment
 				for(ProjectInstance p : projects) {
 
 					String projectPath = p.getPath();
+
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
+
 					boolean disabled  = p.isDisabled();
 
 					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case

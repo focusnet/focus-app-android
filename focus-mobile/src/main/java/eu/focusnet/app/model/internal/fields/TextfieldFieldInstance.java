@@ -65,6 +65,9 @@ public class TextfieldFieldInstance extends FieldInstance
 
 	private static final String TEXTFIELD_LABEL_INPUT_TYPE = "input-type";
 	protected ValidType inputType;
+	private static final String TEXTFIELD_LABEL_DECIMALS_NUMBER = "decimals-number";
+	private static final int TEXTFIELD_DEFAULT_DECIMALS_NUMBER = 2;
+	private int decimalsNumber;
 
 	public TextfieldFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
@@ -88,11 +91,28 @@ public class TextfieldFieldInstance extends FieldInstance
 				this.markAsInvalid();
 			}
 		}
+
+		this.decimalsNumber = TEXTFIELD_DEFAULT_DECIMALS_NUMBER;
+		Object rawDecimalsNumbers = this.config.get(TEXTFIELD_LABEL_DECIMALS_NUMBER);
+		if (rawDecimalsNumbers != null) {
+			try {
+				this.decimalsNumber = (int) Double.parseDouble(TypesHelper.asString(rawDecimalsNumbers));
+			}
+			catch (FocusBadTypeException ex) {
+				this.markAsInvalid();
+			}
+		}
 	}
 
 	public ValidType getInputType()
 	{
 		return this.inputType;
+	}
+
+
+	public int getDecimalsNumber()
+	{
+		return this.decimalsNumber;
 	}
 
 }

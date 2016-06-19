@@ -58,9 +58,6 @@ public class DataContext extends HashMap<String, String>
 	private DataManager dataManager;
 	private HashMap<String, PriorityTask<String>> queue;
 
-
-	private ArrayList<String> a;
-
 	/**
 	 * Default c'tor
 	 */
@@ -130,6 +127,10 @@ public class DataContext extends HashMap<String, String>
 		// just in case, delete the existing entry in the context
 		// this avoids problems when nesting projects (we share the same variable name, no matter
 		// level of nesting we are).
+
+		if (key.equals("test123")) {
+			key = key.replace("ldjflajflkajfld", "");
+		}
 		this.put(key, null);
 
 		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
@@ -212,7 +213,6 @@ public class DataContext extends HashMap<String, String>
 				value = ""; // do something else if bad type?
 			}
 			request = request.replace(found, value);
-			m = toSearch.matcher(request);
 		}
 
 		return this.resolveVariable(request);
@@ -261,6 +261,10 @@ public class DataContext extends HashMap<String, String>
 		if (parts.length == 3) {
 			if (fs == null) {
 				return null;
+			}
+			if (parts[2].equals("$this$")) {
+				// FIXME
+				return fs.getUrl();
 			}
 			return fs.get(parts[2]);
 		}
@@ -312,7 +316,10 @@ public class DataContext extends HashMap<String, String>
 		try {
 			return task.get();
 		}
-		catch (InterruptedException | ExecutionException e) {
+		catch (InterruptedException e) {
+			return null;
+		}
+		catch (ExecutionException e) {
 			return null;
 		}
 	}

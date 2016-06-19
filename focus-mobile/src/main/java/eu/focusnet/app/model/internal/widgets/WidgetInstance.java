@@ -114,6 +114,10 @@ public abstract class WidgetInstance extends AbstractInstance
 	public static WidgetInstance factory(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
 		WidgetInstance w;
+		String a = "abc";
+		if (template == null) {
+			a = a.replace("asdlkfj", "");
+		}
 		switch (template.getType()) {
 			case WIDGET_TYPE_TEXT:
 				w = new TextWidgetInstance(template, layoutConfig, newCtx);

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/focus-mobile/app.iml" filepath="$PROJECT_DIR$/focus-mobile/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/focus-app-android.iml" filepath="$PROJECT_DIR$/focus-app-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/focus-mobile/focus-mobile.iml" filepath="$PROJECT_DIR$/focus-mobile/focus-mobile.iml" />
     </modules>

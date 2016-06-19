@@ -65,7 +65,7 @@ public class AppContentInstance extends AbstractInstance
 		this.buildPaths(null);
 
 		if (!this.isValid()) {
-			throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
+		//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
 		}
 	}
 

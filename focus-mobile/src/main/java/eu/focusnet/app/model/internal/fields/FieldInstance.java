@@ -51,6 +51,7 @@ abstract public class FieldInstance
 	private String type;
 	private boolean isMandatory;
 	private boolean valid;
+	private Object decimalsNumber;
 
 	public FieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
@@ -149,4 +150,5 @@ abstract public class FieldInstance
 	{
 		this.markAsInvalid();
 	}
+
 }

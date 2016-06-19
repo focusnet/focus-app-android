@@ -177,7 +177,7 @@ public class NavigationListAdapter extends BaseAdapter
 				itemViewSet.getDescription().setVisibility(View.GONE);
 			// FIXME	row.setOnClickListener(null); here we should have the default listener
 				itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(android.R.color.black));
-				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
+				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem)); // FIXME also be careful with this one
 
 				String description = ((FeaturedListItem) listItem).getDescription();
 				if (description != null && !description.equals("")) {
@@ -191,6 +191,10 @@ public class NavigationListAdapter extends BaseAdapter
 					row.setEnabled(false);
 					row.setOnClickListener(null);
 					itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(R.color.textColorDiscrete));
+					itemViewSet.getSecondaryIcon().setOnClickListener(null);
+				}
+				else {
+
 				}
 
 

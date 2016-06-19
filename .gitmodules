@@ -1,3 +1,6 @@
 [submodule "app/src/main/assets/webapps/fi.simosol.focus.map"]
 	path = app/src/main/assets/webapps/fi.simosol.focus.map
 	url = git@github.com:focusnet/fi.simosol.focus.map.git
+[submodule "focus-mobile/src/main/assets/webapps/fi.simosol.focus.map"]
+	path = focus-mobile/src/main/assets/webapps/fi.simosol.focus.map
+	url = git@github.com:focusnet/fi.simosol.focus.map.git

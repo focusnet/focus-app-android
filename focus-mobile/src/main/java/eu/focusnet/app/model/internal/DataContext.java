@@ -28,12 +28,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusSample;
 import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.model.util.TypesHelper;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.service.PriorityTask;
 
@@ -172,8 +176,46 @@ public class DataContext extends HashMap<String, String>
 	public void provideData(HashMap<String, String> data, int depthInHierarchy)
 	{
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			this.register(entry.getKey(), entry.getValue(), depthInHierarchy); // just a little bit less important than the iterators -> -1
+			this.register(entry.getKey(), entry.getValue(), depthInHierarchy);
 		}
+	}
+
+
+	/**
+	 * Resolves variables in
+	 *
+	 * Can not be nested "test <ctx/simple-url/<ctx/other-url/field>> test" except if there is nothing around it.
+	 * This is not a feature but a side effect of the implementation. not tested.
+	 *
+	 *
+	 * @param request
+	 * @return
+	 * @throws FocusMissingResourceException
+	 */
+	public Object resolve(String request) throws FocusMissingResourceException
+	{
+		String a = Constant.SELECT_CONTEXT_FULL_PATTERN;
+		Pattern toSearch = Pattern.compile(Constant.SELECT_CONTEXT_FULL_PATTERN);
+		Matcher m = toSearch.matcher(request);
+		while (m.find()) {
+			// if we have an exact match, e.g. only <ctx/...> in the request, then
+			// get out of the loop to make a raw variable interpolation, without stringification
+			if (m.start() == 0 && m.end() == request.length()) {
+				break;
+			}
+			String found = m.group();
+			String value;
+			try {
+				value = TypesHelper.asString(this.resolveVariable(found));
+			}
+			catch (FocusBadTypeException e) {
+				value = ""; // do something else if bad type?
+			}
+			request = request.replace(found, value);
+			m = toSearch.matcher(request);
+		}
+
+		return this.resolveVariable(request);
 	}
 
 	/**
@@ -188,9 +230,10 @@ public class DataContext extends HashMap<String, String>
 	 * <p/>
 	 * If the request does not succeed, throw a FocusMissingResourceException
 	 *
-	 * @return
+	 * The request can be a variable (<ctx/.../...>) or a simple string that will be passed through without processing other than checking if null
+	 *     * @return
 	 */
-	public Object resolve(String request) throws FocusMissingResourceException
+	public Object resolveVariable(String request) throws FocusMissingResourceException
 	{
 		if (request == null) {
 			return "";

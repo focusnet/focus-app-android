@@ -77,7 +77,14 @@ public class Constant
 			SELECTOR_SERVICE_HISTORY = "history",
 			SELECTOR_SERVICE_LOOKUP = "lookup",
 			SELECTOR_SERVICE_SEPARATOR = "\\|",
-			SELECTOR_CONTEXT_SEPARATOR = "/";
+			SELECTOR_CONTEXT_SEPARATOR = "/",
+			SELECT_CONTEXT_FULL_PATTERN = Constant.SELECTOR_OPEN
+					+ Constant.SELECTOR_CONTEXT_LABEL
+					+ Constant.SELECTOR_CONTEXT_SEPARATOR
+					+ "[^" + Constant.SELECTOR_CONTEXT_SEPARATOR + Constant.SELECTOR_CLOSE + "]+("
+					+ Constant.SELECTOR_CONTEXT_SEPARATOR
+					+ "[^" + Constant.SELECTOR_CLOSE + "]+)?"
+					+ Constant.SELECTOR_CLOSE;
 
 	public static final int MAX_CONCURRENT_DOWNLOADS = 40;
 }

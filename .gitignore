@@ -8,4 +8,6 @@
 /captures
 /app/build
 app/src/main/assets/focus.properties
+/focus-mobile/build
+focus-mobile/src/main/assets/focus.properties
 *~

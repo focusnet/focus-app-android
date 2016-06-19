@@ -112,6 +112,17 @@ public class NavigationListAdapter extends BaseAdapter
 		return position;
 	}
 
+	/**
+	 * We recycle views, so we should also clean our mess beforee using them, i.e. initialize them properly.
+	 *
+	 * apparently the recycliing is done separatly for each item TYPE
+	 * FIXME find reference in doc
+	 *
+	 * @param position
+	 * @param convertView
+	 * @param parent
+	 * @return
+	 */
 	@Override
 	public View getView(final int position, final View convertView, ViewGroup parent)
 	{
@@ -119,9 +130,10 @@ public class NavigationListAdapter extends BaseAdapter
 		FeaturedListItemViewSet itemViewSet;
 		SimpleListItem listItem = listItems.get(position);
 
+
 		int itemType = this.getItemViewType(position);
 
-		if (convertView == null) {
+		// if (convertView == null) { FIXME bug with clicklistener, let's deactivate recycling for now
 			// create new view holder
 			itemViewSet = new FeaturedListItemViewSet();
 
@@ -149,21 +161,30 @@ public class NavigationListAdapter extends BaseAdapter
 				itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
 			}
 			row.setTag(itemViewSet);
-		}
-		else {
+		/* }
+		 FIXME see above else {
 			// recycle existing view holder
 			row = convertView;
 			itemViewSet = (FeaturedListItemViewSet) row.getTag();
-		}
+		}*/
 
+		// type seems to help to remember??? convertview may be per type
 		// Set values to our Views
 		switch (itemType) {
 			case LIST_TYPE_LINK:
+				// reasonable defaults
+				row.setEnabled(true);
+				itemViewSet.getDescription().setVisibility(View.GONE);
+			// FIXME	row.setOnClickListener(null); here we should have the default listener
+				itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(android.R.color.black));
+				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
+
 				String description = ((FeaturedListItem) listItem).getDescription();
 				if (description != null && !description.equals("")) {
 					itemViewSet.getDescription().setText(description);
 					itemViewSet.getDescription().setVisibility(View.VISIBLE);
 				}
+
 				itemViewSet.getSecondaryIcon().setImageBitmap(((FeaturedListItem) listItem).getSecondaryIcon());
 
 				if (listItem.isDisabled()) {
@@ -171,9 +192,7 @@ public class NavigationListAdapter extends BaseAdapter
 					row.setOnClickListener(null);
 					itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(R.color.textColorDiscrete));
 				}
-				else {
-					itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem));
-				}
+
 
 				// no break, we share attributes with LIST_TYPE_HEADER
 			case LIST_TYPE_HEADER:

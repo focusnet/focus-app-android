@@ -18,19 +18,16 @@
         <item>@drawable/ic_power_off</item>
     </string-array>
     <string-array name="demo_use_cases_values">
-        <item>ui-library</item>
         <item>pilot-case-1</item>
         <item>pilot-case-3</item>
     </string-array>
     <string-array name="demo_use_cases_labels">
-        <item>@string/use_case_ui_lib</item>
         <item>@string/use_case_ui_pc1</item>
         <item>@string/use_case_ui_pc3</item>
     </string-array>
     <string-array name="demo_use_cases_app_content_uris">
-        <item>http://focus.yatt.ch/debug/app-content-4.json</item>
         <item>http://focus.yatt.ch/application-contents/pilot-case-1.json</item>
-        <item>http://focus.yatt.ch/debug/app-content-5.json</item>
+        <item>http://focus.yatt.ch/application-contents/pilot-case-3.json</item>
     </string-array>
 
     <!-- Application -->
@@ -51,8 +48,8 @@
     <string name="drawer_menu_entry_logout">Log out</string>
 
     <string name="use_case_ui_lib">UI library</string>
-    <string name="use_case_ui_pc1">FOCUS Pilot Case I - Winterthur</string>
-    <string name="use_case_ui_pc3">FOCUS Pilot Case III - Arnsberg</string>
+    <string name="use_case_ui_pc1">FOCUS Pilot Case I - Forest Management</string>
+    <string name="use_case_ui_pc3">FOCUS Pilot Case III - Forest Logistics</string>
 
 
 

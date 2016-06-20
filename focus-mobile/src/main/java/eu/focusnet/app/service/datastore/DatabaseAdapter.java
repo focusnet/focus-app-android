@@ -98,7 +98,7 @@ public class DatabaseAdapter
 	/**
 	 * Close the database
 	 */
-	public void close()
+	public synchronized void close()
 	{
 		--this.numberOfConsumers;
 		if (this.numberOfConsumers == 0) {

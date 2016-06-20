@@ -122,6 +122,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 				this.markAsInvalid();
 				return;
 			}
+
 			this.xAxisLabel = TypesHelper.asString(
 					this.dataContext.resolve(
 							TypesHelper.asString(rawLabel)

@@ -82,6 +82,18 @@ public class TableWidgetInstance extends WidgetInstance
 				this.markAsInvalid();
 				return;
 			}
+
+			try {
+				rawValues = this.dataContext.resolve(TypesHelper.asString(rawValues));
+			}
+			catch (FocusBadTypeException e) {
+				// ok to ignore, means that we are already in an array context
+			}
+			catch (FocusMissingResourceException e) {
+				e.printStackTrace();
+				return;
+			}
+
 			try {
 				header = TypesHelper.asString(rawHeader);
 				values = TypesHelper.asArrayOfStrings(rawValues);
@@ -137,6 +149,7 @@ public class TableWidgetInstance extends WidgetInstance
 				}
 			}
 		}
+		return;
 	}
 
 	/**

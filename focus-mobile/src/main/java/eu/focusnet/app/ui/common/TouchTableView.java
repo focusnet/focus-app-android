@@ -44,6 +44,7 @@ public class TouchTableView extends TableView
 		super(context, attributes, styleAttributes);
 	}
 
+	// FIXME does not work anymore????
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{

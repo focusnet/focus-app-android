@@ -39,7 +39,7 @@ import eu.focusnet.app.ui.util.UiHelper;
  */
 public class TableWidgetFragment extends WidgetFragment
 {
-	private final static int HEIGHT_DP_PER_ROW = 60;
+	private final static int HEIGHT_DP_PER_ROW = 50;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -68,8 +68,8 @@ public class TableWidgetFragment extends WidgetFragment
 	protected void alterReferenceHeight()
 	{
 		int computed = UiHelper.dpToPixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
-		int max = UiHelper.dpToPixels((int) this.getDisplayHeightInDp(), this.getActivity());
-		this.referenceHeight = Math.min(computed, max);
+		//int max = UiHelper.dpToPixels((int) this.getDisplayHeightInDp(), this.getActivity());
+		this.referenceHeight = computed; //  Math.min(computed, max);
 	}
 
 

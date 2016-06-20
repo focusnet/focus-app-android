@@ -51,6 +51,11 @@ import eu.focusnet.app.service.PriorityTask;
  * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
  * <p/>
  * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
+ *
+ *
+ *
+ * FIXME issues with concurrency. convert everything to a HashMap<String,PriorityTask>
+ *
  */
 public class DataContext extends HashMap<String, String>
 {
@@ -250,7 +255,7 @@ public class DataContext extends HashMap<String, String>
 
 		String[] parts = request.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length < 2) {
-			return new FocusInternalErrorException("Invalid context in resolve request.");
+			throw new FocusInternalErrorException("Invalid context in resolve request.");
 		}
 
 		String url = this.get(parts[1]);
@@ -306,13 +311,6 @@ public class DataContext extends HashMap<String, String>
 			throw new FocusInternalErrorException("No task for requested data. Logic problem. Perhaps a badly written JSON file with invalid variables?");
 // FIXME problem here with nested projects?
 		}
-		if (task.isCancelled()) {
-			return null;
-		}
-		if (task.isDone()) {
-			return super.get(key);
-		}
-		// else wait for completion
 		try {
 			return task.get();
 		}

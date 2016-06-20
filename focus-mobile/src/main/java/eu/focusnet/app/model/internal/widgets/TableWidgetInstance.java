@@ -20,7 +20,9 @@
 
 package eu.focusnet.app.model.internal.widgets;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import eu.focusnet.app.exception.FocusBadTypeException;
@@ -37,6 +39,8 @@ public class TableWidgetInstance extends WidgetInstance
 	private final static String CONFIG_LABEL_COLUMNS = "columns";
 	private final static String CONFIG_LABEL_HEADER = "header";
 	private final static String CONFIG_LABEL_VALUES = "values";
+
+	private final static String CONFIG_LABEL_IS_EPOCH = "epoch"; // FIXME better filtering/formatting system is required
 
 	private String[] headers;
 	private String[][] values;
@@ -78,13 +82,21 @@ public class TableWidgetInstance extends WidgetInstance
 
 			Object rawHeader = m.get(CONFIG_LABEL_HEADER);
 			Object rawValues = m.get(CONFIG_LABEL_VALUES);
+			Object rawIsEpoch = m.get(CONFIG_LABEL_IS_EPOCH);
+
+			boolean isEpoch = false;
+			if (rawIsEpoch != null && rawIsEpoch instanceof Boolean && (Boolean) rawIsEpoch) {
+				isEpoch = true;
+			}
+
 			if (rawHeader == null || rawValues == null) {
 				this.markAsInvalid();
 				return;
 			}
 
 			try {
-				rawValues = this.dataContext.resolve(TypesHelper.asString(rawValues));
+				String s = TypesHelper.asString(rawValues);
+				rawValues = this.dataContext.resolve(s);
 			}
 			catch (FocusBadTypeException e) {
 				// ok to ignore, means that we are already in an array context
@@ -112,9 +124,19 @@ public class TableWidgetInstance extends WidgetInstance
 				return;
 			}
 
+			DateFormat dateFormat = DateFormat.getDateTimeInstance();
 			for (int i = 0; i < values.size(); ++i) {
 				try {
-					values.set(i, TypesHelper.asString(this.dataContext.resolve(values.get(i))));
+					String v = TypesHelper.asString(this.dataContext.resolve(values.get(i)));
+					if (isEpoch) {
+						Double d = Double.parseDouble(v);
+						long longVal = Double.valueOf(d).longValue() * 1000;
+						 v = dateFormat.format(new Date(longVal));
+					}
+					else {
+						v += " ";
+					}
+					values.set(i, v);
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					this.markAsInvalid();
@@ -124,6 +146,7 @@ public class TableWidgetInstance extends WidgetInstance
 
 			tmpHeaders.add(header);
 			tmpValues.add(values);
+
 			this.maxNumberOfRows = (this.maxNumberOfRows >= values.size()) ? this.maxNumberOfRows : values.size();
 			++this.numberOfColumns;
 		}

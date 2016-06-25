@@ -42,38 +42,62 @@ import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.util.ApplicationHelper;
 
-// Singleton (the only one)
 
 /**
- * singleton : only static methods if the operation affects the current state of the app. E.g. triggerSync, replaceDataManager(), getAppStatus, etc.
- * <p/>
- * hence all methods called from UI are static or via getInstance
+ * This object is the entry point of the mail application logic. In the MVC paradygm, it would be
+ * the Controller.
+ *
+ * This class is a Singleton (the only one of the application). We only access static methods
+ * when it comes to access or alter the state of the currently running application, e.g. when
+ * we want to replace the current {@link DataManager}. Following this logic, the UI always acts on
+ * static methods (or accessed via {@link #getInstance}).
  */
 public class FocusAppLogic
 {
 	/**
-	 * singleton instance
+	 * Singleton instance
 	 */
-	private static FocusAppLogic instance = new FocusAppLogic();
+	final private static FocusAppLogic instance = new FocusAppLogic();
+
+	/**
+	 * Android's context from which this object has been created.
+	 * See {@link FocusApplication}.
+	 */
+	private Context context;
 
 	/**
 	 * The GSON object with which we do all our Java Object &lt;-&gt; JSON transformations
 	 */
 	private Gson gson;
-	private DataManager dataManager;
-	private Context context;
-	private UserManager userManager;
-	private CronService cronService;
-	private boolean cronBound = false;
+
 	/**
-	 * Defines callbacks for service binding, passed to bindService()
+	 * The currently active {@link DataManager} for the application.
+	 */
+	private DataManager dataManager;
+
+	/**
+	 * Current {@link UserManager} for the application.
+	 */
+	private UserManager userManager;
+
+	/**
+	 * Current periodic task operator. See {@link CronService}.
+	 */
+	private CronService cronService;
+
+	/**
+	 * Tells whether the {@link CronService} is bound.
+	 */
+	private boolean cronBound = false;
+
+	/**
+	 * Defines callbacks for {@link CronService} binding, passed to {@code bindService()}.
 	 */
 	private ServiceConnection cronServiceConnection = new ServiceConnection()
 	{
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service)
 		{
-			// We've bound to LocalService, cast the IBinder and get CronService instance
 			CronService.CronBinder binder = (CronService.CronBinder) service;
 			cronService = binder.getService();
 			cronBound = true;
@@ -91,28 +115,43 @@ public class FocusAppLogic
 	 */
 	private boolean applicationReady;
 
-
 	/**
-	 * The {@link AppContentInstance} is the instanciation of the {@link AppContentTemplate}
-	 * referenced above. It means that the template will be evaluated and expanded with actual data.
+	 * The {@link AppContentInstance} is the model of the application content. It's content is
+	 * used to generate the UI and interact with the model (e.g. create, upate, delete, etc.).
 	 */
 	private AppContentInstance currentApplicationContent;
 
 	/**
-	 * Singleton constructor
+	 * Singleton constructor. It is empty, we are only interested in the object reference here.
 	 */
 	private FocusAppLogic()
 	{
 
 	}
 
+	/**
+	 * Singleton accessor
+	 *
+	 * @return A static reference to our Singleton.
+	 */
 	public static FocusAppLogic getInstance()
 	{
 		return instance;
 	}
 
 	/**
-	 * Get the GSON object used for data conversion in our app
+	 * We need the context for some static method operations,
+	 * such as {@link ApplicationHelper#getSystemService(String)}}.
+	 *
+	 * @return the current {@code ApplicationContext}
+	 */
+	public static Context getApplicationContext()
+	{
+		return instance.context;
+	}
+
+	/**
+	 * Get the GSON object used for data conversion in our app.
 	 * <p/>
 	 * The GSON configuration never changes, so its safe to refer to it statically.
 	 *
@@ -124,21 +163,24 @@ public class FocusAppLogic
 		return instance.gson;
 	}
 
-
+	/**
+	 * Get the current {@link DataManager} of the application.
+	 *
+	 * @return The current {@link DataManager}.
+	 */
 	public static DataManager getDataManager()
 	{
 		return instance.dataManager;
 	}
 
-
 	/**
-	 * We need the context for some static method operations, such as NetworkManager.isNetworkAvailable()
+	 * Get the current {@link UserManager} of the application.
 	 *
-	 * @return the current ApplicationContext
+	 * @return The current {@link UserManager}.
 	 */
-	public static Context getApplicationContext()
+	public static UserManager getUserManager()
 	{
-		return instance.context;
+		return instance.userManager;
 	}
 
 	/**
@@ -152,13 +194,10 @@ public class FocusAppLogic
 		return instance.currentApplicationContent;
 	}
 
-	public static UserManager getUserManager()
-	{
-		return instance.userManager;
-	}
-
 	/**
 	 * Initialize app logic.
+	 *
+	 * @param context Current {@code ApplicationContext}.
 	 */
 	public void init(Context context)
 	{
@@ -169,10 +208,9 @@ public class FocusAppLogic
 
 		// setup DataManager
 		this.dataManager = new DataManager();
+
 		// if at first run there is already something in the database, then we should use it
 		// and not overwrite it by refetching data.
-		// FIXME runs on main thread, warnings in logs
-		// D/StrictMode: StrictMode policy violation; ~duration=147 ms: android.os.StrictMode$StrictModeDiskReadViolation: policy=31 violation=2
 		this.dataManager.useExistingDataSet();
 
 		// Access control facility
@@ -188,19 +226,26 @@ public class FocusAppLogic
 	}
 
 	/**
-	 * do the full login.
+	 * Do the full login.
 	 * <p/>
-	 * Get the 3 basic objects, and then instantiate the Application content as a
+	 * Get the 3 basic objects
+	 * ({@link eu.focusnet.app.model.json.User},
+	 * {@link eu.focusnet.app.model.json.UserPreferences},
+	 * {@link AppContentTemplate}),
+	 * and then instantiate the Application content as a
 	 * {@link AppContentInstance}, based on the Application template ({@link AppContentTemplate}).
 	 *
-	 * @throws FocusMissingResourceException If any of the involved resources could not be found
+	 * @throws FocusMissingResourceException If any of the involved resources could not be found.
 	 */
 	public void acquireApplicationData() throws FocusMissingResourceException
 	{
 		// Get data from access control handler.
 		this.userManager.getUserData();
 
+		// Try to create the app content instance
 		this.currentApplicationContent = this.dataManager.retrieveApplicationData();
+
+		// if success, do set the current application content instance. Otherwise, announce logout
 		if (this.currentApplicationContent != null) {
 			this.applicationReady = true;
 		}
@@ -215,14 +260,15 @@ public class FocusAppLogic
 			this.cronService.onApplicationLoad(this.applicationReady);
 		}
 
+		// be nice and willingly free memory that we don't need anymore
 		this.dataManager.freeMemory();
 	}
 
 	/**
-	 * We do a local copy of the whole initialization procedure and then copy back into
-	 * the real object in case of success
+	 * Data synchronization: we do a local copy of the whole initialization procedure and then
+	 * register the reference of the new object as the current object in case of success.
 	 *
-	 * @throws FocusMissingResourceException if any error happens
+	 * @throws FocusMissingResourceException if any error happens.
 	 */
 	public void sync() throws FocusMissingResourceException
 	{
@@ -283,7 +329,7 @@ public class FocusAppLogic
 	}
 
 	/**
-	 * Reset whole app (delete everything)
+	 * Reset whole app. This deletes everything that is locally stored.
 	 * <p/>
 	 * Note: this method called when crashing, so bugs in there won't be reportedby ACRA. Pay extra attention to it.
 	 */
@@ -304,7 +350,5 @@ public class FocusAppLogic
 	public void freeMemory()
 	{
 		this.dataManager.freeMemory();
-
-		// any other service/memory eater?
 	}
 }

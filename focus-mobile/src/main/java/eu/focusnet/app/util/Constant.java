@@ -224,8 +224,7 @@ final public class Constant
 		/**
 		 * Owner of the resource
 		 * <p/>
-		 * FIXME: hard-coded and not really used for now, as we do not have per-user
-		 * access management in FOCUS, yet.
+		 * FIXME: hard-coded and not really used for now, as we do not have per-user access control in FOCUS, yet.
 		 */
 		final public static String OWNER = "owner";
 
@@ -233,8 +232,7 @@ final public class Constant
 		 * Editor of the sample, i.e. the individual or organization that edited this version
 		 * of the resource.
 		 * <p/>
-		 * FIXME: hard-coded and not really used for now, as we do not have per-user
-		 * access management in FOCUS, yet.
+		 * FIXME: hard-coded and not really used for now, as we do not have per-user access control in FOCUS, yet.
 		 */
 		final public static String EDITOR = "editor";
 

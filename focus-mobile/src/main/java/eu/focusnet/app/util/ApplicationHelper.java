@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
 import java.io.IOException;
@@ -47,9 +48,10 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
- * A helper class used for retrieving Properties.
- * <p/>
- * FIXME might contain methods for accessing getResource(), getAppContext, ...
+ * A helper class to retrieve application configuration and Android facilities.
+ *
+ * All these facilities should be accessed through this class, and not via the
+ * {@link  FocusAppLogic} singleton.
  */
 public class ApplicationHelper
 {
@@ -58,7 +60,6 @@ public class ApplicationHelper
 	 *
 	 * @param key The key of the property to retrieve
 	 * @return A String containing the value of the property, or {@code null} on failure.
-	 * @throws IOException If the properties file could not be open
 	 */
 	public static String getProperty(String key)
 	{
@@ -69,7 +70,7 @@ public class ApplicationHelper
 			properties.load(inputStream);
 		}
 		catch (IOException ex) {
-			throw new FocusInternalErrorException("IO error when accessing property file."); // FIXME throw ex
+			throw new FocusInternalErrorException("IO error when accessing property file.");
 		}
 		return properties.getProperty(key);
 	}
@@ -80,8 +81,6 @@ public class ApplicationHelper
 	 * but will impact all the rest of the life of the application. It does not impact the UI
 	 * directly but is typically called from an Activity's on Resume() method, or just before
 	 * redirecting to another Activity.
-	 * <p/>
-	 * FIXME strange behaviors in emulator. Sometimes does not work. See if any problem on real device.
 	 */
 	public static void changeLanguage(String language)
 	{
@@ -126,18 +125,16 @@ public class ApplicationHelper
 	}
 
 	/**
-	 * Get the list of languages for which we have a translation.
+	 * Get the list of languages for which we have a translation. This is hard-coded.
 	 *
-	 * @return An array consisting of supported languages.
-	 * The languages can be also local versions, e.g. fr_CH instead of fr.
-	 * <p/>
-	 * FIXME should we put this elsewhere / e.g. in util.ApplicationHelper
+	 * @return An array consisting of supported languages. The languages can be also a localized
+	 * versions, e.g. fr_CH instead of fr.
 	 */
 	private static List<String> getSupportedLanguages()
 	{
 		return Arrays.asList(
 				"en",
-				"fr" // FIXME property?
+				"fr"
 		);
 	}
 
@@ -156,6 +153,11 @@ public class ApplicationHelper
 		);
 	}
 
+	/**
+	 * Retrieve the default locale to use as a fallback.
+	 *
+	 * @return The {@code Locale} to use.
+	 */
 	private static Locale getDefaultLocale()
 	{
 		String defaultLocale = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_DEFAULT_LOCALE);
@@ -175,13 +177,13 @@ public class ApplicationHelper
 	/**
 	 * Save provided preferences into the SharedPreferences store.
 	 *
-	 * @param pref A key-value pair set to save. All saved values are String.
+	 * @param preferences A key-value pair set to save. All saved values are String.
 	 */
-	public static void savePreferences(HashMap<String, String> pref)
+	public static void savePreferences(HashMap<String, String> preferences)
 	{
 		SharedPreferences store = getApplicationContext().getSharedPreferences(Constant.SharedPreferences.SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = store.edit();
-		for (Map.Entry e : pref.entrySet()) {
+		for (Map.Entry e : preferences.entrySet()) {
 			editor.putString((String) e.getKey(), (String) e.getValue());
 		}
 		editor.apply();
@@ -189,6 +191,8 @@ public class ApplicationHelper
 
 	/**
 	 * Get all values for the SharedPreferences store
+	 *
+	 * @return The complete set of preferences.
 	 */
 	public static HashMap<String, String> getPreferences()
 	{
@@ -213,36 +217,73 @@ public class ApplicationHelper
 		editor.apply();
 	}
 
+	/**
+	 * Get the application-wide Android context.
+	 *
+	 * @return The Android ApplicationContext.
+	 */
 	public static Context getApplicationContext()
 	{
 		return FocusAppLogic.getApplicationContext();
 	}
 
+	/**
+	 * Get application assets.
+	 *
+	 * @return The {@code AssetManager} to use to browse assets.
+	 */
 	public static AssetManager getAssets()
 	{
 		return getApplicationContext().getAssets();
 	}
 
-	public static ContentResolver getContentResolver()
+	/**
+	 * Get the Android ID of this device.
+	 *
+	 * @return The Android ID.
+	 */
+	public static String getAndroidId()
 	{
-		return getApplicationContext().getContentResolver();
+		return Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 	}
 
+	/**
+	 * Get the Resources of the application.
+	 *
+	 * @return The object used to access resources.
+	 */
 	public static Resources getResources()
 	{
 		return getApplicationContext().getResources();
 	}
 
+	/**
+	 * Get the package manager of the system.
+	 *
+	 * @return The {@code PackageManager} to use to retrieve information.
+	 */
 	public static PackageManager getPackageManager()
 	{
 		return getApplicationContext().getPackageManager();
 	}
 
+	/**
+	 * Check a specific permissions.
+	 *
+	 * @param what The name of the permission.
+	 * @return {@code true} if the permission is granted, {@code false} otherwise.
+	 */
 	public static boolean checkPermission(String what)
 	{
 		return ActivityCompat.checkSelfPermission(getApplicationContext(), what) == PackageManager.PERMISSION_GRANTED;
 	}
 
+	/**
+	 * Get a system service.
+	 *
+	 * @param name The name of the service to acquire.
+	 * @return The service of interest
+	 */
 	public static Object getSystemService(String name)
 	{
 		return getApplicationContext().getSystemService(name);

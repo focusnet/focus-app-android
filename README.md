@@ -20,6 +20,10 @@ we use git sumbodules for fi.simosol.focus.map. Be careful, submodules are not e
 ## Third-party software
 
 Android:
+MPAndroidChart
+Table
+GSON
+Google API
 
 Webapps:
 - jQuery
@@ -52,4 +56,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ````
 
+# DOC
+- MVC-like
 
+# TODO
+- check if we set synchronized methods and volatile properties correctly
+- check that ACRA works in production. Sometimes the bug report window is not shown in emulator. Watch.
+- Anonymize ACRA reports
+- FocusApplogic#init() -> useExistingDataSet() -> warning in logs because is run on main thread. -> move to EntrypointActivity#doInBackground() ?
+- i18n change language always work? emulator sometimes give strange results.
+- getSupportedLanguages() -> from properties?

@@ -215,7 +215,7 @@ public class UserManager implements ApplicationStatusObserver
 		// - one Use URI per user
 		// - one UserPreferences URI per user x use case combination
 		// - one AppContentTemplate per use case
-		String userId = "user-" + Settings.Secure.getString(ApplicationHelper.getContentResolver(), Settings.Secure.ANDROID_ID);
+		String userId = "user-" + ApplicationHelper.getAndroidId();
 
 		// no need to set credentials, we won't use them.
 		this.loginServer = "";

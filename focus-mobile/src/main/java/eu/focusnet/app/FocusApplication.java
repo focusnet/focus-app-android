@@ -40,21 +40,21 @@ import eu.focusnet.app.util.Constant;
  * FOCUS Application
  * <p/>
  * This is the entry point of our application and direct subclass of the default Android
- * Application.
+ * Application object.
  * <p/>
  * In this class, we override the default behavior by:
  * - Defining a custom error reporting system (ACRA)
  * - Defining a custom Activity handler used to
- * <p/>
- * FIXME review all methods and set synchronize / volatile when appropriate
- * FIXME ACRA make sure it works in production. I noticed that sometimes the interactive dialog is not shown emulator (real-time issue?) / Probably only when debugger is attached.
- * <p/>
- * FIXME see FocusAppLogic, which acts as the controller in  MVC
  */
 public class FocusApplication extends Application
 {
 
 
+	/**
+	 * We override the handler for uncaught exceptions and this variable will hold
+	 * a reference to the original one (actually ACRA's one,
+	 * see {@link #attachBaseContext(Context)}, as we also use it.
+	 */
 	private Thread.UncaughtExceptionHandler originalUncaughtExceptionHandler;
 
 	/**
@@ -67,8 +67,6 @@ public class FocusApplication extends Application
 	 * This also allows us to send reports even if no exception is triggered. We may for example
 	 * monitor the application performance and send a report if it is too slow, for knowing what
 	 * happens.
-	 * <p/>
-	 * FIXME the report may contain sensitive information. It should be anonymized.
 	 *
 	 * @param e The exception to be transmitted on the remote reporting server.
 	 */
@@ -86,7 +84,6 @@ public class FocusApplication extends Application
 	 * Attach the base Context
 	 * <p/>
 	 * This implementation does:
-	 * - register our Singleton instance
 	 * - Enable MultiDex
 	 * - Enable ACRA when not in DEBUG build mode
 	 * - Register a custom uncaught exception handler
@@ -135,7 +132,7 @@ public class FocusApplication extends Application
 		}
 
 
-		/*
+		/**
 		 * We create a custom uncaught exception handler that will delete any local data if any
 		 * exception is not caught.
 		 *
@@ -155,10 +152,7 @@ public class FocusApplication extends Application
 			public void uncaughtException(Thread thread, Throwable ex)
 			{
 				if (FocusAppLogic.getInstance() != null) {
-					// FIXME disabled for demo; would require to reload all data, and that may take some time.
-					// but in production, that's better to enable. Like this, the app is less prone
-					// to be stuck in an odd state.
-					// 	FocusAppLogic.getInstance().reset();
+					FocusAppLogic.getInstance().reset();
 				}
 
 				if (BuildConfig.DEBUG) {
@@ -219,7 +213,9 @@ public class FocusApplication extends Application
 	public void onTrimMemory(int level)
 	{
 		super.onTrimMemory(level);
-		FocusAppLogic.getInstance().freeMemory();
+		if (FocusAppLogic.getInstance() != null) {
+			FocusAppLogic.getInstance().freeMemory();
+		}
 	}
 
 	/**
@@ -229,7 +225,9 @@ public class FocusApplication extends Application
 	public void onLowMemory()
 	{
 		super.onLowMemory();
-		FocusAppLogic.getInstance().freeMemory();
+		if (FocusAppLogic.getInstance() != null) {
+			FocusAppLogic.getInstance().freeMemory();
+		}
 	}
 
 

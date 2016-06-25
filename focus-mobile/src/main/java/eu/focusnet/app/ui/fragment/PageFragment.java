@@ -126,7 +126,6 @@ public class PageFragment extends Fragment
 				if (spaceLeft != 0) {
 					WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 					Bundle widgetBundle = new Bundle();
-					widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 					widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
 					emptyWidgetFragment.setArguments(widgetBundle);
 					FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
@@ -147,7 +146,6 @@ public class PageFragment extends Fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
 			widgetBundle.putString(Constant.Extra.UI_EXTRA_PATH, widgetInstance.getPath());
-			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, requiredSpace);
 			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW, Constant.Ui.LAYOUT_NUM_OF_COLUMNS - spaceLeft);
 			widgetFragment.setArguments(widgetBundle);
@@ -161,7 +159,6 @@ public class PageFragment extends Fragment
 		if (spaceLeft != 0) {
 			WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
 			emptyWidgetFragment.setArguments(widgetBundle);
 			FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());

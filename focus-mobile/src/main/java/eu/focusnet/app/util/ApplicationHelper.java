@@ -18,7 +18,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package eu.focusnet.app.util;
 
 import android.content.ContentResolver;
@@ -54,8 +53,6 @@ import eu.focusnet.app.model.internal.AppContentInstance;
  */
 public class ApplicationHelper
 {
-
-
 	/**
 	 * Retrieve a property.
 	 *

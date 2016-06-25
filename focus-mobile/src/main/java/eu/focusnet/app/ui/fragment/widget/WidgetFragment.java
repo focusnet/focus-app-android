@@ -57,6 +57,7 @@ public abstract class WidgetFragment extends Fragment
 {
 
 	private final static int UI_MARGIN_SIZE = 22;
+
 	/**
 	 * Reference height: if not 0, the widget will be set to this number of dp.
 	 * This allows us to adapt the height depending on the content of the widget.
@@ -123,10 +124,9 @@ public abstract class WidgetFragment extends Fragment
 	{
 		Bundle arguments = getArguments();
 		int width = 0; // width is determined by the weight only
-		int height = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT);
 		int numOfCols = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT);
 		int positionInRow = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, numOfCols);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT, numOfCols);
 
 		// set a reasonable margin between fragments
 		int margin = UiHelper.dpToPixels(UI_MARGIN_SIZE, this.getActivity());

@@ -25,12 +25,6 @@ package eu.focusnet.app.util;
  */
 final public class Constant
 {
-
-
-
-
-
-
 	/**
 	 * Constants related to Application configuration
 	 */
@@ -43,11 +37,7 @@ final public class Constant
 		final public static String ASSETS_PROPERTY_FILE = "focus.properties";
 
 		/**
-		 * Date format being used internally, i.e. when not displayed by to the user.
-		 * <p/>
-		 * This is ISO 8601
-		 * <p/>
-		 * FIXME database-realted?
+		 * Date format being used internally in JSON structures. This is ISO 8601.
 		 */
 		final public static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
@@ -490,12 +480,17 @@ final public class Constant
 	final public static class DataReference
 	{
 		/**
-		 * A data selector is identified by an opening character, a service keyword and parameters,
-		 * and a closing character. This constant defines the opening charachter.
+		 * A data selector is identified by an opening character, a selector type keyword
+		 * and parameters, and a closing character. This constant defines the opening character.
+		 *
+		 * There are 2 types of data selectors: context accessor and services. context accessor
+		 * (ctx) definitions are separated with / and services are separated with |. Context
+		 * accessor can be nested into services.
 		 * <p/>
 		 * For example:
 		 * - {@code <ctx/example/prop1>}
-		 * - {@code <history/example/since=...>}
+		 * - {@code <history|example|since=...>}
+		 * - {@code <history|ctx/example/prop2|since=...>}
 		 */
 		final public static String SELECTOR_OPEN = "<";
 
@@ -505,13 +500,13 @@ final public class Constant
 		final public static String SELECTOR_CLOSE = ">";
 
 		/**
-		 * Service keywork for accessing the current
+		 * Data selector keywork for accessing the current
 		 * {@link eu.focusnet.app.model.internal.DataContext}. See {@link #SELECTOR_OPEN}.
 		 */
 		final public static String SELECTOR_CONTEXT_LABEL = "ctx";
 
 		/**
-		 * Service keywork for accessing the history of
+		 * Data selector keywork for accessing the history of
 		 * a {@link eu.focusnet.app.model.json.FocusSample}. See {@link #SELECTOR_OPEN}.
 		 */
 		final public static String SELECTOR_SERVICE_HISTORY = "history";
@@ -523,9 +518,9 @@ final public class Constant
 		final public static String SELECTOR_CONTEXT_SEPARATOR = "/";
 
 		/**
-		 * FIXME check usage and refine doc
+		 * Services separator pattern. See {@link #SELECTOR_OPEN}.
 		 */
-		final public static String SELECTOR_SERVICE_SEPARATOR = "\\|";
+		final public static String SELECTOR_SERVICE_SEPARATOR_PATTERN = "\\|";
 
 		/**
 		 * Pattern matching the {@link #SELECTOR_CONTEXT_LABEL} selector.
@@ -608,20 +603,14 @@ final public class Constant
 		final public static String UI_EXTRA_LOADING_INFO_TEXT = "eu.focusnet.app.extra.LOADING_INFO_TEXT";
 
 		/**
-		 * Height to
-		 *
-		 * FIXME is that eventually used?
-		 */
-		final public static String UI_EXTRA_LAYOUT_HEIGHT = "eu.focusnet.app.extra.LAYOUT_HEIGHT";
-
-		/**
 		 * Weight information for the widget to display. This is used to actually define the width
 		 * taken by widgets on our grid.
 		 */
 		final public static String UI_EXTRA_LAYOUT_WEIGHT = "eu.focusnet.app.extra.LAYOUT_WEIGHT";
 
 		/**
-		 * ??? FIXME ???
+		 * Defines where the widget is located in the row. This is used to decide whether we set a
+		 * margin around the widget or not.
 		 */
 		final public static String UI_EXTRA_LAYOUT_POSITION_IN_ROW = "eu.focusnet.app.extra.POSITION_IN_ROW";
 
@@ -635,6 +624,8 @@ final public class Constant
 		/**
 		 * Used for transmitting input object to external application. We send a stringified
 		 * JSON FocusSample in this extra.
+		 *
+		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_INPUT = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT";
 
@@ -642,7 +633,9 @@ final public class Constant
 		 * Used to acquire return value from external application. We receive a stringified
 		 * JSON FocusSample in this extra.
 		 * <p/>
-		 * FIXME not used, yet, but ready. See FIXME
+		 * FIXME not used, yet, but ready.
+		 *
+		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.app.extra.EXTERNAL_APP_OUTPUT";
 	}

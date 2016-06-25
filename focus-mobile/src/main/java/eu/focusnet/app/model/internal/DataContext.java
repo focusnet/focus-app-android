@@ -22,7 +22,6 @@ package eu.focusnet.app.model.internal;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -359,7 +358,7 @@ public class DataContext extends HashMap<String, String>
 						f = dataManager.getSample(u);
 					}
 					else {
-						String[] parts = description.split(Constant.DataReference.SELECTOR_SERVICE_SEPARATOR);
+						String[] parts = description.split(Constant.DataReference.SELECTOR_SERVICE_SEPARATOR_PATTERN);
 						if (parts.length != 3) {
 							throw new FocusInternalErrorException("Wrong number of fields for description of service.");
 						}

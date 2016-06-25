@@ -28,6 +28,8 @@ Google API
 Webapps:
 - jQuery
 - SIMOSOL: 
+
+
 ## License
 
 This software is released under the commercial-friendly and open-source MIT license.
@@ -66,3 +68,5 @@ SOFTWARE.
 - FocusApplogic#init() -> useExistingDataSet() -> warning in logs because is run on main thread. -> move to EntrypointActivity#doInBackground() ?
 - i18n change language always work? emulator sometimes give strange results.
 - getSupportedLanguages() -> from properties?
+- FocusInternalException:  FIXME probably bad practice. We should keep the original exception. 
+- Translate to DE

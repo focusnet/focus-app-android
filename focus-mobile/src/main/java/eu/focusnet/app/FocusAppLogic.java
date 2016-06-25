@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -33,13 +33,13 @@ import java.util.Date;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.model.internal.AppContentInstance;
-import eu.focusnet.app.model.json.AppContentTemplate;
+import eu.focusnet.app.model.AppContentInstance;
+import eu.focusnet.app.model.DateTypeAdapter;
+import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.service.NetworkManager;
 import eu.focusnet.app.service.UserManager;
-import eu.focusnet.app.service.network.NetworkManager;
-import eu.focusnet.app.ui.adapter.DateTypeAdapter;
 import eu.focusnet.app.util.ApplicationHelper;
 
 
@@ -229,8 +229,8 @@ public class FocusAppLogic
 	 * Do the full login.
 	 * <p/>
 	 * Get the 3 basic objects
-	 * ({@link eu.focusnet.app.model.json.User},
-	 * {@link eu.focusnet.app.model.json.UserPreferences},
+	 * ({@link eu.focusnet.app.model.gson.User},
+	 * {@link eu.focusnet.app.model.gson.UserPreferences},
 	 * {@link AppContentTemplate}),
 	 * and then instantiate the Application content as a
 	 * {@link AppContentInstance}, based on the Application template ({@link AppContentTemplate}).
@@ -303,7 +303,7 @@ public class FocusAppLogic
 		catch (FocusInternalErrorException ex) {
 			// if we crash, this is because the user objects could not be retrieved and they are mandatory.
 			// Let the application survive anyway (we are in a background job, invisible to end user..
-			throw new FocusMissingResourceException("Cannot retrieve user object when syncing data");
+			throw new FocusMissingResourceException("Cannot retrieve user object when syncing data", "newUserManager.getUserData()");
 		}
 
 		// throws FocusMissingResourceException if any error

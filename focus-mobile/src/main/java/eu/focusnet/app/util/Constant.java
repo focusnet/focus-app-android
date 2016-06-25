@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p>
+ * <p/>
  * Permission is hereby granted; free of charge; to any person obtaining a copy of this software
  * and associated documentation files (the "Software"); to deal in the Software without restriction;
  * including without limitation the rights to use; copy; modify; merge; publish; distribute;
  * sublicense; and/or sell copies of the Software; and to permit persons to whom the Software is
  * furnished to do so; subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS"; WITHOUT WARRANTY OF ANY KIND; EXPRESS OR IMPLIED; INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY; FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM;
@@ -19,6 +19,10 @@
  */
 
 package eu.focusnet.app.util;
+
+import eu.focusnet.app.model.DataContext;
+import eu.focusnet.app.model.PageInstance;
+import eu.focusnet.app.model.ProjectInstance;
 
 /**
  * Contains constants that are not class-specific.
@@ -356,17 +360,17 @@ final public class Constant
 
 		/**
 		 * When iterating over multiple objects at the project level, a variable is created in the
-		 * {@link eu.focusnet.app.model.internal.ProjectInstance}'s
-		 * {@link eu.focusnet.app.model.internal.DataContext} and this constant defines the
+		 * {@link ProjectInstance}'s
+		 * {@link DataContext} and this constant defines the
 		 * name of this variable. This variable is also available
-		 * to child {@link eu.focusnet.app.model.internal.PageInstance}s.
+		 * to child {@link PageInstance}s.
 		 */
 		final public static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
 
 		/**
 		 * When iterating over multiple objects at the page level, a variable is created in the
-		 * {@link eu.focusnet.app.model.internal.PageInstance}'s
-		 * {@link eu.focusnet.app.model.internal.DataContext} and this constant defines the
+		 * {@link PageInstance}'s
+		 * {@link DataContext} and this constant defines the
 		 * name of this variable.
 		 */
 		final public static String LABEL_PAGE_ITERATOR = "$page-iterator$";
@@ -380,20 +384,20 @@ final public class Constant
 
 		/**
 		 * JSON schema of the object used to represent user's information
-		 * (see {@link eu.focusnet.app.model.json.User}).
+		 * (see {@link eu.focusnet.app.model.gson.User}).
 		 */
 		final public static String FOCUS_DATA_MODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/focus-user-information/v1.0";
 
 		/**
 		 * JSON schema of the object used to represent user's preferences
-		 * (see {@link eu.focusnet.app.model.json.UserPreferences}).
+		 * (see {@link eu.focusnet.app.model.gson.UserPreferences}).
 		 */
 		final public static String FOCUS_DATA_MODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0";
 
 		/**
 		 * JSON schema of the object used to represent FOCUS Samples, which are used to represent
 		 * arbitrary data being consumed by the application.
-		 * See {@link eu.focusnet.app.model.json.FocusSample}.
+		 * See {@link eu.focusnet.app.model.gson.FocusSample}.
 		 */
 		final public static String FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE = "http://reference.focusnet.eu/schemas/focus-data-sample/v1.0";
 
@@ -500,13 +504,13 @@ final public class Constant
 
 		/**
 		 * Data selector keywork for accessing the current
-		 * {@link eu.focusnet.app.model.internal.DataContext}. See {@link #SELECTOR_OPEN}.
+		 * {@link DataContext}. See {@link #SELECTOR_OPEN}.
 		 */
 		final public static String SELECTOR_CONTEXT_LABEL = "ctx";
 
 		/**
 		 * Data selector keywork for accessing the history of
-		 * a {@link eu.focusnet.app.model.json.FocusSample}. See {@link #SELECTOR_OPEN}.
+		 * a {@link eu.focusnet.app.model.gson.FocusSample}. See {@link #SELECTOR_OPEN}.
 		 */
 		final public static String SELECTOR_SERVICE_HISTORY = "history";
 

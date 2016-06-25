@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 3
-        versionName "v0.9.5"
+        versionName "v0.9.11"
         multiDexEnabled true
         // rename output archive name
         setProperty("archivesBaseName", "FOCUS-Mobile-$versionName") 
@@ -27,9 +27,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false // FIXME enable, for now warning regarding libs dependencies (MPChartAndroid)
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // FIXME TODO
         }
         debug {
             debuggable true
@@ -41,7 +40,7 @@ android {
     }
     lintOptions {
         checkReleaseBuilds false
-        enable 'deprecation', 'NewerVersionAvailable' // FIXME does it work?
+        enable 'deprecation', 'NewerVersionAvailable' // only works for Google libs
     }
 
 }

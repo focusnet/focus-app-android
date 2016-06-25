@@ -12,6 +12,11 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# FIXME check class path after cleaning
+-keepclassmembers class eu.focusnet.app.ui.fragment.widget.WebAppInterface {
+   public *;
+}
+
+# MPAndroidChart depends on io.realm.* but does not include it.
+# We don't use the features of this dependency, so let's ignore it.
+-dontwarn io.realm.**

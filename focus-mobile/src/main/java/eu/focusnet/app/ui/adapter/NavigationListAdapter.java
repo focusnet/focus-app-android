@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -76,7 +76,7 @@ public class NavigationListAdapter extends BaseAdapter
 	@Override
 	public int getViewTypeCount()
 	{
-		return LIST_TYPE_EMPTY+1;
+		return LIST_TYPE_EMPTY + 1;
 	}
 
 	@Override
@@ -134,33 +134,33 @@ public class NavigationListAdapter extends BaseAdapter
 		int itemType = this.getItemViewType(position);
 
 		// if (convertView == null) { FIXME bug with clicklistener, let's deactivate recycling for now
-			// create new view holder
-			itemViewSet = new FeaturedListItemViewSet();
+		// create new view holder
+		itemViewSet = new FeaturedListItemViewSet();
 
-			// resource to inflate depends on current itemType
-			int resourceToInflate;
-			switch (itemType) {
-				case LIST_TYPE_EMPTY:
-					resourceToInflate = R.layout.list_item_empty;
-					break;
-				case LIST_TYPE_HEADER:
-					resourceToInflate = R.layout.list_item_header;
-					break;
-				case LIST_TYPE_LINK:
-					resourceToInflate = R.layout.list_item_link;
-					break;
-				default:
-					throw new FocusInternalErrorException("No view to inflate for list item.");
-			}
-			row = inflater.inflate(resourceToInflate, parent, false);
+		// resource to inflate depends on current itemType
+		int resourceToInflate;
+		switch (itemType) {
+			case LIST_TYPE_EMPTY:
+				resourceToInflate = R.layout.list_item_empty;
+				break;
+			case LIST_TYPE_HEADER:
+				resourceToInflate = R.layout.list_item_header;
+				break;
+			case LIST_TYPE_LINK:
+				resourceToInflate = R.layout.list_item_link;
+				break;
+			default:
+				throw new FocusInternalErrorException("No view to inflate for list item.");
+		}
+		row = inflater.inflate(resourceToInflate, parent, false);
 
-			itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
-			itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
-			if (!(itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY)) {
-				itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
-				itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
-			}
-			row.setTag(itemViewSet);
+		itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
+		itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
+		if (!(itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY)) {
+			itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
+			itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
+		}
+		row.setTag(itemViewSet);
 		/* }
 		 FIXME see above else {
 			// recycle existing view holder
@@ -175,7 +175,7 @@ public class NavigationListAdapter extends BaseAdapter
 				// reasonable defaults
 				row.setEnabled(true);
 				itemViewSet.getDescription().setVisibility(View.GONE);
-			// FIXME	row.setOnClickListener(null); here we should have the default listener
+				// FIXME	row.setOnClickListener(null); here we should have the default listener
 				itemViewSet.getTitle().setTextColor(ApplicationHelper.getResources().getColor(android.R.color.black));
 				itemViewSet.getSecondaryIcon().setOnClickListener(getOnClickBookmarkListener((FeaturedListItem) listItem)); // FIXME also be careful with this one
 
@@ -205,7 +205,7 @@ public class NavigationListAdapter extends BaseAdapter
 				break;
 		}
 
-		switch(itemType) {
+		switch (itemType) {
 			case LIST_TYPE_HEADER:
 			case LIST_TYPE_EMPTY:
 				row.setEnabled(false);

@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -72,7 +72,7 @@ public class ProjectInstance extends AbstractInstance
 		this.tools = new ArrayList<>();
 		this.projects = new ArrayList<>();
 		this.depthInHierarchy = depthInHierarchy;
-		this.disabled  = this.template.isDisabled();
+		this.disabled = this.template.isDisabled();
 
 		this.build();
 	}
@@ -145,7 +145,7 @@ public class ProjectInstance extends AbstractInstance
 
 		// 2x same same FIXME modularize better
 		if (this.template.getDashboards() != null) {
-			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD, this.depthInHierarchy+1);
+			this.dashboards = this.createPageInstances(this.template.getDashboards(), PageInstance.PageType.DASHBOARD, this.depthInHierarchy + 1);
 			if (this.dashboards == null) {
 				this.markAsInvalid();
 			}
@@ -160,7 +160,7 @@ public class ProjectInstance extends AbstractInstance
 		}
 
 		if (this.template.getTools() != null) {
-			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL, this.depthInHierarchy+1);
+			this.tools = this.createPageInstances(this.template.getTools(), PageInstance.PageType.TOOL, this.depthInHierarchy + 1);
 			if (this.tools == null) {
 				this.markAsInvalid();
 			}
@@ -356,8 +356,8 @@ public class ProjectInstance extends AbstractInstance
 		sources.add(this.dashboards);
 		sources.add(this.tools);
 		sources.add(this.projects);
-		for (ArrayList<AbstractInstance> array  : sources) {
-			for (AbstractInstance i : array ) {
+		for (ArrayList<AbstractInstance> array : sources) {
+			for (AbstractInstance i : array) {
 				AbstractInstance ret = i.lookupByPath(searchedPath);
 				if (ret != null) {
 					return ret;
@@ -379,8 +379,8 @@ public class ProjectInstance extends AbstractInstance
 		sources.add(this.projects);
 
 
-		for (ArrayList<AbstractInstance> ar  : sources) {
-			for (AbstractInstance i : ar ) {
+		for (ArrayList<AbstractInstance> ar : sources) {
+			for (AbstractInstance i : ar) {
 				i.buildPaths(this.path);
 			}
 		}

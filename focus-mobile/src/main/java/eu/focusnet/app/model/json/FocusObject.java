@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -34,6 +34,8 @@ import eu.focusnet.app.FocusAppLogic;
 public class FocusObject implements Serializable
 {
 
+	protected String owner,
+			editor;
 	/**
 	 * Safe to use this user like this, as it will be used for data creation,
 	 * and therefore this User should represent the one that is currently used by the application
@@ -43,8 +45,6 @@ public class FocusObject implements Serializable
 	 */
 	private String type,
 			url;
-	protected String owner,
-			editor;
 	private int version;
 	private Date creationDateTime,
 			editionDateTime;
@@ -83,8 +83,8 @@ public class FocusObject implements Serializable
 		User user = FocusAppLogic.getUserManager().getUserAsIs();
 		this.type = type;
 		this.url = url;
-		this.owner = (owner != null ? owner : (user  != null ? user.toString() : ""));
-		this.editor = (editor != null ? editor : (user  != null ? user.toString() : ""));
+		this.owner = (owner != null ? owner : (user != null ? user.toString() : ""));
+		this.editor = (editor != null ? editor : (user != null ? user.toString() : ""));
 		this.version = version;
 		this.creationDateTime = creationDateTime != null ? creationDateTime : new Date();
 		this.editionDateTime = editionDateTime != null ? editionDateTime : new Date();

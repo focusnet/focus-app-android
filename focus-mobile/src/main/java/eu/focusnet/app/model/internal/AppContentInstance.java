@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,7 +23,6 @@ package eu.focusnet.app.model.internal;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
 import eu.focusnet.app.service.DataManager;
@@ -65,7 +64,7 @@ public class AppContentInstance extends AbstractInstance
 		this.buildPaths(null);
 
 		if (!this.isValid()) {
-		//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
+			//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
 		}
 	}
 
@@ -90,7 +89,7 @@ public class AppContentInstance extends AbstractInstance
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
 		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext, this.depthInHierarchy + 1);
-		for(ProjectInstance pi : this.projects) {
+		for (ProjectInstance pi : this.projects) {
 			if (!pi.isValid()) {
 				this.markAsInvalid();
 				break;
@@ -109,8 +108,6 @@ public class AppContentInstance extends AbstractInstance
 	}
 
 
-
-
 	public String getTitle()
 	{
 		return title;
@@ -127,7 +124,7 @@ public class AppContentInstance extends AbstractInstance
 	@Override
 	protected AbstractInstance propagatePathLookup(String searchedPath)
 	{
-		for(ProjectInstance p : this.projects) {
+		for (ProjectInstance p : this.projects) {
 			AbstractInstance ret = p.lookupByPath(searchedPath);
 			if (ret != null) {
 				return ret;
@@ -141,7 +138,7 @@ public class AppContentInstance extends AbstractInstance
 	public void buildPaths(String parentPath)
 	{
 		this.path = Constant.Navigation.PATH_ROOT;
-		for(ProjectInstance pi : this.projects) {
+		for (ProjectInstance pi : this.projects) {
 			pi.buildPaths(this.path);
 		}
 	}

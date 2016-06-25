@@ -11,6 +11,6 @@
         style="@style/FocusText.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="all" />
+        android:autoLink="all"/>
 
 </LinearLayout>

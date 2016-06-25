@@ -51,6 +51,7 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 
 /**
@@ -61,10 +62,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class NetworkManager
 {
-	public final static int NETWORK_REQUEST_STATUS_SUCCESS = 0x0;
-	public final static int NETWORK_REQUEST_STATUS_NETWORK_FAILURE = 0x1;
-	public final static int NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE = 0x2;
-	private static final String ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER = "self-signed-certificates";
+
 	private final static SSLContext sslContext = NetworkManager.initSslContext();
 
 
@@ -75,7 +73,7 @@ public class NetworkManager
 	 */
 	public NetworkManager()
 	{
-		System.setProperty("http.maxConnections", "5");
+		System.setProperty("http.maxConnections", "5"); // FIXME remove!
 
 	}
 
@@ -125,9 +123,9 @@ public class NetworkManager
 
 			// Add each certificate in the keystore
 			AssetManager am = ApplicationHelper.getAssets();
-			List<String> certificates = Arrays.asList(am.list(ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER));
+			List<String> certificates = Arrays.asList(am.list(Constant.AppConfig.ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER));
 			for (String cert : certificates) {
-				InputStream caInput = new BufferedInputStream(am.open(ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER + "/" + cert));
+				InputStream caInput = new BufferedInputStream(am.open(Constant.AppConfig.ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER + "/" + cert));
 				Certificate ca;
 				try {
 					ca = cf.generateCertificate(caInput);
@@ -252,7 +250,7 @@ public class NetworkManager
 	 */
 	public HttpResponse get(String url) throws IOException
 	{
-		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_GET, url);
+		HttpRequest request = new HttpRequest(Constant.Networking.HTTP_METHOD_GET, url);
 		if (request.errors == 0) {
 			return request.execute();
 		}
@@ -271,7 +269,7 @@ public class NetworkManager
 	 */
 	public HttpResponse put(String url, FocusObject data) throws IOException
 	{
-		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_PUT, url, data);
+		HttpRequest request = new HttpRequest(Constant.Networking.HTTP_METHOD_PUT, url, data);
 		return request.execute();
 	}
 
@@ -285,7 +283,7 @@ public class NetworkManager
 	 */
 	public HttpResponse post(String url, FocusObject data) throws IOException
 	{
-		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_POST, url, data);
+		HttpRequest request = new HttpRequest(Constant.Networking.HTTP_METHOD_POST, url, data);
 		HttpResponse r = request.execute();
 		return r;
 	}
@@ -299,7 +297,7 @@ public class NetworkManager
 	 */
 	public HttpResponse delete(String url) throws IOException
 	{
-		HttpRequest request = new HttpRequest(HttpRequest.HTTP_METHOD_DELETE, url);
+		HttpRequest request = new HttpRequest(Constant.Networking.HTTP_METHOD_DELETE, url);
 		return request.execute();
 	}
 

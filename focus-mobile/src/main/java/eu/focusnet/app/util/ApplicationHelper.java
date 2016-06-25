@@ -1,3 +1,24 @@
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+
 package eu.focusnet.app.util;
 
 import android.content.ContentResolver;
@@ -27,77 +48,13 @@ import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.internal.AppContentInstance;
 
 /**
- * The MIT License (MIT)
- * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p/>
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- * <p/>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-/**
  * A helper class used for retrieving Properties.
  * <p/>
  * FIXME might contain methods for accessing getResource(), getAppContext, ...
  */
 public class ApplicationHelper
 {
-	/**
-	 * Name of the file for SharedPreferences
-	 */
-	public static final String SHARED_PREFERENCES_STORE_NAME = "eu.focusnet.app.INTERNAL_CONFIGURATION";
-	/**
-	 * Key name for Server name as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_LOGIN_SERVER = "login-server";
-	/**
-	 * Key name for Username for authentication as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_LOGIN_USERNAME = "login-username";
-	/**
-	 * Key name for Password for authentication as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_LOGIN_PASSWORD = "login-password";
-	/**
-	 * Key name for URI to user information as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_USER_INFOS = "user-infos";
-	/**
-	 * Key name for URI to application preferences as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_APPLICATION_SETTINGS = "user-preferences";
-	/**
-	 * Key name for URI to application content as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_APPLICATION_CONTENT = "application-content";
-	/**
-	 * Key name for URI to demo use case ID as stored in the SharedPreferences.
-	 *
-	 * @deprecated Used only in the prototype. Can be safely removed in production version.
-	 */
-	public static final String SHARED_PREFERENCES_DEMO_USE_CASE = "demo-use-case";
-	/**
-	 * Key name for Last data synchronization as stored in the SharedPreferences.
-	 */
-	public static final String SHARED_PREFERENCES_LAST_SYNC = "last-sync";
-	/**
-	 * Name of our properties file in the assets directory.
-	 */
-	private static final String ASSETS_PROPERTY_FILE = "focus.properties";
-	private static final String PROPERTY_DEFAULT_LOCALE = "i18n.default-locale";
-	private static final String LOCALE_FALLBACK_LANGUAGE = "en";
-	private static final String LOCALE_FALLBACK_COUNTRY = "";
+
 
 	/**
 	 * Retrieve a property.
@@ -111,7 +68,7 @@ public class ApplicationHelper
 		Properties properties = new Properties();
 		AssetManager assetManager = getAssets();
 		try {
-			InputStream inputStream = assetManager.open(ASSETS_PROPERTY_FILE);
+			InputStream inputStream = assetManager.open(Constant.AppConfig.ASSETS_PROPERTY_FILE);
 			properties.load(inputStream);
 		}
 		catch (IOException ex) {
@@ -183,7 +140,7 @@ public class ApplicationHelper
 	{
 		return Arrays.asList(
 				"en",
-				"fr"
+				"fr" // FIXME property?
 		);
 	}
 
@@ -204,9 +161,12 @@ public class ApplicationHelper
 
 	private static Locale getDefaultLocale()
 	{
-		String defaultLocale = ApplicationHelper.getProperty(PROPERTY_DEFAULT_LOCALE);
+		String defaultLocale = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_DEFAULT_LOCALE);
 		String[] parts = defaultLocale.split("_");
-		String[] ret = new String[]{LOCALE_FALLBACK_LANGUAGE, LOCALE_FALLBACK_COUNTRY};
+		String[] ret = new String[]{
+				Constant.AppConfig.LOCALE_FALLBACK_LANGUAGE,
+				Constant.AppConfig.LOCALE_FALLBACK_COUNTRY
+		};
 		for (int i = 0; i < 2; ++i) {
 			if (parts.length > i && !parts[i].isEmpty()) {
 				ret[i] = parts[i];
@@ -222,7 +182,7 @@ public class ApplicationHelper
 	 */
 	public static void savePreferences(HashMap<String, String> pref)
 	{
-		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(Constant.SharedPreferences.SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = store.edit();
 		for (Map.Entry e : pref.entrySet()) {
 			editor.putString((String) e.getKey(), (String) e.getValue());
@@ -235,7 +195,7 @@ public class ApplicationHelper
 	 */
 	public static HashMap<String, String> getPreferences()
 	{
-		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(Constant.SharedPreferences.SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 
 		HashMap<String, String> ret = new HashMap<>();
 		Map<String, ?> prefs = store.getAll();
@@ -250,7 +210,7 @@ public class ApplicationHelper
 	 */
 	public static void resetPreferences()
 	{
-		SharedPreferences store = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
+		SharedPreferences store = getApplicationContext().getSharedPreferences(Constant.SharedPreferences.SHARED_PREFERENCES_STORE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = store.edit();
 		editor.clear();
 		editor.apply();

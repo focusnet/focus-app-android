@@ -25,7 +25,7 @@ import java.util.Date;
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
-import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * A Sample is the object representation of the rows in the "samples" database table
@@ -242,13 +242,13 @@ public class Sample
 	public void setEditionField(String databaseField, boolean flag)
 	{
 		switch (databaseField) {
-			case Constant.TO_CREATE:
+			case Constant.Database.TO_CREATE:
 				this.setToCreate(flag);
 				break;
-			case Constant.TO_UPDATE:
+			case Constant.Database.TO_UPDATE:
 				this.setToUpdate(flag);
 				break;
-			case Constant.TO_DELETE:
+			case Constant.Database.TO_DELETE:
 				this.setToDelete(flag);
 				break;
 		}

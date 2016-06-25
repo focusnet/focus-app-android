@@ -21,8 +21,8 @@
 package eu.focusnet.app.model.json;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.UserManager;
+import eu.focusnet.app.util.Constant;
 
 public class User extends FocusObject
 {
@@ -37,7 +37,7 @@ public class User extends FocusObject
 	{
 		// we expicitely give the owner and editor, such that the FocusObject contructor does not need
 		// to call DataManager getUser(). We may be in the case where we try to create the User
-		super(Constant.FOCUS_DATA_MODEL_TYPE_USER, targetUrl, targetUrl, targetUrl, 1, null, null, true);
+		super(Constant.DataModelTypes.FOCUS_DATA_MODEL_TYPE_USER, targetUrl, targetUrl, targetUrl, 1, null, null, true);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

@@ -34,13 +34,13 @@ import eu.focusnet.app.model.internal.AppContentInstance;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.service.datastore.DatabaseAdapter;
 import eu.focusnet.app.service.datastore.Sample;
 import eu.focusnet.app.service.datastore.SampleDao;
 import eu.focusnet.app.service.network.HttpResponse;
 import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * The DataManager is responsible for building the application content and data management.
@@ -89,8 +89,10 @@ public class DataManager implements ApplicationStatusObserver
 		 */
 		ERROR
 	}
-
-
+	/**
+	 * The object responsible for providing networking facilities
+	 */
+	public NetworkManager net; // FIXME set to private, debugging.
 	private boolean applicationReady;
 	private ExecutorService dataRetrievingExecutor;
 	/**
@@ -102,10 +104,6 @@ public class DataManager implements ApplicationStatusObserver
 	 * then freed, as resources are not required after that anymore.
 	 */
 	private HashMap<String, FocusObject> cache;
-	/**
-	 * The object responsible for providing networking facilities
-	 */
-	public NetworkManager net; // FIXME set to private, debugging.
 	/**
 	 * The object responsible for providing local database storage faiclities (SQLite database)
 	 */
@@ -145,9 +143,9 @@ public class DataManager implements ApplicationStatusObserver
 
 	private static ExecutorService DataPoolFactory()
 	{
-		return new ThreadPoolExecutor(Constant.MAX_CONCURRENT_DOWNLOADS, Constant.MAX_CONCURRENT_DOWNLOADS,
+		return new ThreadPoolExecutor(Constant.Networking.MAX_CONCURRENT_DOWNLOADS, Constant.Networking.MAX_CONCURRENT_DOWNLOADS,
 				0L, TimeUnit.MILLISECONDS,
-				new PriorityBlockingQueue<>(Constant.MAX_CONCURRENT_DOWNLOADS, new PriorityTaskComparator()));
+				new PriorityBlockingQueue<>(Constant.Networking.MAX_CONCURRENT_DOWNLOADS, new PriorityTaskComparator()));
 	}
 
 
@@ -507,7 +505,7 @@ public class DataManager implements ApplicationStatusObserver
 		// the SHARED_PREFERENCES_APPLICATION_CONTENT preference was filled during the
 		// login procedure.
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
-		String templateUri = prefs.get(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_CONTENT);
+		String templateUri = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT);
 		if (templateUri == null) {
 			throw new FocusInternalErrorException("Template is not yet available. Error in the application workflows.");
 		}
@@ -608,14 +606,19 @@ public class DataManager implements ApplicationStatusObserver
 	public void pushPendingLocalModifications() throws FocusMissingResourceException
 	{
 		// a bitmask for our return value
-		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+		int reportFailure = Constant.Networking.NETWORK_REQUEST_STATUS_SUCCESS;
 
 		try {
 			SampleDao dao = this.databaseAdapter.getSampleDao();
 
 			// POST and PUT are almost the same
 			HashSet<Sample> toPushSamples;
-			for (String typeOfOperation : new String[]{Constant.TO_CREATE, Constant.TO_UPDATE, Constant.TO_DELETE}) {
+			for (String typeOfOperation : new String[]
+					{
+							Constant.Database.TO_CREATE,
+							Constant.Database.TO_UPDATE,
+							Constant.Database.TO_DELETE
+					}) {
 				toPushSamples = dao.getAllMarkedFocusSamples(typeOfOperation);
 				for (Sample sample : toPushSamples) {
 					reportFailure |= this.pushLocalModification(sample, FocusSample.class, typeOfOperation, dao);
@@ -628,7 +631,7 @@ public class DataManager implements ApplicationStatusObserver
 
 
 		// Error reporting
-		if (reportFailure != NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS) {
+		if (reportFailure != Constant.Networking.NETWORK_REQUEST_STATUS_SUCCESS) {
 			throw new FocusMissingResourceException("Cannot retrieve resource - code 0x" + reportFailure);
 		}
 
@@ -645,18 +648,18 @@ public class DataManager implements ApplicationStatusObserver
 	 */
 	private int pushLocalModification(Sample sample, Class targetClass, String typeOfOperation, SampleDao dao)
 	{
-		int reportFailure = NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+		int reportFailure = Constant.Networking.NETWORK_REQUEST_STATUS_SUCCESS;
 
 
 		String networkOperation;
 		switch (typeOfOperation) {
-			case Constant.TO_CREATE:
+			case Constant.Database.TO_CREATE:
 				networkOperation = "POST";
 				break;
-			case Constant.TO_UPDATE:
+			case Constant.Database.TO_UPDATE:
 				networkOperation = "PUT";
 				break;
-			case Constant.TO_DELETE:
+			case Constant.Database.TO_DELETE:
 				networkOperation = "DELETE";
 				break;
 			default:
@@ -672,7 +675,7 @@ public class DataManager implements ApplicationStatusObserver
 			String url = sample.getUrl();
 			boolean netResult = this.net.pushModification(networkOperation, url, fo).isSuccessful();
 			if (netResult) {
-				if (typeOfOperation.equals(Constant.TO_DELETE)) {
+				if (typeOfOperation.equals(Constant.Database.TO_DELETE)) {
 					dao.delete(url);
 				}
 				else {
@@ -681,11 +684,11 @@ public class DataManager implements ApplicationStatusObserver
 				}
 			}
 			else {
-				reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
+				reportFailure |= Constant.Networking.NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE;
 			}
 		}
 		catch (IOException ex) {
-			reportFailure |= NetworkManager.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
+			reportFailure |= Constant.Networking.NETWORK_REQUEST_STATUS_NETWORK_FAILURE;
 		}
 
 		return reportFailure;
@@ -706,18 +709,17 @@ public class DataManager implements ApplicationStatusObserver
 			Sample sample = dao.get(url);
 			// we do the update only an update is scheduled
 			if (sample.isToPut()) {
-				return this.pushLocalModification(sample, targetClass, Constant.TO_UPDATE, dao);
+				return this.pushLocalModification(sample, targetClass, Constant.Database.TO_UPDATE, dao);
 			}
 			else {
 				// nothing to do.
-				return NetworkManager.NETWORK_REQUEST_STATUS_SUCCESS;
+				return Constant.Networking.NETWORK_REQUEST_STATUS_SUCCESS;
 			}
 		}
 		finally {
 			this.databaseAdapter.close();
 		}
 	}
-
 
 
 	public ExecutorService getDataRetrievingExecutor()

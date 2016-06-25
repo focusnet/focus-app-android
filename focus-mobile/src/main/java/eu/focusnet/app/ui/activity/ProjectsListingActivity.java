@@ -58,9 +58,9 @@ import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * This Activity contains the list of available projects.
@@ -69,7 +69,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class ProjectsListingActivity extends ToolbarEnabledActivity
 {
-	private static final String ASSETS_ABOUT_PAGE = "documentation/about.html";
+
 
 	protected DrawerLayout drawerLayout;
 	protected ListView drawerListMenu;
@@ -162,7 +162,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		LayoutInflater inflater = getLayoutInflater();
 
 		// set the default section that will initially be loaded
-		this.sectionToRender = this.previouslySelectedToRender = Constant.UI_MENU_ENTRY_PROJECTS_LISTING;
+		this.sectionToRender = this.previouslySelectedToRender = Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING;
 
 		// create a Drawer
 		this.drawerItems = this.getDrawerItems();
@@ -228,15 +228,15 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	protected void doInPageUiOperations()
 	{
 		switch (this.sectionToRender) {
-			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
-			case Constant.UI_MENU_ENTRY_BOOKMARK:
+			case Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING:
+			case Constant.Ui.UI_MENU_ENTRY_BOOKMARK:
 				highlightSelectedMenuItem(this.sectionToRender);
 				break;
-			case Constant.UI_MENU_ENTRY_ABOUT:
+			case Constant.Ui.UI_MENU_ENTRY_ABOUT:
 				LayoutInflater inflater = LayoutInflater.from(this);
 				// LayoutInflater inflater = getLayoutInflater();
 				final WebView dialogContent = (WebView) inflater.inflate(R.layout.dialog_content_about, null);
-				dialogContent.loadUrl("file:///android_asset/" + ASSETS_ABOUT_PAGE);
+				dialogContent.loadUrl("file:///android_asset/" + Constant.AppConfig.ASSETS_ABOUT_PAGE);
 				final FocusDialogBuilder builder = new FocusDialogBuilder(this)
 						.removeNeutralButton()
 						.removeNegativeButton()
@@ -247,7 +247,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				AlertDialog dialog = builder.create();
 				dialog.show();
 				break;
-			case Constant.UI_MENU_ENTRY_LOGOUT:
+			case Constant.Ui.UI_MENU_ENTRY_LOGOUT:
 				final Thread logoutThread = new Thread()
 				{
 					public void run()
@@ -257,7 +257,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
-							i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
+							i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
 							startActivity(i);
 						}
 						finally {
@@ -276,7 +276,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 			// do not keep selection on the current item
 			switch (this.sectionToRender) {
-				case Constant.UI_MENU_ENTRY_ABOUT:
+				case Constant.Ui.UI_MENU_ENTRY_ABOUT:
 					highlightSelectedMenuItem(this.previouslySelectedToRender);
 					break;
 			}
@@ -287,13 +287,13 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	protected void prepareNewFragment()
 	{
 		switch (this.sectionToRender) {
-			case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
+			case Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING:
 				this.fragment = new ProjectsListingFragment();
 				if (this.actionBar != null) {
 					this.actionBar.setTitle(R.string.project_listing_title);
 				}
 				break;
-			case Constant.UI_MENU_ENTRY_BOOKMARK:
+			case Constant.Ui.UI_MENU_ENTRY_BOOKMARK:
 				this.fragment = new BookmarkFragment();
 				if (this.actionBar != null) {
 					this.actionBar.setTitle(R.string.bookmarks_title);
@@ -318,11 +318,11 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				if (position != Constant.UI_MENU_ENTRY_HEADER_NON_CLICKABLE) {
+				if (position != Constant.Ui.UI_MENU_ENTRY_HEADER_NON_CLICKABLE) {
 					boolean doIt = true;
 					switch (position) {
-						case Constant.UI_MENU_ENTRY_PROJECTS_LISTING:
-						case Constant.UI_MENU_ENTRY_BOOKMARK:
+						case Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING:
+						case Constant.Ui.UI_MENU_ENTRY_BOOKMARK:
 							if (position == sectionToRender) {
 								doIt = false;
 							}
@@ -372,7 +372,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			// hence hitting the BACK button will always make us go back to the home page
 			// (if we hit the BACK button on the home page, we exit the app)
 			this.actionBar.setTitle(R.string.project_listing_title);
-			highlightSelectedMenuItem(Constant.UI_MENU_ENTRY_PROJECTS_LISTING);
+			highlightSelectedMenuItem(Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING);
 
 			// close the drawer
 			this.drawerLayout.closeDrawer(this.drawerListMenu);
@@ -483,7 +483,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 				// too early since last sync
 				// display instructions with custom message, disable START
-				if (cronService.getLastSync() >= System.currentTimeMillis() - CronService.CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS) {
+				if (cronService.getLastSync() >= System.currentTimeMillis() - Constant.AppConfig.CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MILLISECONDS) {
 					instructionsField.setText(R.string.sync_too_recent);
 					builder.removePositiveButton();
 					builder.setNegativeButtonText(getString(R.string.close));

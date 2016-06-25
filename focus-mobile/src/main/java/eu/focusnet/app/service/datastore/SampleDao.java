@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * SQL Sample Data Access Object
@@ -44,18 +44,18 @@ public class SampleDao
 
 	private long dataSyncSetId;
 	private String[] columnsToRetrieve = {
-			Constant.URL,
-			Constant.VERSION,
-			Constant.TYPE,
-			Constant.OWNER,
-			Constant.CREATION_EPOCH,
-			Constant.EDITION_EPOCH,
-			Constant.EDITOR,
-			Constant.ACTIVE,
-			Constant.DATA,
-			Constant.TO_DELETE,
-			Constant.TO_UPDATE,
-			Constant.TO_CREATE
+			Constant.Database.URL,
+			Constant.Database.VERSION,
+			Constant.Database.TYPE,
+			Constant.Database.OWNER,
+			Constant.Database.CREATION_EPOCH,
+			Constant.Database.EDITION_EPOCH,
+			Constant.Database.EDITOR,
+			Constant.Database.ACTIVE,
+			Constant.Database.DATA,
+			Constant.Database.TO_DELETE,
+			Constant.Database.TO_UPDATE,
+			Constant.Database.TO_CREATE
 	};
 	private SQLiteDatabase database;
 
@@ -77,15 +77,15 @@ public class SampleDao
 	private static Sample buildSampleFromCursor(Cursor cursor)
 	{
 		Sample sample = new Sample();
-		sample.setUrl(cursor.getString(cursor.getColumnIndex(Constant.URL)));
-		sample.setVersion(cursor.getInt(cursor.getColumnIndex(Constant.VERSION)));
-		sample.setType(cursor.getString(cursor.getColumnIndex(Constant.TYPE)));
-		sample.setOwner(cursor.getString(cursor.getColumnIndex(Constant.OWNER)));
-		sample.setEditor(cursor.getString(cursor.getColumnIndex(Constant.EDITOR)));
-		sample.setData(cursor.getString(cursor.getColumnIndex(Constant.DATA)));
+		sample.setUrl(cursor.getString(cursor.getColumnIndex(Constant.Database.URL)));
+		sample.setVersion(cursor.getInt(cursor.getColumnIndex(Constant.Database.VERSION)));
+		sample.setType(cursor.getString(cursor.getColumnIndex(Constant.Database.TYPE)));
+		sample.setOwner(cursor.getString(cursor.getColumnIndex(Constant.Database.OWNER)));
+		sample.setEditor(cursor.getString(cursor.getColumnIndex(Constant.Database.EDITOR)));
+		sample.setData(cursor.getString(cursor.getColumnIndex(Constant.Database.DATA)));
 
-		int creationDateTime = cursor.getInt(cursor.getColumnIndex(Constant.CREATION_EPOCH));
-		int editionDateTime = cursor.getInt(cursor.getColumnIndex(Constant.EDITION_EPOCH));
+		int creationDateTime = cursor.getInt(cursor.getColumnIndex(Constant.Database.CREATION_EPOCH));
+		int editionDateTime = cursor.getInt(cursor.getColumnIndex(Constant.Database.EDITION_EPOCH));
 
 		Date creationDate = new Date(creationDateTime * 1000L);
 		Date editionDate = new Date(editionDateTime * 1000L);
@@ -93,9 +93,9 @@ public class SampleDao
 		sample.setCreationDateTime(creationDate);
 		sample.setEditionDateTime(editionDate);
 
-		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.ACTIVE)) > 0);
-		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.TO_DELETE)) > 0);
-		sample.setToUpdate(cursor.getInt(cursor.getColumnIndex(Constant.TO_UPDATE)) > 0);
+		sample.setActive(cursor.getInt(cursor.getColumnIndex(Constant.Database.ACTIVE)) > 0);
+		sample.setToDelete(cursor.getInt(cursor.getColumnIndex(Constant.Database.TO_DELETE)) > 0);
+		sample.setToUpdate(cursor.getInt(cursor.getColumnIndex(Constant.Database.TO_UPDATE)) > 0);
 
 		// we don't need the dataSyncSetId in the sample. It is used for maintenance operations
 		// only and should be kept hidden
@@ -109,7 +109,7 @@ public class SampleDao
 	public Long create(Sample sample)
 	{
 		ContentValues contentValues = this.createContentValues(sample);
-		return database.insert(Constant.DATABASE_TABLE_SAMPLES, null, contentValues);
+		return database.insert(Constant.Database.DATABASE_TABLE_SAMPLES, null, contentValues);
 	}
 
 	/**
@@ -122,13 +122,14 @@ public class SampleDao
 				url
 		};
 		Cursor cursor = this.database.query(true,
-				Constant.DATABASE_TABLE_SAMPLES,
+				Constant.Database.DATABASE_TABLE_SAMPLES,
 				this.columnsToRetrieve,
-				Constant.DATA_SET_ID + " = ? AND " + Constant.URL + " = ? AND " + Constant.TO_DELETE + " = 0 AND " + Constant.ACTIVE + " = 1",
+				Constant.Database.DATA_SET_ID + " = ? AND " + Constant.Database.URL + " = ? AND "
+						+ Constant.Database.TO_DELETE + " = 0 AND " + Constant.Database.ACTIVE + " = 1",
 				params,
 				null,
 				null,
-				Constant.VERSION + " DESC, " + Constant.EDITION_EPOCH + " DESC",
+				Constant.Database.VERSION + " DESC, " + Constant.Database.EDITION_EPOCH + " DESC",
 				"1");
 		Sample s = null;
 		if (cursor.moveToFirst()) {
@@ -149,11 +150,11 @@ public class SampleDao
 				Long.toString(this.dataSyncSetId),
 				url
 		};
-		String where = Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "= ?";
+		String where = Constant.Database.DATA_SET_ID + " = ? AND " + Constant.Database.URL + "= ?";
 		ContentValues updatedValues = new ContentValues();
-		updatedValues.put(Constant.TO_DELETE, true);
-		updatedValues.put(Constant.EDITION_EPOCH, new Date().getTime() / 1000L);
-		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
+		updatedValues.put(Constant.Database.TO_DELETE, true);
+		updatedValues.put(Constant.Database.EDITION_EPOCH, new Date().getTime() / 1000L);
+		this.database.update(Constant.Database.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
 
 	/**
@@ -167,7 +168,10 @@ public class SampleDao
 				Long.toString(this.dataSyncSetId),
 				url
 		};
-		return this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "= ? ", params) > 0;
+		return this.database.delete(
+				Constant.Database.DATABASE_TABLE_SAMPLES,
+				Constant.Database.DATA_SET_ID + " = ? AND " + Constant.Database.URL + "= ? ", params
+		) > 0;
 	}
 
 	/**
@@ -181,9 +185,9 @@ public class SampleDao
 				Long.toString(this.dataSyncSetId),
 				sample.getUrl()
 		};
-		String where = Constant.DATA_SET_ID + " = ? AND " + Constant.URL + "=?";
+		String where = Constant.Database.DATA_SET_ID + " = ? AND " + Constant.Database.URL + "=?";
 		ContentValues updatedValues = this.createContentValues(sample);
-		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
+		this.database.update(Constant.Database.DATABASE_TABLE_SAMPLES, updatedValues, where, params);
 	}
 
 	/**
@@ -194,10 +198,10 @@ public class SampleDao
 		String[] params = {
 				Long.toString(this.dataSyncSetId)
 		};
-		String where = Constant.DATA_SET_ID + " = ?";
+		String where = Constant.Database.DATA_SET_ID + " = ?";
 		ContentValues updateValues = new ContentValues();
-		updateValues.put(Constant.DATA_SET_ID, Long.toString(newId));
-		this.database.update(Constant.DATABASE_TABLE_SAMPLES, updateValues, where, params);
+		updateValues.put(Constant.Database.DATA_SET_ID, Long.toString(newId));
+		this.database.update(Constant.Database.DATABASE_TABLE_SAMPLES, updateValues, where, params);
 		this.dataSyncSetId = newId;
 	}
 
@@ -207,19 +211,19 @@ public class SampleDao
 	private ContentValues createContentValues(Sample sample)
 	{
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(Constant.URL, sample.getUrl());
-		contentValues.put(Constant.VERSION, sample.getVersion());
-		contentValues.put(Constant.TYPE, sample.getType());
-		contentValues.put(Constant.OWNER, sample.getOwner());
-		contentValues.put(Constant.CREATION_EPOCH, (sample.getCreationDateTime().getTime() / 1000L));
-		contentValues.put(Constant.EDITION_EPOCH, (sample.getEditionDateTime().getTime() / 1000L));
-		contentValues.put(Constant.EDITOR, sample.getEditor());
-		contentValues.put(Constant.ACTIVE, sample.isActive());
-		contentValues.put(Constant.DATA, sample.getData());
-		contentValues.put(Constant.TO_DELETE, sample.isToDelete());
-		contentValues.put(Constant.TO_UPDATE, sample.isToPut());
-		contentValues.put(Constant.TO_CREATE, sample.isToPost());
-		contentValues.put(Constant.DATA_SET_ID, Long.toString(this.dataSyncSetId));
+		contentValues.put(Constant.Database.URL, sample.getUrl());
+		contentValues.put(Constant.Database.VERSION, sample.getVersion());
+		contentValues.put(Constant.Database.TYPE, sample.getType());
+		contentValues.put(Constant.Database.OWNER, sample.getOwner());
+		contentValues.put(Constant.Database.CREATION_EPOCH, (sample.getCreationDateTime().getTime() / 1000L));
+		contentValues.put(Constant.Database.EDITION_EPOCH, (sample.getEditionDateTime().getTime() / 1000L));
+		contentValues.put(Constant.Database.EDITOR, sample.getEditor());
+		contentValues.put(Constant.Database.ACTIVE, sample.isActive());
+		contentValues.put(Constant.Database.DATA, sample.getData());
+		contentValues.put(Constant.Database.TO_DELETE, sample.isToDelete());
+		contentValues.put(Constant.Database.TO_UPDATE, sample.isToPut());
+		contentValues.put(Constant.Database.TO_CREATE, sample.isToPost());
+		contentValues.put(Constant.Database.DATA_SET_ID, Long.toString(this.dataSyncSetId));
 		return contentValues;
 	}
 
@@ -231,7 +235,7 @@ public class SampleDao
 		String[] params = {
 				Long.toString(this.dataSyncSetId)
 		};
-		this.database.delete(Constant.DATABASE_TABLE_SAMPLES, Constant.DATA_SET_ID + " != ?", params);
+		this.database.delete(Constant.Database.DATABASE_TABLE_SAMPLES, Constant.Database.DATA_SET_ID + " != ?", params);
 	}
 
 	/**
@@ -245,9 +249,9 @@ public class SampleDao
 	public HashSet<Sample> getAllMarkedFocusSamples(String flagType)
 	{
 		switch (flagType) {
-			case Constant.TO_CREATE:
-			case Constant.TO_UPDATE:
-			case Constant.TO_DELETE:
+			case Constant.Database.TO_CREATE:
+			case Constant.Database.TO_UPDATE:
+			case Constant.Database.TO_DELETE:
 				break;
 			default:
 				throw new FocusInternalErrorException("Invalid type for marking operation.");
@@ -258,12 +262,12 @@ public class SampleDao
 		String[] params = {
 				Long.toString(this.dataSyncSetId),
 			//	flagType,
-				Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE.replaceFirst("[^/]+$", "") + "%"// remove the version specifier
+				Constant.DataModelTypes.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE.replaceFirst("[^/]+$", "") + "%"// remove the version specifier
 		};
 		Cursor cursor = this.database.query(
-				Constant.DATABASE_TABLE_SAMPLES,
+				Constant.Database.DATABASE_TABLE_SAMPLES,
 				this.columnsToRetrieve,
-				Constant.DATA_SET_ID + " = ? AND " + flagType + " = 1 AND type LIKE ?", // here does not work if not like this (no placeholder). to check
+				Constant.Database.DATA_SET_ID + " = ? AND " + flagType + " = 1 AND type LIKE ?", // here does not work if not like this (no placeholder). to check
 				params,
 				null,
 				null,
@@ -287,7 +291,7 @@ public class SampleDao
 	 */
 	public void deleteAll()
 	{
-		String sql = "DELETE FROM " + Constant.DATABASE_TABLE_SAMPLES;
+		String sql = "DELETE FROM " + Constant.Database.DATABASE_TABLE_SAMPLES;
 		this.database.execSQL(sql);
 	}
 
@@ -299,23 +303,23 @@ public class SampleDao
 	public long getMostRecentDataSetIdentifier()
 	{
 		String[] cols = {
-				Constant.DATA_SET_ID
+				Constant.Database.DATA_SET_ID
 		};
 		Cursor cursor = this.database.query(
-				Constant.DATABASE_TABLE_SAMPLES,
+				Constant.Database.DATABASE_TABLE_SAMPLES,
 				cols,
 				null,
 				null,
 				null,
 				null,
-				Constant.DATA_SET_ID + " DESC",
+				Constant.Database.DATA_SET_ID + " DESC",
 				"1"
 		);
 
 		long res = 0;
 		if (cursor.getCount() != 0) {
 			cursor.moveToFirst();
-			res = cursor.getLong(cursor.getColumnIndex(Constant.DATA_SET_ID));
+			res = cursor.getLong(cursor.getColumnIndex(Constant.Database.DATA_SET_ID));
 		}
 		cursor.close();
 		return res;

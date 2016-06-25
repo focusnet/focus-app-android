@@ -34,6 +34,7 @@ import eu.focusnet.app.model.internal.fields.TextareaFieldInstance;
 import eu.focusnet.app.model.internal.fields.TextfieldFieldInstance;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by admin on 28.01.2016.
@@ -78,16 +79,16 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 				return;
 			}
 			switch (type) {
-				case FieldInstance.FIELD_TYPE_TEXTFIELD:
+				case Constant.DataModelTypes.FIELD_TYPE_TEXTFIELD:
 					newField = new TextfieldFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
-				case FieldInstance.FIELD_TYPE_TEXTAREA:
+				case Constant.DataModelTypes.FIELD_TYPE_TEXTAREA:
 					newField = new TextareaFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
-				case FieldInstance.FIELD_TYPE_CHECKBOX:
+				case Constant.DataModelTypes.FIELD_TYPE_CHECKBOX:
 					newField = new CheckboxFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
-				case FieldInstance.FIELD_TYPE_SELECT:
+				case Constant.DataModelTypes.FIELD_TYPE_SELECT:
 					newField = new SelectFieldInstance(fieldName, fieldConfig, this.dataContext);
 					break;
 				default:

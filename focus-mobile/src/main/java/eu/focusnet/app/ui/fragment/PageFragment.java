@@ -38,10 +38,10 @@ import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.fragment.widget.EmptyWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
 import eu.focusnet.app.ui.util.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * This fragment will be loaded from the PageActivity and displays
@@ -64,7 +64,7 @@ public class PageFragment extends Fragment
 		// Inflate the layout for this fragment
 		this.viewRoot = inflater.inflate(R.layout.fragment_page_page, container, false);
 		Bundle bundle = getArguments();
-		String path = (String) bundle.get(Constant.UI_EXTRA_PATH);
+		String path = (String) bundle.get(Constant.Extra.UI_EXTRA_PATH);
 
 		this.pageInstance = (PageInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
 		if (this.pageInstance == null) {
@@ -112,7 +112,7 @@ public class PageFragment extends Fragment
 		layoutParams.setMargins(0, 0, 0, 0);
 		containerLayout.setLayoutParams(layoutParams);
 
-		int spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
+		int spaceLeft = Constant.Ui.LAYOUT_NUM_OF_COLUMNS;
 
 		for (Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()) {
 			WidgetInstance widgetInstance = entry.getValue();
@@ -126,8 +126,8 @@ public class PageFragment extends Fragment
 				if (spaceLeft != 0) {
 					WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 					Bundle widgetBundle = new Bundle();
-					widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
-					widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
+					widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+					widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
 					emptyWidgetFragment.setArguments(widgetBundle);
 					FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
 				}
@@ -140,16 +140,16 @@ public class PageFragment extends Fragment
 				containerLayout.setOrientation(LinearLayout.HORIZONTAL);
 				containerLayout.setId(++currentayoutId);
 				containerLayout.setLayoutParams(layoutParams);
-				spaceLeft = Constant.LAYOUT_NUM_OF_COLUMNS;
+				spaceLeft = Constant.Ui.LAYOUT_NUM_OF_COLUMNS;
 			}
 
 			// add the new widget fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putString(Constant.UI_EXTRA_PATH, widgetInstance.getPath());
-			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_WEIGHT, requiredSpace);
-			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW, Constant.LAYOUT_NUM_OF_COLUMNS - spaceLeft);
+			widgetBundle.putString(Constant.Extra.UI_EXTRA_PATH, widgetInstance.getPath());
+			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, requiredSpace);
+			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW, Constant.Ui.LAYOUT_NUM_OF_COLUMNS - spaceLeft);
 			widgetFragment.setArguments(widgetBundle);
 
 			FragmentManager.addFragment(containerLayout.getId(), widgetFragment, this.getActivity().getFragmentManager());
@@ -161,8 +161,8 @@ public class PageFragment extends Fragment
 		if (spaceLeft != 0) {
 			WidgetFragment emptyWidgetFragment = new EmptyWidgetFragment();
 			Bundle widgetBundle = new Bundle();
-			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			widgetBundle.putInt(Constant.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
+			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, spaceLeft);
 			emptyWidgetFragment.setArguments(widgetBundle);
 			FragmentManager.addFragment(containerLayout.getId(), emptyWidgetFragment, this.getActivity().getFragmentManager());
 		}

@@ -28,8 +28,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.FragmentManager;
+import eu.focusnet.app.util.Constant;
 
 /**
  * The ToolbarEnabledActivity is used as the basis for Activities that have
@@ -69,14 +69,14 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		//Get the project title and project id either from the
 		//saved instance or from the received calling Intent
 		if (savedInstanceState == null) {
-			this.title = getIntent().getStringExtra(Constant.UI_EXTRA_TITLE);
+			this.title = getIntent().getStringExtra(Constant.Extra.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			this.path = getIntent().getStringExtra(Constant.UI_EXTRA_PATH);
+			this.path = getIntent().getStringExtra(Constant.Extra.UI_EXTRA_PATH);
 		}
 		else {
-			this.title = savedInstanceState.getString(Constant.UI_EXTRA_TITLE);
+			this.title = savedInstanceState.getString(Constant.Extra.UI_EXTRA_TITLE);
 			//Path is the same as projectId
-			this.path = savedInstanceState.getString(Constant.UI_EXTRA_PATH);
+			this.path = savedInstanceState.getString(Constant.Extra.UI_EXTRA_PATH);
 		}
 
 		setTitle(this.title);
@@ -125,8 +125,8 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	protected void onSaveInstanceState(Bundle saveInstanceState)
 	{
 		super.onSaveInstanceState(saveInstanceState);
-		saveInstanceState.putString(Constant.UI_EXTRA_TITLE, this.title);
-		saveInstanceState.putString(Constant.UI_EXTRA_PATH, this.path);
+		saveInstanceState.putString(Constant.Extra.UI_EXTRA_TITLE, this.title);
+		saveInstanceState.putString(Constant.Extra.UI_EXTRA_PATH, this.path);
 	}
 
 	final protected void applyUiChanges()
@@ -153,7 +153,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		if (this.fragment != null) {
 
 			Bundle bundle = new Bundle();
-			bundle.putString(Constant.UI_EXTRA_PATH, this.path);
+			bundle.putString(Constant.Extra.UI_EXTRA_PATH, this.path);
 			this.fragment.setArguments(bundle);
 
 			FragmentManager.replaceFragment(getTargetLayoutContainer(), this.fragment, getFragmentManager());

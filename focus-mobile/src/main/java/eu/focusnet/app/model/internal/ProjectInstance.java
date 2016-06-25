@@ -36,14 +36,13 @@ import eu.focusnet.app.model.json.PageTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
 import eu.focusnet.app.model.json.WidgetReference;
 import eu.focusnet.app.model.json.WidgetTemplate;
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  */
 public class ProjectInstance extends AbstractInstance
 {
-	public final static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
 
 	private String guid;
 	private String title;
@@ -102,7 +101,7 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(baseContext);
-					newCtx.register(ProjectInstance.LABEL_PROJECT_ITERATOR, url, expectedDepthInHierarchy);
+					newCtx.register(Constant.Navigation.LABEL_PROJECT_ITERATOR, url, expectedDepthInHierarchy);
 					contexts.add(newCtx);
 				}
 
@@ -198,7 +197,7 @@ public class ProjectInstance extends AbstractInstance
 			public Boolean call() throws Exception
 			{
 				if (template.getIterator() != null) {
-					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PROJECT_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
+					guid = guid + Constant.Navigation.PATH_SELECTOR_OPEN + dataContext.get(Constant.Navigation.LABEL_PROJECT_ITERATOR) + Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 
 				try {
@@ -256,7 +255,7 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(this.dataContext);
-					newPageCtx.register(PageInstance.LABEL_PAGE_ITERATOR, url, this.depthInHierarchy);
+					newPageCtx.register(Constant.Navigation.LABEL_PAGE_ITERATOR, url, this.depthInHierarchy);
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
@@ -372,7 +371,7 @@ public class ProjectInstance extends AbstractInstance
 	@Override
 	public void buildPaths(String parentPath)
 	{
-		this.path = parentPath + Constant.PATH_SEPARATOR + this.guid;
+		this.path = parentPath + Constant.Navigation.PATH_SEPARATOR + this.guid;
 
 		ArrayList<ArrayList> sources = new ArrayList<>();
 		sources.add(this.dashboards);

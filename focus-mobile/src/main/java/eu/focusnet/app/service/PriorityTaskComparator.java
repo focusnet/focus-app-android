@@ -1,7 +1,3 @@
-package eu.focusnet.app.service;
-
-import java.util.Comparator;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -21,6 +17,11 @@ import java.util.Comparator;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.service;
+
+import java.util.Comparator;
+
 
 //http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
 public class PriorityTaskComparator implements Comparator<Runnable>

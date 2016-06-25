@@ -39,7 +39,7 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.internal.widgets.CameraWidgetInstance;
 import eu.focusnet.app.ui.activity.ImageActivity;
-import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by yandypiedra on 13.01.16.
@@ -76,7 +76,7 @@ public class CameraWidgetFragment extends WidgetFragment
 										  public void onClick(View v)
 										  {
 											  Intent intent = new Intent(getActivity(), ImageActivity.class);
-											  intent.putExtra(Constant.UI_EXTRA_IMAGE_URI, imageUri);
+											  intent.putExtra(Constant.Extra.UI_EXTRA_IMAGE_URI, imageUri);
 											  startActivity(intent);
 										  }
 									  }

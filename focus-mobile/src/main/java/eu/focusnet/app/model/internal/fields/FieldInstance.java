@@ -33,10 +33,7 @@ import eu.focusnet.app.model.util.TypesHelper;
 abstract public class FieldInstance
 {
 
-	public static final String FIELD_TYPE_TEXTFIELD = "#/definitions/widget/collect/form/fields/textfield";
-	public static final String FIELD_TYPE_TEXTAREA = "#/definitions/widget/collect/form/fields/textarea";
-	public static final String FIELD_TYPE_CHECKBOX = "#/definitions/widget/collect/form/fields/checkbox";
-	public static final String FIELD_TYPE_SELECT = "#/definitions/widget/collect/form/fields/select";
+
 	public static final String FIELD_LABEL_TYPE = "type";
 	public static final String FIELD_LABEL_DEFAULT_VALUE = "default";
 	private static final String FIELD_LABEL_MANDATORY = "mandatory";

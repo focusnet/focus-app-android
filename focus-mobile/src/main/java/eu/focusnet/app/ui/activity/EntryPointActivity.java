@@ -36,8 +36,8 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Entry point activity
@@ -52,11 +52,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class EntryPointActivity extends Activity
 {
-	/**
-	 * Login activity
-	 */
-	final private static Class LOGIN_ACTIVITY = DemoUseCaseSelectionActivity.class;
-	private static final long MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS = 2_000;
+
 
 	/**
 	 * Instantiate the activity.
@@ -72,7 +68,7 @@ public class EntryPointActivity extends Activity
 		// Give more information about the currently pending operation
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			String loadingText = (String) extras.get(Constant.UI_EXTRA_LOADING_INFO_TEXT);
+			String loadingText = (String) extras.get(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT);
 			if (loadingText != null) {
 				TextView loadInfo = (TextView) findViewById(R.id.splashscreen_loading_info);
 				loadInfo.setText(loadingText);
@@ -108,7 +104,7 @@ public class EntryPointActivity extends Activity
 		@Override
 		protected void onPreExecute()
 		{
-			this.runUntil = System.currentTimeMillis() + MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
+			this.runUntil = System.currentTimeMillis() + Constant.AppConfig.SPLASHSCREEN_MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
 		}
 
 		@Override
@@ -157,7 +153,7 @@ public class EntryPointActivity extends Activity
 								startActivity(new Intent(EntryPointActivity.this, ProjectsListingActivity.class));
 							}
 							else {
-								startActivity(new Intent(EntryPointActivity.this, LOGIN_ACTIVITY));
+								startActivity(new Intent(EntryPointActivity.this, Constant.AppConfig.LOGIN_ACTIVITY));
 							}
 							finish();
 						}
@@ -197,7 +193,7 @@ public class EntryPointActivity extends Activity
 						finished = true;
 						tryAgain = true;
 						// force reloading of activity on next iteration of the waiting thread(
-						runUntil = System.currentTimeMillis() - MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
+						runUntil = System.currentTimeMillis() - Constant.AppConfig.SPLASHSCREEN_MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
 						dialog.dismiss();
 					}
 				});

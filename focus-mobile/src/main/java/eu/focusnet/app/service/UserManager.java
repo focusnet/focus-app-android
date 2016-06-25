@@ -34,15 +34,11 @@ import eu.focusnet.app.model.json.User;
 import eu.focusnet.app.model.json.UserPreferences;
 import eu.focusnet.app.service.network.NetworkManager;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 public class UserManager implements ApplicationStatusObserver
 {
 
-	/**
-	 * This property defines the endpoint where our application-specific data are stored
-	 * (User information, User preferences)
-	 */
-	private static final String PROPERTY_TARGET_PERMANENT_STORAGE_SERVER = "resource-server.endpoint";
 	private DataManager dataManager;
 	private User user;
 	private UserPreferences userPreferences;
@@ -109,13 +105,13 @@ public class UserManager implements ApplicationStatusObserver
 	{
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
 
-		this.loginUser = prefs.get(ApplicationHelper.SHARED_PREFERENCES_LOGIN_USERNAME);
-		this.loginPassword = prefs.get(ApplicationHelper.SHARED_PREFERENCES_LOGIN_PASSWORD);
-		this.loginServer = prefs.get(ApplicationHelper.SHARED_PREFERENCES_LOGIN_SERVER);
-		this.userUrl = prefs.get(ApplicationHelper.SHARED_PREFERENCES_USER_INFOS);
-		this.prefUrl = prefs.get(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_SETTINGS);
-		this.demoUseCase = prefs.get(ApplicationHelper.SHARED_PREFERENCES_DEMO_USE_CASE);
-		this.appContentUrl = prefs.get(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_CONTENT);
+		this.loginUser = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_USERNAME);
+		this.loginPassword = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_PASSWORD);
+		this.loginServer = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_SERVER);
+		this.userUrl = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_USER_INFOS);
+		this.prefUrl = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_SETTINGS);
+		this.demoUseCase = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_DEMO_USE_CASE);
+		this.appContentUrl = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT);
 
 		// no need to test all of them
 		if (this.appContentUrl != null) {
@@ -182,12 +178,12 @@ public class UserManager implements ApplicationStatusObserver
 
 		// if all ok, save description to local database for later loading
 		HashMap<String, String> prefs = new HashMap<>();
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_USERNAME, this.loginUser);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_PASSWORD, this.loginPassword);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_SERVER, this.loginServer);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_USER_INFOS, this.userUrl);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_SETTINGS, this.prefUrl);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_CONTENT, this.appContentUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_USERNAME, this.loginUser);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_PASSWORD, this.loginPassword);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_SERVER, this.loginServer);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_USER_INFOS, this.userUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_SETTINGS, this.prefUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT, this.appContentUrl);
 		ApplicationHelper.savePreferences(prefs);
 
 		this.loggedIn = true;
@@ -230,7 +226,7 @@ public class UserManager implements ApplicationStatusObserver
 		this.demoUseCase = useCase;
 
 		// user and preferences URIs
-		String testServer = ApplicationHelper.getProperty(PROPERTY_TARGET_PERMANENT_STORAGE_SERVER);
+		String testServer = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_TARGET_PERMANENT_STORAGE_SERVER);
 		this.userUrl = testServer + "/data/focus-user/" + userId;
 		this.prefUrl = testServer + "/data/focus-user/" + userId + "/focus-mobile-app-preferences/" + this.demoUseCase;
 
@@ -252,13 +248,13 @@ public class UserManager implements ApplicationStatusObserver
 
 		// if all ok, save description to local database for later loading
 		HashMap<String, String> prefs = new HashMap<>();
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_USERNAME, this.loginUser);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_PASSWORD, this.loginPassword);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_LOGIN_SERVER, this.loginServer);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_USER_INFOS, this.userUrl);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_SETTINGS, this.prefUrl);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_APPLICATION_CONTENT, this.appContentUrl);
-		prefs.put(ApplicationHelper.SHARED_PREFERENCES_DEMO_USE_CASE, this.demoUseCase);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_USERNAME, this.loginUser);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_PASSWORD, this.loginPassword);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_LOGIN_SERVER, this.loginServer);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_USER_INFOS, this.userUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_SETTINGS, this.prefUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT, this.appContentUrl);
+		prefs.put(Constant.SharedPreferences.SHARED_PREFERENCES_DEMO_USE_CASE, this.demoUseCase);
 		ApplicationHelper.savePreferences(prefs);
 
 		this.loggedIn = true;

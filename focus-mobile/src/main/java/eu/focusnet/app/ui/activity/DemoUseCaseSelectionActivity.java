@@ -34,9 +34,9 @@ import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.service.network.NetworkManager;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Demo use case activity
@@ -118,7 +118,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 					}
 
 					Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
-					i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
+					i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
 					startActivity(i);
 					finish();
 				}

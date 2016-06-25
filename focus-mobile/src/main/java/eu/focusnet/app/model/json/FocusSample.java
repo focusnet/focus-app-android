@@ -20,7 +20,7 @@
 
 package eu.focusnet.app.model.json;
 
-import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
@@ -42,7 +42,7 @@ public class FocusSample extends FocusObject
 	 */
 	public FocusSample(String url)
 	{
-		super(Constant.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE, url);
+		super(Constant.DataModelTypes.FOCUS_DATA_MODEL_TYPE_FOCUS_SAMPLE, url);
 		this.data = new FocusSampleDataMap();
 	}
 

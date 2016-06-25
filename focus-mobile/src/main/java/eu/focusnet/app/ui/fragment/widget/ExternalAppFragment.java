@@ -36,8 +36,8 @@ import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.internal.widgets.ExternalAppWidgetInstance;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * An application launcher.
@@ -85,7 +85,7 @@ public class ExternalAppFragment extends WidgetFragment
 					FocusSample inputObject = ((ExternalAppWidgetInstance) widgetInstance).getInputObject();
 					if (inputObject != null) {
 						String jsonInput = FocusAppLogic.getGson().toJson(inputObject);
-						intent.putExtra(Constant.UI_EXTRA_EXTERNAL_APP_INPUT, jsonInput);
+						intent.putExtra(Constant.Extra.UI_EXTRA_EXTERNAL_APP_INPUT, jsonInput);
 					}
 					UiHelper.displayToast(getActivity(), r.getString(R.string.launching_ext_app));
 					startActivityForResult(intent, ((ExternalAppWidgetInstance) widgetInstance).getRequestCode());
@@ -114,7 +114,7 @@ public class ExternalAppFragment extends WidgetFragment
 	{
 		if (requestCode == ((ExternalAppWidgetInstance) widgetInstance).getRequestCode()) {
 			if (resultCode == Activity.RESULT_OK) {
-				String response = data.getStringExtra(Constant.UI_EXTRA_EXTERNAL_APP_OUTPUT);
+				String response = data.getStringExtra(Constant.Extra.UI_EXTRA_EXTERNAL_APP_OUTPUT);
 				if (response != null && !response.equals("")) {
 					((ExternalAppWidgetInstance) widgetInstance).saveResponse(response);
 				}

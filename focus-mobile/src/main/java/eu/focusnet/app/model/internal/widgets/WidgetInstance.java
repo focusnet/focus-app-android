@@ -35,7 +35,7 @@ import eu.focusnet.app.model.internal.DataContext;
 import eu.focusnet.app.model.json.WidgetTemplate;
 import eu.focusnet.app.model.util.TypesHelper;
 import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by julien on 12.01.16.
@@ -43,27 +43,12 @@ import eu.focusnet.app.ui.util.Constant;
 public abstract class WidgetInstance extends AbstractInstance
 {
 
-	public static final String WIDGET_TYPE_TEXT = "#/definitions/widget/visualize/text";
-	public static final String WIDGET_TYPE_TABLE = "#/definitions/widget/visualize/table";
-	public static final String WIDGET_TYPE_PIE_CHART = "#/definitions/widget/visualize/piechart";
-	public static final String WIDGET_TYPE_BAR_CHART = "#/definitions/widget/visualize/barchart";
-	public static final String WIDGET_TYPE_LINE_CHART = "#/definitions/widget/visualize/linechart";
-	public static final String WIDGET_TYPE_CAMERA = "#/definitions/widget/collect/camera";
-	public static final String WIDGET_TYPE_GPS = "#/definitions/widget/collect/gps";
-	public static final String WIDGET_TYPE_FORM = "#/definitions/widget/collect/form";
-	public static final String WIDGET_TYPE_EXTERNAL_APP = "#/definitions/widget/collect/external-app";
-	public static final String WIDGET_TYPE_HTML5_WEBAPP = "#/definitions/widget/visualize/html5-widget";
-	public static final String WIDGET_TYPE_SUBMIT = "#/definitions/widget/collect/submit";
-
-	public static final String WIDGET_LAYOUT_WIDTH_LABEL = "width";
-	public static final String WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE = "4of4";
-	public static final int WIDGET_LAYOUT_TOTAL_NUMBER_OF_COLS = 4;
 
 	private static HashMap<String, String> layoutConfigDefaults = null;
 
 	static {
 		layoutConfigDefaults = new HashMap<>();
-		layoutConfigDefaults.put(WIDGET_LAYOUT_WIDTH_LABEL, WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE);
+		layoutConfigDefaults.put(Constant.Ui.WIDGET_LAYOUT_WIDTH_LABEL, Constant.Ui.WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE);
 	}
 
 	protected LinkedTreeMap<String, Object> config;
@@ -119,37 +104,37 @@ public abstract class WidgetInstance extends AbstractInstance
 			a = a.replace("asdlkfj", "");
 		}
 		switch (template.getType()) {
-			case WIDGET_TYPE_TEXT:
+			case Constant.DataModelTypes.WIDGET_TYPE_TEXT:
 				w = new TextWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_TABLE:
+			case Constant.DataModelTypes.WIDGET_TYPE_TABLE:
 				w = new TableWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_PIE_CHART:
+			case Constant.DataModelTypes.WIDGET_TYPE_PIE_CHART:
 				w = new PieChartWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_BAR_CHART:
+			case Constant.DataModelTypes.WIDGET_TYPE_BAR_CHART:
 				w = new BarChartWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_LINE_CHART:
+			case Constant.DataModelTypes.WIDGET_TYPE_LINE_CHART:
 				w = new LineChartWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_CAMERA:
+			case Constant.DataModelTypes.WIDGET_TYPE_CAMERA:
 				w = new CameraWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_GPS:
+			case Constant.DataModelTypes.WIDGET_TYPE_GPS:
 				w = new GPSWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_FORM:
+			case Constant.DataModelTypes.WIDGET_TYPE_FORM:
 				w = new FormWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_EXTERNAL_APP:
+			case Constant.DataModelTypes.WIDGET_TYPE_EXTERNAL_APP:
 				w = new ExternalAppWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_SUBMIT:
+			case Constant.DataModelTypes.WIDGET_TYPE_SUBMIT:
 				w = new SubmitWidgetInstance(template, layoutConfig, newCtx);
 				break;
-			case WIDGET_TYPE_HTML5_WEBAPP:
+			case Constant.DataModelTypes.WIDGET_TYPE_HTML5_WEBAPP:
 				w = new Html5WidgetInstance(template, layoutConfig, newCtx);
 				break;
 			default:
@@ -244,8 +229,8 @@ public abstract class WidgetInstance extends AbstractInstance
 	 */
 	public int getNumberOfColumnsInUi()
 	{
-		String width = this.getLayoutAttribute(WidgetInstance.WIDGET_LAYOUT_WIDTH_LABEL);
-		int indexOf = width.indexOf(Constant.WIDGET_LAYOUT_OF);
+		String width = this.getLayoutAttribute(Constant.Ui.WIDGET_LAYOUT_WIDTH_LABEL);
+		int indexOf = width.indexOf(Constant.Ui.WIDGET_LAYOUT_OF);
 		return Integer.valueOf(width.substring(0, indexOf).trim());
 	}
 
@@ -258,7 +243,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	@Override
 	public void buildPaths(String parentPath)
 	{
-		this.path = parentPath + eu.focusnet.app.model.util.Constant.PATH_SEPARATOR + this.guid;
+		this.path = parentPath + Constant.Navigation.PATH_SEPARATOR + this.guid;
 	}
 
 

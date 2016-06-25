@@ -44,9 +44,9 @@ import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.FeaturedListItem;
 import eu.focusnet.app.ui.common.SimpleListItem;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * This fragment will be loaded from the ProjectActivity and displays
@@ -65,7 +65,7 @@ public class ProjectFragment extends ListFragment
 		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 		Bundle bundle = getArguments();
 		//Path is the same as path
-		path = bundle.getString(Constant.UI_EXTRA_PATH);
+		path = bundle.getString(Constant.Extra.UI_EXTRA_PATH);
 		new ProjectBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 		return viewRoot;
@@ -90,15 +90,15 @@ public class ProjectFragment extends ListFragment
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 
 			String path = selectedItem.getPath();
-			String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
+			String[] parts = path.split(Constant.Navigation.PATH_SEPARATOR_PATTERN);
 			String category = parts[parts.length - 2];
 			intent = new Intent(
 					getActivity(),
 					(category.equals(PageInstance.PageType.TOOL.toString()) || category.equals(PageInstance.PageType.DASHBOARD.toString()))
 							? PageActivity.class : ProjectInProjectActivity.class
 			);
-			intent.putExtra(Constant.UI_EXTRA_PATH, path);
-			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
+			intent.putExtra(Constant.Extra.UI_EXTRA_PATH, path);
+			intent.putExtra(Constant.Extra.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
 	}

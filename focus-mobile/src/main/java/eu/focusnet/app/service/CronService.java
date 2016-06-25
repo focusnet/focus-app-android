@@ -35,6 +35,7 @@ import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.FocusApplication;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 
 // TOOD FIXME also clean SQL db from old entries (i.e. ones that are not refered by fully loaded instances (? to check ?)
@@ -59,11 +60,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 public class CronService extends Service implements ApplicationStatusObserver
 {
 	// FIXME move some of these vales to properties (and load them in onCreate)
-	public static final int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MS = 0; //100 * 24 * 60 * 60 * 1_000; // FIXME set to very high value for demo 10 * 60 * 1_000; // 10 minutes in milliseconds, does not apply to db cleaning
-	private static final int CRON_SERVICE_POLLING_PERIOD_IN_MINUTES = 2; // 2 minutes
-	private static final int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 300_000; // 30 min
-	private static final int CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES = 300_000;
-	private static final String CRON_WAKE_LOCK_NAME = "FOCUS_CRON_TASK";
+
 	private final IBinder cronBinder = new CronBinder();
 	PowerManager powerManager;
 	private long lastSync;
@@ -82,7 +79,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 		this.syncInProgress = false;
 
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
-		String l = prefs.get(ApplicationHelper.SHARED_PREFERENCES_LAST_SYNC);
+		String l = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_LAST_SYNC);
 		this.lastSync = l == null ? 0 : Long.parseLong(l);
 		this.failures = 0;
 	}
@@ -99,7 +96,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 	 * Sync data operations
 	 * <p/>
 	 * * return false if already in progress OR application nto ready, true otherwise
-	 *
+	 * <p/>
 	 * FIXME if I call this in a separate thread, I can then interrupt it.
 	 */
 	public boolean syncData()
@@ -118,7 +115,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 		// acquire CPU lock
 		PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				CRON_WAKE_LOCK_NAME);
+				Constant.AppConfig.CRON_WAKE_LOCK_NAME);
 		wakeLock.acquire();
 
 		// perform the sync
@@ -142,7 +139,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 		// Update information about the last sync
 		this.lastSync = System.currentTimeMillis();
 		HashMap<String, String> toSave = new HashMap<>();
-		toSave.put(ApplicationHelper.SHARED_PREFERENCES_LAST_SYNC, Long.toString(this.lastSync));
+		toSave.put(Constant.SharedPreferences.SHARED_PREFERENCES_LAST_SYNC, Long.toString(this.lastSync));
 		ApplicationHelper.savePreferences(toSave);
 
 		// release CPU lock
@@ -160,26 +157,31 @@ public class CronService extends Service implements ApplicationStatusObserver
 	 */
 	private void periodicallySyncData()
 	{
-		this.scheduleTaskExecutor.scheduleWithFixedDelay(new Runnable()
-		{
-			@Override
-			public void run()
-			{
+		this.scheduleTaskExecutor.scheduleWithFixedDelay(
+				new Runnable()
+				{
+					@Override
+					public void run()
+					{
 
-				if (!applicationReady) {
-					return;
-				}
+						if (!applicationReady) {
+							return;
+						}
 
-				// last sync is too recent, let's wait more
-				long limit = System.currentTimeMillis() - (CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES * 60 * 1_000);
-				if (lastSync == 0 || lastSync >= limit) {
-					return;
-				}
+						// last sync is too recent, let's wait more
+						long limit = System.currentTimeMillis() - (Constant.AppConfig.CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES * 60 * 1_000);
+						if (lastSync == 0 || lastSync >= limit) {
+							return;
+						}
 
-				syncData();
+						syncData();
 
-			}
-		}, CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES, CRON_SERVICE_POLLING_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
+					}
+				},
+				Constant.AppConfig.CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES,
+				Constant.AppConfig.CRON_SERVICE_POLLING_INTERVAL_IN_MINUTES,
+				TimeUnit.MINUTES
+		);
 	}
 
 

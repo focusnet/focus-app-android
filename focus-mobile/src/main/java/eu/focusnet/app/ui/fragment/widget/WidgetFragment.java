@@ -46,9 +46,9 @@ import eu.focusnet.app.model.internal.widgets.TableWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.TextWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * FIXME we don't use savedInstance mechanism. useful?S
@@ -123,9 +123,9 @@ public abstract class WidgetFragment extends Fragment
 	{
 		Bundle arguments = getArguments();
 		int width = 0; // width is determined by the weight only
-		int height = arguments.getInt(Constant.UI_EXTRA_LAYOUT_HEIGHT);
-		int numOfCols = arguments.getInt(Constant.UI_EXTRA_LAYOUT_WEIGHT);
-		int positionInRow = arguments.getInt(Constant.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
+		int height = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_HEIGHT);
+		int numOfCols = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT);
+		int positionInRow = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height, numOfCols);
 
 		// set a reasonable margin between fragments
@@ -133,7 +133,7 @@ public abstract class WidgetFragment extends Fragment
 		params.setMargins(
 				positionInRow == 0 ? margin : margin / 2,
 				margin,
-				positionInRow + numOfCols == Constant.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
+				positionInRow + numOfCols == Constant.Ui.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
 				margin
 		);
 
@@ -158,7 +158,7 @@ public abstract class WidgetFragment extends Fragment
 
 		// acquire the widget instance
 		Bundle bundles = getArguments();
-		String path = bundles.getString(Constant.UI_EXTRA_PATH);
+		String path = bundles.getString(Constant.Extra.UI_EXTRA_PATH);
 
 		// may happen that we have no path (e.g. EmptyWidgetFragment)
 		if (path != null) {

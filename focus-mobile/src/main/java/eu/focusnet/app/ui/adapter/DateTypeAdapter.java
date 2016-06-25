@@ -36,7 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.focusnet.app.model.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * DateTypeAdapter is used by the GSON parser to serialize and deserialize DateTime formats
@@ -53,7 +53,7 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	@SuppressLint("SimpleDateFormat")
 	public DateTypeAdapter()
 	{
-		dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
+		dateFormat = new SimpleDateFormat(Constant.AppConfig.DATE_FORMAT);
 	}
 
 	/**

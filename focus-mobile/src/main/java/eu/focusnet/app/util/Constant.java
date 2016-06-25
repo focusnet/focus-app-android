@@ -111,7 +111,7 @@ final public class Constant
 		/**
 		 * Minimum duration of splashscreen showing, in milliseconds.
 		 */
-		final public static long MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS = 2_000;
+		final public static long SPLASHSCREEN_MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS = 2_000;
 
 		/**
 		 * Prefix of properties that define the alterations to be made to HTTP requests headers

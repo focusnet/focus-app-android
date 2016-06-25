@@ -28,7 +28,7 @@ import android.widget.ImageView;
 
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Activity use to display an image
@@ -46,7 +46,7 @@ public class ImageActivity extends Activity
 		if (extras == null) {
 			throw new FocusInternalErrorException("ImageActivity MUST have an extra.");
 		}
-		Uri imageUri = (Uri) extras.get(Constant.UI_EXTRA_IMAGE_URI); // might come from savedInstance
+		Uri imageUri = (Uri) extras.get(Constant.Extra.UI_EXTRA_IMAGE_URI); // might come from savedInstance
 		tookImage.setImageURI(imageUri);
 	}
 }

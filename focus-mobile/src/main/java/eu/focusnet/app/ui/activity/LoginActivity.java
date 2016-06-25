@@ -35,8 +35,8 @@ import java.io.IOException;
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.service.network.NetworkManager;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Login Activity: this activity displays the login screen
@@ -137,7 +137,7 @@ public class LoginActivity extends Activity
 			//If the given credential were correct start the EntryPointActivity otherwise display an error message(toast) to the user
 			if (hasAccess) {
 				Intent i = new Intent(LoginActivity.this, EntryPointActivity.class);
-				i.putExtra(Constant.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.init_app_first_run));
+				i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.init_app_first_run));
 				startActivity(i);
 				finish();
 			}

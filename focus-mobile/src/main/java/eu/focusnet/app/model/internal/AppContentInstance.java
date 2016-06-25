@@ -27,6 +27,7 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.AppContentTemplate;
 import eu.focusnet.app.model.json.ProjectTemplate;
 import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.util.Constant;
 
 /**
  * An Application content instance, i.e. the application template has been resolved and real
@@ -35,7 +36,6 @@ import eu.focusnet.app.service.DataManager;
 public class AppContentInstance extends AbstractInstance
 {
 
-	private final static String PATH_ROOT = "FOCUS";
 	private AppContentTemplate appTemplate;
 	private ArrayList<ProjectInstance> projects;
 	private String title;
@@ -140,7 +140,7 @@ public class AppContentInstance extends AbstractInstance
 	@Override
 	public void buildPaths(String parentPath)
 	{
-		this.path = PATH_ROOT;
+		this.path = Constant.Navigation.PATH_ROOT;
 		for(ProjectInstance pi : this.projects) {
 			pi.buildPaths(this.path);
 		}

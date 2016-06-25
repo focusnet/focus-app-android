@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.Constant;
 
 /**
  */
@@ -42,7 +42,7 @@ public class InvalidWidgetFragment extends WidgetFragment
 
 		TextView invalidWidgetInfo = (TextView) this.rootView.findViewById(R.id.invalid_widget_info);
 		Bundle bundles = getArguments();
-		String path = bundles.getString(Constant.UI_EXTRA_PATH);
+		String path = bundles.getString(Constant.Extra.UI_EXTRA_PATH);
 
 		if (path != null) {
 			invalidWidgetInfo.setText(path);

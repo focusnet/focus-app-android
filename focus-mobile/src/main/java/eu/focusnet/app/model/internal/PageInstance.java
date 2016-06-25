@@ -34,8 +34,8 @@ import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.internal.widgets.InvalidWidgetInstance;
 import eu.focusnet.app.model.internal.widgets.WidgetInstance;
 import eu.focusnet.app.model.json.PageTemplate;
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  */
@@ -49,7 +49,6 @@ public class PageInstance extends AbstractInstance
 		HIDDEN
 	}
 
-	public final static String LABEL_PAGE_ITERATOR = "$page-iterator$";
 	LinkedHashMap<String, WidgetInstance> widgets; // layout + widget definition, with dataContext.
 	private PageTemplate template;
 	private String guid;
@@ -90,7 +89,7 @@ public class PageInstance extends AbstractInstance
 			public Boolean call() throws Exception
 			{
 				if (template.getIterator() != null) {
-					guid = guid + Constant.PATH_SELECTOR_OPEN + dataContext.get(LABEL_PAGE_ITERATOR) + Constant.PATH_SELECTOR_CLOSE;
+					guid = guid + Constant.Navigation.PATH_SELECTOR_OPEN + dataContext.get(Constant.Navigation.LABEL_PAGE_ITERATOR) + Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 
 				try {
@@ -199,9 +198,9 @@ public class PageInstance extends AbstractInstance
 	public void buildPaths(String parentPath)
 	{
 		this.path = parentPath
-				+ Constant.PATH_SEPARATOR
+				+ Constant.Navigation.PATH_SEPARATOR
 				+ this.type.toString()
-				+ Constant.PATH_SEPARATOR
+				+ Constant.Navigation.PATH_SEPARATOR
 				+ this.guid;
 		for (Map.Entry e : this.widgets.entrySet()) {
 			WidgetInstance p = (WidgetInstance) e.getValue();

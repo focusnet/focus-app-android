@@ -42,7 +42,7 @@ import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
 import eu.focusnet.app.ui.common.FeaturedListItem;
 import eu.focusnet.app.ui.common.SimpleListItem;
-import eu.focusnet.app.ui.util.Constant;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
 
 
@@ -74,8 +74,8 @@ public class ProjectsListingFragment extends ListFragment
 		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
-			intent.putExtra(Constant.UI_EXTRA_PATH, selectedItem.getPath());
-			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
+			intent.putExtra(Constant.Extra.UI_EXTRA_PATH, selectedItem.getPath());
+			intent.putExtra(Constant.Extra.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
 	}

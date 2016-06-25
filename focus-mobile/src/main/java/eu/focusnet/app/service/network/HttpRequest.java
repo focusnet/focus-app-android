@@ -36,6 +36,7 @@ import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.json.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * An HTTP request to be issued to the REST server
@@ -43,12 +44,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 public class HttpRequest
 {
 
-	public static final String PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX = "http-request-header-modification.";
 
-	public static final String HTTP_METHOD_GET = "GET";
-	public static final String HTTP_METHOD_POST = "POST";
-	public static final String HTTP_METHOD_PUT = "PUT";
-	public static final String HTTP_METHOD_DELETE = "DELETE";
 	String method = null;
 	URL url = null;
 	String payload = "";
@@ -127,7 +123,7 @@ public class HttpRequest
 		}
 
 		// add custom headers when necessary
-		String headers = ApplicationHelper.getProperty(PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost());
+		String headers = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost());
 		// FIXME For now, multiple headers per host are not supported.
 		if (headers != null) {
 			Pattern p = Pattern.compile("^([^\\s:]+):\\s*(.*)$");
@@ -164,8 +160,8 @@ public class HttpRequest
 
 		// configure connection depending on method
 		switch (this.method) {
-			case HTTP_METHOD_POST:
-			case HTTP_METHOD_PUT:
+			case Constant.Networking.HTTP_METHOD_POST:
+			case Constant.Networking.HTTP_METHOD_PUT:
 				connection.setDoOutput(true);
 				break;
 		}
@@ -175,8 +171,8 @@ public class HttpRequest
 			connection.connect();
 
 			switch (this.method) {
-				case HTTP_METHOD_POST:
-				case HTTP_METHOD_PUT:
+				case Constant.Networking.HTTP_METHOD_POST:
+				case Constant.Networking.HTTP_METHOD_PUT:
 					OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
 					wr.write(this.payload);
 					wr.flush();

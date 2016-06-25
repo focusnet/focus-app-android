@@ -26,8 +26,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.io.File;
 import java.util.Random;
 
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * The DatabaseAdapater is a facility that helps interacting with the SQLlite database.
@@ -35,10 +35,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 public class DatabaseAdapter
 {
 
-	/**
-	 * Current version of the database
-	 */
-	private static final int DATABASE_VERSION = 1;
+
 
 	private DatabaseHelper databaseHelper;
 	private SQLiteDatabase db;
@@ -170,7 +167,7 @@ public class DatabaseAdapter
 		 */
 		private DatabaseHelper()
 		{
-			super(ApplicationHelper.getApplicationContext(), Constant.DATABASE_NAME, null, DATABASE_VERSION);
+			super(ApplicationHelper.getApplicationContext(), Constant.Database.DATABASE_NAME, null, Constant.Database.DATABASE_VERSION);
 		}
 
 		/**
@@ -209,7 +206,7 @@ public class DatabaseAdapter
 		@Override
 		public void onCreate(SQLiteDatabase db)
 		{
-			db.execSQL(Constant.CREATE_TABLE_SAMPLES_QUERY);
+			db.execSQL(Constant.Database.CREATE_TABLE_SAMPLES_QUERY);
 		}
 
 		/**

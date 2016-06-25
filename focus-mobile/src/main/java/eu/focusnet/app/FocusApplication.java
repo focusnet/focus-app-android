@@ -34,6 +34,7 @@ import org.acra.config.ConfigurationBuilder;
 
 import eu.focusnet.app.service.CronService;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
  * FOCUS Application
@@ -52,12 +53,7 @@ import eu.focusnet.app.util.ApplicationHelper;
  */
 public class FocusApplication extends Application
 {
-	/**
-	 * ACRA configuration keys, from the focus.properties file
-	 */
-	private static final String PROPERTY_ACRA_FORM_URI = "acra.form-uri",
-			PROPERTY_ACRA_USERNAME = "acra.username",
-			PROPERTY_ACRA_PASSWORD = "acra.password";
+
 
 	private Thread.UncaughtExceptionHandler originalUncaughtExceptionHandler;
 
@@ -112,9 +108,9 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 
-			formUri = ApplicationHelper.getProperty(PROPERTY_ACRA_FORM_URI);
-			user = ApplicationHelper.getProperty(PROPERTY_ACRA_USERNAME);
-			pass = ApplicationHelper.getProperty(PROPERTY_ACRA_PASSWORD);
+			formUri = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_FORM_URI);
+			user = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_USERNAME);
+			pass = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_PASSWORD);
 
 			// fully programmatic ACRA configuration (no annotation)
 			try {

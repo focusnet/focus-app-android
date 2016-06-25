@@ -46,8 +46,8 @@ import eu.focusnet.app.ui.adapter.NavigationListAdapter;
 import eu.focusnet.app.ui.common.EmptyListItem;
 import eu.focusnet.app.ui.common.FeaturedListItem;
 import eu.focusnet.app.ui.common.SimpleListItem;
-import eu.focusnet.app.ui.util.Constant;
 import eu.focusnet.app.ui.util.UiHelper;
+import eu.focusnet.app.util.Constant;
 
 import static eu.focusnet.app.model.internal.PageInstance.*;
 
@@ -82,14 +82,14 @@ public class BookmarkFragment extends ListFragment
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 
 			String path = selectedItem.getPath();
-			String[] parts = path.split(eu.focusnet.app.model.util.Constant.PATH_SEPARATOR_PATTERN);
+			String[] parts = path.split(Constant.Navigation.PATH_SEPARATOR_PATTERN);
 			String category = parts[parts.length-2];
 			intent = new Intent(
 					getActivity(),
 					(category.equals(PageType.TOOL.toString()) || category.equals(PageType.DASHBOARD.toString())) ? PageActivity.class : ProjectActivity.class
 			);
-			intent.putExtra(Constant.UI_EXTRA_PATH, path);
-			intent.putExtra(Constant.UI_EXTRA_TITLE, selectedItem.getTitle());
+			intent.putExtra(Constant.Extra.UI_EXTRA_PATH, path);
+			intent.putExtra(Constant.Extra.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
 		}
 	}

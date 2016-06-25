@@ -36,10 +36,10 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
 import eu.focusnet.app.model.json.FocusSample;
-import eu.focusnet.app.model.util.Constant;
 import eu.focusnet.app.model.util.TypesHelper;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.service.PriorityTask;
+import eu.focusnet.app.util.Constant;
 
 /**
  * Created by julien on 13.01.16.
@@ -153,7 +153,7 @@ public class DataContext extends HashMap<String, String>
 	 */
 	private String resolveReferencedUrl(String description) throws FocusMissingResourceException
 	{
-		String[] parts = description.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
+		String[] parts = description.split(Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length != 3) {
 			throw new FocusInternalErrorException("badly formatted reference");
 		}
@@ -200,8 +200,8 @@ public class DataContext extends HashMap<String, String>
 	 */
 	public Object resolve(String request) throws FocusMissingResourceException
 	{
-		String a = Constant.SELECT_CONTEXT_FULL_PATTERN;
-		Pattern toSearch = Pattern.compile(Constant.SELECT_CONTEXT_FULL_PATTERN);
+		String a = Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN;
+		Pattern toSearch = Pattern.compile(Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN);
 		Matcher m = toSearch.matcher(request);
 		while (m.find()) {
 			// if we have an exact match, e.g. only <ctx/...> in the request, then
@@ -245,15 +245,15 @@ public class DataContext extends HashMap<String, String>
 		}
 
 		// if this is a normal url then just return it.
-		if (!request.startsWith(Constant.SELECTOR_OPEN + Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)
-				|| !request.endsWith(Constant.SELECTOR_CLOSE)) {
+		if (!request.startsWith(Constant.DataReference.SELECTOR_OPEN + Constant.DataReference.SELECTOR_CONTEXT_LABEL + Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR)
+				|| !request.endsWith(Constant.DataReference.SELECTOR_CLOSE)) {
 			return request;
 		}
 		request = request
-				.replaceFirst("^" + Constant.SELECTOR_OPEN, "")
-				.replaceFirst(Constant.SELECTOR_CLOSE + "$", "");
+				.replaceFirst("^" + Constant.DataReference.SELECTOR_OPEN, "")
+				.replaceFirst(Constant.DataReference.SELECTOR_CLOSE + "$", "");
 
-		String[] parts = request.split(Constant.SELECTOR_CONTEXT_SEPARATOR);
+		String[] parts = request.split(Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR);
 		if (parts.length < 2) {
 			throw new FocusInternalErrorException("Invalid context in resolve request.");
 		}
@@ -346,26 +346,26 @@ public class DataContext extends HashMap<String, String>
 		{
 			FocusSample f;
 			try {
-				if (description.startsWith(Constant.SELECTOR_OPEN)
-						&& description.endsWith(Constant.SELECTOR_CLOSE)) {
+				if (description.startsWith(Constant.DataReference.SELECTOR_OPEN)
+						&& description.endsWith(Constant.DataReference.SELECTOR_CLOSE)) {
 
 					description = description
-							.replaceFirst("^" + Constant.SELECTOR_OPEN, "")
-							.replaceFirst(Constant.SELECTOR_CLOSE + "$", "");
+							.replaceFirst("^" + Constant.DataReference.SELECTOR_OPEN, "")
+							.replaceFirst(Constant.DataReference.SELECTOR_CLOSE + "$", "");
 
-					if (description.startsWith(Constant.SELECTOR_CONTEXT_LABEL
-							+ Constant.SELECTOR_CONTEXT_SEPARATOR)) {
+					if (description.startsWith(Constant.DataReference.SELECTOR_CONTEXT_LABEL
+							+ Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR)) {
 						String u = resolveReferencedUrl(description);
 						f = dataManager.getSample(u);
 					}
 					else {
-						String[] parts = description.split(Constant.SELECTOR_SERVICE_SEPARATOR);
+						String[] parts = description.split(Constant.DataReference.SELECTOR_SERVICE_SEPARATOR);
 						if (parts.length != 3) {
 							throw new FocusInternalErrorException("Wrong number of fields for description of service.");
 						}
-						if (parts[0].equals(Constant.SELECTOR_SERVICE_HISTORY)) { // FIXME add the special param | last for getting last entry.
+						if (parts[0].equals(Constant.DataReference.SELECTOR_SERVICE_HISTORY)) { // FIXME add the special param | last for getting last entry.
 							String u;
-							if (parts[1].startsWith(Constant.SELECTOR_CONTEXT_LABEL + Constant.SELECTOR_CONTEXT_SEPARATOR)) {
+							if (parts[1].startsWith(Constant.DataReference.SELECTOR_CONTEXT_LABEL + Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR)) {
 								u = resolveReferencedUrl(parts[1]);
 							}
 							else {

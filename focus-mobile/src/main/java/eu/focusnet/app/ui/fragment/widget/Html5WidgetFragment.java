@@ -46,6 +46,7 @@ import eu.focusnet.app.service.network.HttpRequest;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 
 public class Html5WidgetFragment extends WidgetFragment
@@ -270,7 +271,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		@JavascriptInterface
 		public String getAccessControlToken(String which)
 		{
-			String header = ApplicationHelper.getProperty(HttpRequest.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which);
+			String header = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + which);
 			if (header != null) {
 				return header;
 			}

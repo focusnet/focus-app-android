@@ -70,3 +70,4 @@ SOFTWARE.
 - getSupportedLanguages() -> from properties?
 - FocusInternalException:  FIXME probably bad practice. We should keep the original exception. 
 - Translate to DE
+- ToolbarEnabledActiity and child:  FIXME toolbar??? FIXME replace all actionBar with toolbar. should work. to be tested.

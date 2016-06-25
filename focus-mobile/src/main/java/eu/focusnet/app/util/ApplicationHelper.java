@@ -52,8 +52,9 @@ import eu.focusnet.app.model.AppContentInstance;
  * All these facilities should be accessed through this class, and not via the
  * {@link  FocusAppLogic} singleton.
  */
-public class ApplicationHelper
+final public class ApplicationHelper
 {
+
 	/**
 	 * Retrieve a property.
 	 *

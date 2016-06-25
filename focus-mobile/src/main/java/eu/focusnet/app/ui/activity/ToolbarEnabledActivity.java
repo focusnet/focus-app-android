@@ -37,14 +37,35 @@ import eu.focusnet.app.util.Constant;
  */
 public abstract class ToolbarEnabledActivity extends AppCompatActivity
 {
+	/**
+	 * The toolbar, i.e. the top bar with title and action buttons
+	 */
 	protected Toolbar toolbar;
-	protected Fragment fragment;
-	protected String title;
+
+	/**
+	 * FIXME toolbar??? FIXME replace all actionBar with toolbar. should work. to be tested.
+	 */
 	protected ActionBar actionBar;
+
+	/**
+	 * Currently active fragment
+	 */
+	protected Fragment fragment;
+
+	/**
+	 * Title of the activity
+	 */
+	protected String title;
+
+	/**
+	 * Path of the activity currently being displayed.
+	 */
 	private String path;
 
 	/**
-	 * Override creation method. Add a toolbar.
+	 * Override creation method:
+	 * - Add a toolbar
+	 * - setup
 	 *
 	 * @param savedInstanceState
 	 */
@@ -57,8 +78,8 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		setContentView(getTargetView());
 
 		// add the toolbar
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		this.toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(this.toolbar);
 
 		// configure
 		this.actionBar = getSupportActionBar();
@@ -92,22 +113,31 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Retrieve the content of the view
 	 *
-	 * @return a valid Content View id
+	 * @return a valid View id
 	 */
 	protected abstract int getTargetView();
 
 
+	/**
+	 * Retrieve
+	 * @return a valid layout id
+	 */
 	protected abstract int getTargetLayoutContainer();
 
 	/**
 	 * Method that may be overriden to setup Activity-specific UI elements, such as a Drawer or
 	 * Action buttons.
+	 *
+	 * See ....
 	 */
 	protected void setupSpecificUiElements()
 	{
 
 	}
 
+	/**
+	 *
+	 */
 	protected void prepareNewFragment()
 	{
 

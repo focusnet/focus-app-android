@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+FIXME to style, use @style and remove hard-coded dimenstions
+-->
+<LinearLayout android:id="@+id/activity_view_parent"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="1">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:contentDescription="@string/caption_focus_logo"
+        android:src="@drawable/focus_logo"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:visibility="invisible"/>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.4">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/login_username_label"
+                style="@style/FocusText.Big"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_username"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/login_username_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:ems="15"
+                android:maxLines="1"
+                android:textSize="20sp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/login_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_password"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/login_password_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:ems="15"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textSize="20sp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/login_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_server"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/login_server_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:ems="15"
+                android:maxLines="1"
+                android:textSize="20sp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView/>
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:onClick="onClick"
+                android:paddingLeft="50dip"
+                android:paddingRight="50dip"
+                android:text="@string/login_button"/>
+            <!--android:background="@drawable/focus_round_button"-->
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

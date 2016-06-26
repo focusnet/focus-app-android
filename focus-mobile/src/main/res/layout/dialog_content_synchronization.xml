@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:layout_weight="30"
+            android:text="@string/synchronization_status"/>
+
+        <TextView
+            android:id="@+id/dialog_sync_status_field"
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/dialog_sync_instructions_msg"
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:layout_weight="30"
+            android:text="@string/you_can_start_data_sync"/>
+
+        <TextView
+            android:id="@+id/dialog_sync_last_sync_field"
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/last_synchronization_n_a"/>
+
+        <TextView
+            android:id="@+id/dialog_sync_data_volume_field"
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/data_volume_n_a"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_sync_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10sp"
+        android:paddingTop="10sp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/dialog_sync_progress_field"
+            style="@style/FocusText.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/syncronization_in_progress"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </LinearLayout>
+
+</LinearLayout>

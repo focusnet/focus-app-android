@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/focus_splashscreen_logo_horizontal_image_margin"
+        android:layout_marginStart="@dimen/focus_splashscreen_logo_horizontal_image_margin"
+        android:contentDescription="@string/caption_focus_logo"
+        android:src="@drawable/focus_logo"/>
+
+    <TextView
+        android:id="@+id/splashscreen_version_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/focus_splashscreen_padding_version_number"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="70"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dip"
+                android:layout_height="0dip"
+                android:layout_weight="20"/>
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="60"
+                android:indeterminate="true"/>
+
+            <Space
+                android:layout_width="0dip"
+                android:layout_height="0dip"
+                android:layout_weight="20"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/splashscreen_loading_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="12"
+            android:text="@string/loading"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

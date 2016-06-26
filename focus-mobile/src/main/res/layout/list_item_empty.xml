@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        style="@style/FocusListChevron"
+        android:src="@drawable/ic_chevron_right"
+        android:visibility="invisible"/>
+
+    <TextView
+        style="@style/FocusListItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/focus_adjust_for_pixel_perfect_with_actionbar_icon"
+        android:text="@string/not_available"
+        android:textColor="@color/textColorDiscrete"/>
+
+
+</LinearLayout>

@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+    defaultConfig {
+        applicationId "eu.focusnet.app"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 3
+        versionName "v0.9.11"
+        multiDexEnabled true
+        // rename output archive name
+        setProperty("archivesBaseName", "FOCUS-Mobile-$versionName") 
+    }
+    productFlavors {
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion 21
+        }
+        prod {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 19
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+        }
+    }
+    compileOptions {
+        sourceCompatibility 1.7
+        targetCompatibility 1.7
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        enable 'deprecation', 'NewerVersionAvailable' // only works for Google libs
+    }
+
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:appcompat-v7:23.3.0',
+            'com.google.code.gson:gson:2.6.2',
+            'de.codecrafters.tableview:tableview:2.0.1',
+            'com.github.PhilJay:MPAndroidChart:v2.2.5',
+            'com.google.android.gms:play-services:9.0.2'
+    compile 'ch.acra:acra:4.9.0'
+}

@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.util.FocusBadTypeException;
 
 /**
  * This class provides static methods for handling types and reporting inconsistencies
@@ -35,9 +35,10 @@ public class TypesHelper
 	/**
 	 * Acquire object as string
 	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
+	 * @param obj The evaluated object
+	 * @return A Stringified version of the object
+	 * @throws FocusBadTypeException If the input object is not compatible with our application
+	 * casting capabilities.
 	 */
 	public static String asString(Object obj) throws FocusBadTypeException
 	{
@@ -51,11 +52,12 @@ public class TypesHelper
 	}
 
 	/**
-	 * Acquire object as double
+	 * Acquire object as a Double
 	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
+	 * @param obj The evaluated object
+	 * @return A Double version of the object
+	 * @throws FocusBadTypeException If the input object is not compatible with our application
+	 * casting capabilities.
 	 */
 	public static Double asDouble(Object obj) throws FocusBadTypeException
 	{
@@ -76,35 +78,14 @@ public class TypesHelper
 		throw new FocusBadTypeException("Not a Double");
 	}
 
-	/**
-	 * Acquire object as integer
-	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
-	 */
-	public static Integer asInteger(Object obj) throws FocusBadTypeException
-	{
-		if (obj instanceof Integer) {
-			return (Integer) obj;
-		}
-		if (obj instanceof String) {
-			try {
-				return Integer.parseInt((String) obj);
-			}
-			catch (NumberFormatException e) {
-				throw new FocusBadTypeException("not a valid integer string");
-			}
-		}
-		throw new FocusBadTypeException("Not an Integer");
-	}
 
 	/**
-	 * Acquire as an array of strings
+	 * Acquire object as an array of Strings
 	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
+	 * @param obj The evaluated object
+	 * @return An array of Strings version of the object
+	 * @throws FocusBadTypeException If the input object is not compatible with our application
+	 * casting capabilities.
 	 */
 	public static ArrayList<String> asArrayOfStrings(Object obj) throws FocusBadTypeException
 	{
@@ -127,38 +108,12 @@ public class TypesHelper
 	}
 
 	/**
-	 * Acquire as an array of integers
+	 * Acquire object as an array of Doubles
 	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
-	 */
-	public static ArrayList<Integer> asArrayOfIntegers(Object obj) throws FocusBadTypeException
-	{
-		if (!(obj instanceof ArrayList)) {
-			throw new FocusBadTypeException("Provided values are not an ArrayList");
-		}
-		ArrayList<Integer> ret = new ArrayList<Integer>();
-		for (Object o2 : (ArrayList) obj) {
-			if (o2 instanceof Integer) {
-				ret.add((Integer) o2);
-			}
-			else if (o2 instanceof String) {
-				ret.add(Integer.parseInt((String) o2));
-			}
-			else {
-				throw new FocusBadTypeException("Invalid value in array");
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * Acquire as an array of doubles
-	 *
-	 * @param obj
-	 * @return
-	 * @throws FocusBadTypeException
+	 * @param obj The evaluated object
+	 * @return An array of Double version of the object
+	 * @throws FocusBadTypeException If the input object is not compatible with our application
+	 * casting capabilities.
 	 */
 	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws FocusBadTypeException
 	{
@@ -181,14 +136,12 @@ public class TypesHelper
 	}
 
 	/**
-	 * Make sure that the provided object in an ArrayList of URLs (as Strings), or throw an exception.
-	 * <p/>
-	 * We are a bit more paranoiac with this data types because it is used to follow references
-	 * and in iterators, so we must be sure it contains only valid data.
+	 * Acquire object as an array of valid Urls
 	 *
-	 * @param o
-	 * @return
-	 * @throws FocusBadTypeException
+	 * @param o The evaluated object
+	 * @return An array of Urls version of the object
+	 * @throws FocusBadTypeException If the input object is not compatible with our application
+	 * casting capabilities.
 	 */
 	public static ArrayList<String> asArrayOfUrls(Object o) throws FocusBadTypeException
 	{

@@ -18,23 +18,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.exception;
+package eu.focusnet.app.util;
 
 /**
- * FocusNotImplementedException is thrown when some code branch that has not been implemented
- * is reached.
+ * An FocusInternalErrorException denotes a problem that should not happen if the logic of the
+ * application was correct.
  * <p/>
- * This is an unchecked exception.
+ * This is an unchecked exception that will generally crash the application.
  */
-public class FocusNotImplementedException extends RuntimeException
+public class FocusInternalErrorException extends RuntimeException
 {
 	/**
 	 * Exception constructor
 	 *
 	 * @param detailMessage Message summarizing the encountered issue
 	 */
-	public FocusNotImplementedException(String detailMessage)
+	public FocusInternalErrorException(String detailMessage)
 	{
 		super(detailMessage);
+	}
+
+	/**
+	 * Exception constructor to be used when we catch another exception and want to keep
+	 * its detailed information for further propagation.
+	 * <p/>
+	 * FIXME probably bad practice. We should keep the original exception.
+	 *
+	 * @param ex Inherited exception
+	 */
+	public FocusInternalErrorException(Exception ex)
+	{
+		super(ex);
 	}
 }

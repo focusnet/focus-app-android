@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.Constant;
 
 /**

@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.widgets.ExternalAppWidgetInstance;

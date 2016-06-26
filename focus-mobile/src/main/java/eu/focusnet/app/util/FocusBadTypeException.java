@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.exception;
+package eu.focusnet.app.util;
 
 /**
  * This Exception is triggered when an unexpected type is encountered.

@@ -1,8 +1,3 @@
-package eu.focusnet.app.service;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -22,30 +17,14 @@ import java.util.concurrent.FutureTask;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-//http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
-public final class PriorityTask<T> extends FutureTask<T> implements Comparable<PriorityTask<T>>
+
+package eu.focusnet.app.controller;
+
+
+public interface ApplicationStatusObserver
 {
-	private final int priority;
 
-	public PriorityTask(final int priority, final Callable<T> tCallable)
-	{
-		super(tCallable);
+	void onApplicationLoad(boolean appStatus);
 
-		this.priority = priority;
-	}
-
-	public PriorityTask(final int priority, final Runnable runnable,
-						final T result)
-	{
-		super(runnable, result);
-
-		this.priority = priority;
-	}
-
-	@Override
-	public int compareTo(final PriorityTask<T> o)
-	{
-		final long diff = o.priority - priority;
-		return 0 == diff ? 0 : 0 > diff ? -1 : 1;
-	}
+	void handleLogout();
 }

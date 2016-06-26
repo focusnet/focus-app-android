@@ -23,6 +23,10 @@ package eu.focusnet.app.model.gson;
 import java.util.Map;
 
 /**
+ * A reference to a widget.
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
  */
 @SuppressWarnings("unused")
 public class WidgetReference

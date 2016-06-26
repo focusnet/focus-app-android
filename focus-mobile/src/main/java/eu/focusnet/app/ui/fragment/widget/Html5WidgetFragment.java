@@ -35,12 +35,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.widgets.Html5WidgetInstance;
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;

@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -32,8 +32,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
-import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;

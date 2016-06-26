@@ -20,10 +20,18 @@
 
 package eu.focusnet.app.model.gson;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.service.UserManager;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.controller.UserManager;
 import eu.focusnet.app.util.Constant;
 
+/**
+ * A User object as stored in the FOCUS backend. This object is a template, and its actual
+ * instantiation can be found in {@link eu.focusnet.app.model.UserInstance}, even though these
+ * objects are very similar.
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
+ */
 public class User extends FocusObject
 {
 

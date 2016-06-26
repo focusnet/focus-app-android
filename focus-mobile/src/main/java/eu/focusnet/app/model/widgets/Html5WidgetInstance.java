@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;

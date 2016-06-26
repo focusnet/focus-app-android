@@ -31,10 +31,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.service.UserManager;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.controller.UserManager;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;

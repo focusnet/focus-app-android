@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Random;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.model.gson.FocusSample;

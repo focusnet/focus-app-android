@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -47,8 +47,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;

@@ -30,9 +30,9 @@ import android.widget.LinearLayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.widgets.WidgetInstance;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;

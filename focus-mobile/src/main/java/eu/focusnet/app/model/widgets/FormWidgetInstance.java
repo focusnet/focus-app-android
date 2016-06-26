@@ -25,7 +25,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import eu.focusnet.app.exception.FocusBadTypeException;
+import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;

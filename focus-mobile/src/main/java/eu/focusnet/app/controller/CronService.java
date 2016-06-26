@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import android.app.Service;
 import android.content.Intent;
@@ -31,9 +31,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.ui.FocusApplication;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 

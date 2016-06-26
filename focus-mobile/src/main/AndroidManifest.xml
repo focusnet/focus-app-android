@@ -27,7 +27,7 @@
         android:xlargeScreens="true"/>
 
     <application
-        android:name="eu.focusnet.app.FocusApplication"
+        android:name=".ui.FocusApplication"
         android:allowBackup="false"
         android:largeHeap="true"
         android:fullBackupContent="false"
@@ -85,7 +85,7 @@
             android:exported="false"
             android:process=":acra"/>
 
-        <service android:name="eu.focusnet.app.service.CronService"/>
+        <service android:name="eu.focusnet.app.controller.CronService"/>
 
     </application>
 

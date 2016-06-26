@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,8 +28,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.AppContentInstance;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.FocusObject;

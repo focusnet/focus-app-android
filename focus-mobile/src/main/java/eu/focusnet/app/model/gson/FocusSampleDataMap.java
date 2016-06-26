@@ -23,20 +23,19 @@ package eu.focusnet.app.model.gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
+/**
+ * Specialized {@code HashMap} for storing {@link FocusSample} data.
+ */
 public class FocusSampleDataMap extends HashMap<String, Object>
 {
 
 	/**
-	 * Only accept: .... TODO doc simple implementation like hashmap, but check for focus-compatible types.
-	 * <p/>
-	 * FIXME TODO Custom exception.
-	 * <p/>
-	 * FIXME TODO : no URL for now .
+	 * Put a new key-value pair in the {@code Map}.
 	 *
-	 * @param s The key identifying the entry in the HashMap
-	 * @param o The object to insert in this HashMap
+	 * @param s The key identifying the entry in the {@code Map}
+	 * @param o The object to insert in this {@code Map}
 	 * @return The inserted object (o)
 	 */
 	@Override

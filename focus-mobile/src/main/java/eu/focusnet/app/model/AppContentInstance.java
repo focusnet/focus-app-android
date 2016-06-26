@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.util.Constant;
 
 /**

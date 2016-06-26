@@ -18,13 +18,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.util;
 
-
-public interface ApplicationStatusObserver
+/**
+ * A FocusMissingResourceException is triggered when a resource cannot be retrieved when it should.
+ * <p/>
+ * This is a checked exception.
+ */
+public class FocusMissingResourceException extends Exception
 {
+	/**
+	 * Exception constructor
+	 *
+	 * @param detailMessage Message summarizing the encountered issue
+	 */
+	public FocusMissingResourceException(String detailMessage)
+	{
+		super(detailMessage);
+	}
 
-	void onApplicationLoad(boolean appStatus);
+	/**
+	 * Constructor with more details on the missing resource
+	 *
+	 * @param detailMessage    Message summarizing the encountered issue
+	 * @param missingRessource A String describing the missing resource
+	 */
+	public FocusMissingResourceException(String detailMessage, String missingRessource)
+	{
+		super(detailMessage + "; MISSING RESSOURCE: |" + missingRessource + "|");
+	}
 
-	void handleLogout();
 }

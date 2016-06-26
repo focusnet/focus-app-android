@@ -23,7 +23,7 @@ package eu.focusnet.app.model;
 
 import android.support.annotation.NonNull;
 
-import eu.focusnet.app.service.DataManager;
+import eu.focusnet.app.controller.DataManager;
 
 abstract public class AbstractInstance
 {

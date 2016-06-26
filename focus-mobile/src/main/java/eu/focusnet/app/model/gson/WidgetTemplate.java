@@ -21,7 +21,10 @@
 package eu.focusnet.app.model.gson;
 
 /**
- * Created by admin on 03.08.2015.
+ * A widget template.
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
  */
 @SuppressWarnings("unused")
 public class WidgetTemplate

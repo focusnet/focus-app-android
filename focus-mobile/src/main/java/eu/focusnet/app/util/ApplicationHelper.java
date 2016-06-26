@@ -40,10 +40,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import eu.focusnet.app.FocusAppLogic;
-import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.controller.FocusAppLogic;
+import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.model.AppContentInstance;
 
 /**

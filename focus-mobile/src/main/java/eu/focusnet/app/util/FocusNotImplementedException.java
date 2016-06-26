@@ -18,34 +18,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.exception;
+package eu.focusnet.app.util;
 
 /**
- * A FocusMissingResourceException is triggered when a resource cannot be retrieved when it should.
+ * FocusNotImplementedException is thrown when some code branch that has not been implemented
+ * is reached.
  * <p/>
- * This is a checked exception.
+ * This is an unchecked exception.
  */
-public class FocusMissingResourceException extends Exception
+public class FocusNotImplementedException extends RuntimeException
 {
 	/**
 	 * Exception constructor
 	 *
 	 * @param detailMessage Message summarizing the encountered issue
 	 */
-	public FocusMissingResourceException(String detailMessage)
+	public FocusNotImplementedException(String detailMessage)
 	{
 		super(detailMessage);
 	}
-
-	/**
-	 * Constructor with more details on the missing resource
-	 *
-	 * @param detailMessage    Message summarizing the encountered issue
-	 * @param missingRessource A String describing the missing resource
-	 */
-	public FocusMissingResourceException(String detailMessage, String missingRessource)
-	{
-		super(detailMessage + "; MISSING RESSOURCE: |" + missingRessource + "|");
-	}
-
 }

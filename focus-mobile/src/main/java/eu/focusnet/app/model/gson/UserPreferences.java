@@ -20,12 +20,16 @@
 
 package eu.focusnet.app.model.gson;
 
-import java.util.ArrayList;
-
 import eu.focusnet.app.util.Constant;
 
-// FIXME when initially loading bookmarks, check that the paths are still valid! otherwise delete them (and save on backend)
-
+/**
+ * A UserPreferences object as stored in the FOCUS backend. This object is a template, and its actual
+ * instantiation can be found in {@link eu.focusnet.app.model.UserPreferencesInstance}, even though these
+ * objects are very similar.
+ * <p/>
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
+ */
 public class UserPreferences extends FocusObject
 {
 

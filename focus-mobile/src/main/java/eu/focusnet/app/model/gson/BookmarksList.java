@@ -22,6 +22,12 @@ package eu.focusnet.app.model.gson;
 
 import java.util.ArrayList;
 
+/**
+ * Bookmarks folders
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-model
+ */
 public class BookmarksList
 {
 

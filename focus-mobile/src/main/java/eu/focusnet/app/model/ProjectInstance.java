@@ -27,9 +27,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import eu.focusnet.app.FocusApplication;
-import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.ui.FocusApplication;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.gson.PageReference;
 import eu.focusnet.app.model.gson.PageTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;

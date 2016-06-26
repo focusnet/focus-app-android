@@ -31,13 +31,13 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.gson.FocusSample;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.service.PriorityTask;
+import eu.focusnet.app.controller.DataManager;
+import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.util.Constant;
 
 /**
@@ -367,7 +367,6 @@ public class DataContext extends HashMap<String, String>
 			this.key = key;
 			this.description = description;
 		}
-
 
 		@Override
 		public String call() throws Exception

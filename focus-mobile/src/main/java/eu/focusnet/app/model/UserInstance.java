@@ -1,8 +1,3 @@
-package eu.focusnet.app.model;
-
-import eu.focusnet.app.model.gson.User;
-import eu.focusnet.app.service.UserManager;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -22,8 +17,29 @@ import eu.focusnet.app.service.UserManager;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model;
+
+import eu.focusnet.app.model.gson.User;
+import eu.focusnet.app.controller.UserManager;
+
+/**
+ * Instanciation of the {@link User} template object. These objects are very similar, but we keep
+ * the distinction between template and instances explicitly. Operations by controllers
+ * are performed on instances, not templates.
+ */
 public class UserInstance extends User
 {
+	/**
+	 * Constructor
+	 *
+	 * @param targetUrl Inherited.
+	 * @param firstName Inherited.
+	 * @param lastName Inherited.
+	 * @param email Inherited.
+	 * @param company Inherited.
+	 * @param userManager Inherited.
+	 */
 	public UserInstance(String targetUrl, String firstName, String lastName, String email, String company, UserManager userManager)
 	{
 		super(targetUrl, firstName, lastName, email, company, userManager);

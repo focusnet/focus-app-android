@@ -23,9 +23,12 @@ package eu.focusnet.app.model.gson;
 import eu.focusnet.app.util.Constant;
 
 /**
- * A FocusSample is a FocusObject containing a specialized HashMap (FocusSampleDataMap)
+ * A {@code FocusSample} is a {@link FocusObject} containing a specialized {@code HashMap}
+ * {@link FocusSampleDataMap}. All external data that we use in our dahsboards and widgets come
+ * as instances of {@code FocusSample}s.
  * <p/>
- * NOTE: more complex deserializers like URL or BigInteger cannot work because this object Object is too generic.
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
  */
 public class FocusSample extends FocusObject
 {
@@ -36,7 +39,7 @@ public class FocusSample extends FocusObject
 	FocusSampleDataMap data = null;
 
 	/**
-	 * C'tor for a new pre-fed FocusSample
+	 * C'tor for a new empty FocusSample
 	 *
 	 * @param url The URL identifying the created FocusSample
 	 */
@@ -47,7 +50,7 @@ public class FocusSample extends FocusObject
 	}
 
 	/**
-	 * Add a key-value pair to the data HashMap
+	 * Add a key-value pair to the data {@code Map}.
 	 *
 	 * @param s Key
 	 * @param o Value

@@ -32,13 +32,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.ProjectInstance;
 import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
-import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.ui.activity.PageActivity;
 import eu.focusnet.app.ui.activity.ProjectInProjectActivity;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;

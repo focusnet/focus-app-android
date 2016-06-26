@@ -24,7 +24,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-
+/**
+ * Application content description.
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-model
+ */
 @SuppressWarnings("unused")
 public class AppContentTemplate extends FocusObject
 {

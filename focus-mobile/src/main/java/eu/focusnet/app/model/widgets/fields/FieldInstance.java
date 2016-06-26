@@ -22,8 +22,8 @@ package eu.focusnet.app.model.widgets.fields;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import eu.focusnet.app.exception.FocusBadTypeException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 

@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -27,7 +27,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.Date;
 import java.util.HashSet;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.Constant;
 
 /**

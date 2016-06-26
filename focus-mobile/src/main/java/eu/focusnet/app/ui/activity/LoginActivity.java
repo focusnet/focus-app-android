@@ -32,9 +32,9 @@ import android.widget.EditText;
 
 import java.io.IOException;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.service.NetworkManager;
+import eu.focusnet.app.controller.NetworkManager;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
 

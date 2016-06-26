@@ -98,3 +98,4 @@ SOFTWARE.
  - move to MOTI code
  - test current code. Does it also work without Internet connection?
 - improve TypesHelper. Always same constructs -> any way to make more readable?
+- FOCUSOBJET: we use a static reference to the current {@link UserInstance}. Would it be possible to use a better pattern?

@@ -1,3 +1,8 @@
+package eu.focusnet.app.controller;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -17,37 +22,30 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-package eu.focusnet.app.exception;
-
-/**
- * An FocusInternalErrorException denotes a problem that should not happen if the logic of the
- * application was correct.
- * <p/>
- * This is an unchecked exception that will generally crash the application.
- */
-public class FocusInternalErrorException extends RuntimeException
+//http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
+public final class PriorityTask<T> extends FutureTask<T> implements Comparable<PriorityTask<T>>
 {
-	/**
-	 * Exception constructor
-	 *
-	 * @param detailMessage Message summarizing the encountered issue
-	 */
-	public FocusInternalErrorException(String detailMessage)
+	private final int priority;
+
+	public PriorityTask(final int priority, final Callable<T> tCallable)
 	{
-		super(detailMessage);
+		super(tCallable);
+
+		this.priority = priority;
 	}
 
-	/**
-	 * Exception constructor to be used when we catch another exception and want to keep
-	 * its detailed information for further propagation.
-	 * <p/>
-	 * FIXME probably bad practice. We should keep the original exception.
-	 *
-	 * @param ex Inherited exception
-	 */
-	public FocusInternalErrorException(Exception ex)
+	public PriorityTask(final int priority, final Runnable runnable,
+						final T result)
 	{
-		super(ex);
+		super(runnable, result);
+
+		this.priority = priority;
+	}
+
+	@Override
+	public int compareTo(final PriorityTask<T> o)
+	{
+		final long diff = o.priority - priority;
+		return 0 == diff ? 0 : 0 > diff ? -1 : 1;
 	}
 }

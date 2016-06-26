@@ -23,27 +23,23 @@ package eu.focusnet.app.model.gson;
 import java.io.Serializable;
 import java.util.Date;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.UserInstance;
 
 /**
- * Created by admin on 06.07.2015.
- * <p/>
- * There are no setters on this object properties because we don't want it to be altered by
- * the application logic.
+ * The basic object for all FOCUS-compliant objects.
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
+ *
+ * FIXME we use a static reference to the current {@link UserInstance}. Would it be possible to use
+ * FIXME a better pattern?
  */
 public class FocusObject implements Serializable
 {
 
 	protected String owner,
 			editor;
-	/**
-	 * Safe to use this user like this, as it will be used for data creation,
-	 * and therefore this User should represent the one that is currently used by the application
-	 * and not another one
-	 * <p/>
-	 * FIXME see if we can use a more elegant pattern.
-	 */
 	private String type,
 			url;
 	private int version;
@@ -67,20 +63,24 @@ public class FocusObject implements Serializable
 	/**
 	 * NOTE: if the url is internal, we do not set the following fields to anything: owner, editor
 	 * <p/>
-	 * if a user exists, use it. otherwise, just leave the
+	 * if a user exists, use it. otherwise, just leave the owner and editor
 	 *
-	 * @param type
-	 * @param url
-	 * @param owner
-	 * @param editor
-	 * @param version
-	 * @param creationDateTime
-	 * @param editionDateTime
-	 * @param active
+	 * @param type The FOCUS type (i.e. the URL of the JSON schema against which the resource
+	 *             validates)
+	 * @param url The URL identifying this resource
+	 * @param owner If this field is set, use it for specifying the owner of the resource. If not,
+	 *              then use the current {@link UserInstance} of the application. If there is
+	 *              no {@link UserInstance}, then leave this field empty ({@code ""}).
+	 * @param editor Same logic as for the {@link #owner} applies.
+	 * @param version Current version number of the resource
+	 * @param creationDateTime Creation date time as a {@code Date}. If none set, use the current
+	 *                         date and time.
+	 * @param editionDateTime Edition date time as a {@code Date}. If none set, use the current
+	 *                         date and time.
+	 * @param active Tells whether the resource is active (=accessible) or not.
 	 */
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
-		// FIXME not optimal way of getting the User
 		UserInstance user = FocusAppLogic.getUserManager().getUserAsIs();
 		this.type = type;
 		this.url = url;
@@ -94,6 +94,9 @@ public class FocusObject implements Serializable
 
 	/**
 	 * Create a new FocusObject, based on the provided JSON string and target class.
+	 *
+	 * @param json Raw JSON String representation of the object
+	 * @param targetClass The target POJO class to convert the {@code json} input into
 	 */
 	public static FocusObject factory(String json, Class targetClass)
 	{
@@ -101,14 +104,14 @@ public class FocusObject implements Serializable
 	}
 
 	/**
-	 * Update the current object to highlight the fact that we are providing a new version (sampe) of the same resource
-	 * <p/>
-	 * We do not commit() yet, as this is done once the resource is submitted for POST/PUT-ing (i.e. to the DataManager)
+	 * Update the current object to highlight the fact that we are providing a new version of
+	 * the same resource
+	 *
+	 * The user is the current {@link UserInstance} of the application.
 	 */
 	public void updateToNewVersion()
 	{
-		// FIXME not optimal way of getting the User
-		User user = FocusAppLogic.getUserManager().getUserAsIs();
+		UserInstance user = FocusAppLogic.getUserManager().getUserAsIs();
 		++this.version;
 		if (user != null) {
 			this.editor = user.toString();
@@ -159,7 +162,11 @@ public class FocusObject implements Serializable
 		return active;
 	}
 
-
+	/**
+	 * Stringify the object: return its serizalization by GSON.
+	 *
+	 * @return A JSON string
+	 */
 	@Override
 	public String toString()
 	{

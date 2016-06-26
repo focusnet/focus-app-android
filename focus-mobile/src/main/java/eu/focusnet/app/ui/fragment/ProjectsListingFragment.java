@@ -32,12 +32,11 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.ProjectInstance;
 import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
-import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.ui.activity.ProjectActivity;
 import eu.focusnet.app.ui.common.EmptyListItem;
 import eu.focusnet.app.ui.common.FeaturedListItem;

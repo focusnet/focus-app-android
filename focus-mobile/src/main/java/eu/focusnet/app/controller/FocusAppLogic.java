@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app;
+package eu.focusnet.app.controller;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,15 +31,12 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Date;
 
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
+import eu.focusnet.app.ui.FocusApplication;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.AppContentInstance;
-import eu.focusnet.app.model.DateTypeAdapter;
+import eu.focusnet.app.model.gson.DateTypeAdapter;
 import eu.focusnet.app.model.gson.AppContentTemplate;
-import eu.focusnet.app.service.CronService;
-import eu.focusnet.app.service.DataManager;
-import eu.focusnet.app.service.NetworkManager;
-import eu.focusnet.app.service.UserManager;
 import eu.focusnet.app.util.ApplicationHelper;
 
 

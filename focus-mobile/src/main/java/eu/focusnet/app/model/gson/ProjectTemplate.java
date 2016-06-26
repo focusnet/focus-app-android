@@ -25,9 +25,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- * Created by admin on 03.08.2015.
+ * A project template
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
  */
-
 @SuppressWarnings("unused")
 public class ProjectTemplate implements Serializable
 {
@@ -86,13 +88,13 @@ public class ProjectTemplate implements Serializable
 	 * Find the PageTemplate that is contained within this ProjectTemplate and that
 	 * is identified by page_id.
 	 *
-	 * @param page_id
-	 * @return
+	 * @param pageId The id of the page to find.
+	 * @return The {@link PageTemplate} of interest or {@code null} if none is found.
 	 */
-	public PageTemplate findPage(String page_id)
+	public PageTemplate findPage(String pageId)
 	{
 		for (PageTemplate p : this.pages) {
-			if (p.getGuid().equals(page_id)) {
+			if (p.getGuid().equals(pageId)) {
 				return p;
 			}
 		}
@@ -102,13 +104,13 @@ public class ProjectTemplate implements Serializable
 	/**
 	 * Find the WidgetTemplate identified by the specified widgetid
 	 *
-	 * @param widgetid
-	 * @return
+	 * @param widgetId The id of the widget to find.
+	 * @return The {@link WidgetTemplate} of interest or {@code null} if none is found.
 	 */
-	public WidgetTemplate findWidget(String widgetid)
+	public WidgetTemplate findWidget(String widgetId)
 	{
 		for (WidgetTemplate w : this.widgets) {
-			if (w.getGuid().equals(widgetid)) {
+			if (w.getGuid().equals(widgetId)) {
 				return w;
 			}
 		}

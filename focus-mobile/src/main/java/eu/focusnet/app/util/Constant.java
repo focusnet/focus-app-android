@@ -68,7 +68,7 @@ final public class Constant
 		/**
 		 * We do not allow data synchronization to occur too often and this constant defines
 		 * the minimum interval between 2 consecutive data synchronizations. This applies to
-		 * periodic tasks (see {@link eu.focusnet.app.service.CronService}) as well to manual
+		 * periodic tasks (see {@link eu.focusnet.app.controller.CronService}) as well to manual
 		 * synchronization.
 		 */
 		final public static int CRON_SERVICE_MINIMUM_DURATION_BETWEEN_SYNC_DATA_IN_MILLISECONDS = 10 * 60 * 1_000;
@@ -268,19 +268,19 @@ final public class Constant
 
 		/**
 		 * Tells whether the current sample is marked for deletion (will occur right away or
-		 * during periodic tasks, see {@link eu.focusnet.app.service.CronService}).
+		 * during periodic tasks, see {@link eu.focusnet.app.controller.CronService}).
 		 */
 		final public static String TO_DELETE = "to_delete";
 
 		/**
 		 * Tells whether the current sample is marked for update (will occur right away or
-		 * during periodic tasks, see {@link eu.focusnet.app.service.CronService}).
+		 * during periodic tasks, see {@link eu.focusnet.app.controller.CronService}).
 		 */
 		final public static String TO_UPDATE = "to_update";
 
 		/**
 		 * Tells whether the current sample is marked for creation (will occur right away or
-		 * during periodic tasks, see {@link eu.focusnet.app.service.CronService}).
+		 * during periodic tasks, see {@link eu.focusnet.app.controller.CronService}).
 		 */
 		final public static String TO_CREATE = "to_create";
 

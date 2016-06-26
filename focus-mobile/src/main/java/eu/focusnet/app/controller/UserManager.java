@@ -18,15 +18,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app.service;
+package eu.focusnet.app.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.exception.FocusMissingResourceException;
-import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.UserInstance;
 import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.AppContentTemplate;

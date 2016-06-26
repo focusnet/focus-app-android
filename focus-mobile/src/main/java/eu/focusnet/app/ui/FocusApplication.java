@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package eu.focusnet.app;
+package eu.focusnet.app.ui;
 
 import android.app.Application;
 import android.content.Context;
@@ -32,7 +32,10 @@ import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
-import eu.focusnet.app.service.CronService;
+import eu.focusnet.app.BuildConfig;
+import eu.focusnet.app.controller.FocusAppLogic;
+import eu.focusnet.app.R;
+import eu.focusnet.app.controller.CronService;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 

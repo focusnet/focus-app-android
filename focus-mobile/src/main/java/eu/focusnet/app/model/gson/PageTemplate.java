@@ -24,7 +24,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- * Created by admin on 03.08.2015.
+ * A page template
+ *
+ * Refer to JSON Schema for further documentation.
+ * See https://github.com/focusnet/focus-data-mode
  */
 @SuppressWarnings("unused")
 public class PageTemplate

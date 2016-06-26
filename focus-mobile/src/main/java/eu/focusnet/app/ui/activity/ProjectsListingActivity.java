@@ -49,10 +49,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.exception.FocusInternalErrorException;
-import eu.focusnet.app.service.CronService;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.controller.CronService;
 import eu.focusnet.app.ui.common.DrawerListAdapter;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.SimpleListItem;

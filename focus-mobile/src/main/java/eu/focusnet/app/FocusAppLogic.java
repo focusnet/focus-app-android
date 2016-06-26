@@ -46,7 +46,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 /**
  * This object is the entry point of the mail application logic. In the MVC paradygm, it would be
  * the Controller.
- *
+ * <p/>
  * This class is a Singleton (the only one of the application). We only access static methods
  * when it comes to access or alter the state of the currently running application, e.g. when
  * we want to replace the current {@link DataManager}. Following this logic, the UI always acts on

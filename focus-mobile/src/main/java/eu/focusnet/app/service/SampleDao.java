@@ -71,7 +71,7 @@ public class SampleDao
 	/**
 	 * Create a new Sample based on the provided cursor. The cursor is assumed to be already at
 	 * the position of the object from which we will create the Sample.
-	 *
+	 * <p/>
 	 * We assume the query retrieved all columsn (this.columnsToRetrieve)
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
@@ -240,7 +240,7 @@ public class SampleDao
 
 	/**
 	 * Retrieve all urls marked with a certain type of operation
-	 *
+	 * <p/>
 	 * We only manipulate FocusSamples here, not other types.
 	 *
 	 * @param flagType

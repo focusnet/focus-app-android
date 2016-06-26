@@ -41,6 +41,7 @@ public class InvalidWidgetFragment extends WidgetFragment
 {
 	/**
 	 * Create the View.
+	 *
 	 * @param inflater           Inherited
 	 * @param container          Inherited
 	 * @param savedInstanceState Inherited

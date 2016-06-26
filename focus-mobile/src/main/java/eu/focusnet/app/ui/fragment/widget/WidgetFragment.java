@@ -50,7 +50,7 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * Abstract class representing an UI widget.
- *
+ * <p/>
  * All widgets have at least an optional title.
  */
 public abstract class WidgetFragment extends Fragment

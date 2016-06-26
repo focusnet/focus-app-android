@@ -62,8 +62,8 @@ public class PageFragment extends Fragment
 	/**
 	 * Create the View.
 	 *
-	 * @param inflater Inherited
-	 * @param container Inherited
+	 * @param inflater           Inherited
+	 * @param container          Inherited
 	 * @param savedInstanceState Inherited
 	 * @return The new View
 	 */

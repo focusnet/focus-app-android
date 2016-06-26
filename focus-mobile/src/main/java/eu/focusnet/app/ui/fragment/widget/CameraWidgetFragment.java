@@ -145,8 +145,8 @@ public class CameraWidgetFragment extends WidgetFragment
 	 * When the camera Activity returns, save the URI of the new capture.
 	 *
 	 * @param requestCode Must be equals to {@link #CAMERA_REQUEST}.
-	 * @param resultCode Must be equals to {@code Activity.RESULT_OK}
-	 * @param intent Returning {@code Intent}
+	 * @param resultCode  Must be equals to {@code Activity.RESULT_OK}
+	 * @param intent      Returning {@code Intent}
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)

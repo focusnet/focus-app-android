@@ -26,11 +26,11 @@ import eu.focusnet.app.ui.fragment.ProjectFragment;
 /**
  * This {@code Activity} is created when a new project is to be displayed from
  * a {@link ProjectActivity}.
- *
+ * <p/>
  * This is exactly the same as the {@link ProjectActivity}, but having a different
  * {@code Activity} object type allows avoiding to break the navigation history
  * ({@code Activity} stack).
- *
+ * <p/>
  * FIXME perhaps there is a smarter way to do that.
  */
 public class ProjectInProjectActivity extends ToolbarEnabledActivity

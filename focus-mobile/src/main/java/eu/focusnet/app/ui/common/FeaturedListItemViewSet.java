@@ -41,6 +41,7 @@ public class FeaturedListItemViewSet extends SimpleListItemViewSet
 
 	/**
 	 * Get the description View
+	 *
 	 * @return A TextView
 	 */
 	public TextView getDescription()
@@ -50,6 +51,7 @@ public class FeaturedListItemViewSet extends SimpleListItemViewSet
 
 	/**
 	 * Set the description View
+	 *
 	 * @param description A TextView
 	 */
 	public void setDescription(TextView description)
@@ -59,6 +61,7 @@ public class FeaturedListItemViewSet extends SimpleListItemViewSet
 
 	/**
 	 * Get the secondary icon View
+	 *
 	 * @return An ImageView
 	 */
 	public ImageView getSecondaryIcon()
@@ -68,6 +71,7 @@ public class FeaturedListItemViewSet extends SimpleListItemViewSet
 
 	/**
 	 * Set the secondary icon View
+	 *
 	 * @param secondaryIcon An ImageView
 	 */
 	public void setSecondaryIcon(ImageView secondaryIcon)

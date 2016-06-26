@@ -150,6 +150,7 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 
 	/**
 	 * When connected, configure localization updates.
+	 *
 	 * @param bundle Inherited
 	 */
 	@Override
@@ -168,6 +169,7 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 
 	/**
 	 * When the connection is suspended
+	 *
 	 * @param i Inherited
 	 */
 	@Override

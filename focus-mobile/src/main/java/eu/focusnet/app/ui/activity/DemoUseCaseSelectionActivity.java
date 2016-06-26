@@ -81,10 +81,10 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 * Item selection listener for the selection list control that contains the different demo
 	 * use cases.
 	 *
-	 * @param parent Inherited.
-	 * @param view Inhertied.
+	 * @param parent   Inherited.
+	 * @param view     Inhertied.
 	 * @param position 0-based position of the selected item in the selection list.
-	 * @param id Inherited.
+	 * @param id       Inherited.
 	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -102,7 +102,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 * When the user clicks the button to start the demo, we initiate the login procedure. We then
 	 * redirect to the {@link EntryPointActivity}, that will be responsible for retrieving the
 	 * application content.
-	 *
+	 * <p/>
 	 * This logic requires a network connection.
 	 *
 	 * @param view Inherited.

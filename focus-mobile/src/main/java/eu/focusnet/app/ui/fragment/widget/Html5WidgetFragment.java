@@ -295,7 +295,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * Get an access control token directly from the application
-		 *
+		 * <p/>
 		 * FIXME this information should come from the UserManager
 		 */
 		@JavascriptInterface

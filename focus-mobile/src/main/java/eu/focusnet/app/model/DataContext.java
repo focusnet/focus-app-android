@@ -49,11 +49,10 @@ import eu.focusnet.app.util.Constant;
  * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
  * <p/>
  * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
- *
- *
- *
+ * <p/>
+ * <p/>
+ * <p/>
  * FIXME issues with concurrency. convert everything to a HashMap<String,PriorityTask>
- *
  */
 public class DataContext extends HashMap<String, String>
 {
@@ -187,10 +186,9 @@ public class DataContext extends HashMap<String, String>
 
 	/**
 	 * Resolves variables in
-	 *
+	 * <p/>
 	 * Can not be nested "test <ctx/simple-url/<ctx/other-url/field>> test" except if there is nothing around it.
 	 * This is not a feature but a side effect of the implementation. not tested.
-	 *
 	 *
 	 * @param request
 	 * @return
@@ -232,9 +230,9 @@ public class DataContext extends HashMap<String, String>
 	 * If the request format is not recognized, return it as-is.
 	 * <p/>
 	 * If the request does not succeed, throw a FocusMissingResourceException
-	 *
+	 * <p/>
 	 * The request can be a variable (<ctx/.../...>) or a simple string that will be passed through without processing other than checking if null
-	 *     * @return
+	 * * @return
 	 */
 	public Object resolveVariable(String request) throws FocusMissingResourceException
 	{

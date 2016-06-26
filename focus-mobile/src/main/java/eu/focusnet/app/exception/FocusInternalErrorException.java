@@ -41,7 +41,7 @@ public class FocusInternalErrorException extends RuntimeException
 	/**
 	 * Exception constructor to be used when we catch another exception and want to keep
 	 * its detailed information for further propagation.
-	 *
+	 * <p/>
 	 * FIXME probably bad practice. We should keep the original exception.
 	 *
 	 * @param ex Inherited exception

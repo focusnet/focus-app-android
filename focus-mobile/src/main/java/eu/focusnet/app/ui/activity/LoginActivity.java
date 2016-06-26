@@ -41,7 +41,7 @@ import eu.focusnet.app.util.Constant;
 /**
  * Login Activity: this activity displays the login screen
  * and let's the user log into the application.
- *
+ * <p/>
  * FIXME this code is not used. For the prototype, we use {@link DemoUseCaseSelectionActivity}.
  */
 public class LoginActivity extends Activity

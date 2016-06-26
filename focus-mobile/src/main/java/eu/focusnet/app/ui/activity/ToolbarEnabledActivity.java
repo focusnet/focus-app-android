@@ -113,8 +113,6 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	}
 
 
-
-
 	/**
 	 * Method that may be overriden to setup Activity-specific UI elements, such as a Drawer or
 	 * Action buttons. This method is only called once, in {@link #onCreate(Bundle)}.
@@ -127,7 +125,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Load the UI, based on the current Activity configuration as defined by
 	 * {@link #onCreate(Bundle)}, including via {@link #setupSpecificUiElements()}.
-	 *
+	 * <p/>
 	 * This method is called from {@link #onCreate(Bundle)} and whenever the UI must be refreshed.
 	 */
 	final protected void applyUiChanges()
@@ -155,6 +153,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 	/**
 	 * Retrieve
+	 *
 	 * @return a valid layout id
 	 */
 	protected abstract int getTargetLayoutContainer();
@@ -162,7 +161,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Do any UI operation that do not imply creating and including a new Fragment in the UI, such
 	 * as displaying an AlertDialog.
-	 *
+	 * <p/>
 	 * See {@link #applyUiChanges()}.
 	 */
 	protected void doInPageUiOperations()
@@ -172,7 +171,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 	/**
 	 * Prepare a new Fragment before its inclusion in the UI.
-	 *
+	 * <p/>
 	 * See {@link #applyUiChanges()}.
 	 */
 	protected void prepareNewFragment()
@@ -183,7 +182,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 	/**
 	 * Method for replacing the existing fragment with the newly selected one.
-	 *
+	 * <p/>
 	 * See {@link #applyUiChanges()}.
 	 */
 	private void replaceFragment()

@@ -109,7 +109,7 @@ public class UiHelper
 	 * the keyboard on all elements that are not {@link EditText}s.
 	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
-	 *
+	 * <p/>
 	 * also do append text to EditTexts such that the cursor for editing is at the end and not at the beginning.
 	 *
 	 * @param view     The view to parse
@@ -164,13 +164,13 @@ public class UiHelper
 
 	/**
 	 * Close the current activity and redirect the user to another one.
-	 *
+	 * <p/>
 	 * Note: if this function is called from outside of the UI thread, {@code msg} cannot be set,
 	 * as it triggers the display of a toast.
 	 *
 	 * @param targetActivityClass Target Activity to redirect to.
-	 * @param msg A message to display as a toast.
-	 * @param activity The current activity
+	 * @param msg                 A message to display as a toast.
+	 * @param activity            The current activity
 	 */
 	public static void redirectTo(Class targetActivityClass, String msg, Activity activity)
 	{

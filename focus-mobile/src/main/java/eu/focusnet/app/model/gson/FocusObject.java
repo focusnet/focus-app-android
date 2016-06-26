@@ -40,7 +40,7 @@ public class FocusObject implements Serializable
 	 * Safe to use this user like this, as it will be used for data creation,
 	 * and therefore this User should represent the one that is currently used by the application
 	 * and not another one
-	 *
+	 * <p/>
 	 * FIXME see if we can use a more elegant pattern.
 	 */
 	private String type,
@@ -65,7 +65,7 @@ public class FocusObject implements Serializable
 
 	/**
 	 * NOTE: if the url is internal, we do not set the following fields to anything: owner, editor
-	 *
+	 * <p/>
 	 * if a user exists, use it. otherwise, just leave the
 	 *
 	 * @param type

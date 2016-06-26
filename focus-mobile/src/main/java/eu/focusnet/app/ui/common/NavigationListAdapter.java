@@ -67,7 +67,7 @@ public class NavigationListAdapter extends BaseAdapter
 	/**
 	 * Constructor
 	 *
-	 * @param context Input value for instance variable
+	 * @param context   Input value for instance variable
 	 * @param listItems The list of items to be included in the list.
 	 */
 	public NavigationListAdapter(Context context, ArrayList<SimpleListItem> listItems)
@@ -112,6 +112,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Get the number of elements in the list
+	 *
 	 * @return The number of elements in the list
 	 */
 	@Override
@@ -122,6 +123,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Get the list item at the give position
+	 *
 	 * @param position Position of the item to get
 	 * @return The item
 	 */
@@ -145,12 +147,12 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Acquire the {@code View} for a list item.
-	 *
+	 * <p/>
 	 * FIXME enable recycling. We have problems here, yet.
 	 *
-	 * @param position The position of the view to obtain
+	 * @param position    The position of the view to obtain
 	 * @param convertView A recycled View or null
-	 * @param parent Inherited.
+	 * @param parent      Inherited.
 	 * @return The new View for the list item
 	 */
 	@Override
@@ -337,7 +339,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Task to save user preferences
-	 *
+	 * <p/>
 	 * FIXME what happens if we save user preferences when user preference saving is not finished, yet. To check.
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>
@@ -356,7 +358,7 @@ public class NavigationListAdapter extends BaseAdapter
 		 * Constructor
 		 *
 		 * @param userPreferences Input value for instance variables
-		 * @param context Input value for instance variable
+		 * @param context         Input value for instance variable
 		 */
 		public SaveUserPreferencesTask(UserPreferences userPreferences, Context context)
 		{

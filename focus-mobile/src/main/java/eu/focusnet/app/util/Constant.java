@@ -322,7 +322,7 @@ final public class Constant
 	 * Constants related to the navigation system of our application. All Projects, Dashboards &
 	 * Tools (Pages) and widgets are uniquely identified by a path within the application, and these
 	 * constants define the format of this path.
-	 *
+	 * <p/>
 	 * The different list item types and constants used for referencing specific menu entries
 	 * are also defined here.
 	 */
@@ -531,7 +531,7 @@ final public class Constant
 		/**
 		 * A data selector is identified by an opening character, a selector type keyword
 		 * and parameters, and a closing character. This constant defines the opening character.
-		 *
+		 * <p/>
 		 * There are 2 types of data selectors: context accessor and services. context accessor
 		 * (ctx) definitions are separated with / and services are separated with |. Context
 		 * accessor can be nested into services.
@@ -673,7 +673,7 @@ final public class Constant
 		/**
 		 * Used for transmitting input object to external application. We send a stringified
 		 * JSON FocusSample in this extra.
-		 *
+		 * <p/>
 		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_INPUT = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT";
@@ -683,7 +683,7 @@ final public class Constant
 		 * JSON FocusSample in this extra.
 		 * <p/>
 		 * FIXME not used, yet, but ready.
-		 *
+		 * <p/>
 		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.app.extra.EXTERNAL_APP_OUTPUT";

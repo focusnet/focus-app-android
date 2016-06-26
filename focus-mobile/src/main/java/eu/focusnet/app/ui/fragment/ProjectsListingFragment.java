@@ -63,8 +63,8 @@ public class ProjectsListingFragment extends ListFragment
 	/**
 	 * Create the view and build the content of the {@link ListView} in a background task.
 	 *
-	 * @param inflater Inherited
-	 * @param container Inherited
+	 * @param inflater           Inherited
+	 * @param container          Inherited
 	 * @param savedInstanceState Inherited
 	 * @return The new View
 	 */
@@ -82,10 +82,10 @@ public class ProjectsListingFragment extends ListFragment
 	/**
 	 * Click listener for when a list item is clicked.
 	 *
-	 * @param l Inherited
-	 * @param v Inherited
+	 * @param l        Inherited
+	 * @param v        Inherited
 	 * @param position Position of the clicked item
-	 * @param id Inherited
+	 * @param id       Inherited
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)

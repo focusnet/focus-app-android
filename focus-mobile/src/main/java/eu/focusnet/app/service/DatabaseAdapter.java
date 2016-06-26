@@ -51,8 +51,8 @@ public class DatabaseAdapter
 	 * <p/>
 	 * When updating/creating/deletion entries (PUT,POST,DELETE), we still use the same ID. This
 	 * is not an incremental version number, but only an instance identifier.
-	 *
-	 *
+	 * <p/>
+	 * <p/>
 	 * The databaseAdapter is initially created with a low uniqueInstanceIdentifier and data will
 	 * created with identifier. This means that they will NOT be considered as the latest data set.
 	 * For the data loaded under this id to become the latest data set, call makeDataPersistent()
@@ -65,7 +65,6 @@ public class DatabaseAdapter
 
 	/**
 	 * Constructor.
-	 *
 	 */
 	public DatabaseAdapter()
 	{
@@ -190,6 +189,7 @@ public class DatabaseAdapter
 		 * Idem , but generate a small number, which will be considered as an old data set.
 		 * This is used for temporarily saving new data before committing them when the data set
 		 * is complete by updating to a "new" data set id.
+		 *
 		 * @return
 		 */
 		public static long generateOldDataSetIdentifier()

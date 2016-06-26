@@ -57,14 +57,15 @@ public class FeaturedListItem extends SimpleListItem
 
 	/**
 	 * Constructor.
-	 * @param path Input value for instance variable
-	 * @param icon Input value for instance variable
-	 * @param title Input value for instance variable
-	 * @param description Input value for instance variable
-	 * @param secondaryIcon Input value for instance variable
+	 *
+	 * @param path               Input value for instance variable
+	 * @param icon               Input value for instance variable
+	 * @param title              Input value for instance variable
+	 * @param description        Input value for instance variable
+	 * @param secondaryIcon      Input value for instance variable
 	 * @param isExistingBookmark Input value for instance variable
-	 * @param typeOfBookmark Input value for instance variable
-	 * @param disabled Input value for instance variable
+	 * @param typeOfBookmark     Input value for instance variable
+	 * @param disabled           Input value for instance variable
 	 */
 	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isExistingBookmark, String typeOfBookmark, boolean disabled)
 	{

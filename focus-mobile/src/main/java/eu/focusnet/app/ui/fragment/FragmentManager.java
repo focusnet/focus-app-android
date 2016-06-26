@@ -34,7 +34,7 @@ final public class FragmentManager
 	 * Replace a {@code Fragment} with a smooth animation.
 	 *
 	 * @param containerViewId The target container
-	 * @param newFragment The new {@code Fragment}
+	 * @param newFragment     The new {@code Fragment}
 	 * @param fragmentManager The Android {@code FragmentManager}
 	 */
 	public static void replaceFragment(int containerViewId, Fragment newFragment, android.app.FragmentManager fragmentManager)
@@ -55,7 +55,7 @@ final public class FragmentManager
 	 * Add a {@code Fragment} to the container
 	 *
 	 * @param containerViewId Target container
-	 * @param newFragment The new {@code Fragment}
+	 * @param newFragment     The new {@code Fragment}
 	 * @param fragmentManager The Android {@code FragmentManager}
 	 */
 	public static void addFragment(int containerViewId, Fragment newFragment, android.app.FragmentManager fragmentManager)

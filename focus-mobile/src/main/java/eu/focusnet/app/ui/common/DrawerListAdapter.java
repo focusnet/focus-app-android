@@ -51,7 +51,7 @@ public class DrawerListAdapter extends BaseAdapter
 	/**
 	 * Constuctor
 	 *
-	 * @param context Inherited
+	 * @param context   Inherited
 	 * @param listItems Items to put in the drawer menu
 	 */
 	public DrawerListAdapter(Context context, ArrayList<SimpleListItem> listItems)
@@ -98,9 +98,9 @@ public class DrawerListAdapter extends BaseAdapter
 	/**
 	 * Create the view for a menu item.
 	 *
-	 * @param position 0-based position of the menu item
+	 * @param position    0-based position of the menu item
 	 * @param convertView Recycled view.
-	 * @param parent Inherited.
+	 * @param parent      Inherited.
 	 * @return A {@code View} for the menu item.
 	 */
 	@Override

@@ -67,8 +67,8 @@ public class BookmarkFragment extends ListFragment
 	/**
 	 * Create the view.
 	 *
-	 * @param inflater Inherited
-	 * @param container Inherited
+	 * @param inflater           Inherited
+	 * @param container          Inherited
 	 * @param savedInstanceState Inherited
 	 * @return
 	 */
@@ -92,10 +92,10 @@ public class BookmarkFragment extends ListFragment
 	/**
 	 * Click listener for the bookmark list
 	 *
-	 * @param l Inherited
-	 * @param v Inherited
+	 * @param l        Inherited
+	 * @param v        Inherited
 	 * @param position Position of the clicked item
-	 * @param id Inherited
+	 * @param id       Inherited
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
@@ -143,8 +143,8 @@ public class BookmarkFragment extends ListFragment
 	/**
 	 * Add list items from a give source, also adding a user-friendly header.
 	 *
-	 * @param source The source of items
-	 * @param headerIcon The icon of the header
+	 * @param source      The source of items
+	 * @param headerIcon  The icon of the header
 	 * @param headerLabel The label of the header
 	 */
 	private void addListItems(ArrayList<Bookmark> source, int headerIcon, int headerLabel)

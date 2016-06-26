@@ -68,8 +68,8 @@ public class ProjectFragment extends ListFragment
 	/**
 	 * Create the view and load items via a background task.
 	 *
-	 * @param inflater Inherited
-	 * @param container Inherited
+	 * @param inflater           Inherited
+	 * @param container          Inherited
 	 * @param savedInstanceState Inherited
 	 * @return The new View
 	 */
@@ -92,10 +92,10 @@ public class ProjectFragment extends ListFragment
 	 * depends on the target of the item link ({@link PageActivity}
 	 * or {@link ProjectInProjectActivity}).
 	 *
-	 * @param l Inherited
-	 * @param v Inherited
+	 * @param l        Inherited
+	 * @param v        Inherited
 	 * @param position Position of the item being clicked
-	 * @param id Inherited
+	 * @param id       Inherited
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
@@ -129,7 +129,7 @@ public class ProjectFragment extends ListFragment
 
 		/**
 		 * Tells whether the {@link ProjectInstance} has been found or not.
-		 *
+		 * <p/>
 		 * Used for delaying redirection to another page to postExecute(), which runs on the
 		 * UI thread and therefore can display the associated toast
 		 */

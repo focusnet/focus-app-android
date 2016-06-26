@@ -48,7 +48,7 @@ import eu.focusnet.app.model.AppContentInstance;
 
 /**
  * A helper class to retrieve application configuration and Android facilities.
- *
+ * <p/>
  * All these facilities should be accessed through this class, and not via the
  * {@link  FocusAppLogic} singleton.
  */

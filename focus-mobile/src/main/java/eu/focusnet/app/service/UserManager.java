@@ -339,9 +339,10 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Return the user in its current state, it may be null
-	 *
+	 * <p/>
 	 * FIXME this is a little trick because we need the user in the FocusObject initiatilization.
 	 * FIXME must fix the logic.
+	 *
 	 * @return
 	 */
 	public User getUserAsIs()
@@ -393,10 +394,8 @@ public class UserManager implements ApplicationStatusObserver
 	 * Those 2 objects are mandatory, and fatal exception is triggered if sth goes wrong.
 	 * <p/>
 	 * Access control setup should come here, too (if not already done in login() )
-	 *
+	 * <p/>
 	 * FIXME if fail, crash. not very user-friendly. should gracefully fallback to entry point activity for example.
-	 *
-	 *
 	 */
 	public void getUserData()
 	{
@@ -418,6 +417,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Information obtained from login, such as a user id on the network.
+	 *
 	 * @return
 	 */
 	public String getUserIdentification()

@@ -225,7 +225,7 @@ public class ProjectInstance extends AbstractInstance
 	 *
 	 * @param source
 	 * @return FIXME a bit strange to have it in this class
-	 *
+	 * <p/>
 	 * FIXME this is blocking because of the call at the end.
 	 */
 	private ArrayList<PageInstance> createPageInstances(ArrayList<PageReference> source, PageInstance.PageType type, int expectedDepthInHierarchy)

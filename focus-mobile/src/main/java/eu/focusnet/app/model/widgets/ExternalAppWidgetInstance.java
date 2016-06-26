@@ -15,7 +15,6 @@ import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.gson.WidgetTemplate;
@@ -72,7 +71,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		}
 		else {
 			try {
-				this.buttonLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawLabel)));
+				this.buttonLabel = this.dataContext.resolveToString(rawLabel);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -93,7 +92,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		}
 		else {
 			try {
-				this.appIdentifier = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawIdentifer)));
+				this.appIdentifier = this.dataContext.resolveToString(rawIdentifer);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -113,7 +112,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		}
 		else {
 			try {
-				url = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawInput)));
+				url = this.dataContext.resolveToString(rawInput);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();

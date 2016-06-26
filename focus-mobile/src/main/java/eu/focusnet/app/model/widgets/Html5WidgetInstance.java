@@ -96,11 +96,7 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		}
 		else {
 			try {
-				this.context = TypesHelper.asString(
-						this.dataContext.resolve(
-								TypesHelper.asString(rawContext)
-						)
-				);
+				this.context = this.dataContext.resolveToString(rawContext);
 			}
 			catch (FocusBadTypeException | FocusMissingResourceException ex) {
 				this.markAsInvalid();

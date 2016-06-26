@@ -5,7 +5,6 @@ import com.google.gson.internal.LinkedTreeMap;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
 
 /**
  * The MIT License (MIT)
@@ -57,7 +56,7 @@ public class CheckboxFieldInstance extends FieldInstance
 			return;
 		}
 		try {
-			this.checkboxLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawLabel)));
+			this.checkboxLabel = this.dataContext.resolveToString(rawLabel);
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.markAsInvalid();
@@ -74,8 +73,8 @@ public class CheckboxFieldInstance extends FieldInstance
 			return;
 		}
 		try {
-			this.checkedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawChecked)));
-			this.uncheckedValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawUnchecked)));
+			this.checkedValue = this.dataContext.resolveToString(rawChecked);
+			this.uncheckedValue = this.dataContext.resolveToString(rawUnchecked);
 		}
 		catch (FocusBadTypeException | FocusMissingResourceException ex) {
 			this.markAsInvalid();

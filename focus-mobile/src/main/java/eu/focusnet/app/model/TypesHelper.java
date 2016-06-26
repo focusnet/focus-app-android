@@ -33,20 +33,6 @@ public class TypesHelper
 {
 
 	/**
-	 * Types descriptions
-	 */
-	public enum TargetType
-	{
-		STRING,
-		DOUBLE,
-		INTEGER,
-		ARRAY_OF_STRINGS,
-		ARRAY_OF_DOUBLES,
-		ARRAY_OF_INTEGERS,
-		ARRAY_OF_URLS
-	}
-
-	/**
 	 * Acquire object as string
 	 *
 	 * @param obj

@@ -86,9 +86,7 @@ public class ProjectInstance extends AbstractInstance
 			if (projTpl.getIterator() != null) {
 				ArrayList<String> urls;
 				try {
-					urls = TypesHelper.asArrayOfUrls(
-							baseContext.resolve(projTpl.getIterator())
-					);
+					urls = baseContext.resolveToArrayOfUrls(projTpl.getIterator());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException e) {
 					// Resource not found or invalid iterator.
@@ -200,9 +198,8 @@ public class ProjectInstance extends AbstractInstance
 				}
 
 				try {
-					Object x = dataContext.resolve(template.getTitle());
-					title = TypesHelper.asString(x);
-					description = TypesHelper.asString(dataContext.resolve(template.getDescription()));
+					title = dataContext.resolveToString(template.getTitle());
+					description = dataContext.resolveToString(template.getDescription());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					// silent skipping
@@ -241,9 +238,7 @@ public class ProjectInstance extends AbstractInstance
 			if (pageTpl.getIterator() != null) {
 				ArrayList<String> urls;
 				try {
-					urls = TypesHelper.asArrayOfUrls(
-							this.dataContext.resolve(pageTpl.getIterator()) // FIXME blocking
-					);
+					urls = this.dataContext.resolveToArrayOfUrls(pageTpl.getIterator());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException e) {
 					// should not happen, but let's continue silently

@@ -32,7 +32,6 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 import eu.focusnet.app.service.DataManager;
 import eu.focusnet.app.util.Constant;
@@ -154,7 +153,7 @@ public abstract class WidgetInstance extends AbstractInstance
 		String title = this.template.getTitle();
 		if (title != null) {
 			try {
-				title = TypesHelper.asString(this.dataContext.resolve(title));
+				title = this.dataContext.resolveToString(title);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				title = "Error in fetching title";

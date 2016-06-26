@@ -92,8 +92,8 @@ public class PageInstance extends AbstractInstance
 				}
 
 				try {
-					title = TypesHelper.asString(dataContext.resolve(template.getTitle()));
-					description = TypesHelper.asString(dataContext.resolve(template.getDescription()));
+					title = dataContext.resolveToString(template.getTitle());
+					description = dataContext.resolveToString(template.getDescription());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					FocusApplication.reportError(ex);

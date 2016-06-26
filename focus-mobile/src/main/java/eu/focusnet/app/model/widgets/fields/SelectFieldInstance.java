@@ -73,7 +73,7 @@ public class SelectFieldInstance extends FieldInstance
 				return;
 			}
 			try {
-				newVal = TypesHelper.asString(this.dataContext.resolve(rawVal));
+				newVal = this.dataContext.resolveToString(rawVal);
 				this.values.set(i, newVal);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
@@ -116,7 +116,7 @@ public class SelectFieldInstance extends FieldInstance
 		for (int i = 0; i < this.texts.size(); ++i) {
 			String rawText = tmpTexts.get(i);
 			try {
-				String v = TypesHelper.asString(this.dataContext.resolve(rawText));
+				String v = this.dataContext.resolveToString(rawText);
 				this.texts.set(i, v);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {

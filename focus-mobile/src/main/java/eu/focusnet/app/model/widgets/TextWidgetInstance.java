@@ -25,7 +25,6 @@ import java.util.Map;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
@@ -52,12 +51,7 @@ public class TextWidgetInstance extends WidgetInstance
 	protected void processSpecificConfig()
 	{
 		try {
-			this.content = TypesHelper.asString(
-					this.dataContext.resolve(
-							TypesHelper.asString(this.config.get(CONFIG_LABEL_CONTENT)
-							)
-					)
-			);
+			this.content = this.dataContext.resolveToString(this.config.get(CONFIG_LABEL_CONTENT));
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.markAsInvalid();

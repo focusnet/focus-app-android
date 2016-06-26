@@ -76,7 +76,7 @@ abstract public class FieldInstance
 
 		Object raw_label = this.config.get(FIELD_LABEL_LABEL);
 		try {
-			this.label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_label)));
+			this.label = this.dataContext.resolveToString(raw_label);
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.markAsInvalid();
@@ -90,7 +90,7 @@ abstract public class FieldInstance
 		}
 		else {
 			try {
-				this.defaultValue = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(raw_default_value)));
+				this.defaultValue = this.dataContext.resolveToString(raw_default_value);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();

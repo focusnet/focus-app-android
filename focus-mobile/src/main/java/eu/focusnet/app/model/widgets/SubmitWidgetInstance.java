@@ -25,7 +25,6 @@ import java.util.Map;
 import eu.focusnet.app.exception.FocusBadTypeException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
@@ -54,13 +53,13 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 	@Override
 	protected void processSpecificConfig()
 	{
-		Object label = this.config.get(CONFIG_LABEL_LABEL);
-		if (label == null) {
+		Object rawLabel = this.config.get(CONFIG_LABEL_LABEL);
+		if (rawLabel == null) {
 			this.submitLabel = CONFIG_LABEL_DEFAULT_VALUE;
 		}
 		else {
 			try {
-				this.submitLabel = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(label)));
+				this.submitLabel = this.dataContext.resolveToString(rawLabel);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();

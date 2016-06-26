@@ -95,19 +95,17 @@ public class TableWidgetInstance extends WidgetInstance
 			}
 
 			try {
-				String s = TypesHelper.asString(rawValues);
-				rawValues = this.dataContext.resolve(s);
+				rawValues = this.dataContext.resolveToObject(rawValues);
 			}
 			catch (FocusBadTypeException e) {
 				// ok to ignore, means that we are already in an array context
 			}
 			catch (FocusMissingResourceException e) {
-				e.printStackTrace();
+				this.markAsInvalid();
 				return;
 			}
 
 			try {
-				header = TypesHelper.asString(rawHeader);
 				values = TypesHelper.asArrayOfStrings(rawValues);
 			}
 			catch (FocusBadTypeException e) {
@@ -117,7 +115,7 @@ public class TableWidgetInstance extends WidgetInstance
 
 			// resolve() header and values
 			try {
-				header = TypesHelper.asString(this.dataContext.resolve(header));
+				header = this.dataContext.resolveToString(rawHeader);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -127,7 +125,7 @@ public class TableWidgetInstance extends WidgetInstance
 			DateFormat dateFormat = DateFormat.getDateTimeInstance();
 			for (int i = 0; i < values.size(); ++i) {
 				try {
-					String v = TypesHelper.asString(this.dataContext.resolve(values.get(i)));
+					String v = this.dataContext.resolveToString(values.get(i));
 					if (isEpoch) {
 						Double d = Double.parseDouble(v);
 						long longVal = Double.valueOf(d).longValue() * 1000;

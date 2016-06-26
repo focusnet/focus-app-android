@@ -22,6 +22,7 @@ package eu.focusnet.app.model;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -194,7 +195,7 @@ public class DataContext extends HashMap<String, String>
 	 * @return
 	 * @throws FocusMissingResourceException
 	 */
-	public Object resolve(String request) throws FocusMissingResourceException
+	private Object resolve(String request) throws FocusMissingResourceException
 	{
 		String a = Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN;
 		Pattern toSearch = Pattern.compile(Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN);
@@ -217,6 +218,37 @@ public class DataContext extends HashMap<String, String>
 		}
 
 		return this.resolveVariable(request);
+	}
+
+	/**
+	 * helper functions to make code easier to read.
+	 * resole from input string to output string
+	 * <p/>
+	 * object is in fact always a disguised string. If not, then throw exception.
+	 */
+	public String resolveToString(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asString(this.resolve(TypesHelper.asString(probableString)));
+	}
+
+	public String resolveToString(String request) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asString(this.resolve(request));
+	}
+
+	public ArrayList<String> resolveToArrayOfUrls(String request) throws FocusMissingResourceException, FocusBadTypeException
+	{
+		return TypesHelper.asArrayOfUrls(this.resolve(request));
+	}
+
+	public Double resolveToDouble(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asDouble(this.resolve(TypesHelper.asString(probableString)));
+	}
+
+	public Object resolveToObject(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return this.resolve(TypesHelper.asString(probableString));
 	}
 
 	/**

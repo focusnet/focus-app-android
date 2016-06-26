@@ -98,11 +98,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 		}
 		else {
 			try {
-				this.caption = TypesHelper.asString(
-						this.dataContext.resolve(
-								TypesHelper.asString(rawCaption)
-						)
-				);
+				this.caption = this.dataContext.resolveToString(rawCaption);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -123,11 +119,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 				return;
 			}
 
-			this.xAxisLabel = TypesHelper.asString(
-					this.dataContext.resolve(
-							TypesHelper.asString(rawLabel)
-					)
-			);
+			this.xAxisLabel = this.dataContext.resolveToString(rawLabel);
 			Object rawValues = xMap.get(CONFIG_LABEL_VALUES);
 			if (rawValues == null) {
 				this.markAsInvalid();
@@ -135,7 +127,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 			}
 			this.xAxisValues = TypesHelper.asArrayOfStrings(rawValues);
 			for (int i = 0; i < this.xAxisValues.size(); ++i) {
-				this.xAxisValues.set(i, TypesHelper.asString(this.dataContext.resolve(this.xAxisValues.get(i))));
+				this.xAxisValues.set(i, this.dataContext.resolveToString(this.xAxisValues.get(i)));
 			}
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
@@ -160,11 +152,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 				return;
 			}
 			try {
-				newLabel = TypesHelper.asString(
-						this.dataContext.resolve(
-								TypesHelper.asString(rawLabel)
-						)
-				);
+				newLabel = this.dataContext.resolveToString(rawLabel);
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
@@ -178,8 +166,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 				return;
 			}
 			try {
-				String valuesDescr = TypesHelper.asString(rawValues);
-				valuesTmp = this.dataContext.resolve(valuesDescr);
+				valuesTmp = this.dataContext.resolveToObject(rawValues);
 			}
 			catch (FocusBadTypeException ex) {
 				// good, this means we have an array of double and nothing to resolve()
@@ -225,8 +212,8 @@ public class LineChartWidgetInstance extends WidgetInstance
 						return;
 					}
 					try {
-						label = TypesHelper.asString(this.dataContext.resolve(TypesHelper.asString(rawLimitLabel)));
-						value = TypesHelper.asDouble(this.dataContext.resolve(TypesHelper.asString(rawLimitValue)));
+						label = this.dataContext.resolveToString(rawLimitLabel);
+						value = this.dataContext.resolveToDouble(rawLimitValue);
 						Object rawType = m2.get(CONFIG_LABEL_LIMIT_TYPE);
 						if (rawType == null) {
 							// default is "min"

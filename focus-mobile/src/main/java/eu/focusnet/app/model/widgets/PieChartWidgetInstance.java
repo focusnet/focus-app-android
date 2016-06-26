@@ -71,11 +71,7 @@ public class PieChartWidgetInstance extends WidgetInstance
 		}
 
 		try {
-			this.caption = TypesHelper.asString(
-					this.dataContext.resolve(
-							TypesHelper.asString(caption)
-					)
-			);
+			this.caption = this.dataContext.resolveToString(caption);
 		}
 		catch (FocusMissingResourceException | FocusBadTypeException ex) {
 			this.markAsInvalid();
@@ -92,22 +88,14 @@ public class PieChartWidgetInstance extends WidgetInstance
 					this.markAsInvalid();
 					return;
 				}
-				value = TypesHelper.asDouble(
-						this.dataContext.resolve(
-								TypesHelper.asString(valueRaw)
-						)
-				);
+				value = this.dataContext.resolveToDouble(valueRaw);
 
 				Object labelRaw = m.get(CONFIG_LABEL_LABEL);
 				if (labelRaw == null) {
 					label = "";
 				}
 				else {
-					label = TypesHelper.asString(
-							this.dataContext.resolve(
-									TypesHelper.asString(labelRaw)
-							)
-					);
+					label = this.dataContext.resolveToString(labelRaw);
 				}
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {

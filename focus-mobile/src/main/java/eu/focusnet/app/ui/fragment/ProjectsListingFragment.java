@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.model.ProjectInstance;
+import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
 import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.ui.activity.ProjectActivity;
@@ -120,7 +121,7 @@ public class ProjectsListingFragment extends ListFragment
 					getString(R.string.focus_header_project));
 
 			listItems.add(headerProjectsListItem);
-			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
+			UserPreferencesInstance preference = FocusAppLogic.getUserManager().getUserPreferences();
 
 			ArrayList<ProjectInstance> projects = FocusAppLogic.getCurrentApplicationContent().getProjects();
 			Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);

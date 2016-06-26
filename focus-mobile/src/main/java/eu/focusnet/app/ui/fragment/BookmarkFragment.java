@@ -37,6 +37,7 @@ import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.AppContentInstance;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.ProjectInstance;
+import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
 import eu.focusnet.app.model.gson.BookmarksList;
 import eu.focusnet.app.model.gson.UserPreferences;
@@ -124,7 +125,7 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void fillListAdapter()
 	{
-		UserPreferences preferences = FocusAppLogic.getUserManager().getUserPreferences();
+		UserPreferencesInstance preferences = FocusAppLogic.getUserManager().getUserPreferences();
 
 		BookmarksList bookmark = preferences.getBookmarks();
 		ArrayList<Bookmark> pages = bookmark.getPages();

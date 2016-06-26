@@ -430,13 +430,13 @@ final public class Constant
 
 		/**
 		 * JSON schema of the object used to represent user's information
-		 * (see {@link eu.focusnet.app.model.gson.User}).
+		 * (see {@link eu.focusnet.app.model.UserInstance}).
 		 */
 		final public static String FOCUS_DATA_MODEL_TYPE_USER = "http://reference.focusnet.eu/schemas/focus-user-information/v1.0";
 
 		/**
 		 * JSON schema of the object used to represent user's preferences
-		 * (see {@link eu.focusnet.app.model.gson.UserPreferences}).
+		 * (see {@link eu.focusnet.app.model.UserPreferencesInstance}).
 		 */
 		final public static String FOCUS_DATA_MODEL_TYPE_USER_PREFERENCES = "http://reference.focusnet.eu/schemas/focus-mobile-app-user-preferences/v1.0";
 

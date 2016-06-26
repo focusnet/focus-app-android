@@ -1,3 +1,8 @@
+package eu.focusnet.app.model;
+
+import eu.focusnet.app.model.gson.User;
+import eu.focusnet.app.service.UserManager;
+
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -17,24 +22,10 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-package eu.focusnet.app.model.gson;
-
-import java.util.ArrayList;
-
-import eu.focusnet.app.util.Constant;
-
-// FIXME when initially loading bookmarks, check that the paths are still valid! otherwise delete them (and save on backend)
-
-public class UserPreferences extends FocusObject
+public class UserInstance extends User
 {
-
-	protected BookmarksList bookmarks;
-
-	public UserPreferences(String targetUrl)
+	public UserInstance(String targetUrl, String firstName, String lastName, String email, String company, UserManager userManager)
 	{
-		super(Constant.DataModelTypes.FOCUS_DATA_MODEL_TYPE_USER_PREFERENCES, targetUrl);
+		super(targetUrl, firstName, lastName, email, company, userManager);
 	}
-
-
 }

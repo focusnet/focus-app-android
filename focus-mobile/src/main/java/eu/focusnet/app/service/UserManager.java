@@ -27,6 +27,8 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.exception.FocusMissingResourceException;
 import eu.focusnet.app.exception.FocusNotImplementedException;
+import eu.focusnet.app.model.UserInstance;
+import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.User;
 import eu.focusnet.app.model.gson.UserPreferences;
@@ -37,8 +39,8 @@ public class UserManager implements ApplicationStatusObserver
 {
 
 	private DataManager dataManager;
-	private User user;
-	private UserPreferences userPreferences;
+	private UserInstance user;
+	private UserPreferencesInstance userPreferences;
 	/**
 	 * Login-related input information: username
 	 */
@@ -315,9 +317,10 @@ public class UserManager implements ApplicationStatusObserver
 		if (this.user != null) {
 			return this.user;
 		}
-		User user;
+		UserInstance user;
 		try {
-			user = (User) this.dataManager.get(this.userUrl, User.class);
+			// UserInstance is child of User, so safe to cast
+			user = (UserInstance) this.dataManager.get(this.userUrl, User.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without a user
@@ -327,7 +330,7 @@ public class UserManager implements ApplicationStatusObserver
 		}
 		if (user == null) {
 			// FIXME information not used for now, must still must be valid to pass JSON Schema valiation on the server-side
-			user = new User(this.userUrl, "first", "last", "email@email.com", "company", this); // FIXME all information should come from login step -> only pass UserManager to User()
+			user = new UserInstance(this.userUrl, "first", "last", "email@email.com", "company", this); // FIXME all information should come from login step -> only pass UserManager to User()
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(user);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
@@ -345,7 +348,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return
 	 */
-	public User getUserAsIs()
+	public UserInstance getUserAsIs()
 	{
 		return this.user;
 	}
@@ -360,7 +363,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return A {@link UserPreferences} object
 	 */
-	public synchronized UserPreferences getUserPreferences()
+	public synchronized UserPreferencesInstance getUserPreferences()
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -369,9 +372,9 @@ public class UserManager implements ApplicationStatusObserver
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		UserPreferences userPreferences = null;
+		UserPreferencesInstance userPreferences = null;
 		try {
-			userPreferences = (UserPreferences) this.dataManager.get(this.prefUrl, UserPreferences.class);
+			userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferences.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without userpreferences
@@ -379,7 +382,7 @@ public class UserManager implements ApplicationStatusObserver
 			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
 		}
 		if (userPreferences == null) {
-			userPreferences = new UserPreferences(this.prefUrl);
+			userPreferences = new UserPreferencesInstance(this.prefUrl);
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(userPreferences);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create UserPreferences object.");

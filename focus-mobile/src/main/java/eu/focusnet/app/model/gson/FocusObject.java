@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import eu.focusnet.app.FocusAppLogic;
+import eu.focusnet.app.model.UserInstance;
 
 /**
  * Created by admin on 06.07.2015.
@@ -80,7 +81,7 @@ public class FocusObject implements Serializable
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
 		// FIXME not optimal way of getting the User
-		User user = FocusAppLogic.getUserManager().getUserAsIs();
+		UserInstance user = FocusAppLogic.getUserManager().getUserAsIs();
 		this.type = type;
 		this.url = url;
 		this.owner = (owner != null ? owner : (user != null ? user.toString() : ""));

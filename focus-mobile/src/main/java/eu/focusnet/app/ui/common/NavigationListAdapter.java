@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
 import eu.focusnet.app.exception.FocusInternalErrorException;
+import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
 import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.util.ApplicationHelper;
@@ -306,7 +307,7 @@ public class NavigationListAdapter extends BaseAdapter
 						@Override
 						public void onClick(View view)
 						{
-							UserPreferences userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
+							UserPreferencesInstance userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
 
 							if (isExistingBookmark) {
 								featuredListItem.setIsBookmarked(false);

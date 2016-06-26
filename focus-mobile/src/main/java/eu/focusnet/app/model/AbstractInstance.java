@@ -29,7 +29,7 @@ import eu.focusnet.app.controller.DataManager;
  * In our model, we distinguish between template objects and instance objects. Template objects
  * are raw objects obtained from JSON stored on the backend. Instances are the translation of these
  * templates with real data, resolving iterators and interoplating variables.
- * 
+ * <p/>
  * This object is the abstract parent object for most instances: {@link AppContentInstance},
  * {@link ProjectInstance}, {@link PageInstance}.
  */
@@ -47,20 +47,18 @@ abstract public class AbstractInstance
 
 	/**
 	 * Path to this instance.
-	 * 
+	 * <p/>
 	 * See {@link eu.focusnet.app.util.Constant.Navigation}
 	 */
 	protected String path;
-
-	/**
-	 * Tells whether this instance and the instances it contains are valid
-	 */
-	private boolean valid;
-
 	/**
 	 * If the instance is not valid, this instance variable may contain information on why.
 	 */
 	protected String nonValidityReason;
+	/**
+	 * Tells whether this instance and the instances it contains are valid
+	 */
+	private boolean valid;
 
 	/**
 	 * Constructor. Set reasonable defaults for instances.
@@ -162,7 +160,7 @@ abstract public class AbstractInstance
 
 	/**
 	 * Get the path of the current instance.
-	 *
+	 * <p/>
 	 * See {@link eu.focusnet.app.util.Constant.Navigation}.
 	 *
 	 * @return The path
@@ -175,7 +173,7 @@ abstract public class AbstractInstance
 	/**
 	 * Build paths for this instanc and other instances it may contain. This cannot be done at
 	 * instance creation time because iterators may not be completely built, yet.
-	 *
+	 * <p/>
 	 * See FIXME (for more details on how it works)
 	 *
 	 * @param parentPath The parent path on the top of which the new path must be defined.

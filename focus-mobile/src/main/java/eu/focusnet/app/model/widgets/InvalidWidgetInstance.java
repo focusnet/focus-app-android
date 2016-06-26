@@ -39,7 +39,7 @@ public class InvalidWidgetInstance extends WidgetInstance
 	 * Constructor.
 	 *
 	 * @param layoutConfig Inherited
-	 * @param w Inherited
+	 * @param w            Inherited
 	 */
 	public InvalidWidgetInstance(Map<String, String> layoutConfig, WidgetInstance w)
 	{

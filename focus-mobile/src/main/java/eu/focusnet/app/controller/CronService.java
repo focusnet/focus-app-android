@@ -32,9 +32,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import eu.focusnet.app.ui.FocusApplication;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 
 // TOOD FIXME also clean SQL db from old entries (i.e. ones that are not refered by fully loaded instances (? to check ?)
@@ -46,7 +46,7 @@ import eu.focusnet.app.util.Constant;
  * This class is a service responsible for calling periodic tasks:
  * - cleaning of SQL database every N hours
  * - retrieving new version of data every N minutes
- * 
+ * <p/>
  * Schedulor behavior regarding sleep/wake:
  * - will not wake the device up
  * - we use wake locks to ensure that started tasks are indeed finished
@@ -93,9 +93,9 @@ public class CronService extends Service implements ApplicationStatusObserver
 
 	/**
 	 * Sync data operations
-	 * 
+	 * <p/>
 	 * * return false if already in progress OR application nto ready, true otherwise
-	 * 
+	 * <p/>
 	 * FIXME if I call this in a separate thread, I can then interrupt it.
 	 */
 	public boolean syncData()
@@ -231,7 +231,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 
 	/**
 	 * Get the last sync date
-	 * 
+	 * <p/>
 	 * NOTE: only available within a single application instance run. We do not permanently save
 	 * this information (e.g. in the db)
 	 *

@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * A reference to a widget.
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
  */

@@ -29,7 +29,7 @@ import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * Abstract class. An instance containing all information pertaining to a form field.
- * 
+ * <p/>
  * NOTE: this is NOT a child of AbstractInstance,
  */
 abstract public class FieldInstance
@@ -110,8 +110,8 @@ abstract public class FieldInstance
 	 * Constructor. Initializes settings that are common to all field types and then
 	 * request customized configuration.
 	 *
-	 * @param fieldName The name of the field
-	 * @param config The configuration {@code Map}
+	 * @param fieldName   The name of the field
+	 * @param config      The configuration {@code Map}
 	 * @param dataContext The data context against which we must resolve
 	 */
 	public FieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
@@ -177,6 +177,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Get the type
+	 *
 	 * @return The type
 	 */
 	public String getType()
@@ -186,6 +187,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Tells if the field is mandatory
+	 *
 	 * @return {@code true} if this is the case, {@code false} otherwise.
 	 */
 	public boolean isMandatory()
@@ -195,6 +197,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Get default value
+	 *
 	 * @return The default value
 	 */
 	public String getDefaultValue()
@@ -214,6 +217,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Tells if the field is read-only
+	 *
 	 * @return {@code true} if this is the case, {@code false} otherwise.
 	 */
 	public boolean isReadOnly()
@@ -223,6 +227,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Tells if the field is valid
+	 *
 	 * @return {@code true} if this is the case, {@code false} otherwise.
 	 */
 	public boolean isValid()
@@ -240,6 +245,7 @@ abstract public class FieldInstance
 
 	/**
 	 * Mark this field as invalid and say why
+	 *
 	 * @param why The reason for non-validity
 	 */
 	protected void markAsInvalid(String why)

@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 
 /**
  * A page template
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
  */

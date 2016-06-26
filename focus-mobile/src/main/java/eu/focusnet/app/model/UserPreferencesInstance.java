@@ -60,7 +60,7 @@ public class UserPreferencesInstance extends UserPreferences
 	/**
 	 * Add a bookmark
 	 *
-	 * @param bookmark The bookmark to add
+	 * @param bookmark     The bookmark to add
 	 * @param bookmarkType In which library we must add the bookmark: {@code PAGE} or {@code TOOLS}.
 	 */
 	public void addBookmarkLink(Bookmark bookmark, String bookmarkType)
@@ -80,8 +80,8 @@ public class UserPreferencesInstance extends UserPreferences
 	/**
 	 * Find where the bookmark link is in one of the 2 specific sets (PAGE / TOOL)
 	 *
-	 * @param path The path where the bookmark point to
-	 * @param title The title of the bookmark
+	 * @param path         The path where the bookmark point to
+	 * @param title        The title of the bookmark
 	 * @param bookmarkType The bookmark library in which we must look for.
 	 * @return The index of the found bookmark in the specified library.
 	 */
@@ -114,8 +114,8 @@ public class UserPreferencesInstance extends UserPreferences
 	/**
 	 * Remove a bookmark
 	 *
-	 * @param path The path where the bookmark point to
-	 * @param title The title of the bookmark
+	 * @param path         The path where the bookmark point to
+	 * @param title        The title of the bookmark
 	 * @param bookmarkType The bookmark library in which we must look for.
 	 */
 	public void removeBookmarkLink(String path, String title, String bookmarkType)

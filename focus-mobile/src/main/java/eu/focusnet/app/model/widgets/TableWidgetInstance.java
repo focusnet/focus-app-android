@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * An instance containing all information pertaining to a Table widget.
@@ -53,6 +53,7 @@ public class TableWidgetInstance extends WidgetInstance
 
 	/**
 	 * The configuration property that defines if values are an epoch timestamp
+	 *
 	 * @deprecated quite clumsy, was last minute addition for PC3
 	 */
 	final private static String CONFIG_LABEL_IS_EPOCH = "epoch";
@@ -80,9 +81,9 @@ public class TableWidgetInstance extends WidgetInstance
 	/**
 	 * Constructor.
 	 *
-	 * @param template Inherited
+	 * @param template     Inherited
 	 * @param layoutConfig Inherited
-	 * @param newCtx Inherited
+	 * @param newCtx       Inherited
 	 */
 	public TableWidgetInstance(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{

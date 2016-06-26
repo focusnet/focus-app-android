@@ -31,19 +31,19 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Date;
 
+import eu.focusnet.app.model.AppContentInstance;
+import eu.focusnet.app.model.gson.AppContentTemplate;
+import eu.focusnet.app.model.gson.DateTypeAdapter;
 import eu.focusnet.app.ui.FocusApplication;
+import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
-import eu.focusnet.app.model.AppContentInstance;
-import eu.focusnet.app.model.gson.DateTypeAdapter;
-import eu.focusnet.app.model.gson.AppContentTemplate;
-import eu.focusnet.app.util.ApplicationHelper;
 
 
 /**
  * This object is the entry point of the mail application logic. In the MVC paradygm, it would be
  * the Controller.
- * 
+ * <p/>
  * This class is a Singleton (the only one of the application). We only access static methods
  * when it comes to access or alter the state of the currently running application, e.g. when
  * we want to replace the current {@link DataManager}. Following this logic, the UI always acts on
@@ -149,7 +149,7 @@ public class FocusAppLogic
 
 	/**
 	 * Get the GSON object used for data conversion in our app.
-	 * 
+	 * <p/>
 	 * The GSON configuration never changes, so its safe to refer to it statically.
 	 *
 	 * @return a pointer to the GSON object, which is already properly configured for our
@@ -224,7 +224,7 @@ public class FocusAppLogic
 
 	/**
 	 * Do the full login.
-	 * 
+	 * <p/>
 	 * Get the 3 basic objects
 	 * ({@link eu.focusnet.app.model.gson.User},
 	 * {@link eu.focusnet.app.model.gson.UserPreferences},
@@ -327,7 +327,7 @@ public class FocusAppLogic
 
 	/**
 	 * Reset whole app. This deletes everything that is locally stored.
-	 * 
+	 * <p/>
 	 * Note: this method called when crashing, so bugs in there won't be reportedby ACRA. Pay extra attention to it.
 	 */
 	public void reset()

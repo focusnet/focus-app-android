@@ -28,10 +28,10 @@ import eu.focusnet.app.model.UserInstance;
 
 /**
  * The basic object for all FOCUS-compliant objects.
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
- *
+ * <p/>
  * FIXME we use a static reference to the current {@link UserInstance}. Would it be possible to use
  * FIXME a better pattern?
  */
@@ -62,22 +62,22 @@ public class FocusObject implements Serializable
 
 	/**
 	 * NOTE: if the url is internal, we do not set the following fields to anything: owner, editor
-	 * 
+	 * <p/>
 	 * if a user exists, use it. otherwise, just leave the owner and editor
 	 *
-	 * @param type The FOCUS type (i.e. the URL of the JSON schema against which the resource
-	 *             validates)
-	 * @param url The URL identifying this resource
-	 * @param owner If this field is set, use it for specifying the owner of the resource. If not,
-	 *              then use the current {@link UserInstance} of the application. If there is
-	 *              no {@link UserInstance}, then leave this field empty ({@code ""}).
-	 * @param editor Same logic as for the {@link #owner} applies.
-	 * @param version Current version number of the resource
+	 * @param type             The FOCUS type (i.e. the URL of the JSON schema against which the resource
+	 *                         validates)
+	 * @param url              The URL identifying this resource
+	 * @param owner            If this field is set, use it for specifying the owner of the resource. If not,
+	 *                         then use the current {@link UserInstance} of the application. If there is
+	 *                         no {@link UserInstance}, then leave this field empty ({@code ""}).
+	 * @param editor           Same logic as for the {@link #owner} applies.
+	 * @param version          Current version number of the resource
 	 * @param creationDateTime Creation date time as a {@code Date}. If none set, use the current
 	 *                         date and time.
-	 * @param editionDateTime Edition date time as a {@code Date}. If none set, use the current
+	 * @param editionDateTime  Edition date time as a {@code Date}. If none set, use the current
 	 *                         date and time.
-	 * @param active Tells whether the resource is active (=accessible) or not.
+	 * @param active           Tells whether the resource is active (=accessible) or not.
 	 */
 	protected FocusObject(String type, String url, String owner, String editor, int version, Date creationDateTime, Date editionDateTime, boolean active)
 	{
@@ -95,7 +95,7 @@ public class FocusObject implements Serializable
 	/**
 	 * Create a new FocusObject, based on the provided JSON string and target class.
 	 *
-	 * @param json Raw JSON String representation of the object
+	 * @param json        Raw JSON String representation of the object
 	 * @param targetClass The target POJO class to convert the {@code json} input into
 	 */
 	public static FocusObject factory(String json, Class targetClass)
@@ -106,7 +106,7 @@ public class FocusObject implements Serializable
 	/**
 	 * Update the current object to highlight the fact that we are providing a new version of
 	 * the same resource
-	 *
+	 * <p/>
 	 * The user is the current {@link UserInstance} of the application.
 	 */
 	public void updateToNewVersion()

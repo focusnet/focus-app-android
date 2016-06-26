@@ -42,7 +42,7 @@ public class ProjectInstance extends AbstractInstance
 	/**
 	 * Unique identifier for the project. If an iterator is defined for this project, it will be
 	 * altered such that we are able to distinguish between the different versions of the project.
-	 * 
+	 * <p/>
 	 * See {@link eu.focusnet.app.util.Constant.Navigation},
 	 * {@link ProjectInstance#createProjects(ArrayList, DataContext)}
 	 * and {@link #fillWithAcquiredData()}
@@ -87,8 +87,8 @@ public class ProjectInstance extends AbstractInstance
 	/**
 	 * C'tor
 	 *
-	 * @param projectTemplate  Template to use to contruct this instance.
-	 * @param dataContext      The {@link DataContext} of this instance
+	 * @param projectTemplate Template to use to contruct this instance.
+	 * @param dataContext     The {@link DataContext} of this instance
 	 */
 	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext)
 	{
@@ -108,8 +108,8 @@ public class ProjectInstance extends AbstractInstance
 	/**
 	 * Factory function for creating a set of projects out of a template.
 	 *
-	 * @param projectTemplates         The template used to build the current project instances.
-	 * @param parentContext            Parent context on the top of which we will define a new {@link DataContext} for created instances
+	 * @param projectTemplates The template used to build the current project instances.
+	 * @param parentContext    Parent context on the top of which we will define a new {@link DataContext} for created instances
 	 * @return A list of new {@link ProjectInstance}s
 	 */
 	public static ArrayList<ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext parentContext)

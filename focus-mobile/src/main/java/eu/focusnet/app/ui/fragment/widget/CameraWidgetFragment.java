@@ -36,10 +36,10 @@ import android.widget.ImageView;
 import java.io.IOException;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.model.widgets.CameraWidgetInstance;
 import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * {@code Fragment} to render an image capture widget.

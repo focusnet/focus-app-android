@@ -30,13 +30,13 @@ import android.widget.Spinner;
 
 import java.io.IOException;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.controller.NetworkManager;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * Demo use case selection activity.
@@ -102,7 +102,7 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	 * When the user clicks the button to start the demo, we initiate the login procedure. We then
 	 * redirect to the {@link EntryPointActivity}, that will be responsible for retrieving the
 	 * application content.
-	 * 
+	 * <p/>
 	 * This logic requires a network connection.
 	 *
 	 * @param view Inherited.

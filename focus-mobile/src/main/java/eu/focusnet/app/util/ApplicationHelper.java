@@ -41,12 +41,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.FocusAppLogic;
-import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.model.AppContentInstance;
+import eu.focusnet.app.ui.FocusApplication;
 
 /**
  * A helper class to retrieve application configuration and Android facilities.
- * 
+ * <p/>
  * All these facilities should be accessed through this class, and not via the
  * {@link  FocusAppLogic} singleton.
  */

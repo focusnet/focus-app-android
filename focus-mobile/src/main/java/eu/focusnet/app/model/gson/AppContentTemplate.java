@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 
 /**
  * Application content description.
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-model
  */

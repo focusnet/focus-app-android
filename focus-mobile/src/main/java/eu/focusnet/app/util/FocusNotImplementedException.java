@@ -23,7 +23,7 @@ package eu.focusnet.app.util;
 /**
  * FocusNotImplementedException is thrown when some code branch that has not been implemented
  * is reached.
- * 
+ * <p/>
  * This is an unchecked exception.
  */
 public class FocusNotImplementedException extends RuntimeException

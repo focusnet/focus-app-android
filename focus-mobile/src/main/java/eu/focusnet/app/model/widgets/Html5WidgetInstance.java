@@ -26,13 +26,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * An instance containing all information pertaining to a webapp widget.
@@ -64,9 +64,9 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public Html5WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Bookmarks folders
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-model
  */

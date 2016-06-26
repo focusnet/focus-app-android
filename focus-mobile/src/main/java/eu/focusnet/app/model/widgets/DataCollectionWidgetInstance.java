@@ -39,9 +39,9 @@ abstract public class DataCollectionWidgetInstance extends WidgetInstance
 	 * Constructor. Checks if a field name is indeed set and marks the widget as invalid if this
 	 * is not the case.
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public DataCollectionWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

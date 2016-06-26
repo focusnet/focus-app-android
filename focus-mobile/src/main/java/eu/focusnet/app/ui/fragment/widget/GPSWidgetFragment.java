@@ -41,7 +41,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 
 /**
  * A {@code Fragment} rendering the GPS coordinates fetching form widget.
- * 
+ * <p/>
  * FIXME move to same code as MOTI. Much better.
  */
 public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
@@ -209,7 +209,7 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 	 */
 	private void setUnavailableMessage()
 	{
-		((GPSWidgetInstance)this.widgetInstance).resetSample();
+		((GPSWidgetInstance) this.widgetInstance).resetSample();
 		this.longitudeView.setText(R.string.n_a);
 		this.latitudeView.setText(R.string.n_a);
 		this.accuracyView.setText(R.string.n_a);

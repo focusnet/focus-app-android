@@ -23,7 +23,7 @@ package eu.focusnet.app.util;
 /**
  * An FocusInternalErrorException denotes a problem that should not happen if the logic of the
  * application was correct.
- * 
+ * <p/>
  * This is an unchecked exception that will generally crash the application.
  */
 public class FocusInternalErrorException extends RuntimeException
@@ -41,7 +41,7 @@ public class FocusInternalErrorException extends RuntimeException
 	/**
 	 * Exception constructor to be used when we catch another exception and want to keep
 	 * its detailed information for further propagation.
-	 * 
+	 * <p/>
 	 * FIXME probably bad practice. We should keep the original exception.
 	 *
 	 * @param ex Inherited exception

@@ -22,7 +22,7 @@ package eu.focusnet.app.util;
 
 /**
  * This Exception is triggered when an unexpected type is encountered.
- * 
+ * <p/>
  * This is a checked exception, and we will try to survive this situation as much as possible.
  */
 public class FocusBadTypeException extends Exception

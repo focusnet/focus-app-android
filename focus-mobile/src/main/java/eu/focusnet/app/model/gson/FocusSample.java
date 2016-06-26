@@ -26,7 +26,7 @@ import eu.focusnet.app.util.Constant;
  * A {@code FocusSample} is a {@link FocusObject} containing a specialized {@code HashMap}
  * {@link FocusSampleDataMap}. All external data that we use in our dahsboards and widgets come
  * as instances of {@code FocusSample}s.
- * 
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
  */

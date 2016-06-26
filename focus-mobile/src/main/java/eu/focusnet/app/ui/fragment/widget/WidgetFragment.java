@@ -28,8 +28,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.widgets.BarChartWidgetInstance;
 import eu.focusnet.app.model.widgets.CameraWidgetInstance;
 import eu.focusnet.app.model.widgets.ExternalAppWidgetInstance;
@@ -50,7 +50,7 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * Abstract class representing an UI widget.
- * 
+ * <p/>
  * All widgets have at least an optional title.
  */
 public abstract class WidgetFragment extends Fragment
@@ -181,7 +181,7 @@ public abstract class WidgetFragment extends Fragment
 	/**
 	 * Setup widget layout. We set width, height and margins and apply the overridden
 	 * {@link #referenceHeight} if necessary.
-	 * 
+	 * <p/>
 	 * See {@link #setupWidget(View)}.
 	 */
 	protected void setWidgetLayout()
@@ -214,7 +214,7 @@ public abstract class WidgetFragment extends Fragment
 	/**
 	 * The reference height is not altered by default. In this case WRAP_CONTENT will be used.
 	 * Subclasses can override this behavior.
-	 * 
+	 * <p/>
 	 * See {@link #setupWidget(View)} and {@link #setWidgetLayout()}.
 	 */
 	protected void alterReferenceHeight()

@@ -34,14 +34,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.Bookmark;
 import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * List Adapter used by the drawer menu and the listings of objects.
@@ -148,7 +148,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Acquire the {@code View} for a list item.
-	 * 
+	 * <p/>
 	 * FIXME enable recycling. We have problems here, yet.
 	 *
 	 * @param position    The position of the view to obtain
@@ -340,7 +340,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 	/**
 	 * Task to save user preferences
-	 * 
+	 * <p/>
 	 * FIXME what happens if we save user preferences when user preference saving is not finished, yet. To check.
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>

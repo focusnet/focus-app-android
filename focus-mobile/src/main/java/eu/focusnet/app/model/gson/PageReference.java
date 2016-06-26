@@ -22,7 +22,7 @@ package eu.focusnet.app.model.gson;
 
 /**
  * A reference to a page
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
  */

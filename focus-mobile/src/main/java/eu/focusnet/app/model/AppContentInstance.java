@@ -125,6 +125,7 @@ public class AppContentInstance extends AbstractInstance
 
 	/**
 	 * Wait for the application instance building to be terminated.
+	 *
 	 * @throws InterruptedException
 	 */
 	public void waitForCompletion() throws InterruptedException

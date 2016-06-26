@@ -23,8 +23,6 @@ package eu.focusnet.app.model;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -119,8 +117,8 @@ public class PageInstance extends AbstractInstance
 	 * Factory to create page instances
 	 *
 	 * @param projectTemplate The project template to take as a basis for generating the page instances.
-	 * @param pageType The category of page we are interested in
-	 * @param parentContext The {@link DataContext} to use as a basis for data resolution
+	 * @param pageType        The category of page we are interested in
+	 * @param parentContext   The {@link DataContext} to use as a basis for data resolution
 	 * @return A list of {@link PageInstance}s
 	 */
 	public static ArrayList<PageInstance> createPageInstances(ProjectTemplate projectTemplate, PageType pageType, DataContext parentContext)
@@ -191,13 +189,13 @@ public class PageInstance extends AbstractInstance
 
 	/**
 	 * Create a single page instance.
-	 *
+	 * <p/>
 	 * FIXME the structure of the project/page/widget definition could be improved, hence simplifying these methods.
 	 *
 	 * @param projectTemplate The project template where the page is defined.
-	 * @param pageTpl The page template on the top of which we create this instance
-	 * @param pageType The category of page to create
-	 * @param newPageCtx The {@link DataContext} of the new page instance
+	 * @param pageTpl         The page template on the top of which we create this instance
+	 * @param pageType        The category of page to create
+	 * @param newPageCtx      The {@link DataContext} of the new page instance
 	 * @return A new {@link PageInstance}
 	 */
 	private static PageInstance createPageInstance(
@@ -289,7 +287,7 @@ public class PageInstance extends AbstractInstance
 	/**
 	 * Get the description (resolved within the current data context)
 	 *
-	 * @return  The description or the empty string.
+	 * @return The description or the empty string.
 	 */
 	public String getDescription()
 	{
@@ -298,10 +296,10 @@ public class PageInstance extends AbstractInstance
 
 	/**
 	 * Add a widget instance to the current page
-	 * 
+	 * <p/>
 	 * If any of the widget instances is not valid, then the page is considered as not valid
 	 * (but it will still be displayed anyway).
-	 * 
+	 * <p/>
 	 * We never pass invalid widgets to a {@link PageInstance}. Instead, we pass
 	 * an {@link InvalidWidgetInstance} that contains a reference to the invalid widget instance.
 	 *

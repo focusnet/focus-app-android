@@ -22,7 +22,7 @@ package eu.focusnet.app.util;
 
 /**
  * A FocusMissingResourceException is triggered when a resource cannot be retrieved when it should.
- * 
+ * <p/>
  * This is a checked exception.
  */
 public class FocusMissingResourceException extends Exception

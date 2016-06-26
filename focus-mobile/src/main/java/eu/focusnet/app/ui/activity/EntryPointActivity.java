@@ -31,17 +31,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.controller.UserManager;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * Entry point activity
- * 
+ * <p/>
  * Start screen of the application. If the application is not configured, yet, the user is
  * redirected to the {@link LoginActivity} (or {@link DemoUseCaseSelectionActivity} as long as
  * we are working with a prototype of the application). If the application is configured, then

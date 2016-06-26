@@ -22,9 +22,9 @@ package eu.focusnet.app.model.widgets.fields;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
+import eu.focusnet.app.util.FocusBadTypeException;
 
 /**
  * An instance containing all information pertaining to a textfield field.
@@ -97,8 +97,9 @@ public class TextfieldFieldInstance extends FieldInstance
 
 	/**
 	 * Constructor
-	 * @param fieldName Inherited
-	 * @param config Inherited
+	 *
+	 * @param fieldName   Inherited
+	 * @param config      Inherited
 	 * @param dataContext Inherited
 	 */
 	public TextfieldFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
@@ -144,6 +145,7 @@ public class TextfieldFieldInstance extends FieldInstance
 
 	/**
 	 * Get input type
+	 *
 	 * @return The input type
 	 */
 	public ValidType getInputType()
@@ -153,6 +155,7 @@ public class TextfieldFieldInstance extends FieldInstance
 
 	/**
 	 * Get number of decimals to display
+	 *
 	 * @return Number of decimals to display.
 	 */
 	public int getDecimalsNumber()

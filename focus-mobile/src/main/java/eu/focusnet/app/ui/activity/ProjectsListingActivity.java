@@ -49,10 +49,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import eu.focusnet.app.BuildConfig;
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.controller.CronService;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.ui.common.DrawerListAdapter;
 import eu.focusnet.app.ui.common.FocusDialogBuilder;
 import eu.focusnet.app.ui.common.SimpleListItem;
@@ -61,6 +60,7 @@ import eu.focusnet.app.ui.fragment.BookmarkFragment;
 import eu.focusnet.app.ui.fragment.ProjectsListingFragment;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * This {@code Activity} contains the listing of all projects, and is therefore the welcome screen
@@ -195,7 +195,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Prepare the view. This is called in {@link #onCreate(Bundle)}, before actually rendering the
 	 * UI.
-	 * 
+	 * <p/>
 	 * See {@link super#onCreate(Bundle)}.
 	 */
 	@Override
@@ -274,7 +274,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * - if projects or bookmarks listing: highlight the appropriate menu item
 	 * - if About, then display a dialog with the information about the app
 	 * - If Logout, then reset the application
-	 * 
+	 * <p/>
 	 * See {@link super#applyUiChanges()}.
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Defines the Fragment to include in the container for this Activity.
 	 * Either the project listing fragment or the bookmarks listing fragment.
-	 * 
+	 * <p/>
 	 * See {@link super#applyUiChanges()}.
 	 */
 	@Override
@@ -440,7 +440,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Listener for the back button. We have 2 menu entries in the drawer menu that load their
 	 * fragment in the main content container.
-	 * 
+	 * <p/>
 	 * In {@link #getOnClickDrawerItemListener()}, we make sure we do not reload the same page
 	 * indefinitely such that the below logic can work.
 	 */
@@ -631,7 +631,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 	/**
 	 * Task responsible for synchronizing data
-	 * 
+	 * <p/>
 	 * Called when the user explicitly launches data sync via the dialog of the action bar.
 	 */
 	private class SyncTask extends AsyncTask<Void, Void, Void>

@@ -51,7 +51,7 @@ import eu.focusnet.app.util.FocusNotImplementedException;
  * - Instances can consume data by calling {@code #resolve*()} methods. WThe
  * calling thread will then block until the resource is available. The actual blocking and waiting
  * is done in {@link #get(Object)}.
- * 
+ * <p/>
  * {@link #register(String, String)}-ed resources are processed in order of {@link #priority}.
  * The later the instance is created in the application content, the lower is its priority.
  */
@@ -109,19 +109,18 @@ public class DataContext extends HashMap<String, String>
 	 * new data to be included. These descriptions are the ones we can find in the 'data'
 	 * properties of the Application Content template JSON representation, or in iterators
 	 * definitions.
-	 * 
+	 * <p/>
 	 * All targets of data context entries are FocusSample's
-	 * 
+	 * <p/>
 	 * The different options for the description are the following:
-	 * 
+	 * <p/>
 	 * - a simple URL, e.g. http://data.example.org/test/123
 	 * - a reference to an existing entry in this data context, with a selector to the
 	 * appropriate key in its data object; e.g. <ctx/machine-ABC/woodpile-url>
-	 * 
+	 * <p/>
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a history request with a reference to a previously registered entry, e.g.
 	 * <history|ctx/machine-ABC/woodpile-url|since=$date$>
-	 * 
 	 */
 	public void register(String key, String description)
 	{
@@ -154,9 +153,9 @@ public class DataContext extends HashMap<String, String>
 	 * Resolve the supplied request in the current data context.
 	 * A request may be an arbitrary String with expected variable interpolation, e.g.
 	 * {@code "Project number <ctx/my-project/id>"}
-	 * 
+	 * <p/>
 	 * Or a simple string that will return another type of Object (e.g. Double, Array of URLs, etc.)
-	 * 
+	 * <p/>
 	 * Can not be nested "test <ctx/simple-url/<ctx/other-url/field>> test" except if there is nothing around it.
 	 * This is not a feature but a side effect of the implementation. not tested.
 	 *
@@ -347,11 +346,11 @@ public class DataContext extends HashMap<String, String>
 
 	/**
 	 * Block and wait for some data to be retrieved, and then return it to the caller.
-	 *
+	 * <p/>
 	 * FIXME check stash, better version there.
 	 *
 	 * @param key Key corresponding to the data retrieval request that was
-	 * {@link #register(String, String)}-ed.
+	 *            {@link #register(String, String)}-ed.
 	 * @return the url of the object that is gotten, or null if an error occured and the object
 	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
 	 */
@@ -379,7 +378,7 @@ public class DataContext extends HashMap<String, String>
 
 	/**
 	 * Execute the supplied task on a new Thread
-	 * 
+	 * <p/>
 	 * FIXME is that really on a new thread? my be interesting to push it to an execution queue?
 	 *
 	 * @param todo The task to execute
@@ -408,7 +407,8 @@ public class DataContext extends HashMap<String, String>
 
 		/**
 		 * Constructor
-		 * @param key Input value for instance variable
+		 *
+		 * @param key         Input value for instance variable
 		 * @param description Input value for instance variable
 		 */
 		private DataAcquisitionTask(String key, String description)
@@ -419,6 +419,7 @@ public class DataContext extends HashMap<String, String>
 
 		/**
 		 * Do the data fetching.
+		 *
 		 * @return
 		 * @throws Exception
 		 */

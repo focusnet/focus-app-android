@@ -32,8 +32,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.ProjectInstance;
 import eu.focusnet.app.model.UserPreferencesInstance;
@@ -129,7 +129,7 @@ public class ProjectFragment extends ListFragment
 
 		/**
 		 * Tells whether the {@link ProjectInstance} has been found or not.
-		 * 
+		 * <p/>
 		 * Used for delaying redirection to another page to postExecute(), which runs on the
 		 * UI thread and therefore can display the associated toast
 		 */

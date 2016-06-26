@@ -22,7 +22,7 @@ package eu.focusnet.app.model.gson;
 
 /**
  * A bookmark object, consisting of a path and a label.
- *
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-model
  */

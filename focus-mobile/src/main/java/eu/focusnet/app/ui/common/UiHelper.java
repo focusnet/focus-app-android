@@ -88,7 +88,7 @@ public class UiHelper
 
 	/**
 	 * Helper function to hide the keyboard when clicking on an element.
-	 * 
+	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
 	 * @param activity The Activity where this operation is performed
@@ -104,12 +104,12 @@ public class UiHelper
 
 	/**
 	 * Setup the UI to be able to click outside of keyboard to hide it.
-	 * 
+	 * <p/>
 	 * We recursively parse the content of the View and register a touch listener that will hide
 	 * the keyboard on all elements that are not {@link EditText}s.
-	 * 
+	 * <p/>
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
-	 * 
+	 * <p/>
 	 * also do append text to EditTexts such that the cursor for editing is at the end and not at the beginning.
 	 *
 	 * @param view     The view to parse
@@ -164,7 +164,7 @@ public class UiHelper
 
 	/**
 	 * Close the current activity and redirect the user to another one.
-	 * 
+	 * <p/>
 	 * Note: if this function is called from outside of the UI thread, {@code msg} cannot be set,
 	 * as it triggers the display of a toast.
 	 *

@@ -237,7 +237,7 @@ final public class Constant
 
 		/**
 		 * Owner of the resource
-		 * 
+		 * <p/>
 		 * FIXME: hard-coded and not really used for now, as we do not have per-user access control in FOCUS, yet.
 		 */
 		final public static String OWNER = "owner";
@@ -245,7 +245,7 @@ final public class Constant
 		/**
 		 * Editor of the sample, i.e. the individual or organization that edited this version
 		 * of the resource.
-		 * 
+		 * <p/>
 		 * FIXME: hard-coded and not really used for now, as we do not have per-user access control in FOCUS, yet.
 		 */
 		final public static String EDITOR = "editor";
@@ -332,7 +332,7 @@ final public class Constant
 	 * Constants related to the navigation system of our application. All Projects, Dashboards &
 	 * Tools (Pages) and widgets are uniquely identified by a path within the application, and these
 	 * constants define the format of this path.
-	 * 
+	 * <p/>
 	 * The different list item types and constants used for referencing specific menu entries
 	 * are also defined here.
 	 */
@@ -345,7 +345,7 @@ final public class Constant
 
 		/**
 		 * The different levels of paths are separated by this String.
-		 * 
+		 * <p/>
 		 * For example: FOCUS|project1|DASHBOARD|page1
 		 */
 		final public static String PATH_SEPARATOR = "|";
@@ -358,7 +358,7 @@ final public class Constant
 		/**
 		 * When iterating over multiple objects, we distinguish the different paths by defining a
 		 * selector and this constant defines the opening character for that selector.
-		 * 
+		 * <p/>
 		 * For example: FOCUS|projectA[http://object-of-interest-1]|...
 		 */
 		final public static String PATH_SELECTOR_OPEN = "[";
@@ -366,7 +366,7 @@ final public class Constant
 		/**
 		 * When iterating over multiple objects, we distinguish the different paths by defining a
 		 * selector and this constant defines the closing character for that selector.
-		 * 
+		 * <p/>
 		 * For example: FOCUS|projectA[http://object-of-interest-1]|...
 		 */
 		final public static String PATH_SELECTOR_CLOSE = "]";
@@ -541,11 +541,11 @@ final public class Constant
 		/**
 		 * A data selector is identified by an opening character, a selector type keyword
 		 * and parameters, and a closing character. This constant defines the opening character.
-		 * 
+		 * <p/>
 		 * There are 2 types of data selectors: context accessor and services. context accessor
 		 * (ctx) definitions are separated with / and services are separated with |. Context
 		 * accessor can be nested into services.
-		 * 
+		 * <p/>
 		 * For example:
 		 * - {@code <ctx/example/prop1>}
 		 * - {@code <history|example|since=...>}
@@ -683,7 +683,7 @@ final public class Constant
 		/**
 		 * Used for transmitting input object to external application. We send a stringified
 		 * JSON FocusSample in this extra.
-		 * 
+		 * <p/>
 		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_INPUT = "eu.focusnet.app.extra.EXTERNAL_APP_INPUT";
@@ -691,9 +691,9 @@ final public class Constant
 		/**
 		 * Used to acquire return value from external application. We receive a stringified
 		 * JSON FocusSample in this extra.
-		 * 
+		 * <p/>
 		 * FIXME not used, yet, but ready.
-		 * 
+		 * <p/>
 		 * See {@link eu.focusnet.app.ui.fragment.widget.ExternalAppFragment}.
 		 */
 		final public static String UI_EXTRA_EXTERNAL_APP_OUTPUT = "eu.focusnet.app.extra.EXTERNAL_APP_OUTPUT";

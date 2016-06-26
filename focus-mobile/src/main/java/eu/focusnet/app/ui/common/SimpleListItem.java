@@ -25,7 +25,7 @@ import android.graphics.Bitmap;
 /**
  * List item which contains an icon and a title.
  * This is the standard list item, and other list item types inherit it.
- * 
+ * <p/>
  * This list item type is used for list items styled as headers and the drawer menu items.
  */
 public class SimpleListItem

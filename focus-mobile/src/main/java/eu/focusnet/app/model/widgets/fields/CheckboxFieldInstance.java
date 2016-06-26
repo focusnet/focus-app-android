@@ -22,13 +22,13 @@ package eu.focusnet.app.model.widgets.fields;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusMissingResourceException;
-import eu.focusnet.app.model.DataContext;
 
 /**
-* An instance containing all information pertaining to a checkboxx field.
-*/
+ * An instance containing all information pertaining to a checkboxx field.
+ */
 public class CheckboxFieldInstance extends FieldInstance
 {
 
@@ -89,8 +89,9 @@ public class CheckboxFieldInstance extends FieldInstance
 
 	/**
 	 * Constructor
-	 * @param fieldName Inherited
-	 * @param config Inherited
+	 *
+	 * @param fieldName   Inherited
+	 * @param config      Inherited
 	 * @param dataContext Inherited
 	 */
 	public CheckboxFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
@@ -157,6 +158,7 @@ public class CheckboxFieldInstance extends FieldInstance
 
 	/**
 	 * Tells whether the checkbox is checked by default.
+	 *
 	 * @return {@code true} if this is the case, {@code false} otherwise.
 	 */
 	public boolean isDefaultChecked()
@@ -166,6 +168,7 @@ public class CheckboxFieldInstance extends FieldInstance
 
 	/**
 	 * Get the checkbox label
+	 *
 	 * @return The label
 	 */
 	public String getCheckboxLabel()

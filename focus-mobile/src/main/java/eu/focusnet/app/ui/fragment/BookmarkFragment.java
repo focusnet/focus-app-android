@@ -31,8 +31,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.AppContentInstance;
 import eu.focusnet.app.model.PageInstance;

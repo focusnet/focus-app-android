@@ -22,10 +22,10 @@ package eu.focusnet.app.model.widgets;
 
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * Instanciation of a widget containing a simple text field
@@ -45,9 +45,10 @@ public class TextWidgetInstance extends WidgetInstance
 
 	/**
 	 * Constructor
-	 * @param template Inherited
+	 *
+	 * @param template     Inherited
 	 * @param layoutConfig Inherited
-	 * @param newCtx Inherited
+	 * @param newCtx       Inherited
 	 */
 	public TextWidgetInstance(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{

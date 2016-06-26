@@ -33,8 +33,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.widgets.ExternalAppWidgetInstance;
 import eu.focusnet.app.ui.common.UiHelper;
@@ -49,7 +49,7 @@ public class ExternalAppFragment extends WidgetFragment
 	 * Create the View. The launch listener button is modified depending if the external
 	 * application is installed or not. If it is not, then the button triggers the installation
 	 * in Google Play. If it is, then the external application is launched.
-	 * 
+	 * <p/>
 	 * The external application has an optional stringified {@link FocusSample}
 	 * input parameter passed in
 	 * the {@link eu.focusnet.app.util.Constant.Extra#UI_EXTRA_EXTERNAL_APP_INPUT} extra.

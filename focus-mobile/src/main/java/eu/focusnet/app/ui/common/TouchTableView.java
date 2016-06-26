@@ -28,7 +28,7 @@ import de.codecrafters.tableview.TableView;
 
 /**
  * Specialized TableView overcoming problems when embedding TableView within ScrollView
- * 
+ * <p/>
  * See http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
 public class TouchTableView extends TableView

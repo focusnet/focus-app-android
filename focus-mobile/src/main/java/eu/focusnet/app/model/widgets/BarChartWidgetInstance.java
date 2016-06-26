@@ -27,7 +27,7 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
  * WidgetInstance containing all information pertaining to a Bar Chart widget.
- *
+ * <p/>
  * All the logic is the same as the one for {@link LineChartWidgetInstance}.
  */
 public class BarChartWidgetInstance extends LineChartWidgetInstance
@@ -35,9 +35,9 @@ public class BarChartWidgetInstance extends LineChartWidgetInstance
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public BarChartWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

@@ -26,8 +26,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * Activity use to display an image that has been previously captured by the camera.

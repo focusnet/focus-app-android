@@ -32,8 +32,8 @@ import android.widget.EditText;
 
 import java.io.IOException;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.controller.NetworkManager;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
@@ -41,7 +41,7 @@ import eu.focusnet.app.util.Constant;
 /**
  * Login Activity: this activity displays the login screen
  * and let's the user log into the application.
- * 
+ * <p/>
  * FIXME this code is not used. For the prototype, we use {@link DemoUseCaseSelectionActivity}.
  */
 public class LoginActivity extends Activity
@@ -64,7 +64,7 @@ public class LoginActivity extends Activity
 	/**
 	 * When the user clicks the login button, the provided username, password and server name
 	 * are used to authenticate.
-	 * 
+	 * <p/>
 	 * This logic requires a network connection.
 	 */
 	public void onClick(View view)

@@ -54,9 +54,9 @@ public class GPSWidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public GPSWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

@@ -26,7 +26,7 @@ import eu.focusnet.app.util.Constant;
  * A UserPreferences object as stored in the FOCUS backend. This object is a template, and its actual
  * instantiation can be found in {@link eu.focusnet.app.model.UserPreferencesInstance}, even though these
  * objects are very similar.
- * 
+ * <p/>
  * Refer to JSON Schema for further documentation.
  * See https://github.com/focusnet/focus-data-mode
  */

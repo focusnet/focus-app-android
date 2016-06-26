@@ -47,18 +47,17 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 
 
 /**
  * This class contains all methods pertaining to networking.
- * 
+ * <p/>
  * This class is an abstraction library for communicating with our REST server.
- * 
  */
 public class NetworkManager
 {
@@ -79,14 +78,14 @@ public class NetworkManager
 
 	/**
 	 * init SSL context
-	 * 
+	 * <p/>
 	 * We must create a custom TrustManagerFactory because some of our certificates are self-signed.
-	 * 
+	 * <p/>
 	 * Android developer doc: https://developer.android.com/training/articles/security-ssl.html#SelfSigned
 	 * and we also fallback to the default manager
-	 * 
+	 * <p/>
 	 * FIXME FIXME DEBUG: we probably should not accept self-signed certificates in the future.
-	 * 
+	 * <p/>
 	 * FIXME we do a big try/catch, that quite ugly.
 	 *
 	 * @return
@@ -214,7 +213,7 @@ public class NetworkManager
 
 	/**
 	 * Is the network currently available?
-	 * 
+	 * <p/>
 	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
 	 *
 	 * @return true if network is available, false otherwise.
@@ -332,9 +331,9 @@ public class NetworkManager
 
 	/**
 	 * Custom (and dummy) host name verifier
-	 * 
+	 * <p/>
 	 * This is prototype code and is not secure. It may be used to bypass hostname validation of SSL certificates.
-	 * 
+	 * <p/>
 	 * If required, put in NetworkManager constructor
 	 * HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
 	 *

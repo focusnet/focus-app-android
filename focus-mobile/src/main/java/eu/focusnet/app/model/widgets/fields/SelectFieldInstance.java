@@ -25,12 +25,12 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.ArrayList;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * An instance containing all information pertaining to a select list field.
@@ -61,8 +61,9 @@ public class SelectFieldInstance extends FieldInstance
 
 	/**
 	 * Constructor
-	 * @param fieldName Inherited
-	 * @param config Inherited
+	 *
+	 * @param fieldName   Inherited
+	 * @param config      Inherited
 	 * @param dataContext Inherited
 	 */
 	public SelectFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
@@ -162,6 +163,7 @@ public class SelectFieldInstance extends FieldInstance
 
 	/**
 	 * Get list values
+	 *
 	 * @return List values
 	 */
 	public ArrayList<String> getValues()
@@ -171,6 +173,7 @@ public class SelectFieldInstance extends FieldInstance
 
 	/**
 	 * Get list labels
+	 *
 	 * @return List labels
 	 */
 	public ArrayList<String> getTexts()

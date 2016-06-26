@@ -27,12 +27,12 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.Date;
 import java.util.HashSet;
 
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * SQL Sample Data Access Object
- * 
+ * <p/>
  * All samples being recorded belong to a specific data set id ({@link #dataSyncSetId}
  * instance variable) that is unique to each {@link DatabaseAdapter} being created. Most operations
  * are constrained on this set, hence allowing us to have different versions of the data set. This
@@ -71,7 +71,7 @@ public class SampleDao
 	/**
 	 * Create a new Sample based on the provided cursor. The cursor is assumed to be already at
 	 * the position of the object from which we will create the Sample.
-	 * 
+	 * <p/>
 	 * We assume the query retrieved all columsn (this.columnsToRetrieve)
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
@@ -141,7 +141,7 @@ public class SampleDao
 
 	/**
 	 * Mark a resource for deletion
-	 * 
+	 * <p/>
 	 * we mark ALL versions of the resource for deletion. Is that good? FIXME TODO JULIEN
 	 */
 	public void markForDeletion(String url)
@@ -159,7 +159,7 @@ public class SampleDao
 
 	/**
 	 * Actually delete a resource
-	 * 
+	 * <p/>
 	 * We delete all versions of the resource
 	 */
 	public boolean delete(String url)
@@ -240,7 +240,7 @@ public class SampleDao
 
 	/**
 	 * Retrieve all urls marked with a certain type of operation
-	 * 
+	 * <p/>
 	 * We only manipulate FocusSamples here, not other types.
 	 *
 	 * @param flagType
@@ -285,7 +285,7 @@ public class SampleDao
 
 	/**
 	 * Delete all entries from the database
-	 * 
+	 * <p/>
 	 * This really deletes all rows, not only the ones belong to the current data set
 	 * {@code this.dataSyncSetId}
 	 */

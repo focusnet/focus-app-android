@@ -27,7 +27,7 @@ import android.webkit.WebView;
 
 /**
  * Specialized WebView overcoming problems when embedding WebView within ScrollView
- * 
+ * <p/>
  * See http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
 public class TouchWebView extends WebView

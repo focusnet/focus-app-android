@@ -25,7 +25,6 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
@@ -35,6 +34,7 @@ import eu.focusnet.app.model.widgets.fields.SelectFieldInstance;
 import eu.focusnet.app.model.widgets.fields.TextareaFieldInstance;
 import eu.focusnet.app.model.widgets.fields.TextfieldFieldInstance;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusBadTypeException;
 
 /**
  * An instance containing all information pertaining to a form widget.
@@ -50,9 +50,9 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * Constructor.
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public FormWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -115,6 +115,7 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get fields
+	 *
 	 * @return The fields instances as a {@code Map}
 	 */
 	public LinkedHashMap<String, FieldInstance> getFields()

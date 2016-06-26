@@ -22,10 +22,10 @@ package eu.focusnet.app.model.widgets;
 
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * An instance containing all information pertaining to a Submit widget.
@@ -51,9 +51,9 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public SubmitWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -63,7 +63,7 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * Specific configuration:
 	 * - a label for the button
-	 *
+	 * <p/>
 	 * FIXME implement action on submit
 	 */
 	@Override
@@ -85,6 +85,7 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get the button label
+	 *
 	 * @return The label
 	 */
 	public String getSubmitLabel()

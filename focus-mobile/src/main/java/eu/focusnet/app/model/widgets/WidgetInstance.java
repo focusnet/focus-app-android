@@ -27,14 +27,14 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
-import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * Abstract class being the common parent to all Widget instanciations.
@@ -88,9 +88,9 @@ public abstract class WidgetInstance extends AbstractInstance
 	 * C'tor for instantiating real widget instances. This constructor also acquires the widget
 	 * configuration and frees memory when it does not need data structures anymore.
 	 *
-	 * @param wTpl Base widget template
+	 * @param wTpl         Base widget template
 	 * @param layoutConfig Layout configuration
-	 * @param dataCtx Data context against which we will resolve data
+	 * @param dataCtx      Data context against which we will resolve data
 	 */
 	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, @NonNull DataContext dataCtx)
 	{
@@ -125,9 +125,10 @@ public abstract class WidgetInstance extends AbstractInstance
 
 	/**
 	 * Factory for creating specialized Widgets based on the input template
-	 * @param template Widget template
+	 *
+	 * @param template     Widget template
 	 * @param layoutConfig Layout configuration
-	 * @param newCtx Data context
+	 * @param newCtx       Data context
 	 * @return A new instance, child of {@link WidgetInstance}
 	 */
 	public static WidgetInstance factory(@NonNull WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)

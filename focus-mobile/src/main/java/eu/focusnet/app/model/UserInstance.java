@@ -20,8 +20,8 @@
 
 package eu.focusnet.app.model;
 
-import eu.focusnet.app.model.gson.User;
 import eu.focusnet.app.controller.UserManager;
+import eu.focusnet.app.model.gson.User;
 
 /**
  * Instanciation of the {@link User} template object. These objects are very similar, but we keep
@@ -33,11 +33,11 @@ public class UserInstance extends User
 	/**
 	 * Constructor
 	 *
-	 * @param targetUrl Inherited.
-	 * @param firstName Inherited.
-	 * @param lastName Inherited.
-	 * @param email Inherited.
-	 * @param company Inherited.
+	 * @param targetUrl   Inherited.
+	 * @param firstName   Inherited.
+	 * @param lastName    Inherited.
+	 * @param email       Inherited.
+	 * @param company     Inherited.
 	 * @param userManager Inherited.
 	 */
 	public UserInstance(String targetUrl, String firstName, String lastName, String email, String company, UserManager userManager)

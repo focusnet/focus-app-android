@@ -28,12 +28,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.widgets.WidgetInstance;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;
@@ -42,6 +39,7 @@ import eu.focusnet.app.ui.fragment.widget.EmptyWidgetFragment;
 import eu.focusnet.app.ui.fragment.widget.WidgetFragment;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * This fragment will be loaded from the {@link eu.focusnet.app.ui.activity.PageActivity}

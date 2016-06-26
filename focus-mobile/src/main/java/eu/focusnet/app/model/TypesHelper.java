@@ -38,7 +38,7 @@ public class TypesHelper
 	 * @param obj The evaluated object
 	 * @return A Stringified version of the object
 	 * @throws FocusBadTypeException If the input object is not compatible with our application
-	 * casting capabilities.
+	 *                               casting capabilities.
 	 */
 	public static String asString(Object obj) throws FocusBadTypeException
 	{
@@ -57,7 +57,7 @@ public class TypesHelper
 	 * @param obj The evaluated object
 	 * @return A Double version of the object
 	 * @throws FocusBadTypeException If the input object is not compatible with our application
-	 * casting capabilities.
+	 *                               casting capabilities.
 	 */
 	public static Double asDouble(Object obj) throws FocusBadTypeException
 	{
@@ -85,7 +85,7 @@ public class TypesHelper
 	 * @param obj The evaluated object
 	 * @return An array of Strings version of the object
 	 * @throws FocusBadTypeException If the input object is not compatible with our application
-	 * casting capabilities.
+	 *                               casting capabilities.
 	 */
 	public static ArrayList<String> asArrayOfStrings(Object obj) throws FocusBadTypeException
 	{
@@ -113,7 +113,7 @@ public class TypesHelper
 	 * @param obj The evaluated object
 	 * @return An array of Double version of the object
 	 * @throws FocusBadTypeException If the input object is not compatible with our application
-	 * casting capabilities.
+	 *                               casting capabilities.
 	 */
 	public static ArrayList<Double> asArrayOfDoubles(Object obj) throws FocusBadTypeException
 	{
@@ -141,7 +141,7 @@ public class TypesHelper
 	 * @param o The evaluated object
 	 * @return An array of Urls version of the object
 	 * @throws FocusBadTypeException If the input object is not compatible with our application
-	 * casting capabilities.
+	 *                               casting capabilities.
 	 */
 	public static ArrayList<String> asArrayOfUrls(Object o) throws FocusBadTypeException
 	{

@@ -31,14 +31,14 @@ import java.util.Map;
 import java.util.Random;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * An instance containing all information pertaining to a form widget.
@@ -92,9 +92,10 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Constructor
-	 * @param wTpl Inherited
+	 *
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public ExternalAppWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -219,6 +220,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get button label
+	 *
 	 * @return The label
 	 */
 	public String getButtonLabel()
@@ -238,6 +240,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get the external application input parameter object
+	 *
 	 * @return The input parameter object
 	 */
 	public FocusSample getInputObject()
@@ -247,6 +250,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get the external application request code.
+	 *
 	 * @return The request code
 	 */
 	public int getRequestCode()
@@ -279,6 +283,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 	/**
 	 * Get the installed version of the external application.
+	 *
 	 * @return The installed version, or a user-friendly "unknown" string.
 	 */
 	public String getInstalledVersion()

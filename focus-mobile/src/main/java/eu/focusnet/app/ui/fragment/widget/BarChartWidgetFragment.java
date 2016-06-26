@@ -45,7 +45,7 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * A {@code Fragment} rendering a Pie Chart widget, using MPAndroidChart
- * 
+ * <p/>
  * FIXME very similar to BarChartWidget -> modularize?
  */
 public class BarChartWidgetFragment extends WidgetFragment

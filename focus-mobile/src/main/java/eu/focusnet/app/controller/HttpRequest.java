@@ -32,10 +32,10 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * An HTTP request to be issued to the REST server
@@ -97,9 +97,9 @@ public class HttpRequest
 
 	/**
 	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
-	 * 
+	 * <p/>
 	 * FIXME HttpsURLConnection for HTTPS connections?
-	 * 
+	 * <p/>
 	 * keepalive and persistent connections are automatically handled by Anroid. Nothing to do.
 	 *
 	 * @param url

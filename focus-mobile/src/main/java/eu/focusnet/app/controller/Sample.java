@@ -22,9 +22,9 @@ package eu.focusnet.app.controller;
 
 import java.util.Date;
 
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * A Sample is the object representation of the rows in the "samples" database table

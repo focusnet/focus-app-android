@@ -24,9 +24,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusMissingResourceException;
-import eu.focusnet.app.util.FocusNotImplementedException;
 import eu.focusnet.app.model.UserInstance;
 import eu.focusnet.app.model.UserPreferencesInstance;
 import eu.focusnet.app.model.gson.AppContentTemplate;
@@ -34,6 +31,9 @@ import eu.focusnet.app.model.gson.User;
 import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 
 public class UserManager implements ApplicationStatusObserver
 {
@@ -64,7 +64,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * URI to resource holding user information.
-	 * 
+	 * <p/>
 	 * URIs to resources that are used for building the application. 3 objects are of special
 	 * importance and mandatory for the application to work properly:
 	 * - userUrl points to a {@link User} object, which contains basic information such as the
@@ -133,7 +133,7 @@ public class UserManager implements ApplicationStatusObserver
 	/**
 	 * Login and if successful, save the login information in the permanent store, as the internal
 	 * configuration resource.
-	 * 
+	 * <p/>
 	 * FIXME TODO implementation to be completed once we have an authentication server.
 	 *
 	 * @param user     The login user
@@ -302,7 +302,7 @@ public class UserManager implements ApplicationStatusObserver
 	 * The {@link User} is one of the 3 mandatory objects for the application to run. This method
 	 * retrieves this object based on the URI that has been obtained during the login procedure.
 	 * If the object does not exist, a new one is created on the network.
-	 * 
+	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
@@ -342,7 +342,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Return the user in its current state, it may be null
-	 * 
+	 * <p/>
 	 * FIXME this is a little trick because we need the user in the FocusObject initiatilization.
 	 * FIXME must fix the logic.
 	 *
@@ -357,7 +357,7 @@ public class UserManager implements ApplicationStatusObserver
 	 * The {@link UserPreferences} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object does not exist, a new one is created on the network.
-	 * 
+	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
@@ -395,9 +395,9 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Those 2 objects are mandatory, and fatal exception is triggered if sth goes wrong.
-	 * 
+	 * <p/>
 	 * Access control setup should come here, too (if not already done in login() )
-	 * 
+	 * <p/>
 	 * FIXME if fail, crash. not very user-friendly. should gracefully fallback to entry point activity for example.
 	 */
 	public void getUserData()

@@ -35,15 +35,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusMissingResourceException;
-import eu.focusnet.app.util.FocusNotImplementedException;
+import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.gson.FocusObject;
 import eu.focusnet.app.model.gson.FocusSample;
 import eu.focusnet.app.model.widgets.Html5WidgetInstance;
-import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.util.FocusNotImplementedException;
 
 /**
  * A {@code Fragment} rendering a webapp inside a {@code WebView}. We in fact use a {@link TouchWebView} to
@@ -189,15 +189,15 @@ public class Html5WidgetFragment extends WidgetFragment
 
 	/**
 	 * JavaScript interface definition.
-	 * 
+	 * <p/>
 	 * Using this interface grants access to all facilities provided by the application to the
 	 * webapp, such as access control tokens, offline usage of data, etc.
-	 * 
+	 * <p/>
 	 * The browser imposes a maximum of 6 concurrent downloads. This can be overcome by using the
 	 * below interface.
-	 * 
+	 * <p/>
 	 * In the webapp, these calls are blocking. Therefore the webapp must implement Web Workers.
-	 * 
+	 * <p/>
 	 * FIXME implement non-blocking methods with {@code Future}s
 	 */
 	private class WebAppInterface
@@ -284,7 +284,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		 *
 		 * @param url The resource to get
 		 * @return A base64 String containing the fetched resource.
-		 * 
+		 * <p/>
 		 * FIXME mimetype?
 		 */
 		@JavascriptInterface
@@ -295,7 +295,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * Get an access control token directly from the application
-		 * 
+		 * <p/>
 		 * FIXME this information should come from the UserManager
 		 */
 		@JavascriptInterface

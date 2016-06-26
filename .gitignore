@@ -8,6 +8,8 @@
 /captures
 /app/build
 app/src/main/assets/focus.properties
+focus-mobile/src/main/res/values/google_maps_api.xml
 /focus-mobile/build
 focus-mobile/src/main/assets/focus.properties
 *~
+

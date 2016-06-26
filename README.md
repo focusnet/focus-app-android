@@ -108,3 +108,10 @@ SOFTWARE.
 - content of About
 - Google map api key outside of github.
 - Html5WidgetInstance is blocking. Is that a problem?
+
+- focus.properties
+- Google maps api key:
+    values/google_maps_api.xml
+    <resources>
+        <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">FIXME</string>
+    </resources>

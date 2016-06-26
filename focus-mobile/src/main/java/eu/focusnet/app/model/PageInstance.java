@@ -42,7 +42,7 @@ import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * The instantiation of a page template, consisting of widgets. A {@code PageInstance} can have
- * an iterator, too. In this case, one page will be created for each iterator.
+ * an iterator, too. In this case, one page will be created for each item in the iterator.
  */
 public class PageInstance extends AbstractInstance
 {

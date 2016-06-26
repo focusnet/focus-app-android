@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -41,18 +41,18 @@ public class DatabaseAdapter
 
 	/**
 	 * A unique identifier for that instance, based on time.
-	 * <p/>
+	 * 
 	 * This identifier will be used to identify the different sets of data coming from backends
 	 * At each data sync, we create a new DataManager that will replace the old one on success,
 	 * and each of these DataManagers contains a single DatabaseAdapter. Therefore, by
 	 * identifying data sync sets with this unique ID, we are able to distinguish the differents
 	 * syncs. It makes local db cleaning easier, as it then only consists in deleting entries that
 	 * do not match this unique ID.
-	 * <p/>
+	 * 
 	 * When updating/creating/deletion entries (PUT,POST,DELETE), we still use the same ID. This
 	 * is not an incremental version number, but only an instance identifier.
-	 * <p/>
-	 * <p/>
+	 * 
+	 * 
 	 * The databaseAdapter is initially created with a low uniqueInstanceIdentifier and data will
 	 * created with identifier. This means that they will NOT be considered as the latest data set.
 	 * For the data loaded under this id to become the latest data set, call makeDataPersistent()

@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -189,15 +189,15 @@ public class Html5WidgetFragment extends WidgetFragment
 
 	/**
 	 * JavaScript interface definition.
-	 * <p/>
+	 * 
 	 * Using this interface grants access to all facilities provided by the application to the
 	 * webapp, such as access control tokens, offline usage of data, etc.
-	 * <p/>
+	 * 
 	 * The browser imposes a maximum of 6 concurrent downloads. This can be overcome by using the
 	 * below interface.
-	 * <p/>
+	 * 
 	 * In the webapp, these calls are blocking. Therefore the webapp must implement Web Workers.
-	 * <p/>
+	 * 
 	 * FIXME implement non-blocking methods with {@code Future}s
 	 */
 	private class WebAppInterface
@@ -284,7 +284,7 @@ public class Html5WidgetFragment extends WidgetFragment
 		 *
 		 * @param url The resource to get
 		 * @return A base64 String containing the fetched resource.
-		 * <p/>
+		 * 
 		 * FIXME mimetype?
 		 */
 		@JavascriptInterface
@@ -295,7 +295,7 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		/**
 		 * Get an access control token directly from the application
-		 * <p/>
+		 * 
 		 * FIXME this information should come from the UserManager
 		 */
 		@JavascriptInterface

@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -39,19 +39,19 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * The DataManager is responsible for building the application content and data management.
- * <p/>
+ * 
  * Its specific tasks are:
  * <ul>
  * <li>Serve as a single contact entity for data CRUD operations.</li>
  * <li>Initialize and construct the application content</li>
  * </ul>
- * <p/>
+ * 
  * The DataManager is hence the Model of the application. It does not provide any UI-related
  * feature, and does not run tasks in the background. This is left to the View aspect of
  * the application.
- * <p/>
+ * 
  * TODO move user/login-related operations to a standalone {@code AccessControlManager}
- * <p/>
+ * 
  * FIXME we instantiate all application contentn parts (projects, pages, widgets) at start-time. Should we rather do it on-demand?
  */
 public class DataManager implements ApplicationStatusObserver
@@ -95,7 +95,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
 	 * instanciation of the application content, by avoiding to retrieve many time the same
 	 * resources from the network and/or the local database.
-	 * <p/>
+	 * 
 	 * This cache is only used when initializing the application content instance, and is
 	 * then freed, as resources are not required after that anymore.
 	 */
@@ -108,9 +108,9 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * This List keeps track of the currently active instances
-	 * <p/>
+	 * 
 	 * We use this such that the instances are not garbage collected
-	 * <p/>
+	 * 
 	 * FIXME check that last sentence, I have a doubt now. Not really useful?
 	 */
 	// private ArrayList<AbstractInstance> activeInstances;
@@ -157,7 +157,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
-	 * <p/>
+	 * 
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving this object.
 	 *
@@ -210,16 +210,16 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Get a sample history.
-	 * <p/>
+	 * 
 	 * FIXME give a proper description of the output
 	 *
 	 * @param url    The URL of the resource for which we want an history
 	 * @param params The parameters to be passed to the history retrieving service
 	 * @return A {@link FocusSample} containing the history of intereset
-	 * <p/>
-	 * <p/>
+	 * 
+	 * 
 	 * FIXME params are passed without any validation.
-	 * <p/>
+	 * 
 	 * FIXME important: the returned FocusSample MUST have a url property that is set to the
 	 * same one as the accessed url.
 	 */
@@ -232,7 +232,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Get the appropriate copy of the data identified by the provided url.
-	 * <p/>
+	 * 
 	 * This method first tries to acquire the resource from the local database and then from the
 	 * network if not available. It also stores the object in the local database such that it
 	 * can later be quickly accessed.
@@ -299,7 +299,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Create a new FOCUS data object and send it to the its target location on the network.
-	 * <p/>
+	 * 
 	 * The resource is also saved in the local database for later quicker use. If network is not
 	 * available, it is only stored in this database and will be pushed to the network later
 	 * during periodic operations performed by {@link CronService}.
@@ -354,7 +354,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Upate an existing FOCUS data object and send it to the its target location on the network.
-	 * <p/>
+	 * 
 	 * The resource is also saved in the local database for later quicker use. If network is not
 	 * available, it is only stored in this database and will be pushed to the network later
 	 * during periodic operations performed by {@link CronService}.
@@ -411,7 +411,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Delete an existing FOCUS data object, both locally and on its target location on the network.
-	 * <p/>
+	 * 
 	 * If network is not available, the deletion information is only stored in the local database
 	 * and deletion will be performed on the network later during periodic operations performed by
 	 * {@link CronService}.
@@ -480,7 +480,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Clean the samples table from useless entries.
-	 * <p/>
+	 * 
 	 * FIXME we should not do anything if app not ready.
 	 */
 	public void cleanDataStore()
@@ -541,7 +541,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Delete non-mandatory data structure for freeing memory.
-	 * <p/>
+	 * 
 	 * The application will continue to work, but might require more disk accesses and will
 	 * then be slower.
 	 */
@@ -701,8 +701,8 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * same but public, and hence we create the dao ourselves and fetch the Sample for local store for the caller
-	 * <p/>
-	 * <p/>
+	 * 
+	 * 
 	 * also, we only allow UPDATE of data.
 	 */
 	public int pushLocalModification(String url, Class targetClass)

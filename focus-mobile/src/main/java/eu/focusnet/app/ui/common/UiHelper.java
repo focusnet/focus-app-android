@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -88,7 +88,7 @@ public class UiHelper
 
 	/**
 	 * Helper function to hide the keyboard when clicking on an element.
-	 * <p/>
+	 * 
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
 	 *
 	 * @param activity The Activity where this operation is performed
@@ -104,12 +104,12 @@ public class UiHelper
 
 	/**
 	 * Setup the UI to be able to click outside of keyboard to hide it.
-	 * <p/>
+	 * 
 	 * We recursively parse the content of the View and register a touch listener that will hide
 	 * the keyboard on all elements that are not {@link EditText}s.
-	 * <p/>
+	 * 
 	 * See http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
-	 * <p/>
+	 * 
 	 * also do append text to EditTexts such that the cursor for editing is at the end and not at the beginning.
 	 *
 	 * @param view     The view to parse
@@ -164,7 +164,7 @@ public class UiHelper
 
 	/**
 	 * Close the current activity and redirect the user to another one.
-	 * <p/>
+	 * 
 	 * Note: if this function is called from outside of the UI thread, {@code msg} cannot be set,
 	 * as it triggers the display of a toast.
 	 *

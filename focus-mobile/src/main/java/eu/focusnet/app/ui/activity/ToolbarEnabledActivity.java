@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -125,7 +125,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Load the UI, based on the current Activity configuration as defined by
 	 * {@link #onCreate(Bundle)}, including via {@link #setupSpecificUiElements()}.
-	 * <p/>
+	 * 
 	 * This method is called from {@link #onCreate(Bundle)} and whenever the UI must be refreshed.
 	 */
 	final protected void applyUiChanges()
@@ -161,7 +161,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Do any UI operation that do not imply creating and including a new Fragment in the UI, such
 	 * as displaying an AlertDialog.
-	 * <p/>
+	 * 
 	 * See {@link #applyUiChanges()}.
 	 */
 	protected void doInPageUiOperations()
@@ -171,7 +171,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 	/**
 	 * Prepare a new Fragment before its inclusion in the UI.
-	 * <p/>
+	 * 
 	 * See {@link #applyUiChanges()}.
 	 */
 	protected void prepareNewFragment()
@@ -182,7 +182,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 	/**
 	 * Method for replacing the existing fragment with the newly selected one.
-	 * <p/>
+	 * 
 	 * See {@link #applyUiChanges()}.
 	 */
 	private void replaceFragment()

@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -41,10 +41,10 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * FOCUS Application
- * <p/>
+ * 
  * This is the entry point of our application and direct subclass of the default Android
  * Application object.
- * <p/>
+ * 
  * In this class, we override the default behavior by:
  * - Defining a custom error reporting system (ACRA)
  * - Defining a custom Activity handler used to
@@ -61,11 +61,11 @@ public class FocusApplication extends Application
 
 	/**
 	 * This function triggers a silent ACRA report to the reporting server.
-	 * <p/>
+	 * 
 	 * This is used when we think we have somehow end up in a strange/crashed state, but we
 	 * were still able to recover. We however want to inspect the reasons of this state and
 	 * therefore expect to receive a bug report.
-	 * <p/>
+	 * 
 	 * This also allows us to send reports even if no exception is triggered. We may for example
 	 * monitor the application performance and send a report if it is too slow, for knowing what
 	 * happens.
@@ -84,7 +84,7 @@ public class FocusApplication extends Application
 
 	/**
 	 * Attach the base Context
-	 * <p/>
+	 * 
 	 * This implementation does:
 	 * - Enable MultiDex
 	 * - Enable ACRA when not in DEBUG build mode
@@ -170,7 +170,7 @@ public class FocusApplication extends Application
 
 	/**
 	 * Perform operations when creating the Application
-	 * <p/>
+	 * 
 	 * This is called after attachBaseContext(). We do the following:
 	 * - Register a custom activity handler that will help us keep track of the currently active
 	 * Activity

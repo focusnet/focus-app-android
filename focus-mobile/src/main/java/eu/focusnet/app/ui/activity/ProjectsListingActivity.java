@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -195,7 +195,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Prepare the view. This is called in {@link #onCreate(Bundle)}, before actually rendering the
 	 * UI.
-	 * <p/>
+	 * 
 	 * See {@link super#onCreate(Bundle)}.
 	 */
 	@Override
@@ -274,7 +274,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	 * - if projects or bookmarks listing: highlight the appropriate menu item
 	 * - if About, then display a dialog with the information about the app
 	 * - If Logout, then reset the application
-	 * <p/>
+	 * 
 	 * See {@link super#applyUiChanges()}.
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Defines the Fragment to include in the container for this Activity.
 	 * Either the project listing fragment or the bookmarks listing fragment.
-	 * <p/>
+	 * 
 	 * See {@link super#applyUiChanges()}.
 	 */
 	@Override
@@ -440,7 +440,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	/**
 	 * Listener for the back button. We have 2 menu entries in the drawer menu that load their
 	 * fragment in the main content container.
-	 * <p/>
+	 * 
 	 * In {@link #getOnClickDrawerItemListener()}, we make sure we do not reload the same page
 	 * indefinitely such that the below logic can work.
 	 */
@@ -631,7 +631,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 	/**
 	 * Task responsible for synchronizing data
-	 * <p/>
+	 * 
 	 * Called when the user explicitly launches data sync via the dialog of the action bar.
 	 */
 	private class SyncTask extends AsyncTask<Void, Void, Void>

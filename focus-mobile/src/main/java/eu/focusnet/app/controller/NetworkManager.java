@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -56,9 +56,9 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * This class contains all methods pertaining to networking.
- * <p/>
+ * 
  * This class is an abstraction library for communicating with our REST server.
- * <p/>
+ * 
  */
 public class NetworkManager
 {
@@ -79,14 +79,14 @@ public class NetworkManager
 
 	/**
 	 * init SSL context
-	 * <p/>
+	 * 
 	 * We must create a custom TrustManagerFactory because some of our certificates are self-signed.
-	 * <p/>
+	 * 
 	 * Android developer doc: https://developer.android.com/training/articles/security-ssl.html#SelfSigned
 	 * and we also fallback to the default manager
-	 * <p/>
+	 * 
 	 * FIXME FIXME DEBUG: we probably should not accept self-signed certificates in the future.
-	 * <p/>
+	 * 
 	 * FIXME we do a big try/catch, that quite ugly.
 	 *
 	 * @return
@@ -214,7 +214,7 @@ public class NetworkManager
 
 	/**
 	 * Is the network currently available?
-	 * <p/>
+	 * 
 	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
 	 *
 	 * @return true if network is available, false otherwise.
@@ -332,9 +332,9 @@ public class NetworkManager
 
 	/**
 	 * Custom (and dummy) host name verifier
-	 * <p/>
+	 * 
 	 * This is prototype code and is not secure. It may be used to bypass hostname validation of SSL certificates.
-	 * <p/>
+	 * 
 	 * If required, put in NetworkManager constructor
 	 * HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
 	 *

@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,11 +23,11 @@ package eu.focusnet.app.model.widgets;
 import java.util.ArrayList;
 import java.util.Map;
 
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.TypesHelper;
 import eu.focusnet.app.model.gson.WidgetTemplate;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * WidgetInstance containing all information pertaining to a Line Chart widget.
@@ -137,9 +137,9 @@ public class LineChartWidgetInstance extends WidgetInstance
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl Inherited
+	 * @param wTpl         Inherited
 	 * @param layoutConfig Inherited
-	 * @param dataCtx Inherited
+	 * @param dataCtx      Inherited
 	 */
 	public LineChartWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -344,6 +344,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Returns the x-axis label
+	 *
 	 * @return The x-axis label
 	 */
 	public String getxAxisLabel()
@@ -353,6 +354,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the x-axis values
+	 *
 	 * @return The x-axis values
 	 */
 	public ArrayList<String> getxAxisValues()
@@ -362,6 +364,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the number of series
+	 *
 	 * @return The number of series
 	 */
 	public int getNumberOfSeries()
@@ -371,6 +374,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the number of max limits
+	 *
 	 * @return Number of max limits
 	 */
 	public int getNumberOfMaxLimits()
@@ -380,6 +384,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the number of min limits
+	 *
 	 * @return Number of min limits
 	 */
 	public int getNumberOfMinLimits()
@@ -389,6 +394,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get label of a specific serie
+	 *
 	 * @param i Which serie to get the label from (0-based index)
 	 * @return The label
 	 */
@@ -399,6 +405,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get values for a specific serie
+	 *
 	 * @param i Which serie to get the label from (0-based index)
 	 * @return The values
 	 */
@@ -409,6 +416,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get a specific max limit label
+	 *
 	 * @param i Which label to get (0-based index)
 	 * @return The label
 	 */
@@ -419,6 +427,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get a specific max limit value
+	 *
 	 * @param i Which value to get (0-based index)
 	 * @return The value
 	 */
@@ -429,6 +438,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get a specific min limit label
+	 *
 	 * @param i Which label to get (0-based index)
 	 * @return The label
 	 */
@@ -439,6 +449,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get a specific min limit value
+	 *
 	 * @param i Which value to get (0-based index)
 	 * @return The value
 	 */

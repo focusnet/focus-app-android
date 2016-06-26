@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -43,7 +43,7 @@ import eu.focusnet.app.util.ApplicationHelper;
 /**
  * This object is the entry point of the mail application logic. In the MVC paradygm, it would be
  * the Controller.
- * <p/>
+ * 
  * This class is a Singleton (the only one of the application). We only access static methods
  * when it comes to access or alter the state of the currently running application, e.g. when
  * we want to replace the current {@link DataManager}. Following this logic, the UI always acts on
@@ -149,7 +149,7 @@ public class FocusAppLogic
 
 	/**
 	 * Get the GSON object used for data conversion in our app.
-	 * <p/>
+	 * 
 	 * The GSON configuration never changes, so its safe to refer to it statically.
 	 *
 	 * @return a pointer to the GSON object, which is already properly configured for our
@@ -224,7 +224,7 @@ public class FocusAppLogic
 
 	/**
 	 * Do the full login.
-	 * <p/>
+	 * 
 	 * Get the 3 basic objects
 	 * ({@link eu.focusnet.app.model.gson.User},
 	 * {@link eu.focusnet.app.model.gson.UserPreferences},
@@ -327,7 +327,7 @@ public class FocusAppLogic
 
 	/**
 	 * Reset whole app. This deletes everything that is locally stored.
-	 * <p/>
+	 * 
 	 * Note: this method called when crashing, so bugs in there won't be reportedby ACRA. Pay extra attention to it.
 	 */
 	public void reset()

@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -32,7 +32,7 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * SQL Sample Data Access Object
- * <p/>
+ * 
  * All samples being recorded belong to a specific data set id ({@link #dataSyncSetId}
  * instance variable) that is unique to each {@link DatabaseAdapter} being created. Most operations
  * are constrained on this set, hence allowing us to have different versions of the data set. This
@@ -71,7 +71,7 @@ public class SampleDao
 	/**
 	 * Create a new Sample based on the provided cursor. The cursor is assumed to be already at
 	 * the position of the object from which we will create the Sample.
-	 * <p/>
+	 * 
 	 * We assume the query retrieved all columsn (this.columnsToRetrieve)
 	 */
 	private static Sample buildSampleFromCursor(Cursor cursor)
@@ -141,7 +141,7 @@ public class SampleDao
 
 	/**
 	 * Mark a resource for deletion
-	 * <p/>
+	 * 
 	 * we mark ALL versions of the resource for deletion. Is that good? FIXME TODO JULIEN
 	 */
 	public void markForDeletion(String url)
@@ -159,7 +159,7 @@ public class SampleDao
 
 	/**
 	 * Actually delete a resource
-	 * <p/>
+	 * 
 	 * We delete all versions of the resource
 	 */
 	public boolean delete(String url)
@@ -240,7 +240,7 @@ public class SampleDao
 
 	/**
 	 * Retrieve all urls marked with a certain type of operation
-	 * <p/>
+	 * 
 	 * We only manipulate FocusSamples here, not other types.
 	 *
 	 * @param flagType
@@ -285,7 +285,7 @@ public class SampleDao
 
 	/**
 	 * Delete all entries from the database
-	 * <p/>
+	 * 
 	 * This really deletes all rows, not only the ones belong to the current data set
 	 * {@code this.dataSyncSetId}
 	 */

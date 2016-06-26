@@ -1,16 +1,16 @@
-/**
+/*
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * 
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -46,7 +46,7 @@ import eu.focusnet.app.util.Constant;
  * This class is a service responsible for calling periodic tasks:
  * - cleaning of SQL database every N hours
  * - retrieving new version of data every N minutes
- * <p/>
+ * 
  * Schedulor behavior regarding sleep/wake:
  * - will not wake the device up
  * - we use wake locks to ensure that started tasks are indeed finished
@@ -93,9 +93,9 @@ public class CronService extends Service implements ApplicationStatusObserver
 
 	/**
 	 * Sync data operations
-	 * <p/>
+	 * 
 	 * * return false if already in progress OR application nto ready, true otherwise
-	 * <p/>
+	 * 
 	 * FIXME if I call this in a separate thread, I can then interrupt it.
 	 */
 	public boolean syncData()
@@ -231,7 +231,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 
 	/**
 	 * Get the last sync date
-	 * <p/>
+	 * 
 	 * NOTE: only available within a single application instance run. We do not permanently save
 	 * this information (e.g. in the db)
 	 *

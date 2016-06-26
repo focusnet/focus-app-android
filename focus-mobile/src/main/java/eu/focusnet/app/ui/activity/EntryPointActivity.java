@@ -42,22 +42,20 @@ import eu.focusnet.app.util.Constant;
 /**
  * Entry point activity
  * <p/>
- * Start screen of the application. If the application is not configured, yet, he is redirected
- * to the LoginActivity. If the application is configured, then the basic application data are
- * loaded and the user is then redirected to the ProjectsListingActivity.
- * <p/>
- * TODO consider setting up AppIndex API
- * <p/>
- * FIXME why did Yandy alter the logic -> to display progress dialog.
+ * Start screen of the application. If the application is not configured, yet, the user is
+ * redirected to the {@link LoginActivity} (or {@link DemoUseCaseSelectionActivity} as long as
+ * we are working with a prototype of the application). If the application is configured, then
+ * the basic application data are loaded and the user is then redirected to the
+ * {@link }ProjectsListingActivity}.
  */
 public class EntryPointActivity extends Activity
 {
 
-
 	/**
-	 * Instantiate the activity.
+	 * Instantiate the activity by defining the UI and launching the background task responsible
+	 * for initializing the application.
 	 *
-	 * @param savedInstanceState past Activity state
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -78,7 +76,7 @@ public class EntryPointActivity extends Activity
 		TextView version = (TextView) findViewById(R.id.splashscreen_version_number);
 		version.setText(BuildConfig.VERSION_NAME);
 
-		// run tasks
+		// Initialize the application
 		new InitTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
@@ -87,12 +85,38 @@ public class EntryPointActivity extends Activity
 	 */
 	private class InitTask extends AsyncTask<Void, Void, Void>
 	{
+		/**
+		 * Current Android context.
+		 */
 		private Context context;
+
+		/**
+		 * The splash screen must be displayed at least until this epoch
+		 */
 		private long runUntil;
+
+		/**
+		 * Tells whether we must display the remediation dialog or not (i.e. if there has been
+		 * a network error or a missing resource).
+		 */
 		private boolean remediationDialog;
+
+		/**
+		 * Tells whether the task is finished or not.
+		 */
 		private boolean finished;
+
+		/**
+		 * Tells whether we should try again, depending on what the user has decided with the
+		 * remediation dialog.
+		 */
 		private boolean tryAgain;
 
+		/**
+		 * Constructor.
+		 *
+		 * @param context Input value for instance variable.
+		 */
 		public InitTask(Context context)
 		{
 			this.context = context;
@@ -101,12 +125,21 @@ public class EntryPointActivity extends Activity
 			this.tryAgain = false;
 		}
 
+		/**
+		 * Set the minimum duration of displaying of the splash screen.
+		 */
 		@Override
 		protected void onPreExecute()
 		{
 			this.runUntil = System.currentTimeMillis() + Constant.AppConfig.SPLASHSCREEN_MINIMUM_DISPLAY_DURATION_IN_MILLISECONDS;
 		}
 
+		/**
+		 * Do application initialization.
+		 *
+		 * @param data Nothing
+		 * @return Nothing
+		 */
 		@Override
 		protected Void doInBackground(Void... data)
 		{
@@ -115,10 +148,6 @@ public class EntryPointActivity extends Activity
 			if (accessControl.isLoggedIn()) {
 				try {
 					FocusAppLogic.getInstance().acquireApplicationData();
-
-					// A new sync will be requested after
-					// {@link CronService#CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES}
-
 				}
 				catch (FocusMissingResourceException ex) {
 					// this may occur when no data has been previously loaded even though the login information are available
@@ -134,6 +163,14 @@ public class EntryPointActivity extends Activity
 			return null;
 		}
 
+		/**
+		 * After execution, wait until the minimum amount of time to display the splash screen
+		 * and if appropriate, display the remediation dialog. If everything went fine, redirect to
+		 * {@link ProjectsListingActivity}. If the application could not be initialized, redirect
+		 * to the login activity.
+		 *
+		 * @param v Nothing
+		 */
 		@Override
 		protected void onPostExecute(Void v)
 		{
@@ -174,6 +211,7 @@ public class EntryPointActivity extends Activity
 			// display the remediation dialog if necessary
 			if (this.remediationDialog) {
 				LayoutInflater inflater = LayoutInflater.from(context);
+				// FIXME define a better Context than null. this.context? To be tested.
 				TextView dialogContent = (TextView) inflater.inflate(R.layout.dialog_content_simpletext, null);
 				dialogContent.setText(getString(R.string.connected_to_web));
 
@@ -205,6 +243,5 @@ public class EntryPointActivity extends Activity
 
 		}
 	}
-
 
 }

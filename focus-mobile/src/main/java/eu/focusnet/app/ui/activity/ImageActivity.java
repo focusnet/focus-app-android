@@ -20,7 +20,6 @@
 
 package eu.focusnet.app.ui.activity;
 
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,11 +30,17 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.util.Constant;
 
 /**
- * Activity use to display an image
+ * Activity use to display an image that has been previously captured by the camera.
  */
 public class ImageActivity extends Activity
 {
 
+	/**
+	 * Create the activity: display the image being refered to by
+	 * the {@link Constant.Extra#UI_EXTRA_IMAGE_URI} extra.
+	 *
+	 * @param savedInstanceState Inherited.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

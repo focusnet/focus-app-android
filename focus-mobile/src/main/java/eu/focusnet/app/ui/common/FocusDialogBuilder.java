@@ -29,18 +29,36 @@ import android.widget.TextView;
 
 import eu.focusnet.app.R;
 
+/**
+ * This class makes it easier to create a custom AlertDialog.
+ */
 public class FocusDialogBuilder extends AlertDialog.Builder
 {
+	/**
+	 * The root View
+	 */
 	private View rootView;
 
+	/**
+	 * Consttructor
+	 *
+	 * @param context Android Context
+	 */
 	public FocusDialogBuilder(Context context)
 	{
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
+		// FIXME Context other than null?
 		this.rootView = inflater.inflate(R.layout.dialog_layout, null);
 		this.setView(this.rootView);
 	}
 
+	/**
+	 * Set the title of the dialog
+	 *
+	 * @param title The dialog
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder setTitle(String title)
 	{
 		TextView dialogTitle = ((TextView) this.rootView.findViewById(R.id.dialog_title));
@@ -50,6 +68,12 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Insert the content of the dialog
+	 *
+	 * @param content A View containing the content
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder insertContent(View content)
 	{
 		ViewGroup vg = (ViewGroup) this.rootView.findViewById(R.id.dialog_content);
@@ -59,6 +83,11 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Remove the negative button
+	 *
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder removeNegativeButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_negative);
@@ -68,6 +97,11 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Remove the neutral button
+	 *
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder removeNeutralButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_neutral);
@@ -77,6 +111,11 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Remove the positive button
+	 *
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder removePositiveButton()
 	{
 		View b = this.rootView.findViewById(R.id.button_positive);
@@ -86,7 +125,12 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
-
+	/**
+	 * Set the positive button text
+	 *
+	 * @param label The text of the button
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder setPositiveButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_positive);
@@ -96,6 +140,12 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Set the neutral button text
+	 *
+	 * @param label The text of the button
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder setNeutralButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_neutral);
@@ -105,6 +155,12 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Set the negative button text
+	 *
+	 * @param label The text of the button
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder setNegativeButtonText(String label)
 	{
 		Button b = (Button) this.rootView.findViewById(R.id.button_negative);
@@ -114,21 +170,42 @@ public class FocusDialogBuilder extends AlertDialog.Builder
 		return this;
 	}
 
+	/**
+	 * Get the negative butotn's View.
+	 *
+	 * @return The Button of interest
+	 */
 	public Button getNegativeButton()
 	{
 		return (Button) this.rootView.findViewById(R.id.button_negative);
 	}
 
+	/**
+	 * Get the neutral butotn's View.
+	 *
+	 * @return The Button of interest
+	 */
 	public Button getNeutralButton()
 	{
 		return (Button) this.rootView.findViewById(R.id.button_neutral);
 	}
 
+	/**
+	 * Get the positive butotn's View.
+	 *
+	 * @return The Button of interest
+	 */
 	public Button getPositiveButton()
 	{
 		return (Button) this.rootView.findViewById(R.id.button_positive);
 	}
 
+	/**
+	 * Set if the dialog is cancelable or not.
+	 *
+	 * @param flag {@code true} if the dialog is cancelable, {@code false} otherwise
+	 * @return The current object, such that chaining of methods is possible.
+	 */
 	public FocusDialogBuilder setCancelable(boolean flag)
 	{
 		super.setCancelable(flag);

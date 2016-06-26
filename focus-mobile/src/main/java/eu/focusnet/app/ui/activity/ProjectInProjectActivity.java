@@ -24,32 +24,46 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.ProjectFragment;
 
 /**
- * This class displays (loading the ProjectFragment) the characteristics of a project after
- * the it was selected in the ProjectsListingActivity
+ * This {@code Activity} is created when a new project is to be displayed from
+ * a {@link ProjectActivity}.
  *
- * FIXME exactly the same of ProjetActivity, but redirect to ProjectActivity from ProjectActivity
- * does not work. to check doc when time. probably due to mode of launching. Also be careful with
- * Activity stack history.
+ * This is exactly the same as the {@link ProjectActivity}, but having a different
+ * {@code Activity} object type allows avoiding to break the navigation history
+ * ({@code Activity} stack).
+ *
+ * FIXME perhaps there is a smarter way to do that.
  */
 public class ProjectInProjectActivity extends ToolbarEnabledActivity
 {
+	/**
+	 * Defines the target container of this Activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetLayoutContainer()
 	{
 		return R.id.project_container;
 	}
 
+	/**
+	 * Defines the Fragment to include in the container for this Activity.
+	 */
 	@Override
 	protected void prepareNewFragment()
 	{
 		this.fragment = new ProjectFragment();
 	}
 
+	/**
+	 * Defines the layout of this activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetView()
 	{
 		return R.layout.activity_project;
 	}
-
 
 }

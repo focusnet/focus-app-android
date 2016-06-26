@@ -1,19 +1,3 @@
-package eu.focusnet.app.ui.common;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import java.text.DecimalFormat;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -33,6 +17,23 @@ import java.text.DecimalFormat;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.ui.common;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.text.DecimalFormat;
+
 
 /**
  * This class contains static methods to help building commonly used UI elements.
@@ -148,14 +149,14 @@ public class UiHelper
 	 * Get a user-friendly data size
 	 *
 	 * @param size The size of the data to evaluate
-	 * @return a String such as "2.2 GB or 1.23kB
+	 * @return a String such as "2.2 GiB or 1.23 kiB
 	 */
 	public static String getFileSize(long size)
 	{
 		if (size <= 0) {
 			return "0";
 		}
-		final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+		final String[] units = new String[]{"B", "kiB", "MiB", "GiB", "TiB"};
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
@@ -164,13 +165,15 @@ public class UiHelper
 	/**
 	 * Close the current activity and redirect the user to another one.
 	 *
-	 * @param targetActivityClass
-	 * @param msg
-	 * @param activity
+	 * Note: if this function is called from outside of the UI thread, {@code msg} cannot be set,
+	 * as it triggers the display of a toast.
+	 *
+	 * @param targetActivityClass Target Activity to redirect to.
+	 * @param msg A message to display as a toast.
+	 * @param activity The current activity
 	 */
 	public static void redirectTo(Class targetActivityClass, String msg, Activity activity)
 	{
-		// FIXME no toast, other cannot be called from non-ui threads (e.g. onPrepare of async tasks
 		if (msg != null) {
 			UiHelper.displayToast(activity, msg);
 		}

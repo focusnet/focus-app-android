@@ -26,7 +26,11 @@ import android.view.MotionEvent;
 
 import de.codecrafters.tableview.TableView;
 
-// FIXME we may use SortableTableView
+/**
+ * Specialized TableView overcoming problems when embedding TableView within ScrollView
+ * <p/>
+ * See http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
+ */
 public class TouchTableView extends TableView
 {
 	public TouchTableView(Context context)
@@ -44,7 +48,12 @@ public class TouchTableView extends TableView
 		super(context, attributes, styleAttributes);
 	}
 
-	// FIXME does not work anymore????
+	/**
+	 * Override touch events handling.
+	 *
+	 * @param event Inherited
+	 * @return Inherited
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{

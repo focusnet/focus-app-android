@@ -49,7 +49,6 @@ import eu.focusnet.app.util.Constant;
 public class FocusApplication extends Application
 {
 
-
 	/**
 	 * We override the handler for uncaught exceptions and this variable will hold
 	 * a reference to the original one (actually ACRA's one,

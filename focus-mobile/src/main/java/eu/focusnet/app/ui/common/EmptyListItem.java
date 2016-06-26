@@ -1,5 +1,3 @@
-package eu.focusnet.app.ui.common;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -20,16 +18,21 @@ package eu.focusnet.app.ui.common;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// used if no entry found for list. default placeholder.
+package eu.focusnet.app.ui.common;
+
+
+/**
+ * A dummy list item to be used when the list is found to be empty. We use type comparison
+ * ({@code instanceof}) to decide what to display, so this object does not contain a lot of things.
+ */
 public class EmptyListItem extends SimpleListItem
 {
 
-	// FIXME if items.isEmpty() -> new Emptylistitem() everywhere
-	// FIXME also check that pages/projects ... still exist before calling them in UI
+	/**
+	 * Dummy constructor.
+	 */
 	public EmptyListItem()
 	{
 		super(null, null);
 	}
-
-
 }

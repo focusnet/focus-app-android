@@ -24,28 +24,39 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.ProjectFragment;
 
 /**
- * This class displays (loading the ProjectFragment) the characteristics of a project after
- * the it was selected in the ProjectsListingActivity
+ * This {@code Activity} is created when accessing a project from the
+ * {@link ProjectsListingActivity}.
  */
 public class ProjectActivity extends ToolbarEnabledActivity
 {
+	/**
+	 * Defines the target container of this Activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetLayoutContainer()
 	{
 		return R.id.project_container;
 	}
 
+	/**
+	 * Defines the Fragment to include in the container for this Activity.
+	 */
 	@Override
 	protected void prepareNewFragment()
 	{
 		this.fragment = new ProjectFragment();
 	}
 
+	/**
+	 * Defines the layout of this activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetView()
 	{
 		return R.layout.activity_project;
 	}
-
-
 }

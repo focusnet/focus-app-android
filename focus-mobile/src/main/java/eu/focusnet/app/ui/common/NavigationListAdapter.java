@@ -40,25 +40,36 @@ import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.gson.Bookmark;
 import eu.focusnet.app.model.gson.UserPreferences;
 import eu.focusnet.app.util.ApplicationHelper;
+import eu.focusnet.app.util.Constant;
 
 /**
- * List Adapter, used for drawer and entries in listings pages
- * <p/>
- * FIXME TODO JULIEN TO BE REVIEWED
- * <p/>
- * FIXME FIXME FIXME bookarmking for TOOLs does not work: the position value is relative to the HeaderItem. (e.g. 1 instead of count(PAGE)+1)
- * however, simple click on TOOL items redirects to the correct page.
+ * List Adapter used by the drawer menu and the listings of objects.
  */
 public class NavigationListAdapter extends BaseAdapter
 {
-	public final static int LIST_TYPE_HEADER = 0;
-	public final static int LIST_TYPE_LINK = 1;
-	public final static int LIST_TYPE_EMPTY = 2;
 
-	private final Context context;
-	private final LayoutInflater inflater;
+	/**
+	 * Android Context
+	 */
+	final private Context context;
+
+	/**
+	 * Layout inflater
+	 */
+	final private LayoutInflater inflater;
+
+	/**
+	 * List of items to include in the list. These are {@link SimpleListItem}s (for header and
+	 * dummy empty list item) or {@link FeaturedListItem} (for links).
+	 */
 	private ArrayList<SimpleListItem> listItems;
 
+	/**
+	 * Constructor
+	 *
+	 * @param context Input value for instance variable
+	 * @param listItems The list of items to be included in the list.
+	 */
 	public NavigationListAdapter(Context context, ArrayList<SimpleListItem> listItems)
 	{
 		this.context = context;
@@ -67,39 +78,65 @@ public class NavigationListAdapter extends BaseAdapter
 	}
 
 
+	/**
+	 * We have 3 types of list items: header, dummy empty element and link.
+	 *
+	 * @return The number of types of elements in the lsit.
+	 */
 	@Override
 	public int getViewTypeCount()
 	{
-		return LIST_TYPE_EMPTY + 1;
+		return Constant.Navigation.LIST_TYPE_EMPTY + 1;
 	}
 
+	/**
+	 * Give the type of item at the given position.
+	 *
+	 * @param position The position of the item to investigate within the list
+	 * @return The type of the list item
+	 */
 	@Override
 	public int getItemViewType(int position)
 	{
 		SimpleListItem item = listItems.get(position);
 		if (item instanceof FeaturedListItem) {
-			return LIST_TYPE_LINK;
+			return Constant.Navigation.LIST_TYPE_LINK;
 		}
 		else if (item instanceof EmptyListItem) {
-			return LIST_TYPE_EMPTY;
+			return Constant.Navigation.LIST_TYPE_EMPTY;
 		}
 		else {
-			return LIST_TYPE_HEADER;
+			return Constant.Navigation.LIST_TYPE_HEADER;
 		}
 	}
 
+	/**
+	 * Get the number of elements in the list
+	 * @return The number of elements in the list
+	 */
 	@Override
 	public int getCount()
 	{
 		return listItems.size();
 	}
 
+	/**
+	 * Get the list item at the give position
+	 * @param position Position of the item to get
+	 * @return The item
+	 */
 	@Override
 	public Object getItem(int position)
 	{
 		return listItems.get(position);
 	}
 
+	/**
+	 * Get an item ID
+	 *
+	 * @param position Position of the item to get
+	 * @return The ID of the item
+	 */
 	@Override
 	public long getItemId(int position)
 	{
@@ -107,15 +144,14 @@ public class NavigationListAdapter extends BaseAdapter
 	}
 
 	/**
-	 * We recycle views, so we should also clean our mess beforee using them, i.e. initialize them properly.
+	 * Acquire the {@code View} for a list item.
 	 *
-	 * apparently the recycliing is done separatly for each item TYPE
-	 * FIXME find reference in doc
+	 * FIXME enable recycling. We have problems here, yet.
 	 *
-	 * @param position
-	 * @param convertView
-	 * @param parent
-	 * @return
+	 * @param position The position of the view to obtain
+	 * @param convertView A recycled View or null
+	 * @param parent Inherited.
+	 * @return The new View for the list item
 	 */
 	@Override
 	public View getView(final int position, final View convertView, ViewGroup parent)
@@ -134,13 +170,13 @@ public class NavigationListAdapter extends BaseAdapter
 		// resource to inflate depends on current itemType
 		int resourceToInflate;
 		switch (itemType) {
-			case LIST_TYPE_EMPTY:
+			case Constant.Navigation.LIST_TYPE_EMPTY:
 				resourceToInflate = R.layout.list_item_empty;
 				break;
-			case LIST_TYPE_HEADER:
+			case Constant.Navigation.LIST_TYPE_HEADER:
 				resourceToInflate = R.layout.list_item_header;
 				break;
-			case LIST_TYPE_LINK:
+			case Constant.Navigation.LIST_TYPE_LINK:
 				resourceToInflate = R.layout.list_item_link;
 				break;
 			default:
@@ -150,7 +186,7 @@ public class NavigationListAdapter extends BaseAdapter
 
 		itemViewSet.setTitle((TextView) row.findViewById(R.id.title));
 		itemViewSet.setPrimaryIcon((ImageView) row.findViewById(R.id.icon));
-		if (!(itemType == LIST_TYPE_HEADER || itemType == LIST_TYPE_EMPTY)) {
+		if (!(itemType == Constant.Navigation.LIST_TYPE_HEADER || itemType == Constant.Navigation.LIST_TYPE_EMPTY)) {
 			itemViewSet.setDescription((TextView) row.findViewById(R.id.description));
 			itemViewSet.setSecondaryIcon((ImageView) row.findViewById(R.id.right_icon));
 		}
@@ -165,7 +201,7 @@ public class NavigationListAdapter extends BaseAdapter
 		// type seems to help to remember??? convertview may be per type
 		// Set values to our Views
 		switch (itemType) {
-			case LIST_TYPE_LINK:
+			case Constant.Navigation.LIST_TYPE_LINK:
 				// reasonable defaults
 				row.setEnabled(true);
 				itemViewSet.getDescription().setVisibility(View.GONE);
@@ -193,15 +229,15 @@ public class NavigationListAdapter extends BaseAdapter
 
 
 				// no break, we share attributes with LIST_TYPE_HEADER
-			case LIST_TYPE_HEADER:
+			case Constant.Navigation.LIST_TYPE_HEADER:
 				itemViewSet.getPrimaryIcon().setImageBitmap(listItem.getPrimaryIcon());
 				itemViewSet.getTitle().setText(listItem.getTitle());
 				break;
 		}
 
 		switch (itemType) {
-			case LIST_TYPE_HEADER:
-			case LIST_TYPE_EMPTY:
+			case Constant.Navigation.LIST_TYPE_HEADER:
+			case Constant.Navigation.LIST_TYPE_EMPTY:
 				row.setEnabled(false);
 				row.setOnClickListener(null);
 				break;
@@ -210,6 +246,12 @@ public class NavigationListAdapter extends BaseAdapter
 		return row;
 	}
 
+	/**
+	 * Create a click listener for the secondary icon, which triggers bookmarking or unbookmarking.
+	 *
+	 * @param featuredListItem The item on which the listener will be registered.
+	 * @return A click listener.
+	 */
 	private View.OnClickListener getOnClickBookmarkListener(final FeaturedListItem featuredListItem)
 	{
 
@@ -218,8 +260,6 @@ public class NavigationListAdapter extends BaseAdapter
 			@Override
 			public void onClick(View v)
 			{
-				//	final FeaturedListItem featuredListItem = (FeaturedListItem) listItems.get(position);
-
 				if (featuredListItem.getSecondaryIcon() != null) {
 					final ImageView imageView = (ImageView) v;
 
@@ -228,14 +268,14 @@ public class NavigationListAdapter extends BaseAdapter
 
 					// Dialog payload
 					LayoutInflater inflater = LayoutInflater.from(context);
-					View dialogContent = inflater.inflate(R.layout.dialog_content_bookmark, null); // FIXME context?
+					// FIXME better context than null
+					View dialogContent = inflater.inflate(R.layout.dialog_content_bookmark, null);
 					final TextView bookmarkTitle = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_ro : R.id.bookmark_field_rw);
 					TextView alternateField = (TextView) dialogContent.findViewById(isExistingBookmark ? R.id.bookmark_field_rw : R.id.bookmark_field_ro);
 					alternateField.setVisibility(View.GONE);
 					bookmarkTitle.setVisibility(View.VISIBLE);
 					bookmarkTitle.setText("");
 					bookmarkTitle.append(featuredListItem.getTitle());
-
 
 					// Dialog building
 					FocusDialogBuilder builder = new FocusDialogBuilder(context)
@@ -296,27 +336,49 @@ public class NavigationListAdapter extends BaseAdapter
 
 
 	/**
-	 * This class is used for testing if the given credential are correct
-	 * <p/>
-	 * FIXME might be used elsewhere, create own file
+	 * Task to save user preferences
+	 *
+	 * FIXME what happens if we save user preferences when user preference saving is not finished, yet. To check.
 	 */
 	private class SaveUserPreferencesTask extends AsyncTask<Void, Void, Void>
 	{
+		/**
+		 * User preference object
+		 */
 		private final UserPreferences userPreferences;
+
+		/**
+		 * Android Context
+		 */
 		private Context context;
 
+		/**
+		 * Constructor
+		 *
+		 * @param userPreferences Input value for instance variables
+		 * @param context Input value for instance variable
+		 */
 		public SaveUserPreferencesTask(UserPreferences userPreferences, Context context)
 		{
 			this.context = context;
 			this.userPreferences = userPreferences;
 		}
 
+		/**
+		 * Announce that we are going to do something
+		 */
 		@Override
 		protected void onPreExecute()
 		{
 			UiHelper.displayToast(this.context, R.string.focus_save_user_pref_before);
 		}
 
+		/**
+		 * Save the new preferences
+		 *
+		 * @param nil Nothing
+		 * @return Nothing
+		 */
 		@Override
 		protected Void doInBackground(Void... nil)
 		{
@@ -324,6 +386,11 @@ public class NavigationListAdapter extends BaseAdapter
 			return null;
 		}
 
+		/**
+		 * Announce that we successfully saved the preferences
+		 *
+		 * @param nil Nothing
+		 */
 		@Override
 		protected void onPostExecute(Void nil)
 		{

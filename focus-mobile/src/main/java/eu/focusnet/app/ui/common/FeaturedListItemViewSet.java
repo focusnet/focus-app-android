@@ -23,39 +23,53 @@ package eu.focusnet.app.ui.common;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * A View set holder for {@link FeaturedListItem}s that allows recycling of list item in our
+ * list adapters.
+ */
 public class FeaturedListItemViewSet extends SimpleListItemViewSet
 {
-	private TextView title;
+	/**
+	 * Description view
+	 */
 	private TextView description;
+
+	/**
+	 * Secondary icon view
+	 */
 	private ImageView secondaryIcon;
 
-	@Override
-	public TextView getTitle()
-	{
-		return title;
-	}
-
-	@Override
-	public void setTitle(TextView title)
-	{
-		this.title = title;
-	}
-
+	/**
+	 * Get the description View
+	 * @return A TextView
+	 */
 	public TextView getDescription()
 	{
 		return description;
 	}
 
+	/**
+	 * Set the description View
+	 * @param description A TextView
+	 */
 	public void setDescription(TextView description)
 	{
 		this.description = description;
 	}
 
+	/**
+	 * Get the secondary icon View
+	 * @return An ImageView
+	 */
 	public ImageView getSecondaryIcon()
 	{
 		return secondaryIcon;
 	}
 
+	/**
+	 * Set the secondary icon View
+	 * @param secondaryIcon An ImageView
+	 */
 	public void setSecondaryIcon(ImageView secondaryIcon)
 	{
 		this.secondaryIcon = secondaryIcon;

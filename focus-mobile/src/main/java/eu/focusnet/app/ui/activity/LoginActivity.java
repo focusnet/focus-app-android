@@ -40,9 +40,9 @@ import eu.focusnet.app.util.Constant;
 
 /**
  * Login Activity: this activity displays the login screen
- * and log the user in the application
- * <p/>
- * FIXME review when relesing production version
+ * and let's the user log into the application.
+ *
+ * FIXME this code is not used. For the prototype, we use {@link DemoUseCaseSelectionActivity}.
  */
 public class LoginActivity extends Activity
 {
@@ -50,7 +50,7 @@ public class LoginActivity extends Activity
 	/**
 	 * Instantiate the activity UI
 	 *
-	 * @param savedInstanceState
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +77,7 @@ public class LoginActivity extends Activity
 			String password = ((EditText) findViewById(R.id.login_password_editText)).getText().toString();
 			String server = ((EditText) findViewById(R.id.login_server_editText)).getText().toString();
 
-			// FIXME input validation
+			// FIXME TODO input validation
 
 			new LoginTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, username, password, server);
 		}
@@ -87,19 +87,34 @@ public class LoginActivity extends Activity
 	}
 
 	/**
-	 * This class is used for testing if the given credential are correct
+	 * This Task is used for testing if the given credential are correct
 	 */
 	private class LoginTask extends AsyncTask<String, Void, Boolean>
 	{
 
+		/**
+		 * Progress dialog to display while the operation is in progress.
+		 */
 		private ProgressDialog progressDialog;
+
+		/**
+		 * The current Android Context for this task.
+		 */
 		private Context context;
 
+		/**
+		 * Constructor.
+		 *
+		 * @param context Input value for instance variable.
+		 */
 		public LoginTask(Context context)
 		{
 			this.context = context;
 		}
 
+		/**
+		 * Before execution, display the progress dialog.
+		 */
 		@Override
 		protected void onPreExecute()
 		{
@@ -110,6 +125,12 @@ public class LoginActivity extends Activity
 			progressDialog.show();
 		}
 
+		/**
+		 * Do the login
+		 *
+		 * @param data Credentials
+		 * @return {@code true} on success, {@code false} otherwise.
+		 */
 		@Override
 		protected Boolean doInBackground(String... data)
 		{
@@ -119,7 +140,7 @@ public class LoginActivity extends Activity
 
 			Boolean hasAccess;
 			try {
-				hasAccess = FocusAppLogic.getUserManager().login(username, password, server); // FIXME probably move to UserManager object
+				hasAccess = FocusAppLogic.getUserManager().login(username, password, server);
 			}
 			catch (IOException ex) {
 				hasAccess = false;
@@ -127,6 +148,12 @@ public class LoginActivity extends Activity
 			return hasAccess;
 		}
 
+		/**
+		 * After execution, dismiss the progress dialog and advertise success or failure to the
+		 * user.
+		 *
+		 * @param hasAccess {@code true} on success, {@code false} otherwise.
+		 */
 		@Override
 		protected void onPostExecute(Boolean hasAccess)
 		{
@@ -143,7 +170,6 @@ public class LoginActivity extends Activity
 			}
 			else {
 				UiHelper.displayToast(this.context, R.string.focus_login_error_bad_credentials);
-				//TODO maybe we should also show some text in red or something like this ...?
 			}
 		}
 	}

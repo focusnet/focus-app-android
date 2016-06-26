@@ -22,74 +22,145 @@ package eu.focusnet.app.ui.common;
 
 import android.graphics.Bitmap;
 
-
 /**
- * Standard list item which contains
- * This is the standard item from a list
- * <p/>
- * FIXME used for clickable entries in navigationn lists
+ * List item type being used for clickable entries in our listings. This class inherits the
+ * features of {@link SimpleListItem}.
  */
 public class FeaturedListItem extends SimpleListItem
 {
 
+	/**
+	 * The path of the entity being pointed to by the list item
+	 */
 	private String path;
+
+	/**
+	 * An optional description to display on the list item
+	 */
 	private String description;
+
+	/**
+	 * A secondary icon to display on the right.
+	 */
 	private Bitmap secondaryIcon;
-	private boolean isBookmarked;
+
+	/**
+	 * Tells whether the list item has been bookmarked.
+	 */
+	private boolean isExistingBookmark;
+
+	/**
+	 * Gives the type of bookmark.
+	 */
 	private String typeOfBookmark;
 
 
-	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isBookmarked, String typeOfBookmark, boolean disabled)
+	/**
+	 * Constructor.
+	 * @param path Input value for instance variable
+	 * @param icon Input value for instance variable
+	 * @param title Input value for instance variable
+	 * @param description Input value for instance variable
+	 * @param secondaryIcon Input value for instance variable
+	 * @param isExistingBookmark Input value for instance variable
+	 * @param typeOfBookmark Input value for instance variable
+	 * @param disabled Input value for instance variable
+	 */
+	public FeaturedListItem(String path, Bitmap icon, String title, String description, Bitmap secondaryIcon, boolean isExistingBookmark, String typeOfBookmark, boolean disabled)
 	{
 		super(icon, title, disabled);
 		this.description = description;
 		this.path = path;
 		this.secondaryIcon = secondaryIcon;
-		this.isBookmarked = isBookmarked;
+		this.isExistingBookmark = isExistingBookmark;
 		this.typeOfBookmark = typeOfBookmark;
 	}
 
-
+	/**
+	 * Get the secondary icon.
+	 *
+	 * @return The icon
+	 */
 	public Bitmap getSecondaryIcon()
 	{
 		return secondaryIcon;
 	}
 
+	/**
+	 * Set the secondary icon
+	 *
+	 * @param secondaryIcon The icon
+	 */
 	public void setSecondaryIcon(Bitmap secondaryIcon)
 	{
 		this.secondaryIcon = secondaryIcon;
 	}
 
+	/**
+	 * Get the description
+	 *
+	 * @return The description
+	 */
 	public String getDescription()
 	{
 		return description;
 	}
 
+	/**
+	 * Set the description
+	 *
+	 * @param description The description
+	 */
 	public void setDescription(String description)
 	{
 		this.description = description;
 	}
 
+	/**
+	 * Tells whether the current list item has already been bookmarked.
+	 *
+	 * @return {@code true} if this is the case, {@code false} otherwise.
+	 */
 	public boolean isExistingBookmark()
 	{
-		return isBookmarked;
+		return isExistingBookmark;
 	}
 
-	public void setIsBookmarked(boolean isBookarmed)
+	/**
+	 * Sets the bookmark status
+	 *
+	 * @param isExistingBookmark The status
+	 */
+	public void setIsBookmarked(boolean isExistingBookmark)
 	{
-		this.isBookmarked = isBookarmed;
+		this.isExistingBookmark = isExistingBookmark;
 	}
 
+	/**
+	 * Get the type of bookmark as a String
+	 *
+	 * @return TOOL or DASHBOARD
+	 */
 	public String getTypeOfBookmark()
 	{
 		return typeOfBookmark;
 	}
 
+	/**
+	 * Get the path pointed to by the list item.
+	 *
+	 * @return The path
+	 */
 	public String getPath()
 	{
 		return path;
 	}
 
+	/**
+	 * Set the path being pointed to by the list item
+	 *
+	 * @param path The path
+	 */
 	public void setPath(String path)
 	{
 		this.path = path;

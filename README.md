@@ -70,4 +70,16 @@ SOFTWARE.
 - getSupportedLanguages() -> from properties?
 - FocusInternalException:  FIXME probably bad practice. We should keep the original exception. 
 - Translate to DE
-- ToolbarEnabledActiity and child:  FIXME toolbar??? FIXME replace all actionBar with toolbar. should work. to be tested.
+- ProjectInProjectActivity -> useless? FIXME perhaps there is a smarter way to do that.
+- ProjectListingActivity: 
+ - animate sync button when active. Listen for completion.
+ - onBackPressed() FIXME no animation? init.setFlags ( ANIMATION ) may help
+ - highlightSelectedMenuItem() does it have any effect? 
+- getColor(id) is deprecated
+- move to real login activity.  * FIXME this code is not used. For the prototype, we use {@link DemoUseCaseSelectionActivity}. - marked as deprecated.
+- TODO consider setting up AppIndex API
+- envoyer un mail à Yandy pour dire que le projet est terminé.
+- TAbleView may be SortableTableView
+- scroll on TouchTableView does not work anymore??? TouchTableView
+- fix NavigationListAdapter#getView() recycling.
+- NavigationListADapter.SaveUserPreferencesTask :  what happens if we save user preferences when user preference saving is not finished, yet. To check.

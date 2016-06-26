@@ -1,8 +1,3 @@
-package eu.focusnet.app.ui.common;
-
-import android.widget.ImageView;
-import android.widget.TextView;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -22,26 +17,63 @@ import android.widget.TextView;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.ui.common;
+
+import android.widget.ImageView;
+import android.widget.TextView;
+
+/**
+ * A View set holder for {@link SimpleListItem}s that allows recycling of list item in our
+ * list adapters.
+ */
 public class SimpleListItemViewSet
 {
+	/**
+	 * Primary icon view
+	 */
 	private ImageView primaryIcon;
+
+	/**
+	 * Title view
+	 */
 	private TextView title;
 
+	/**
+	 * Get primary icon View
+	 *
+	 * @return An ImageView
+	 */
 	public ImageView getPrimaryIcon()
 	{
 		return primaryIcon;
 	}
 
+	/**
+	 * Set the primary icon View
+	 *
+	 * @param primaryIcon An ImageView
+	 */
 	public void setPrimaryIcon(ImageView primaryIcon)
 	{
 		this.primaryIcon = primaryIcon;
 	}
 
+	/**
+	 * Get title View
+	 *
+	 * @return A TextView
+	 */
 	public TextView getTitle()
 	{
 		return title;
 	}
 
+	/**
+	 * Set the title View
+	 *
+	 * @param title A TextView
+	 */
 	public void setTitle(TextView title)
 	{
 		this.title = title;

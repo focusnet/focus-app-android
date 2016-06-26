@@ -23,22 +23,46 @@ package eu.focusnet.app.ui.common;
 import android.graphics.Bitmap;
 
 /**
- * Drawer list item which contains an primaryIcon, a title and an description
- * This is the standard list drawer list item
- * <p/>
- * FIFXME used for headers in navigation list and for drawer menu
+ * List item which contains an icon and a title.
+ * This is the standard list item, and other list item types inherit it.
+ *
+ * This list item type is used for list items styled as headers and the drawer menu items.
  */
 public class SimpleListItem
 {
+	/**
+	 * Title of the list item
+	 */
 	private final String title;
+
+	/**
+	 * Main icon of the list item
+	 */
 	private final Bitmap primaryIcon;
+
+	/**
+	 * Tells whether this list item is enabled (clickable)
+	 */
 	private final boolean disabled;
 
+	/**
+	 * Constructor
+	 *
+	 * @param primaryIcon Input value for instance variable
+	 * @param title Input value for instance variable
+	 */
 	public SimpleListItem(Bitmap primaryIcon, String title)
 	{
 		this(primaryIcon, title, false);
 	}
 
+	/**
+	 * Constructor
+	 *
+	 * @param primaryIcon Input value for instance variable
+	 * @param title Input value for instance variable
+	 * @param disabled Input value for instance variable
+	 */
 	public SimpleListItem(Bitmap primaryIcon, String title, boolean disabled)
 	{
 		this.primaryIcon = primaryIcon;
@@ -46,19 +70,34 @@ public class SimpleListItem
 		this.disabled = disabled;
 	}
 
+	/**
+	 * Get the main icon
+	 *
+	 * @return The icon
+	 */
 	public Bitmap getPrimaryIcon()
 	{
-		return primaryIcon;
+		return this.primaryIcon;
 	}
 
+	/**
+	 * Get the list item title
+	 *
+	 * @return The title
+	 */
 	public String getTitle()
 	{
-		return title;
+		return this.title;
 	}
 
+	/**
+	 * Tells whether the list item is disabled or not
+	 *
+	 * @return {@code true} if this is the case, {@code false} otherwise.
+	 */
 	public boolean isDisabled()
 	{
-		return disabled;
+		return this.disabled;
 	}
 }
 

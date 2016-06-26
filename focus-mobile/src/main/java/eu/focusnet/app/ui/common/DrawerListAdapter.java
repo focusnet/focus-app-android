@@ -33,38 +33,76 @@ import java.util.ArrayList;
 import eu.focusnet.app.R;
 
 /**
- * ok
+ * List adapter used by the drawer menu
  */
 public class DrawerListAdapter extends BaseAdapter
 {
 
+	/**
+	 * Layout inflater
+	 */
 	private LayoutInflater inflater;
+
+	/**
+	 * List items of the drawer menu
+	 */
 	private ArrayList<SimpleListItem> listItems;
 
+	/**
+	 * Constuctor
+	 *
+	 * @param context Inherited
+	 * @param listItems Items to put in the drawer menu
+	 */
 	public DrawerListAdapter(Context context, ArrayList<SimpleListItem> listItems)
 	{
 		this.inflater = LayoutInflater.from(context);
 		this.listItems = listItems;
 	}
 
+	/**
+	 * Inherited. Dummy function.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	public int getCount()
 	{
 		return this.listItems.size();
 	}
 
+	/**
+	 * Inherited. Dummy function.
+	 *
+	 * @param position Inherited.
+	 * @return Inherited.
+	 */
 	@Override
 	public Object getItem(int position)
 	{
 		return listItems.get(position);
 	}
 
+	/**
+	 * Inherited. Dummy function.
+	 *
+	 * @param position Inherited.
+	 * @return Inherited.
+	 */
 	@Override
 	public long getItemId(int position)
 	{
 		return position;
 	}
 
+	/**
+	 * Create the view for a menu item.
+	 *
+	 * @param position 0-based position of the menu item
+	 * @param convertView Recycled view.
+	 * @param parent Inherited.
+	 * @return A {@code View} for the menu item.
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
@@ -92,6 +130,5 @@ public class DrawerListAdapter extends BaseAdapter
 
 		return row;
 	}
-
 
 }

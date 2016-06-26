@@ -322,6 +322,8 @@ final public class Constant
 	 * Constants related to the navigation system of our application. All Projects, Dashboards &
 	 * Tools (Pages) and widgets are uniquely identified by a path within the application, and these
 	 * constants define the format of this path.
+	 *
+	 * The different list item types are also defined here.
 	 */
 	final public static class Navigation
 	{
@@ -374,6 +376,24 @@ final public class Constant
 		 * name of this variable.
 		 */
 		final public static String LABEL_PAGE_ITERATOR = "$page-iterator$";
+
+		/**
+		 * List item type corresponding the a header
+		 * (non clickable, {@link eu.focusnet.app.ui.common.SimpleListItem}).
+		 */
+		final public static int LIST_TYPE_HEADER = 0;
+
+		/**
+		 * List item type corresponding the a link
+		 * (clickable, {@link eu.focusnet.app.ui.common.FeaturedListItem}).
+		 */
+		final public static int LIST_TYPE_LINK = 1;
+
+		/**
+		 * List item type corresponding the an empty entry, i.e. an item that announces that
+		 * the list is empty. (non clickable, {@link eu.focusnet.app.ui.common.SimpleListItem}).
+		 */
+		final public static int LIST_TYPE_EMPTY = 2;
 	}
 
 	/**

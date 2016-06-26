@@ -84,7 +84,7 @@ public class ProjectFragment extends ListFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
-		if (l.getAdapter().getItemViewType(position) == NavigationListAdapter.LIST_TYPE_LINK) {
+		if (l.getAdapter().getItemViewType(position) == Constant.Navigation.LIST_TYPE_LINK) {
 			// same as in bookmark fragment, modularize
 			Intent intent;
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);

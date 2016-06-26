@@ -71,7 +71,7 @@ public class ProjectsListingFragment extends ListFragment
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
 		//Test where the user has clicked and navigate to this project or notifications
-		if (l.getAdapter().getItemViewType(position) != NavigationListAdapter.LIST_TYPE_HEADER) {
+		if (l.getAdapter().getItemViewType(position) != Constant.Navigation.LIST_TYPE_HEADER) {
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
 			intent.putExtra(Constant.Extra.UI_EXTRA_PATH, selectedItem.getPath());

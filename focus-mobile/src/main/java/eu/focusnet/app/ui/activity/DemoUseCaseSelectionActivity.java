@@ -39,17 +39,22 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * Demo use case activity
+ * Demo use case selection activity.
+ *
+ * @deprecated only used in the prototype. We should use {@link LoginActivity} instead.
  */
 public class DemoUseCaseSelectionActivity extends Activity implements AdapterView.OnItemSelectedListener
 {
 
+	/**
+	 * Index of the selected use case.
+	 */
 	private int selectedUseCase;
 
 	/**
 	 * Instantiate the activity UI
 	 *
-	 * @param savedInstanceState
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -72,14 +77,14 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		spinner.setOnItemSelectedListener(this);
 	}
 
-
 	/**
-	 * position is 0-based
+	 * Item selection listener for the selection list control that contains the different demo
+	 * use cases.
 	 *
-	 * @param parent
-	 * @param view
-	 * @param position
-	 * @param id
+	 * @param parent Inherited.
+	 * @param view Inhertied.
+	 * @param position 0-based position of the selected item in the selection list.
+	 * @param id Inherited.
 	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -94,10 +99,13 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 	}
 
 	/**
-	 * When the user clicks the activity_login button, the provided username, password and server name
-	 * are used to authenticate.
-	 * <p/>
+	 * When the user clicks the button to start the demo, we initiate the login procedure. We then
+	 * redirect to the {@link EntryPointActivity}, that will be responsible for retrieving the
+	 * application content.
+	 *
 	 * This logic requires a network connection.
+	 *
+	 * @param view Inherited.
 	 */
 	public void onClickStartDemo(View view)
 	{
@@ -129,8 +137,6 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 		else {
 			UiHelper.displayToast(this, R.string.focus_login_error_no_network);
 		}
-
 	}
-
 
 }

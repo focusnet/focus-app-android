@@ -43,7 +43,8 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	protected Toolbar toolbar;
 
 	/**
-	 * FIXME toolbar??? FIXME replace all actionBar with toolbar. should work. to be tested.
+	 * The ActionBar of this activity. We operate in compatibility activity, so we set a Toolbar
+	 * and must perform actions such as setting titles on the corresponding ActionBar.
 	 */
 	protected ActionBar actionBar;
 
@@ -65,9 +66,11 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	/**
 	 * Override creation method:
 	 * - Add a toolbar
-	 * - setup
+	 * - setup the title and path depending on incoming extra
+	 * - setup the UI
+	 * - load the UI
 	 *
-	 * @param savedInstanceState
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -84,7 +87,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 		// configure
 		this.actionBar = getSupportActionBar();
 		if (this.actionBar != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true); // FIXME not same behavior as BACK button.
+			this.actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		//Get the project title and project id either from the
@@ -102,13 +105,45 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 		setTitle(this.title);
 
-		// our activity is then ready to accept customization by subclasses
+		// our activity is then ready to accept customization by subclasses (setup)
 		this.setupSpecificUiElements();
 
-		// and run the initial UI loading (in page operations and fragment loading)
+		// and run the initial UI loading
 		this.applyUiChanges();
 	}
 
+
+
+
+	/**
+	 * Method that may be overriden to setup Activity-specific UI elements, such as a Drawer or
+	 * Action buttons. This method is only called once, in {@link #onCreate(Bundle)}.
+	 */
+	protected void setupSpecificUiElements()
+	{
+
+	}
+
+	/**
+	 * Load the UI, based on the current Activity configuration as defined by
+	 * {@link #onCreate(Bundle)}, including via {@link #setupSpecificUiElements()}.
+	 *
+	 * This method is called from {@link #onCreate(Bundle)} and whenever the UI must be refreshed.
+	 */
+	final protected void applyUiChanges()
+	{
+		// All operations that do not provoke the loading of a new fragment
+		// should be done here
+		this.doInPageUiOperations();
+
+		// In case we need to load a new fragment, setup operations are done in this
+		// method.
+		this.fragment = null;
+		this.prepareNewFragment();
+
+		// and replace the fragment
+		this.replaceFragment();
+	}
 
 	/**
 	 * Retrieve the content of the view
@@ -125,58 +160,31 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 	protected abstract int getTargetLayoutContainer();
 
 	/**
-	 * Method that may be overriden to setup Activity-specific UI elements, such as a Drawer or
-	 * Action buttons.
+	 * Do any UI operation that do not imply creating and including a new Fragment in the UI, such
+	 * as displaying an AlertDialog.
 	 *
-	 * See ....
-	 */
-	protected void setupSpecificUiElements()
-	{
-
-	}
-
-	/**
-	 *
-	 */
-	protected void prepareNewFragment()
-	{
-
-	}
-
-	/**
-	 * All operations that do not infert
+	 * See {@link #applyUiChanges()}.
 	 */
 	protected void doInPageUiOperations()
 	{
 
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle saveInstanceState)
+	/**
+	 * Prepare a new Fragment before its inclusion in the UI.
+	 *
+	 * See {@link #applyUiChanges()}.
+	 */
+	protected void prepareNewFragment()
 	{
-		super.onSaveInstanceState(saveInstanceState);
-		saveInstanceState.putString(Constant.Extra.UI_EXTRA_TITLE, this.title);
-		saveInstanceState.putString(Constant.Extra.UI_EXTRA_PATH, this.path);
-	}
 
-	final protected void applyUiChanges()
-	{
-		// all operations that do not provoke the loading of a new fragment
-		// should be done here
-		this.doInPageUiOperations();
-
-		// in case we need to load a new fragment, setup operations are done in this
-		// method.
-		this.fragment = null;
-		this.prepareNewFragment();
-
-		// and replace the fragment
-		this.replaceFragment();
 	}
 
 
 	/**
 	 * Method for replacing the existing fragment with the newly selected one.
+	 *
+	 * See {@link #applyUiChanges()}.
 	 */
 	private void replaceFragment()
 	{
@@ -188,10 +196,27 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 
 			FragmentManager.replaceFragment(getTargetLayoutContainer(), this.fragment, getFragmentManager());
 		}
-
 	}
 
-	// make the home button behave like the back button.
+	/**
+	 * Pass Activity parameters when saving the instance.
+	 *
+	 * @param saveInstanceState Inherited.
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle saveInstanceState)
+	{
+		super.onSaveInstanceState(saveInstanceState);
+		saveInstanceState.putString(Constant.Extra.UI_EXTRA_TITLE, this.title);
+		saveInstanceState.putString(Constant.Extra.UI_EXTRA_PATH, this.path);
+	}
+
+	/**
+	 * When the home button is pressed, behave like if the back button of the device was pressed.
+	 *
+	 * @param item Inherited.
+	 * @return Inherited.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -200,9 +225,7 @@ public abstract class ToolbarEnabledActivity extends AppCompatActivity
 				onBackPressed();
 				return true;
 		}
-
 		return (super.onOptionsItemSelected(item));
 	}
-
 
 }

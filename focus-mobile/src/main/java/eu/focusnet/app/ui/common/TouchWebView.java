@@ -1,10 +1,3 @@
-package eu.focusnet.app.ui.common;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.webkit.WebView;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -25,14 +18,21 @@ import android.webkit.WebView;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package eu.focusnet.app.ui.common;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.webkit.WebView;
+
+
 /**
- * Specialized WebView overcoming problems when embedded WebView within ScrollView
+ * Specialized WebView overcoming problems when embedding WebView within ScrollView
  * <p/>
  * See http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
 public class TouchWebView extends WebView
 {
-
 	public TouchWebView(Context context)
 	{
 		super(context);
@@ -48,6 +48,12 @@ public class TouchWebView extends WebView
 		super(context, attrs, defStyle);
 	}
 
+	/**
+	 * Override touch events handling.
+	 *
+	 * @param event Inherited
+	 * @return Inherited
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{

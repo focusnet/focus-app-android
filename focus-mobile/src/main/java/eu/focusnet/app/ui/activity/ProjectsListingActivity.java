@@ -63,24 +63,53 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * This Activity contains the list of available projects.
- * <p/>
- * FIXME a bit messy, to be reorganized.
+ * This {@code Activity} contains the listing of all projects, and is therefore the welcome screen
+ * of our application after the login and loading screens.
  */
 public class ProjectsListingActivity extends ToolbarEnabledActivity
 {
-
-
-	protected DrawerLayout drawerLayout;
-	protected ListView drawerListMenu;
-	protected ActionBarDrawerToggle drawerToggle;
-	protected ArrayList<SimpleListItem> drawerItems;
-	private int previouslySelectedToRender;
-	private int sectionToRender;
-	private CronService cronService;
-	private boolean cronBound = false;
 	/**
-	 * Defines callbacks for service binding, passed to bindService()
+	 * The layout containing our drawer menu.
+	 */
+	protected DrawerLayout drawerLayout;
+
+	/**
+	 * The {@code ListView} defining the menu entries of our drawer menu.
+	 */
+	protected ListView drawerListMenu;
+
+	/**
+	 * Facility for linking the menu drawer and the action bar.
+	 */
+	protected ActionBarDrawerToggle drawerToggle;
+
+	/**
+	 * List of items to include in the menu drawer.
+	 */
+	protected ArrayList<SimpleListItem> drawerItems;
+
+	/**
+	 * Previously selected {@code Fragment} identifier.
+	 */
+	private int previouslySelectedSectionToRender;
+
+	/**
+	 * Currently selected {@code Fragment} identifier.
+	 */
+	private int sectionToRender;
+
+	/**
+	 * {@link CronService} to link to for allowing the user to trigger data synchronization
+	 */
+	private CronService cronService;
+
+	/**
+	 * Tells whether the {@link CronService} is bound or not.
+	 */
+	private boolean cronBound = false;
+
+	/**
+	 * Defines callbacks for {@link CronService} binding, passed to bindService()
 	 */
 	private ServiceConnection cronServiceConnection = new ServiceConnection()
 	{
@@ -94,6 +123,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			// if we are in this Activity, this means that the application is ready to display
 			// something, so let's update the cron's applicationReady flag that may have not been
 			// set if the service was not bound in FocusAppLogic when we tried to do it.
+			// Not likely, though.
 			cronService.onApplicationLoad(true);
 		}
 
@@ -104,11 +134,12 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 	};
 
-
 	/**
 	 * Create the activity.
+	 * - the parent {@code onCreate()} method will setup and render the UI
+	 * - we bind to {@link CronService}
 	 *
-	 * @param savedInstanceState past state
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -123,6 +154,9 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 	}
 
+	/**
+	 * Destroy the activity, and unbind the registered {@link CronService}.
+	 */
 	@Override
 	protected void onDestroy()
 	{
@@ -135,11 +169,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 	}
 
-
 	/**
-	 * Get the current activity's view
+	 * Defines the layout of this activity.
 	 *
-	 * @return The view
+	 * @return Inherited.
 	 */
 	@Override
 	protected int getTargetView()
@@ -147,7 +180,11 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		return R.layout.activity_projects_listing;
 	}
 
-
+	/**
+	 * Defines the target container of this Activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetLayoutContainer()
 	{
@@ -155,14 +192,19 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	}
 
 
-	// called just after setting view
+	/**
+	 * Prepare the view. This is called in {@link #onCreate(Bundle)}, before actually rendering the
+	 * UI.
+	 * <p/>
+	 * See {@link super#onCreate(Bundle)}.
+	 */
 	@Override
 	protected void setupSpecificUiElements()
 	{
 		LayoutInflater inflater = getLayoutInflater();
 
 		// set the default section that will initially be loaded
-		this.sectionToRender = this.previouslySelectedToRender = Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING;
+		this.sectionToRender = this.previouslySelectedSectionToRender = Constant.Ui.UI_MENU_ENTRY_PROJECTS_LISTING;
 
 		// create a Drawer
 		this.drawerItems = this.getDrawerItems();
@@ -173,15 +215,17 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 
 		// get the header and add it to the ListView
-		LinearLayout menuHeader = (LinearLayout) inflater.inflate(R.layout.include_drawer_header, null); // FIXME context?
+		// FIXME pass something else as the Context
+		LinearLayout menuHeader = (LinearLayout) inflater.inflate(R.layout.include_drawer_header, null);
 		menuHeader.setEnabled(false);
 		menuHeader.setOnClickListener(null);
 		this.drawerListMenu.addHeaderView(menuHeader, null, false);
 		// adjust content of header
+		/** @deprecated for production version, we should put the name/email of the user */
 		String appVersion = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
 		TextView appInfo = (TextView) findViewById(R.id.drawer_app_info);
 		if (appInfo != null) {
-			appInfo.setText(appVersion); // FIXME for production version, we should put the name/email of the user
+			appInfo.setText(appVersion);
 		}
 		// scroll the menu to the very top (at the top of the header)
 		// set in a runnable such that this is called when the system decides, an not too early.
@@ -224,6 +268,15 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		);
 	}
 
+	/**
+	 * Do any UI operation that do not imply creating and including a new Fragment in the UI.
+	 * The following is performed depending on which menu item is selected:
+	 * - if projects or bookmarks listing: highlight the appropriate menu item
+	 * - if About, then display a dialog with the information about the app
+	 * - If Logout, then reset the application
+	 * <p/>
+	 * See {@link super#applyUiChanges()}.
+	 */
 	@Override
 	protected void doInPageUiOperations()
 	{
@@ -234,7 +287,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				break;
 			case Constant.Ui.UI_MENU_ENTRY_ABOUT:
 				LayoutInflater inflater = LayoutInflater.from(this);
-				// LayoutInflater inflater = getLayoutInflater();
+				// FIXME set a better Context than null
 				final WebView dialogContent = (WebView) inflater.inflate(R.layout.dialog_content_about, null);
 				dialogContent.loadUrl("file:///android_asset/" + Constant.AppConfig.ASSETS_ABOUT_PAGE);
 				final FocusDialogBuilder builder = new FocusDialogBuilder(this)
@@ -254,7 +307,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 					{
 						// reset all when logging out
 						FocusAppLogic.getInstance().reset();
-
+						// redirect to the EntryPointActivity
 						try {
 							Intent i = new Intent(ProjectsListingActivity.this, EntryPointActivity.class);
 							i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.wiping_user_data_logout_msg));
@@ -271,18 +324,25 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				break;
 		}
 
+		// close the drawer and cleanup
 		if (this.sectionToRender != 0) {
 			drawerLayout.closeDrawer(this.drawerListMenu);
 
 			// do not keep selection on the current item
 			switch (this.sectionToRender) {
 				case Constant.Ui.UI_MENU_ENTRY_ABOUT:
-					highlightSelectedMenuItem(this.previouslySelectedToRender);
+					highlightSelectedMenuItem(this.previouslySelectedSectionToRender);
 					break;
 			}
 		}
 	}
 
+	/**
+	 * Defines the Fragment to include in the container for this Activity.
+	 * Either the project listing fragment or the bookmarks listing fragment.
+	 * <p/>
+	 * See {@link super#applyUiChanges()}.
+	 */
 	@Override
 	protected void prepareNewFragment()
 	{
@@ -304,12 +364,48 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 	}
 
+	/**
+	 * Create the option menu of the app
+	 *
+	 * @param menu the menu
+	 * @return true
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_projects_listing, menu);
+		return true;
+	}
 
 	/**
-	 * Register a click listener for drawer items
+	 * This method gives a list of items to display in the left drawer.
 	 *
-	 * @return a ListView
-	 * <p/>
+	 * @return An array list of items to display in the drawer
+	 */
+	private ArrayList<SimpleListItem> getDrawerItems()
+	{
+		// load menu items and icons
+		String[] navMenuTitles = getResources().getStringArray(R.array.drawer_items);
+		TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.drawer_icons);
+
+		ArrayList<SimpleListItem> drawerItems = new ArrayList<>();
+
+		for (int i = 0; i < navMenuTitles.length; i++) {
+			String menuTitle = navMenuTitles[i];
+			SimpleListItem drawListItem = new SimpleListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle);
+			drawerItems.add(drawListItem);
+		}
+
+		// Release the typed array
+		navMenuIcons.recycle();
+
+		return drawerItems;
+	}
+
+	/**
+	 * Create a click listener tailored for the Drawer menu.
+	 *
+	 * @return A click listener.
 	 */
 	private ListView.OnItemClickListener getOnClickDrawerItemListener()
 	{
@@ -331,7 +427,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 							break;
 					}
 					if (doIt) {
-						previouslySelectedToRender = sectionToRender;
+						previouslySelectedSectionToRender = sectionToRender;
 						sectionToRender = position;
 						applyUiChanges();
 					}
@@ -341,20 +437,12 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		};
 	}
 
-
 	/**
-	 * Listener for the back button
+	 * Listener for the back button. We have 2 menu entries in the drawer menu that load their
+	 * fragment in the main content container.
 	 * <p/>
-	 * FIXME if we have more than 2 menu entries in the Drawer that load their fragments in the
-	 * main content, that may be more complicated.
-	 * <p/>
-	 * FIXME no animation? init.setFlags ( ANIMATION ) may help
-	 * <p/>
-	 * also, we block reloading the same page in the clicklistener of the menu such that we don't have problems here.
-	 *
-	 * this is the behavior for navigation between fragments of the proejctslistingactivity.
-	 *
-	 * FIXME the logic here is buggy. to be reviewed. for example the selected element is not updated.
+	 * In {@link #getOnClickDrawerItemListener()}, we make sure we do not reload the same page
+	 * indefinitely such that the below logic can work.
 	 */
 	@Override
 	public void onBackPressed()
@@ -367,7 +455,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			//remove the last inserted fragment from the stack
 			fragmentManager.popBackStackImmediate();
 
-			int b = fragmentManager.getBackStackEntryCount();
 			// hard coded things is ok as we are only playing with 2 possible targets, and
 			// hence hitting the BACK button will always make us go back to the home page
 			// (if we hit the BACK button on the home page, we exit the app)
@@ -385,9 +472,9 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 
 
 	/**
-	 * Highlight the selected menu item
+	 * Highlight the currently selected menu item
 	 *
-	 * @param position FIXME does not have any effect
+	 * @param position 1-based position of the menu item to highlight.
 	 */
 	private void highlightSelectedMenuItem(int position)
 	{
@@ -395,10 +482,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		this.drawerListMenu.setSelection(position);
 	}
 
-
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged().
+	 * Required by {@link ActionBarDrawerToggle}.
+	 *
+	 * @param newConfig Inherited.
 	 */
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
@@ -407,10 +494,10 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		this.drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged().
+	 * Required by {@link ActionBarDrawerToggle}.
+	 *
+	 * @param savedInstanceState Inherited.
 	 */
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState)
@@ -420,6 +507,14 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 	}
 
 
+	/**
+	 * When clicking the action bar buttons:
+	 * - display an alert dialog that allows to trigger data synchronization or displays the current
+	 * status of the synchronization.
+	 *
+	 * @param item Inherited.
+	 * @return Inherited.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -431,6 +526,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				}
 
 				LayoutInflater inflater = getLayoutInflater();
+				// FIXME pass a better Context than null.
 				final LinearLayout dialogContent = (LinearLayout) inflater.inflate(R.layout.dialog_content_synchronization, null);
 
 				final Context context = this;
@@ -459,7 +555,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				final View progress = dialogContent.findViewById(R.id.dialog_sync_progress);
 				final View status = dialogContent.findViewById(R.id.dialog_sync_status);
 				final TextView instructionsField = (TextView) instructions.findViewById(R.id.dialog_sync_instructions_msg);
-				final TextView progressField = (TextView) progress.findViewById(R.id.dialog_sync_progress_field);
 				final TextView statusField = (TextView) status.findViewById(R.id.dialog_sync_status_field);
 
 				// update dynamic content (last sync and last data volume)
@@ -469,8 +564,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 				}
 				else {
 					DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
-					// FIXME set the correct locale. no, apparnetly is correct, but i18n is broken ???
-					// DateFormat dateformat = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT, Locale locale);
 					lastSync = dateFormat.format(new Date(this.cronService.getLastSync()));
 				}
 				TextView lastSyncField = (TextView) instructions.findViewById(R.id.dialog_sync_last_sync_field);
@@ -514,7 +607,6 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 							progress.setVisibility(View.VISIBLE);
 
 							// Run the periodic task
-							// FIXME pass the MenuItem item, such that we can change its drawablet to an animation (or start the animation)
 							new SyncTask(builder, dialogContent, dialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						}
 					});
@@ -536,59 +628,37 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 		}
 	}
 
-	/**
-	 * Create the option menu of the app
-	 *
-	 * @param menu the menu
-	 * @return true
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.menu_projects_listing, menu);
-		return true;
-	}
-
-	/**
-	 * This method gives a list of items to display in the left drawer.
-	 *
-	 * @return An array list of items to display in the drawer
-	 */
-	private ArrayList<SimpleListItem> getDrawerItems()
-	{
-		// load menu items and icons
-		String[] navMenuTitles = getResources().getStringArray(R.array.drawer_items);
-		TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.drawer_icons);
-
-		ArrayList<SimpleListItem> drawerItems = new ArrayList<>();
-
-		for (int i = 0; i < navMenuTitles.length; i++) {
-			String menuTitle = navMenuTitles[i];
-			SimpleListItem drawListItem = new SimpleListItem(UiHelper.getBitmap(this, navMenuIcons.getResourceId(i, -1)), menuTitle);
-			drawerItems.add(drawListItem);
-		}
-
-		// Release the typed array
-		navMenuIcons.recycle();
-
-		return drawerItems;
-	}
 
 	/**
 	 * Task responsible for synchronizing data
 	 * <p/>
-	 * Called when the user explicitly launches data sync via the dialog
-	 * <p/>
-	 * FIXME: if we pass the MenuItem, we can change its icon to an animation (Drawable) or start an animation.
-	 * FIXME: we must then stop/revert when the operation is completed, and we would then need a Listener on the Service
+	 * Called when the user explicitly launches data sync via the dialog of the action bar.
 	 */
 	private class SyncTask extends AsyncTask<Void, Void, Void>
 	{
 
-		private final LinearLayout dialogContent;
-		private final FocusDialogBuilder builder;
-		private final AlertDialog dialog;
+		/**
+		 * Layout containing the content of the dialog
+		 */
+		final private LinearLayout dialogContent;
 
+		/**
+		 * Dialog builder
+		 */
+		final private FocusDialogBuilder builder;
+
+		/**
+		 * The dialog being displayed.
+		 */
+		final private AlertDialog dialog;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param builder       Input value for setting instance variable.
+		 * @param dialogContent Input value for setting instance variable.
+		 * @param dialog        Input value for setting instance variable.
+		 */
 		public SyncTask(FocusDialogBuilder builder, LinearLayout dialogContent, AlertDialog dialog)
 		{
 			this.builder = builder;
@@ -596,6 +666,12 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			this.dialog = dialog;
 		}
 
+		/**
+		 * Perform the data synchronization in the background.
+		 *
+		 * @param params Nothing
+		 * @return Nothing
+		 */
 		@Override
 		protected Void doInBackground(Void... params)
 		{
@@ -618,6 +694,11 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			return null;
 		}
 
+		/**
+		 * After execution, update the dialog to reflect success or failure.
+		 *
+		 * @param v Nothing
+		 */
 		@Override
 		protected void onPostExecute(Void v)
 		{

@@ -23,26 +23,37 @@ package eu.focusnet.app.ui.activity;
 import eu.focusnet.app.R;
 import eu.focusnet.app.ui.fragment.PageFragment;
 
-
 /**
- * This class displays (loading the PageFragment) the characteristics of a page after
- * the it was selected in the ProjectActivity
+ * This {@code Activity} is created when accessing a page from a project listing {@code Activity}
+ * ({@link ProjectsListingActivity} or {@link ProjectInProjectActivity}).
  */
 public class PageActivity extends ToolbarEnabledActivity
 {
-
+	/**
+	 * Defines the target container of this Activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetLayoutContainer()
 	{
 		return R.id.main_content_container;
 	}
 
+	/**
+	 * Defines the Fragment to include in the container for this Activity.
+	 */
 	@Override
 	protected void prepareNewFragment()
 	{
 		this.fragment = new PageFragment();
 	}
 
+	/**
+	 * Defines the layout of this activity.
+	 *
+	 * @return Inherited.
+	 */
 	@Override
 	protected int getTargetView()
 	{

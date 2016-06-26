@@ -44,7 +44,7 @@ public class ProjectInstance extends AbstractInstance
 	 * altered such that we are able to distinguish between the different versions of the project.
 	 * <p>
 	 * See {@link eu.focusnet.app.util.Constant.Navigation},
-	 * {@link ProjectInstance#createProjects(ArrayList, DataContext, int)}
+	 * {@link ProjectInstance#createProjects(ArrayList, DataContext)}
 	 * and {@link #fillWithAcquiredData()}
 	 */
 	private String guid;
@@ -89,11 +89,8 @@ public class ProjectInstance extends AbstractInstance
 	 *
 	 * @param projectTemplate  Template to use to contruct this instance.
 	 * @param dataContext      The {@link DataContext} of this instance
-	 * @param depthInHierarchy Depth in the hierarchy of created instance for this application.
-	 *                         This is used for defining priorities when building the content
-	 *                         (e.g. download resources at lower depth first).
 	 */
-	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext, int depthInHierarchy)
+	public ProjectInstance(ProjectTemplate projectTemplate, @NonNull DataContext dataContext)
 	{
 		super(dataContext.getDataManager());
 
@@ -103,7 +100,6 @@ public class ProjectInstance extends AbstractInstance
 		this.dashboards = new ArrayList<>();
 		this.tools = new ArrayList<>();
 		this.projects = new ArrayList<>();
-		this.depthInHierarchy = depthInHierarchy;
 		this.disabled = this.template.isDisabled();
 
 		this.build();
@@ -114,10 +110,9 @@ public class ProjectInstance extends AbstractInstance
 	 *
 	 * @param projectTemplates         The template used to build the current project instances.
 	 * @param parentContext            Parent context on the top of which we will define a new {@link DataContext} for created instances
-	 * @param expectedDepthInHierarchy See {@link ProjectInstance#ProjectInstance(ProjectTemplate, DataContext, int)}.
 	 * @return A list of new {@link ProjectInstance}s
 	 */
-	public static ArrayList<ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext parentContext, int expectedDepthInHierarchy)
+	public static ArrayList<ProjectInstance> createProjects(ArrayList<ProjectTemplate> projectTemplates, DataContext parentContext)
 	{
 		ArrayList<ProjectInstance> projInstancesTemp = new ArrayList<>();
 		for (ProjectTemplate projTpl : projectTemplates) {
@@ -139,19 +134,19 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(parentContext);
-					newCtx.register(Constant.Navigation.LABEL_PROJECT_ITERATOR, url, expectedDepthInHierarchy);
+					newCtx.register(Constant.Navigation.LABEL_PROJECT_ITERATOR, url);
 					contexts.add(newCtx);
 				}
 
 				for (DataContext newCtx : contexts) {
 					// the guid is adapted in the ProjectInstance constructor
-					ProjectInstance p = new ProjectInstance(projTpl, newCtx, expectedDepthInHierarchy);
+					ProjectInstance p = new ProjectInstance(projTpl, newCtx);
 					projInstancesTemp.add(p);
 				}
 			}
 			else {
 				DataContext newCtx = new DataContext(parentContext);
-				ProjectInstance p = new ProjectInstance(projTpl, newCtx, expectedDepthInHierarchy);
+				ProjectInstance p = new ProjectInstance(projTpl, newCtx);
 				projInstancesTemp.add(p);
 			}
 		}
@@ -174,16 +169,16 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy); // provide data called AFTER projects set iterator
+		this.dataContext.provideData(this.template.getData()); // provide data called AFTER projects set iterator
 
 		if (this.description == null) {
 			this.description = "";
 		}
 
 		// build the content of the project
-		this.dashboards = PageInstance.createPageInstances(this.template, PageInstance.PageType.DASHBOARD, this.dataContext, this.depthInHierarchy + 1);
-		this.tools = PageInstance.createPageInstances(this.template, PageInstance.PageType.TOOL, this.dataContext, this.depthInHierarchy + 1);
-		this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext, this.depthInHierarchy + 1);
+		this.dashboards = PageInstance.createPageInstances(this.template, PageInstance.PageType.DASHBOARD, this.dataContext);
+		this.tools = PageInstance.createPageInstances(this.template, PageInstance.PageType.TOOL, this.dataContext);
+		this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext);
 
 		// Check validity of created objects and mark as invalid if not fully valid.
 		this.checkValidity();
@@ -214,7 +209,7 @@ public class ProjectInstance extends AbstractInstance
 
 
 	/**
-	 * Fill instance with data that have been acquired via {@link DataContext#register(String, String, int)}
+	 * Fill instance with data that have been acquired via {@link DataContext#register(String, String)}
 	 *
 	 * @return a {@code Future} on which we may listen to know if the operation is finished.
 	 */

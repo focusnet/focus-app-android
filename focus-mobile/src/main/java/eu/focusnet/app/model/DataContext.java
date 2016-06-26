@@ -31,35 +31,48 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.focusnet.app.controller.DataManager;
+import eu.focusnet.app.controller.PriorityTask;
+import eu.focusnet.app.model.gson.FocusSample;
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.FocusNotImplementedException;
-import eu.focusnet.app.model.gson.FocusSample;
-import eu.focusnet.app.controller.DataManager;
-import eu.focusnet.app.controller.PriorityTask;
-import eu.focusnet.app.util.Constant;
 
 /**
- * Created by julien on 13.01.16.
+ * In our model, all {@link AbstractInstance} have an associated {@code DataContext}. This data
+ * context is used to perform data resolution, i.e. determine iterators and interpolate
+ * variables in the instance content. The basic functioning is as follows:
+ * - Instance request to {@link #register(String, String)} data to their {@code DataContext}.
+ * - The {@code DataContext} then pushes the request in a queue such that the resource will
+ * be downloaded. The queue is actually maintained by the {@link DataManager} of the application,
+ * which is common to all {@code DataContext}s.
+ * - Instances can consume data by calling {@code #resolve*()} methods. WThe
+ * calling thread will then block until the resource is available. The actual blocking and waiting
+ * is done in {@link #get(Object)}.
  * <p/>
- * TODO doc:
- * we always store FocusSamples, not actual scalar/leaf data
- * -> register() will retrieve a sample only
- * -> get() retrieves samples
- * -> resolve() used to get leaf-data (i.e. content of FocuSSample)
- * <p/>
- * iterators require a list of urls -> get a specific FocusSample -> resolve() it -> case to list of urls.
- * <p/>
- * <p/>
- * <p/>
- * FIXME issues with concurrency. convert everything to a HashMap<String,PriorityTask>
+ * {@link #register(String, String)}-ed resources are processed in order of {@link #priority}.
+ * The later the instance is created in the application content, the lower is its priority.
  */
 public class DataContext extends HashMap<String, String>
 {
 
+	/**
+	 * The application {@link DataManager}.
+	 */
 	private DataManager dataManager;
+
+	/**
+	 * A prioritized queue for requesting the data. FIXME, a DataContext should be a queue in itself. Check stash and debug.
+	 */
 	private HashMap<String, PriorityTask<String>> queue;
+
+	/**
+	 * Priority of this data context. The deeper it is created in the application content, the lower
+	 * it is.
+	 */
+	private int priority;
 
 	/**
 	 * Default c'tor
@@ -67,6 +80,7 @@ public class DataContext extends HashMap<String, String>
 	public DataContext(@NonNull DataManager dm)
 	{
 		super();
+		this.priority = 1000;
 		this.dataManager = dm;
 		this.queue = new HashMap<>();
 	}
@@ -74,12 +88,13 @@ public class DataContext extends HashMap<String, String>
 	/**
 	 * Construct a new DataContext from another one.
 	 *
-	 * @param c - we use the datamanager of this context as we will build the new context on top of the old one, so using the same data manager makes sense
+	 * @param c The {@code DataContext} on the top of which we must create the new one.
 	 */
 	public DataContext(@NonNull DataContext c)
 	{
 		super(c);
 		this.dataManager = c.dataManager;
+		this.priority = c.getPriority() - 1;
 
 		// keep reference to the existing queue
 		// FIXME should we lock before starting? queue may be expanded while we are copying.
@@ -92,9 +107,10 @@ public class DataContext extends HashMap<String, String>
 	/**
 	 * Add a new FocusSample's urls entry in our current data context, based on a description of the
 	 * new data to be included. These descriptions are the ones we can find in the 'data'
-	 * properties of the Application Content template JSON representation.
+	 * properties of the Application Content template JSON representation, or in iterators
+	 * definitions.
 	 * <p/>
-	 * All data context entries are FocusSample's
+	 * All targets of data context entries are FocusSample's
 	 * <p/>
 	 * The different options for the description are the following:
 	 * <p/>
@@ -102,98 +118,54 @@ public class DataContext extends HashMap<String, String>
 	 * - a reference to an existing entry in this data context, with a selector to the
 	 * appropriate key in its data object; e.g. <ctx/machine-ABC/woodpile-url>
 	 * <p/>
-	 * TODO
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
-	 * - a lookup request, e.g. <lookup:http://schemas.focusnet.eu/my-special-type|URL>
-	 * * where URL is the "context" of the FocusObject.
-	 * - above services with references to context:
-	 * <history|ctx/machine-ABC/woodpile-url|since=now-86400;until=now;every=240>
+	 * - a history request with a reference to a previously registered entry, e.g.
+	 * <history|ctx/machine-ABC/woodpile-url|since=$date$>
 	 * <p/>
-	 * Examples:
-	 * "simple-url": "http://focus.yatt.ch/debug/focus-sample-1.json",
-	 * "referenced-url": "<ctx/simple-url/url1>",
-	 * <p/>
-	 * FIXME TODO
-	 * "history-test": "<history|http://focus.yatt.ch/debug/focus-sample-1.json|params>",
-	 * "history-test-ref": "<history|ctx/simple-url/url1|params,params2>",
-	 * "lookup-test": "<lookup|http://focus.yatt.ch/debug/focus-sample-1.json|http://www.type.com>",
-	 * "lookup-test-ref": "<lookup|ctx/simple-url/url1|http://www.type.com>"
-	 * lookup: no context for now.
-	 * <p/>
-	 * <p/>
-	 * the register operation must be an AsyncTask(). we keep reference to the task such that this.get() can wait for it.
-	 * <p/>
-	 * FIXME implement custom queuing
 	 */
-	public void register(String key, String description, int depthInHierarchy)
+	public void register(String key, String description)
 	{
 		// just in case, delete the existing entry in the context
 		// this avoids problems when nesting projects (we share the same variable name, no matter
 		// level of nesting we are).
 
-		if (key.equals("test123")) {
-			key = key.replace("ldjflajflkajfld", "");
-		}
-		this.put(key, null);
+		this.put(key, null); // FIXME not a good idea. resolve handles null?? check stash
 
 		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
-		PriorityTask p = new PriorityTask((int) (1_000_000 / depthInHierarchy), task);
+		PriorityTask p = new PriorityTask(this.priority, task); // FIXME crappy
 		this.dataManager.getDataRetrievingExecutor().execute(p);
 		this.queue.put(key, p);
 	}
 
 	/**
-	 * We know that we have a context reference (starting with "ctx/")
-	 * and we want to return the corresponding URL.
-	 *
-	 * @param description
-	 * @return
-	 */
-	private String resolveReferencedUrl(String description) throws FocusMissingResourceException
-	{
-		String[] parts = description.split(Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR);
-		if (parts.length != 3) {
-			throw new FocusInternalErrorException("badly formatted reference");
-		}
-
-		String ref = parts[1];
-		String res = this.get(ref);
-		if (res == null) {
-			throw new FocusInternalErrorException("invalid object reference");
-		}
-		FocusSample fs = this.dataManager.getSample(res);
-		res = fs.getString(parts[2]);
-		if (res == null) {
-			throw new FocusInternalErrorException("Cannot find this field.");
-		}
-		// if that's indeed a url, then we can retrieve it.
-		// FIXME check that this is a url!
-		return res;
-	}
-
-
-	/**
 	 * Fill data in this context based on the provided data input definition.
 	 *
-	 * @param data
+	 * @param data A list of descriptions for data fetching, as defined
+	 *             in {@link #register(String, String)}
 	 */
-	public void provideData(HashMap<String, String> data, int depthInHierarchy)
+	public void provideData(HashMap<String, String> data)
 	{
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			this.register(entry.getKey(), entry.getValue(), depthInHierarchy);
+			this.register(entry.getKey(), entry.getValue());
 		}
 	}
 
-
 	/**
-	 * Resolves variables in
+	 * Resolve the supplied request in the current data context.
+	 * A request may be an arbitrary String with expected variable interpolation, e.g.
+	 * {@code "Project number <ctx/my-project/id>"}
+	 * <p/>
+	 * Or a simple string that will return another type of Object (e.g. Double, Array of URLs, etc.)
 	 * <p/>
 	 * Can not be nested "test <ctx/simple-url/<ctx/other-url/field>> test" except if there is nothing around it.
 	 * This is not a feature but a side effect of the implementation. not tested.
 	 *
-	 * @param request
-	 * @return
-	 * @throws FocusMissingResourceException
+	 * @param request The request to satisfy
+	 * @return An Object that answers the request, or {@code null}. We return either the URL
+	 * of a registered {@link FocusSample} or the specifically requested property within a
+	 * {@link FocusSample}. If the request does not match any of our expected formats, it will be
+	 * returned as-is.
+	 * @throws FocusMissingResourceException If the requested resource could not be obtained
 	 */
 	private Object resolve(String request) throws FocusMissingResourceException
 	{
@@ -221,52 +193,18 @@ public class DataContext extends HashMap<String, String>
 	}
 
 	/**
-	 * helper functions to make code easier to read.
-	 * resole from input string to output string
-	 * <p/>
-	 * object is in fact always a disguised string. If not, then throw exception.
-	 */
-	public String resolveToString(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
-	{
-		return TypesHelper.asString(this.resolve(TypesHelper.asString(probableString)));
-	}
-
-	public String resolveToString(String request) throws FocusBadTypeException, FocusMissingResourceException
-	{
-		return TypesHelper.asString(this.resolve(request));
-	}
-
-	public ArrayList<String> resolveToArrayOfUrls(String request) throws FocusMissingResourceException, FocusBadTypeException
-	{
-		return TypesHelper.asArrayOfUrls(this.resolve(request));
-	}
-
-	public Double resolveToDouble(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
-	{
-		return TypesHelper.asDouble(this.resolve(TypesHelper.asString(probableString)));
-	}
-
-	public Object resolveToObject(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
-	{
-		return this.resolve(TypesHelper.asString(probableString));
-	}
-
-	/**
-	 * Resolve the provided request considering the present data context. e.g.
-	 * <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
+	 * Resolve the provided request considering the present data context, without variable
+	 * interpolation within the string. e.g.
+	 * - <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
 	 * data being stored under the simple-example entry.
-	 * <ctx/simple-example> -> will return the url of the context identfied by simlpe-example (a FocusSample)
-	 * <p/>
-	 * It is then the responsibility of the caller to create FocusSample's when appropriate. FIXME FIXME FIXME - i never do it! to test.
-	 * <p/>
-	 * If the request format is not recognized, return it as-is.
-	 * <p/>
-	 * If the request does not succeed, throw a FocusMissingResourceException
-	 * <p/>
-	 * The request can be a variable (<ctx/.../...>) or a simple string that will be passed through without processing other than checking if null
-	 * * @return
+	 * - <ctx/simple-example> -> will return the url of the context identfied by simple-example
+	 *
+	 * @param request The request to satisfy
+	 * @return Same as {@link #resolve(String)}, except that there is never variable
+	 * interpolation; this is the job of {@link #resolve(String)}.
+	 * @throws FocusMissingResourceException If a resource cannot be found
 	 */
-	public Object resolveVariable(String request) throws FocusMissingResourceException
+	private Object resolveVariable(String request) throws FocusMissingResourceException
 	{
 		if (request == null) {
 			return "";
@@ -290,6 +228,7 @@ public class DataContext extends HashMap<String, String>
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve the request in the current data context.", request);
 		}
+		// this is ok to call getSample(url) as url as we have already gotten the url.
 		FocusSample fs = this.dataManager.getSample(url);
 		if (parts.length == 3) {
 			if (fs == null) {
@@ -306,13 +245,100 @@ public class DataContext extends HashMap<String, String>
 		}
 	}
 
+
+	/**
+	 * Resolve the supplied parameter against the current data context.
+	 *
+	 * @param probableString An object, but probably a String.
+	 * @return The requested value as a String
+	 * @throws FocusBadTypeException         If eventually the input object was not a String, or if the
+	 *                                       output casting was not possible
+	 * @throws FocusMissingResourceException If the resource could not be fetched
+	 */
+	public String resolveToString(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asString(this.resolve(TypesHelper.asString(probableString)));
+	}
+
+	/**
+	 * Resolve the supplied parameter against the current data context.
+	 *
+	 * @param request A request
+	 * @return The requested value as a String
+	 * @throws FocusBadTypeException         If the output casting was not possible
+	 * @throws FocusMissingResourceException If the resource could not be fetched
+	 */
+	public String resolveToString(String request) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asString(this.resolve(request));
+	}
+
+	/**
+	 * Resolve the supplied parameter against the current data context. and retrieve an array of
+	 * URLs.
+	 *
+	 * @param request A request
+	 * @return The requested value as an array of URLs
+	 * @throws FocusBadTypeException         If it is not possible to cast the output to an array of URLs
+	 * @throws FocusMissingResourceException If the resource could not be fetched
+	 */
+	public ArrayList<String> resolveToArrayOfUrls(String request) throws FocusMissingResourceException, FocusBadTypeException
+	{
+		return TypesHelper.asArrayOfUrls(this.resolveVariable(request));
+	}
+
+	/**
+	 * Resolve the supplied parameter against the current data context.
+	 *
+	 * @param probableString An object, but probably a String.
+	 * @return The requested value as a Double
+	 * @throws FocusBadTypeException         If eventually the input object was not a String, or if the
+	 *                                       output casting was not possible
+	 * @throws FocusMissingResourceException If the resource could not be fetched
+	 */
+	public Double resolveToDouble(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return TypesHelper.asDouble(this.resolve(TypesHelper.asString(probableString)));
+	}
+
+	/**
+	 * Resolve the supplied parameter against the current data context.
+	 *
+	 * @param probableString An object, but probably a String.
+	 * @return The requested value as an Object, without further casting
+	 * @throws FocusBadTypeException         If eventually the input object was not a String
+	 * @throws FocusMissingResourceException If the resource could not be fetched
+	 */
+	public Object resolveToObject(Object probableString) throws FocusBadTypeException, FocusMissingResourceException
+	{
+		return this.resolveVariable(TypesHelper.asString(probableString));
+	}
+
+
+	/**
+	 * Get the {@link DataManager} used by this {@code DataContext}.
+	 *
+	 * @return The {@link DataManager}
+	 */
 	public DataManager getDataManager()
 	{
 		return this.dataManager;
 	}
 
 	/**
-	 * Queue getter
+	 * Get current data context priority.
+	 *
+	 * @return The priority. The higher the better.
+	 */
+	public int getPriority()
+	{
+		return priority;
+	}
+
+	/**
+	 * Get the queue
+	 *
+	 * @return The queue
 	 */
 	public HashMap<String, PriorityTask<String>> getQueue()
 	{
@@ -320,11 +346,12 @@ public class DataContext extends HashMap<String, String>
 	}
 
 	/**
-	 * FIXME TODO override get, make it wait for the pending async operation
-	 * <p/>
-	 * in some situtations, I may need not to wait (UI Thread). to be cchecked.
+	 * Block and wait for some data to be retrieved, and then return it to the caller.
 	 *
-	 * @param key
+	 * FIXME check stash, better version there.
+	 *
+	 * @param key Key corresponding to the data retrieval request that was
+	 * {@link #register(String, String)}-ed.
 	 * @return the url of the object that is gotten, or null if an error occured and the object
 	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
 	 */
@@ -350,24 +377,51 @@ public class DataContext extends HashMap<String, String>
 		}
 	}
 
+	/**
+	 * Execute the supplied task on a new Thread
+	 * <p/>
+	 * FIXME is that really on a new thread? my be interesting to push it to an execution queue?
+	 *
+	 * @param todo The task to execute
+	 */
 	public void execute(FutureTask<Boolean> todo)
 	{
 		Thread t = new Thread(todo);
 		t.start();
 	}
 
+	/**
+	 * Task responsible for acquiring data
+	 */
 	private class DataAcquisitionTask implements Callable
 	{
+		/**
+		 * Key as it has been {@link #register(String, String)}-ed.
+		 */
 		private String key;
+
+		/**
+		 * Description of the data to retrieve, also as {@link #register(String, String)}-ed.
+		 */
 		private String description;
 
 
+		/**
+		 * Constructor
+		 * @param key Input value for instance variable
+		 * @param description Input value for instance variable
+		 */
 		private DataAcquisitionTask(String key, String description)
 		{
 			this.key = key;
 			this.description = description;
 		}
 
+		/**
+		 * Do the data fetching.
+		 * @return
+		 * @throws Exception
+		 */
 		@Override
 		public String call() throws Exception
 		{
@@ -376,6 +430,7 @@ public class DataContext extends HashMap<String, String>
 				if (description.startsWith(Constant.DataReference.SELECTOR_OPEN)
 						&& description.endsWith(Constant.DataReference.SELECTOR_CLOSE)) {
 
+					// <ctx/.../...>
 					description = description
 							.replaceFirst("^" + Constant.DataReference.SELECTOR_OPEN, "")
 							.replaceFirst(Constant.DataReference.SELECTOR_CLOSE + "$", "");
@@ -390,7 +445,8 @@ public class DataContext extends HashMap<String, String>
 						if (parts.length != 3) {
 							throw new FocusInternalErrorException("Wrong number of fields for description of service.");
 						}
-						if (parts[0].equals(Constant.DataReference.SELECTOR_SERVICE_HISTORY)) { // FIXME add the special param | last for getting last entry.
+						// <history|...|...>
+						if (parts[0].equals(Constant.DataReference.SELECTOR_SERVICE_HISTORY)) {
 							String u;
 							if (parts[1].startsWith(Constant.DataReference.SELECTOR_CONTEXT_LABEL + Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR)) {
 								u = resolveReferencedUrl(parts[1]);
@@ -414,11 +470,43 @@ public class DataContext extends HashMap<String, String>
 				// we highlight the fact that we could not retrieve a resource by NOT saving
 				// it into the DataContext. When get()-ing, the caller will
 				// receive null, and can act accordingly.
+				// FIXME is that really the case? might be a problem if we remove put(key, null) from register(); check the stash.
 				return null;
 			}
 			DataContext.this.put(key, f.getUrl());
 			return f.getUrl();
 		}
+
+		/**
+		 * We know that we have a context reference (starting with "ctx/")
+		 * and we want to return the corresponding URL.
+		 *
+		 * @param description The description of the resource to retrieve
+		 * @return
+		 */
+		private String resolveReferencedUrl(String description) throws FocusMissingResourceException
+		{
+			String[] parts = description.split(Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR);
+			if (parts.length != 3 || !parts[0].equals(Constant.DataReference.SELECTOR_CONTEXT_LABEL)) {
+				throw new FocusInternalErrorException("badly formatted reference");
+			}
+
+			String ref = parts[1];
+			String res = get(ref); // FIXME block
+			if (res == null) {
+				throw new FocusInternalErrorException("invalid object reference");
+			}
+			// This is ok to getSample(res) here as res has already been gotten
+			FocusSample fs = dataManager.getSample(res);
+			res = fs.getString(parts[2]);
+			if (res == null) {
+				throw new FocusInternalErrorException("Cannot find this field.");
+			}
+			// if that's indeed a url, then we can retrieve it.
+			// FIXME check that this is a url!
+			return res;
+		}
+		
 	}
 
 

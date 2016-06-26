@@ -320,7 +320,7 @@ public class UserManager implements ApplicationStatusObserver
 		UserInstance user;
 		try {
 			// UserInstance is child of User, so safe to cast
-			user = (UserInstance) this.dataManager.get(this.userUrl, User.class);
+			user = (UserInstance) this.dataManager.get(this.userUrl, UserInstance.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without a user
@@ -374,7 +374,7 @@ public class UserManager implements ApplicationStatusObserver
 		}
 		UserPreferencesInstance userPreferences = null;
 		try {
-			userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferences.class);
+			userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferencesInstance.class);
 		}
 		catch (IOException ex) {
 			// we cannot survive without userpreferences

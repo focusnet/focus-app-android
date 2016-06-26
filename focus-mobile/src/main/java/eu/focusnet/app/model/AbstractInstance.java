@@ -52,9 +52,6 @@ abstract public class AbstractInstance
 	 */
 	protected String path;
 
-	// depth in hierarchy is in fact attached to a datacontext.
-	protected int depthInHierarchy;
-
 	/**
 	 * Tells whether this instance and the instances it contains are valid
 	 */
@@ -75,7 +72,6 @@ abstract public class AbstractInstance
 		this.path = null;
 		this.valid = true;
 		this.dataManager = dm;
-		this.depthInHierarchy = 0;
 	}
 
 	/**

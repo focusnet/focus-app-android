@@ -100,7 +100,7 @@ public class PageInstance extends AbstractInstance
 	 * @param pageTpl Page template on the top of which we build this instance
 	 * @param dataCtx {@link DataContext} being used to resolve data
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx, int depthInHierarchy)
+	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx)
 	{
 		super(dataCtx.getDataManager());
 
@@ -109,11 +109,10 @@ public class PageInstance extends AbstractInstance
 		this.type = type;
 		this.widgets = new ArrayList<>();
 		this.dataContext = dataCtx;
-		this.depthInHierarchy = depthInHierarchy;
 		this.disabled = this.template.isDisabled();
 
 		// register page-specific data to our current data context
-		this.dataContext.provideData(this.template.getData(), this.depthInHierarchy);
+		this.dataContext.provideData(this.template.getData());
 	}
 
 	/**
@@ -122,10 +121,9 @@ public class PageInstance extends AbstractInstance
 	 * @param projectTemplate The project template to take as a basis for generating the page instances.
 	 * @param pageType The category of page we are interested in
 	 * @param parentContext The {@link DataContext} to use as a basis for data resolution
-	 * @param expectedHierarchyLevel The expected hierarchy level.
 	 * @return A list of {@link PageInstance}s
 	 */
-	public static ArrayList<PageInstance> createPageInstances(ProjectTemplate projectTemplate, PageType pageType, DataContext parentContext, int expectedHierarchyLevel)
+	public static ArrayList<PageInstance> createPageInstances(ProjectTemplate projectTemplate, PageType pageType, DataContext parentContext)
 	{
 		ArrayList<PageInstance> newPages = new ArrayList<>();
 
@@ -161,18 +159,18 @@ public class PageInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(parentContext);
-					newPageCtx.register(Constant.Navigation.LABEL_PAGE_ITERATOR, url, expectedHierarchyLevel - 1);
+					newPageCtx.register(Constant.Navigation.LABEL_PAGE_ITERATOR, url);
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
-					PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx, expectedHierarchyLevel);
+					PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx);
 					newPages.add(page);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
 				DataContext newPageCtx = new DataContext(parentContext);
-				PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx, expectedHierarchyLevel);
+				PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx);
 				newPages.add(page);
 			}
 		}
@@ -200,18 +198,16 @@ public class PageInstance extends AbstractInstance
 	 * @param pageTpl The page template on the top of which we create this instance
 	 * @param pageType The category of page to create
 	 * @param newPageCtx The {@link DataContext} of the new page instance
-	 * @param expectedHierarchyLevel The expected hierarchy level of the instance
 	 * @return A new {@link PageInstance}
 	 */
 	private static PageInstance createPageInstance(
 			ProjectTemplate projectTemplate,
 			PageTemplate pageTpl,
 			PageType pageType,
-			DataContext newPageCtx,
-			int expectedHierarchyLevel
+			DataContext newPageCtx
 	)
 	{
-		PageInstance page = new PageInstance(pageTpl, pageType, newPageCtx, expectedHierarchyLevel);
+		PageInstance page = new PageInstance(pageTpl, pageType, newPageCtx);
 
 		for (WidgetReference wr : pageTpl.getWidgets()) {
 			WidgetTemplate wTpl = projectTemplate.findWidget(wr.getWidgetid());

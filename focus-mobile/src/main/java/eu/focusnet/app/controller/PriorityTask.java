@@ -1,8 +1,3 @@
-package eu.focusnet.app.controller;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -22,6 +17,12 @@ import java.util.concurrent.FutureTask;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.controller;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+
 //http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
 public final class PriorityTask<T> extends FutureTask<T> implements Comparable<PriorityTask<T>>
 {

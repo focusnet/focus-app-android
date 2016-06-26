@@ -66,9 +66,6 @@ public class AppContentInstance extends AbstractInstance
 	{
 		super(dataManager);
 
-		// we are at the root -> level = 1
-		this.depthInHierarchy = 1;
-
 		this.appTemplate = template;
 		this.projects = new ArrayList<>();
 		this.dataContext = new DataContext(this.dataManager);
@@ -101,12 +98,12 @@ public class AppContentInstance extends AbstractInstance
 		this.title = this.appTemplate.getTitle();
 
 		// retrieve application-wide data
-		this.dataContext.provideData(this.appTemplate.getData(), this.depthInHierarchy);
+		this.dataContext.provideData(this.appTemplate.getData());
 
 		// build the different projects in the application content
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
-		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext, this.depthInHierarchy + 1);
+		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext);
 
 		// is everything valid?
 		this.checkValidity();

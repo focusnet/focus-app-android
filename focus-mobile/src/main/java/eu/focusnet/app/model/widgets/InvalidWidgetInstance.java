@@ -1,7 +1,3 @@
-package eu.focusnet.app.model.widgets;
-
-import java.util.Map;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -21,11 +17,30 @@ import java.util.Map;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets;
+
+import java.util.Map;
+
+/**
+ * An instance containing all information pertaining to an invalid widget. This type of widget
+ * replaces widgets that are found to be invalid, and it keeps a reference of the originally failing
+ * widget.
+ */
 public class InvalidWidgetInstance extends WidgetInstance
 {
 
+	/**
+	 * Reference to the widget instance that originally failed to laod.
+	 */
 	private WidgetInstance originalWidgetInstance;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param layoutConfig Inherited
+	 * @param w Inherited
+	 */
 	public InvalidWidgetInstance(Map<String, String> layoutConfig, WidgetInstance w)
 	{
 		super(layoutConfig, w.getDataManager());

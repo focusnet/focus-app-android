@@ -107,3 +107,4 @@ SOFTWARE.
 - README.md
 - content of About
 - Google map api key outside of github.
+- Html5WidgetInstance is blocking. Is that a problem?

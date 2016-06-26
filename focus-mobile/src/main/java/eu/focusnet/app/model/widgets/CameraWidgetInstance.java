@@ -29,37 +29,43 @@ import java.util.Map;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
-/**
- * Created by admin on 28.01.2016.
- */
 
+/**
+ * An instance containing all information pertaining to a camera capture widget.
+ */
 public class CameraWidgetInstance extends DataCollectionWidgetInstance
 {
 
+	/**
+	 * Base64 representation of the captured image
+	 */
 	private String savedImage;
 
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public CameraWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
-
+	/**
+	 * Nothing specific to perform
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
 
 	}
 
-
 	/**
 	 * Save the image being captured as a base64-encoded string.
+	 *
+	 * @param bitmap The Bitmap image having been captured.
 	 */
 	public void saveImage(Bitmap bitmap)
 	{

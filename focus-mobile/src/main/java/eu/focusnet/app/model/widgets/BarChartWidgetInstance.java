@@ -1,10 +1,3 @@
-package eu.focusnet.app.model.widgets;
-
-import java.util.Map;
-
-import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.gson.WidgetTemplate;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -24,14 +17,27 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets;
+
+import java.util.Map;
+
+import eu.focusnet.app.model.DataContext;
+import eu.focusnet.app.model.gson.WidgetTemplate;
+
+/**
+ * WidgetInstance containing all information pertaining to a Bar Chart widget.
+ *
+ * All the logic is the same as the one for {@link LineChartWidgetInstance}.
+ */
 public class BarChartWidgetInstance extends LineChartWidgetInstance
 {
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public BarChartWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{

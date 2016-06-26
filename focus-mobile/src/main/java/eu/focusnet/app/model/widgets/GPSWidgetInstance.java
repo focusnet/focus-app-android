@@ -26,22 +26,37 @@ import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
- * Created by admin on 28.01.2016.
+ * An instance containing all information pertaining to a GPS widget.
  */
 public class GPSWidgetInstance extends DataCollectionWidgetInstance
 {
 
+	/**
+	 * Variable holding the current latitude
+	 */
 	private double latitude;
+
+	/**
+	 * Variable holding the current longitude
+	 */
 	private double longitude;
+
+	/**
+	 * Variable holding the current altitude
+	 */
 	private double altitude;
+
+	/**
+	 * Variable holding the current precision
+	 */
 	private float accuracy;
 
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public GPSWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -49,6 +64,9 @@ public class GPSWidgetInstance extends DataCollectionWidgetInstance
 	}
 
 
+	/**
+	 * Nothing specific to be done for this widget instance
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -64,5 +82,13 @@ public class GPSWidgetInstance extends DataCollectionWidgetInstance
 		this.longitude = longitude;
 		this.altitude = altitude;
 		this.accuracy = accuracy;
+	}
+
+	/**
+	 * Reset instance variables.
+	 */
+	public void resetSample()
+	{
+		this.latitude = this.longitude = this.altitude = this.accuracy = 0;
 	}
 }

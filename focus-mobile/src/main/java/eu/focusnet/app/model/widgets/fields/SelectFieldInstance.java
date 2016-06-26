@@ -1,17 +1,3 @@
-package eu.focusnet.app.model.widgets.fields;
-
-import com.google.gson.internal.LinkedTreeMap;
-
-import java.util.ArrayList;
-
-import eu.focusnet.app.R;
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusInternalErrorException;
-import eu.focusnet.app.util.FocusMissingResourceException;
-import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
-import eu.focusnet.app.util.ApplicationHelper;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -31,21 +17,65 @@ import eu.focusnet.app.util.ApplicationHelper;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets.fields;
+
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.util.ArrayList;
+
+import eu.focusnet.app.R;
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
+import eu.focusnet.app.model.DataContext;
+import eu.focusnet.app.model.TypesHelper;
+import eu.focusnet.app.util.ApplicationHelper;
+
+/**
+ * An instance containing all information pertaining to a select list field.
+ */
 public class SelectFieldInstance extends FieldInstance
 {
 
+	/**
+	 * Configuration property for the list labels
+	 */
 	final private static String SELECT_LABEL_OPTIONS_TEXTS = "options-texts";
+
+	/**
+	 * Configuration property for the list values
+	 */
 	final private static String SELECT_LABEL_OPTIONS_VALUES = "options-values";
 
+	/**
+	 * List values
+	 */
 	private ArrayList<String> values;
+
+	/**
+	 * List labels
+	 */
 	private ArrayList<String> texts;
 
 
+	/**
+	 * Constructor
+	 * @param fieldName Inherited
+	 * @param config Inherited
+	 * @param dataContext Inherited
+	 */
 	public SelectFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
 		super(fieldName, config, dataContext);
 	}
 
+	/**
+	 * Specific configuration:
+	 * - values
+	 * - labels
+	 * - if field is not mandatory, display '-- Select --'
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -128,15 +158,21 @@ public class SelectFieldInstance extends FieldInstance
 			this.texts.add(0, ApplicationHelper.getResources().getString(R.string.select_no_selection));
 			this.values.add(0, "");
 		}
-
-
 	}
 
+	/**
+	 * Get list values
+	 * @return List values
+	 */
 	public ArrayList<String> getValues()
 	{
 		return this.values;
 	}
 
+	/**
+	 * Get list labels
+	 * @return List labels
+	 */
 	public ArrayList<String> getTexts()
 	{
 		return this.texts;

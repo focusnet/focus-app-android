@@ -1,11 +1,3 @@
-package eu.focusnet.app.model.widgets.fields;
-
-import com.google.gson.internal.LinkedTreeMap;
-
-import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.TypesHelper;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -25,9 +17,24 @@ import eu.focusnet.app.model.TypesHelper;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets.fields;
+
+import com.google.gson.internal.LinkedTreeMap;
+
+import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.model.DataContext;
+import eu.focusnet.app.model.TypesHelper;
+
+/**
+ * An instance containing all information pertaining to a textfield field.
+ */
 public class TextfieldFieldInstance extends FieldInstance
 {
 
+	/**
+	 * Valid types of textfields
+	 */
 	public enum ValidType
 	{
 		TEXTFIELD_TYPE_TEXT("text"),
@@ -63,17 +70,48 @@ public class TextfieldFieldInstance extends FieldInstance
 		}
 	}
 
-	private static final String TEXTFIELD_LABEL_INPUT_TYPE = "input-type";
-	private static final String TEXTFIELD_LABEL_DECIMALS_NUMBER = "decimals-number";
-	private static final int TEXTFIELD_DEFAULT_DECIMALS_NUMBER = 2;
+	/**
+	 * Configuration property for textfield type
+	 */
+	final private static String TEXTFIELD_LABEL_INPUT_TYPE = "input-type";
+
+	/**
+	 * Configuration property for defining how many decimals we display
+	 */
+	final private static String TEXTFIELD_LABEL_DECIMALS_NUMBER = "decimals-number";
+
+	/**
+	 * Default value for decimcals number
+	 */
+	final private static int TEXTFIELD_DEFAULT_DECIMALS_NUMBER = 2;
+
+	/**
+	 * Textfield type
+	 */
 	protected ValidType inputType;
+
+	/**
+	 * Number of decimals
+	 */
 	private int decimalsNumber;
 
+	/**
+	 * Constructor
+	 * @param fieldName Inherited
+	 * @param config Inherited
+	 * @param dataContext Inherited
+	 */
 	public TextfieldFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
 		super(fieldName, config, dataContext);
 	}
 
+	/**
+	 * Specific configurations:
+	 * - label
+	 * - input type
+	 * - decimals number if applicable
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -104,12 +142,19 @@ public class TextfieldFieldInstance extends FieldInstance
 		}
 	}
 
+	/**
+	 * Get input type
+	 * @return The input type
+	 */
 	public ValidType getInputType()
 	{
 		return this.inputType;
 	}
 
-
+	/**
+	 * Get number of decimals to display
+	 * @return Number of decimals to display.
+	 */
 	public int getDecimalsNumber()
 	{
 		return this.decimalsNumber;

@@ -37,29 +37,39 @@ import eu.focusnet.app.model.widgets.fields.TextfieldFieldInstance;
 import eu.focusnet.app.util.Constant;
 
 /**
- * Created by admin on 28.01.2016.
+ * An instance containing all information pertaining to a form widget.
  */
 public class FormWidgetInstance extends DataCollectionWidgetInstance
 {
 
+	/**
+	 * List of fields
+	 */
 	private LinkedHashMap<String, FieldInstance> fields;
 
 	/**
-	 * C'tor
+	 * Constructor.
+	 *
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public FormWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
-
+	/**
+	 * Specific configuration:
+	 * - iterate through fields and create field instances accordingly
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
 		this.fields = new LinkedHashMap<>();
 		for (Map.Entry e : this.config.entrySet()) {
 			String fieldName = (String) e.getKey();
-			LinkedTreeMap<String, Object> fieldConfig = (LinkedTreeMap<String, Object>) e.getValue(); // FIXME warning for casting
+			LinkedTreeMap<String, Object> fieldConfig = (LinkedTreeMap<String, Object>) e.getValue();
 			if (fieldConfig == null) {
 				this.markAsInvalid();
 				return;
@@ -103,6 +113,10 @@ public class FormWidgetInstance extends DataCollectionWidgetInstance
 		}
 	}
 
+	/**
+	 * Get fields
+	 * @return The fields instances as a {@code Map}
+	 */
 	public LinkedHashMap<String, FieldInstance> getFields()
 	{
 		return this.fields;

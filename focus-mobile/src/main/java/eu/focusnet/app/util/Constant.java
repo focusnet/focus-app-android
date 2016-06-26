@@ -138,6 +138,16 @@ final public class Constant
 		 * Fallback country code if everything goes wrong.
 		 */
 		final public static String LOCALE_FALLBACK_COUNTRY = "";
+
+		/**
+		 * Location folder of webapps in the assets
+		 */
+		final public static String ASSETS_HTML5_WEBAPPS_FOLDER = "webapps";
+
+		/**
+		 * Entry point of webapps
+		 */
+		final public static String ASSETS_HTML5_WEBAPPS_ENTRY_POINT = "index.html";
 	}
 
 	/**

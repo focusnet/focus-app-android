@@ -34,34 +34,112 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
  */
 public class LineChartWidgetInstance extends WidgetInstance
 {
-	private static final String CONFIG_LABEL_CAPTION = "caption";
-	private static final String CONFIG_LABEL_X_AXIS = "x-axis";
-	private static final String CONFIG_LABEL_SERIES = "series";
-	private static final String CONFIG_LABEL_LIMITS = "limits";
-	private static final String CONFIG_LABEL_LABEL = "label";
-	private static final String CONFIG_LABEL_VALUES = "values";
-	private static final String CONFIG_LABEL_VALUE = "value";
-	private static final String CONFIG_LABEL_LIMIT_TYPE = "type";
+	/**
+	 * Configuration property for the caption
+	 */
+	final private static String CONFIG_LABEL_CAPTION = "caption";
 
+	/**
+	 * Configuration property for the x-axis
+	 */
+	final private static String CONFIG_LABEL_X_AXIS = "x-axis";
+
+	/**
+	 * Configuration property for the Series
+	 */
+	final private static String CONFIG_LABEL_SERIES = "series";
+
+	/**
+	 * Configuration property for the limits
+	 */
+	final private static String CONFIG_LABEL_LIMITS = "limits";
+
+	/**
+	 * Configuration property for the labels
+	 */
+	final private static String CONFIG_LABEL_LABEL = "label";
+
+	/**
+	 * Configuration property for the values
+	 */
+	final private static String CONFIG_LABEL_VALUES = "values";
+
+	/**
+	 * Configuration property for the limit value
+	 */
+	final private static String CONFIG_LABEL_LIMIT_VALUE = "value";
+
+	/**
+	 * Configuration property for the type of oimit
+	 */
+	final private static String CONFIG_LABEL_LIMIT_TYPE = "type";
+
+	/**
+	 * The caption
+	 */
 	private String caption;
+
+	/**
+	 * Number of series
+	 */
 	private int numberOfSeries;
+
+	/**
+	 * Number of max limits
+	 */
 	private int numberOfMaxLimits;
+
+	/**
+	 * Number of min limits
+	 */
 	private int numberOfMinLimits;
+
+	/**
+	 * Series labels
+	 */
 	private ArrayList<String> seriesLabels;
+
+	/**
+	 * Series values
+	 */
 	private ArrayList<ArrayList<Double>> seriesValues;
+
+	/**
+	 * Labels for max limits
+	 */
 	private ArrayList<String> limitsMaxLabels;
+
+	/**
+	 * Values for max limits
+	 */
 	private ArrayList<Double> limitsMaxValues;
+
+	/**
+	 * Labels for min limits
+	 */
 	private ArrayList<String> limitsMinLabels;
+
+	/**
+	 * Values for min values
+	 */
 	private ArrayList<Double> limitsMinValues;
+
+	/**
+	 * x-axis label
+	 */
 	private String xAxisLabel;
+
+	/**
+	 * x-axis values
+	 */
 	private ArrayList<String> xAxisValues;
 
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public LineChartWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
@@ -71,7 +149,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 	/**
 	 * Process the configuration that is specific to LineCharts. In JSON, the structure is well
 	 * organized, but here we flatten everything such that it can be used to render by the Chart
-	 * library. That could be improved, but will work for now.
+	 * library.
 	 */
 	@Override
 	public void processSpecificConfig()
@@ -206,7 +284,7 @@ public class LineChartWidgetInstance extends WidgetInstance
 					Double value;
 					String type;
 					Object rawLimitLabel = m2.get(CONFIG_LABEL_LABEL);
-					Object rawLimitValue = m2.get(CONFIG_LABEL_VALUE);
+					Object rawLimitValue = m2.get(CONFIG_LABEL_LIMIT_VALUE);
 					if (rawLimitLabel == null || rawLimitValue == null) {
 						this.markAsInvalid();
 						return;
@@ -254,61 +332,116 @@ public class LineChartWidgetInstance extends WidgetInstance
 	}
 
 
+	/**
+	 * Get the caption
+	 *
+	 * @return The caption
+	 */
 	public String getCaption()
 	{
 		return this.caption;
 	}
 
+	/**
+	 * Returns the x-axis label
+	 * @return The x-axis label
+	 */
 	public String getxAxisLabel()
 	{
 		return this.xAxisLabel;
 	}
 
+	/**
+	 * Get the x-axis values
+	 * @return The x-axis values
+	 */
 	public ArrayList<String> getxAxisValues()
 	{
 		return this.xAxisValues;
 	}
 
+	/**
+	 * Get the number of series
+	 * @return The number of series
+	 */
 	public int getNumberOfSeries()
 	{
 		return this.numberOfSeries;
 	}
 
+	/**
+	 * Get the number of max limits
+	 * @return Number of max limits
+	 */
 	public int getNumberOfMaxLimits()
 	{
 		return this.numberOfMaxLimits;
 	}
 
+	/**
+	 * Get the number of min limits
+	 * @return Number of min limits
+	 */
 	public int getNumberOfMinLimits()
 	{
 		return this.numberOfMinLimits;
 	}
 
+	/**
+	 * Get label of a specific serie
+	 * @param i Which serie to get the label from (0-based index)
+	 * @return The label
+	 */
 	public String getSerieLabel(int i)
 	{
 		return this.seriesLabels.get(i);
 	}
 
+	/**
+	 * Get values for a specific serie
+	 * @param i Which serie to get the label from (0-based index)
+	 * @return The values
+	 */
 	public ArrayList<Double> getSerieValues(int i)
 	{
 		return this.seriesValues.get(i);
 	}
 
+	/**
+	 * Get a specific max limit label
+	 * @param i Which label to get (0-based index)
+	 * @return The label
+	 */
 	public String getMaxLimitLabel(int i)
 	{
 		return this.limitsMaxLabels.get(i);
 	}
 
+	/**
+	 * Get a specific max limit value
+	 * @param i Which value to get (0-based index)
+	 * @return The value
+	 */
 	public Double getMaxLimitValue(int i)
 	{
 		return this.limitsMaxValues.get(i);
 	}
 
+	/**
+	 * Get a specific min limit label
+	 * @param i Which label to get (0-based index)
+	 * @return The label
+	 */
 	public String getMinLimitLabel(int i)
 	{
 		return this.limitsMinLabels.get(i);
 	}
 
+	/**
+	 * Get a specific min limit value
+	 * @param i Which value to get (0-based index)
+	 * @return The value
+	 */
 	public Double getMinLimitValue(int i)
 	{
 		return this.limitsMinValues.get(i);

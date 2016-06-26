@@ -36,23 +36,53 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
  */
 public class TableWidgetInstance extends WidgetInstance
 {
-	private final static String CONFIG_LABEL_COLUMNS = "columns";
-	private final static String CONFIG_LABEL_HEADER = "header";
-	private final static String CONFIG_LABEL_VALUES = "values";
+	/**
+	 * The configuration property for columns definitions
+	 */
+	final private static String CONFIG_LABEL_COLUMNS = "columns";
 
-	private final static String CONFIG_LABEL_IS_EPOCH = "epoch"; // FIXME better filtering/formatting system is required
+	/**
+	 * The configuration property corresponding to header definition
+	 */
+	final private static String CONFIG_LABEL_HEADER = "header";
 
+	/**
+	 * The configuration property corresponding to values definition
+	 */
+	final private static String CONFIG_LABEL_VALUES = "values";
+
+	/**
+	 * The configuration property that defines if values are an epoch timestamp
+	 * @deprecated quite clumsy, was last minute addition for PC3
+	 */
+	final private static String CONFIG_LABEL_IS_EPOCH = "epoch";
+
+	/**
+	 * Headers
+	 */
 	private String[] headers;
+
+	/**
+	 * Values ([rows][cols])
+	 */
 	private String[][] values;
+
+	/**
+	 * Number of columns
+	 */
 	private int numberOfColumns;
+
+	/**
+	 * Maximum number of rows
+	 */
 	private int maxNumberOfRows;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param template
-	 * @param layoutConfig
-	 * @param newCtx
+	 * @param template Inherited
+	 * @param layoutConfig Inherited
+	 * @param newCtx Inherited
 	 */
 	public TableWidgetInstance(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
@@ -128,7 +158,7 @@ public class TableWidgetInstance extends WidgetInstance
 					String v = this.dataContext.resolveToString(values.get(i));
 					if (isEpoch) {
 						Double d = Double.parseDouble(v);
-						long longVal = Double.valueOf(d).longValue() * 1000;
+						long longVal = d.longValue() * 1_000;
 						v = dateFormat.format(new Date(longVal));
 					}
 					else {
@@ -170,13 +200,12 @@ public class TableWidgetInstance extends WidgetInstance
 				}
 			}
 		}
-		return;
 	}
 
 	/**
 	 * Get the number of columns for this Table
 	 *
-	 * @return
+	 * @return Number of columns
 	 */
 	public int getNumberOfColumns()
 	{
@@ -186,7 +215,7 @@ public class TableWidgetInstance extends WidgetInstance
 	/**
 	 * Return the number of rows for this Table
 	 *
-	 * @return
+	 * @return Number of rows
 	 */
 	public int getNumberOfRows()
 	{
@@ -197,7 +226,7 @@ public class TableWidgetInstance extends WidgetInstance
 	/**
 	 * Return the header row of the Table
 	 *
-	 * @return
+	 * @return Header row
 	 */
 	public String[] getTableHeaders()
 	{
@@ -208,7 +237,7 @@ public class TableWidgetInstance extends WidgetInstance
 	 * Return the data of the Table as an array of array of Strings. The first dimension contains
 	 * the rows, the second dimension contains the columns
 	 *
-	 * @return
+	 * @return Table data as a bi-dimensional array of Strings
 	 */
 	public String[][] getTableData()
 	{

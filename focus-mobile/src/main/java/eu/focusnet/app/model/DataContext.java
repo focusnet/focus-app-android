@@ -506,7 +506,7 @@ public class DataContext extends HashMap<String, String>
 			// FIXME check that this is a url!
 			return res;
 		}
-		
+
 	}
 
 

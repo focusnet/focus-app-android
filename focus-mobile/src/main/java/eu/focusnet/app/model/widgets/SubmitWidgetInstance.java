@@ -28,28 +28,44 @@ import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
- * Created by admin on 28.01.2016.
+ * An instance containing all information pertaining to a Submit widget.
  */
 public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 {
 
+	/**
+	 * Configuration property for the button label
+	 */
 	final private static String CONFIG_LABEL_LABEL = "label";
+
+	/**
+	 * Configuration default value for the button label
+	 */
 	final private static String CONFIG_LABEL_DEFAULT_VALUE = "Submit";
 
+	/**
+	 * Label of the button
+	 */
 	private String submitLabel;
 
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public SubmitWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
+	/**
+	 * Specific configuration:
+	 * - a label for the button
+	 *
+	 * FIXME implement action on submit
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -63,14 +79,14 @@ public class SubmitWidgetInstance extends DataCollectionWidgetInstance
 			}
 			catch (FocusMissingResourceException | FocusBadTypeException ex) {
 				this.markAsInvalid();
-				return;
 			}
 		}
-
-		// reset button, actions
-		// FIXME TODO
 	}
 
+	/**
+	 * Get the button label
+	 * @return The label
+	 */
 	public String getSubmitLabel()
 	{
 		return this.submitLabel;

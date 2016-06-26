@@ -112,9 +112,9 @@ public class Html5WidgetFragment extends WidgetFragment
 
 		webView.loadUrl(
 				"file:///android_asset/"
-						+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
+						+ Constant.AppConfig.ASSETS_HTML5_WEBAPPS_FOLDER + "/"
 						+ ((Html5WidgetInstance) this.widgetInstance).getWebAppIdentifier() + "/"
-						+ Html5WidgetInstance.ASSETS_HTML5_WEBAPPS_ENTRY_POINT
+						+ Constant.AppConfig.ASSETS_HTML5_WEBAPPS_ENTRY_POINT
 		);
 
 		return this.rootView;

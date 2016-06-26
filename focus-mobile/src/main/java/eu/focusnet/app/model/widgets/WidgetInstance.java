@@ -37,32 +37,60 @@ import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.util.Constant;
 
 /**
- * Created by julien on 12.01.16.
+ * Abstract class being the common parent to all Widget instanciations.
  */
 public abstract class WidgetInstance extends AbstractInstance
 {
-
-
+	/**
+	 * Default layout customization
+	 */
 	private static HashMap<String, String> layoutConfigDefaults = null;
 
+	/**
+	 * Default layout customization
+	 */
 	static {
 		layoutConfigDefaults = new HashMap<>();
 		layoutConfigDefaults.put(Constant.Ui.WIDGET_LAYOUT_WIDTH_LABEL, Constant.Ui.WIDGET_LAYOUT_WIDTH_DEFAULT_VALUE);
 	}
 
+	/**
+	 * {@code Map} containing configuration parameters for the widget
+	 */
 	protected LinkedTreeMap<String, Object> config;
+
+	/**
+	 * Template base on which the instance is constructed
+	 */
 	protected WidgetTemplate template;
+
+	/**
+	 * Widget unique identifier
+	 */
 	private String guid;
+
+	/**
+	 * Title of the widget
+	 */
 	private String title;
+
+	/**
+	 * Type of the widget
+	 */
 	private String type;
+
+	/**
+	 * {@code Map} containing layout customization information
+	 */
 	private Map<String, String> layoutConfig;
 
 	/**
-	 * C'tor for instantiating real widget instances
+	 * C'tor for instantiating real widget instances. This constructor also acquires the widget
+	 * configuration and frees memory when it does not need data structures anymore.
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Base widget template
+	 * @param layoutConfig Layout configuration
+	 * @param dataCtx Data context against which we will resolve data
 	 */
 	public WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, @NonNull DataContext dataCtx)
 	{
@@ -86,7 +114,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	}
 
 	/**
-	 * Dummy c'tor for InvalidWidgetInstance
+	 * Dummy c'tor for {@link InvalidWidgetInstance}
 	 */
 	public WidgetInstance(Map<String, String> layoutConfig, DataManager dm)
 	{
@@ -95,13 +123,16 @@ public abstract class WidgetInstance extends AbstractInstance
 		this.layoutConfig = (layoutConfig == null ? WidgetInstance.layoutConfigDefaults : layoutConfig);
 	}
 
-	public static WidgetInstance factory(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
+	/**
+	 * Factory for creating specialized Widgets based on the input template
+	 * @param template Widget template
+	 * @param layoutConfig Layout configuration
+	 * @param newCtx Data context
+	 * @return A new instance, child of {@link WidgetInstance}
+	 */
+	public static WidgetInstance factory(@NonNull WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
 		WidgetInstance w;
-		String a = "abc";
-		if (template == null) {
-			a = a.replace("asdlkfj", "");
-		}
 		switch (template.getType()) {
 			case Constant.DataModelTypes.WIDGET_TYPE_TEXT:
 				w = new TextWidgetInstance(template, layoutConfig, newCtx);
@@ -174,7 +205,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Return this WidgetInstance's guid.
 	 *
-	 * @return
+	 * @return The guid
 	 */
 	public String getGuid()
 	{
@@ -183,6 +214,8 @@ public abstract class WidgetInstance extends AbstractInstance
 
 	/**
 	 * Set the guid
+	 *
+	 * @param guid The new guid
 	 */
 	protected void setGuid(String guid)
 	{
@@ -192,7 +225,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Get the current widget's type.
 	 *
-	 * @return
+	 * @return The type
 	 */
 	public String getType()
 	{
@@ -202,7 +235,7 @@ public abstract class WidgetInstance extends AbstractInstance
 	/**
 	 * Get the title
 	 *
-	 * @return
+	 * @return The title
 	 */
 	public String getTitle()
 	{
@@ -225,6 +258,8 @@ public abstract class WidgetInstance extends AbstractInstance
 
 	/**
 	 * Return an integer that represents the number of columsn covered by the widget.
+	 *
+	 * @return a number between 1 and {@link Constant.Ui#LAYOUT_NUM_OF_COLUMNS}.
 	 */
 	public int getNumberOfColumnsInUi()
 	{

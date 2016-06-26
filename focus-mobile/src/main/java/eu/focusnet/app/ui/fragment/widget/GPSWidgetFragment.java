@@ -209,6 +209,7 @@ public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient
 	 */
 	private void setUnavailableMessage()
 	{
+		((GPSWidgetInstance)this.widgetInstance).resetSample();
 		this.longitudeView.setText(R.string.n_a);
 		this.latitudeView.setText(R.string.n_a);
 		this.accuracyView.setText(R.string.n_a);

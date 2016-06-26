@@ -1,3 +1,23 @@
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package eu.focusnet.app.model.widgets;
 
 import android.content.Intent;
@@ -21,46 +41,73 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
 import eu.focusnet.app.util.ApplicationHelper;
 
 /**
- * The MIT License (MIT)
- * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p/>
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- * <p/>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * An instance containing all information pertaining to a form widget.
  */
 public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 {
-	private final static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
-	private final static String CONFIG_LABEL_BUTTON_LABEL = "launcher-button-label";
-	private final static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
+	/**
+	 * Configuration property for application identifier
+	 */
+	final private static String CONFIG_LABEL_APP_IDENTIFIER = "app-identifier";
 
+	/**
+	 * Configuration property for launcher button label
+	 */
+	final private static String CONFIG_LABEL_BUTTON_LABEL = "launcher-button-label";
+
+	/**
+	 * Configuration property for input parameter
+	 */
+	final private static String CONFIG_LABEL_INPUT_OBJECT = "input-object";
+
+	/**
+	 * Button label
+	 */
 	private String buttonLabel;
+
+	/**
+	 * Application identifier
+	 */
 	private String appIdentifier;
 
 	/**
-	 * Always an URL pointing to a FocusSample
+	 * Object to pass as the external application input. This is a {@link FocusSample}
 	 */
 	private FocusSample inputObject;
+
+	/**
+	 * External application request code
+	 */
 	private int requestCode;
+
+	/**
+	 * External application response
+	 */
 	private FocusSample response;
+
+	/**
+	 * Installed version of the external application
+	 */
 	private String installedVersion;
 
+	/**
+	 * Constructor
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
+	 */
 	public ExternalAppWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
+	/**
+	 * Specific configuration:
+	 * - button label
+	 * - application identifier and check whether the application is installed.
+	 * - External application input object
+	 * - Set the application request code to something (almost) random.
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -132,12 +179,17 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 		// set requestCode
 		// only can use 16-bit for calls to external apps
-		// FIXME this may not be unique. But risks are low, let's accept it for this prototype.
+		// This may not be unique. But risks are low.
 		this.requestCode = new Random().nextInt(0xffff);
 	}
 
 	/**
-	 * Update the app availability instance variable and return the current availability.
+	 * Update the app availability instance variable and return the current availability. This
+	 * must be called everytime we may use the application, because users may install or
+	 * uninstall the external application between application startup and display of the
+	 * page containing the external application launcher.
+	 *
+	 * @return {@code true} if the application is available, {@code false} otherwise.
 	 */
 	public boolean updateAppAvailability()
 	{
@@ -165,21 +217,38 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		return appAvailable;
 	}
 
+	/**
+	 * Get button label
+	 * @return The label
+	 */
 	public String getButtonLabel()
 	{
 		return this.buttonLabel;
 	}
 
+	/**
+	 * Get application identifier
+	 *
+	 * @return The application identifier
+	 */
 	public String getAppIdentifier()
 	{
 		return appIdentifier;
 	}
 
+	/**
+	 * Get the external application input parameter object
+	 * @return The input parameter object
+	 */
 	public FocusSample getInputObject()
 	{
 		return inputObject;
 	}
 
+	/**
+	 * Get the external application request code.
+	 * @return The request code
+	 */
 	public int getRequestCode()
 	{
 		return requestCode;
@@ -188,7 +257,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 	/**
 	 * Save the response as a valid FocusSample
 	 *
-	 * @param response
+	 * @param response The response being transmitted by the external application
 	 */
 	public void saveResponse(String response)
 	{
@@ -208,6 +277,10 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 		}
 	}
 
+	/**
+	 * Get the installed version of the external application.
+	 * @return The installed version, or a user-friendly "unknown" string.
+	 */
 	public String getInstalledVersion()
 	{
 		return (this.installedVersion == null ? ApplicationHelper.getResources().getString(R.string.version_unknown) : this.installedVersion);

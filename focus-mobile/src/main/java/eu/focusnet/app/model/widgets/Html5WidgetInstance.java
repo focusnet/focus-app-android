@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.model.DataContext;
@@ -34,29 +35,51 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
 import eu.focusnet.app.util.ApplicationHelper;
 
 /**
+ * An instance containing all information pertaining to a webapp widget.
  */
-
 public class Html5WidgetInstance extends DataCollectionWidgetInstance
 {
-	public static final String ASSETS_HTML5_WEBAPPS_FOLDER = "webapps";
-	public static final String ASSETS_HTML5_WEBAPPS_ENTRY_POINT = "index.html";
-	private static final String CONFIG_WEB_APP_IDENTIFIER_FIELD = "webapp-identifier";
-	private static final String CONFIG_CONTEXT_FIELD = "context";
+	/**
+	 * Configuration property for the webapp identifier
+	 */
+	final private static String CONFIG_WEB_APP_IDENTIFIER_FIELD = "webapp-identifier";
+
+	/**
+	 * Configuration property for the context to pass to the webapp
+	 */
+	final private static String CONFIG_CONTEXT_FIELD = "context";
+
+	/**
+	 * Webapp identifier
+	 */
 	private String webAppIdentifier;
+
+	/**
+	 * Context to pass to the webapp. The context is a typically a URL that the webapp will then
+	 * process, possibly by calling the facilities of the app via
+	 * {@link eu.focusnet.app.ui.fragment.widget.Html5WidgetFragment.WebAppInterface}
+	 */
 	private String context;
 
 	/**
 	 * C'tor
 	 *
-	 * @param wTpl
-	 * @param layoutConfig
-	 * @param dataCtx
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
 	 */
 	public Html5WidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
 	}
 
+
+	/**
+	 * Specific configuration:
+	 * - webapp identifier, check that the webapp is actually available in the assets
+	 * - context to pass, must be obtained from the DataContext via resolveToString() and hence
+	 * may be blocking.
+	 */
 	@Override
 	protected void processSpecificConfig()
 	{
@@ -78,9 +101,13 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		boolean assetFound = false;
 		try {
 			AssetManager am = ApplicationHelper.getAssets();
-			assetFound = Arrays.asList(am.list(ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier)).contains(ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
+			assetFound = Arrays.asList(
+					am.list(
+							Constant.AppConfig.ASSETS_HTML5_WEBAPPS_FOLDER + "/" + this.webAppIdentifier
+					)
+			).contains(Constant.AppConfig.ASSETS_HTML5_WEBAPPS_ENTRY_POINT);
 		}
-		catch (IOException ex) {
+		catch (IOException ignored) {
 			// ok, asset_found defaults to false.
 		}
 		if (!assetFound) {
@@ -104,11 +131,21 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 		}
 	}
 
+	/**
+	 * Get webapp identifier
+	 *
+	 * @return The webapp identifier
+	 */
 	public String getWebAppIdentifier()
 	{
 		return this.webAppIdentifier;
 	}
 
+	/**
+	 * Get the context to pass at webapp initialization
+	 *
+	 * @return The context
+	 */
 	public String getContext()
 	{
 		return this.context;

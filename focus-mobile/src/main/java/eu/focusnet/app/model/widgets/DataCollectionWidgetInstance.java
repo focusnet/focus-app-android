@@ -1,10 +1,3 @@
-package eu.focusnet.app.model.widgets;
-
-import java.util.Map;
-
-import eu.focusnet.app.model.DataContext;
-import eu.focusnet.app.model.gson.WidgetTemplate;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -24,10 +17,32 @@ import eu.focusnet.app.model.gson.WidgetTemplate;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets;
+
+import java.util.Map;
+
+import eu.focusnet.app.model.DataContext;
+import eu.focusnet.app.model.gson.WidgetTemplate;
+
+/**
+ * Abstract class shared by all data collection widget instances.
+ */
 abstract public class DataCollectionWidgetInstance extends WidgetInstance
 {
+	/**
+	 * Name of the field identifying the data capture
+	 */
 	private String fieldName;
 
+	/**
+	 * Constructor. Checks if a field name is indeed set and marks the widget as invalid if this
+	 * is not the case.
+	 *
+	 * @param wTpl Inherited
+	 * @param layoutConfig Inherited
+	 * @param dataCtx Inherited
+	 */
 	public DataCollectionWidgetInstance(WidgetTemplate wTpl, Map<String, String> layoutConfig, DataContext dataCtx)
 	{
 		super(wTpl, layoutConfig, dataCtx);
@@ -36,6 +51,10 @@ abstract public class DataCollectionWidgetInstance extends WidgetInstance
 		}
 	}
 
+	/**
+	 * Specific configuration:
+	 * - set the field name
+	 */
 	@Override
 	protected void processCommonConfig()
 	{

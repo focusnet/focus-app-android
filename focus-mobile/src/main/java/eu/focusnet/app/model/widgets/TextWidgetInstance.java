@@ -28,15 +28,27 @@ import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
 
 /**
- * Created by julien on 20.01.16.
+ * Instanciation of a widget containing a simple text field
  */
 public class TextWidgetInstance extends WidgetInstance
 {
 
-	private static final String CONFIG_LABEL_CONTENT = "content";
+	/**
+	 * Label of the configuration parameter containing the text to displa.
+	 */
+	final private static String CONFIG_LABEL_CONTENT = "content";
 
+	/**
+	 * Content to render
+	 */
 	private String content;
 
+	/**
+	 * Constructor
+	 * @param template Inherited
+	 * @param layoutConfig Inherited
+	 * @param newCtx Inherited
+	 */
 	public TextWidgetInstance(WidgetTemplate template, Map<String, String> layoutConfig, DataContext newCtx)
 	{
 		super(template, layoutConfig, newCtx);
@@ -45,7 +57,7 @@ public class TextWidgetInstance extends WidgetInstance
 	/**
 	 * A TextWidgetInstance defines:
 	 * - title (String)
-	 * - content (String)
+	 * - content (String); may contain HTML markup.
 	 */
 	@Override
 	protected void processSpecificConfig()
@@ -58,11 +70,10 @@ public class TextWidgetInstance extends WidgetInstance
 		}
 	}
 
-
 	/**
 	 * Get the content
 	 *
-	 * @return
+	 * @return The content
 	 */
 	public String getContent()
 	{

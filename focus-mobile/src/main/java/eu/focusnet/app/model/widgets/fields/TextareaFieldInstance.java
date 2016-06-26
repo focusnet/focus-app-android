@@ -1,9 +1,3 @@
-package eu.focusnet.app.model.widgets.fields;
-
-import com.google.gson.internal.LinkedTreeMap;
-
-import eu.focusnet.app.model.DataContext;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -23,8 +17,24 @@ import eu.focusnet.app.model.DataContext;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package eu.focusnet.app.model.widgets.fields;
+
+import com.google.gson.internal.LinkedTreeMap;
+
+import eu.focusnet.app.model.DataContext;
+
+/**
+ * An instance containing all information pertaining to a textarea field.
+ */
 public class TextareaFieldInstance extends FieldInstance
 {
+	/**
+	 * Constructor
+	 * @param fieldName Inherited
+	 * @param config Inherited
+	 * @param dataContext Inherited
+	 */
 	public TextareaFieldInstance(String fieldName, LinkedTreeMap<String, Object> config, DataContext dataContext)
 	{
 		super(fieldName, config, dataContext);

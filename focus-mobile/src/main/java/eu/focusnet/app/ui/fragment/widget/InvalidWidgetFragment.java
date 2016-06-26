@@ -27,12 +27,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import eu.focusnet.app.R;
+import eu.focusnet.app.model.widgets.WidgetInstance;
 import eu.focusnet.app.util.Constant;
 
 /**
+ * {@code Fragment} rendering a dummy content for widgets that are not properly configured. If a widget
+ * is not correctly configured, the corresponding {@link WidgetInstance} children type will be a
+ * {@link eu.focusnet.app.model.widgets.InvalidWidgetInstance}. However, the latter will keep a
+ * reference to the original {@link WidgetInstance} that failed to load such that we can display
+ * more useful information here.
  */
 public class InvalidWidgetFragment extends WidgetFragment
 {
+	/**
+	 * Create the View.
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View.
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{

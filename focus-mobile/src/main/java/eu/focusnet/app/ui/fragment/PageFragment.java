@@ -32,8 +32,8 @@ import java.util.Map;
 
 import eu.focusnet.app.FocusAppLogic;
 import eu.focusnet.app.R;
+import eu.focusnet.app.exception.FocusInternalErrorException;
 import eu.focusnet.app.model.PageInstance;
-import eu.focusnet.app.model.ProjectInstance;
 import eu.focusnet.app.model.widgets.WidgetInstance;
 import eu.focusnet.app.ui.activity.ProjectsListingActivity;
 import eu.focusnet.app.ui.common.UiHelper;
@@ -43,21 +43,34 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * This fragment will be loaded from the PageActivity and displays
- * the characteristics of a page
+ * This fragment will be loaded from the {@link eu.focusnet.app.ui.activity.PageActivity}
+ * and displays a dashboard consisting of widgets.
  */
 public class PageFragment extends Fragment
 {
 
+	/**
+	 * The {@link PageInstance} of interest.
+	 */
 	private PageInstance pageInstance;
-	private ProjectInstance projectInstance;
+
+	/**
+	 * The root View
+	 */
 	private View viewRoot;
 
+	/**
+	 * Create the View.
+	 *
+	 * @param inflater Inherited
+	 * @param container Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState)
 	{
-
 		super.onCreate(savedInstanceState);
 
 		// Inflate the layout for this fragment
@@ -65,36 +78,24 @@ public class PageFragment extends Fragment
 		Bundle bundle = getArguments();
 		String path = (String) bundle.get(Constant.Extra.UI_EXTRA_PATH);
 
+		// Acquire the PageInstance
 		this.pageInstance = (PageInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
 		if (this.pageInstance == null) {
 			UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.page_not_found), getActivity());
 			return null;
 		}
 
-		// useful for our custom garbage collection in DataManager
-		/// FIXME uselss?	dm.registerActiveInstance(this.pageInstance);
-
-		//	ViewUtil.buildPageView(this.projectInstance, this.pageInstance, linearLayoutPageInfo, getActivity());
+		// Build the page
 		this.buildPage();
 
-		// Keyboard should disappear when the user clicks outside of it
+		// Keyboard should disappear when the user clicks outside of EditTexts
 		UiHelper.setupHidableKeyboard(this.viewRoot, this.getActivity());
 
 		return viewRoot;
 	}
 
-	@Override
-	public void onDestroyView()
-	{
-		// useful for our custom garbage collection in DataManager
-		// FIXME uselss???	FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.pageInstance);
-
-		super.onDestroyView();
-	}
-
-
 	/**
-	 * Setup the horizontal layout containers that contain the different widgets for this page.
+	 * Build the page by arranging the different widgets in our column-based layout.
 	 */
 	private void buildPage()
 	{
@@ -143,6 +144,9 @@ public class PageFragment extends Fragment
 
 			// add the new widget fragment
 			WidgetFragment widgetFragment = WidgetFragment.getWidgetFragmentByType(widgetInstance);
+			if (widgetFragment == null) {
+				throw new FocusInternalErrorException("No widget fragment could be created for the specified widget instance.");
+			}
 			Bundle widgetBundle = new Bundle();
 			widgetBundle.putString(Constant.Extra.UI_EXTRA_PATH, widgetInstance.getPath());
 			widgetBundle.putInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT, requiredSpace);
@@ -164,8 +168,6 @@ public class PageFragment extends Fragment
 		}
 
 		verticalContainerLayout.addView(containerLayout);
-
-
 	}
 
 }

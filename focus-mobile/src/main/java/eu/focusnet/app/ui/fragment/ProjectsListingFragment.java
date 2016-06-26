@@ -53,9 +53,21 @@ import eu.focusnet.app.util.Constant;
 public class ProjectsListingFragment extends ListFragment
 {
 
+	/**
+	 * Items to be inserted in the {@link NavigationListAdapter} that is responsible for
+	 * handling the {@link ListView} of this page. I.e. list of projects.
+	 */
 	private ArrayList<SimpleListItem> listItems;
 
 
+	/**
+	 * Create the view and build the content of the {@link ListView} in a background task.
+	 *
+	 * @param inflater Inherited
+	 * @param container Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState)
@@ -67,10 +79,17 @@ public class ProjectsListingFragment extends ListFragment
 	}
 
 
+	/**
+	 * Click listener for when a list item is clicked.
+	 *
+	 * @param l Inherited
+	 * @param v Inherited
+	 * @param position Position of the clicked item
+	 * @param id Inherited
+	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
-		//Test where the user has clicked and navigate to this project or notifications
 		if (l.getAdapter().getItemViewType(position) != Constant.Navigation.LIST_TYPE_HEADER) {
 			Intent intent = new Intent(getActivity(), ProjectActivity.class);
 			FeaturedListItem selectedItem = (FeaturedListItem) listItems.get(position);
@@ -82,12 +101,17 @@ public class ProjectsListingFragment extends ListFragment
 
 
 	/**
-	 * This class loads all projects from the database belonging to the logged user and displays
-	 * the project title and a small description of the project
+	 * This task loads all projects a renders them using a {@link NavigationListAdapter}
 	 */
 	private class ProjectsListingBuilderTask extends AsyncTask<Void, Void, NavigationListAdapter>
 	{
 
+		/**
+		 * Acquire the list items and save them in a {@link NavigationListAdapter}.
+		 *
+		 * @param voids Nothing
+		 * @return A new {@link NavigationListAdapter}
+		 */
 		@Override
 		protected NavigationListAdapter doInBackground(Void... voids)
 		{
@@ -110,7 +134,7 @@ public class ProjectsListingFragment extends ListFragment
 					String projectDesc = p.getDescription();
 					boolean disabled = p.isDisabled();
 
-					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
+					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString();
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(
@@ -133,6 +157,11 @@ public class ProjectsListingFragment extends ListFragment
 			return new NavigationListAdapter(getActivity(), listItems);
 		}
 
+		/**
+		 * Set the list adapter
+		 *
+		 * @param navigationListAdapter Adapter to use
+		 */
 		@Override
 		protected void onPostExecute(NavigationListAdapter navigationListAdapter)
 		{

@@ -25,7 +25,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
-
 /**
  * Specialized WebView overcoming problems when embedding WebView within ScrollView
  * <p/>

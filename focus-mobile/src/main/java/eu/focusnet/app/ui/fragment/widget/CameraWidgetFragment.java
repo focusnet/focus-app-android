@@ -42,23 +42,45 @@ import eu.focusnet.app.ui.activity.ImageActivity;
 import eu.focusnet.app.util.Constant;
 
 /**
- * Created by yandypiedra on 13.01.16.
- * <p/>
- * FIXME FIXME
- * FIXME change of configuration during capture (e.g. change orentiation) make app crash.
- * Probably because we don't handle savedInstance correctly everywhere.
- * May also affect external app.. Does not happen systematically.
+ * {@code Fragment} to render an image capture widget.
  */
 public class CameraWidgetFragment extends WidgetFragment
 {
 
-	private final int CAMERA_REQUEST = 19432;
+	/**
+	 * Arbitrary request code for camera capture
+	 */
+	final private static int CAMERA_REQUEST = 19432;
+
+	/**
+	 * Target URI of the captured image.
+	 */
 	private Uri imageUri;
+
+	/**
+	 * Temporary URI used before we confirm that a newly captured image is confirmed as the accepted
+	 * capture (i.e. the user may try to take more than one picture and only chose the last one).
+	 */
 	private Uri tmpImageUri;
+
+	/**
+	 * ImageView where to display the preview of the currently captured image.
+	 */
 	private ImageView imageView;
 
+	/**
+	 * Views of the different buttons of the widget.
+	 */
 	private Button deleteButton, viewButton, takePictureButton;
 
+	/**
+	 * Create the View. We define default behaviors for all buttons.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -119,8 +141,15 @@ public class CameraWidgetFragment extends WidgetFragment
 		return this.rootView;
 	}
 
+	/**
+	 * When the camera Activity returns, save the URI of the new capture.
+	 *
+	 * @param requestCode Must be equals to {@link #CAMERA_REQUEST}.
+	 * @param resultCode Must be equals to {@code Activity.RESULT_OK}
+	 * @param intent Returning {@code Intent}
+	 */
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
 		if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
 			// get a bitmap from imageuri and save it

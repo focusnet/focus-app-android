@@ -22,8 +22,6 @@ package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,23 +49,33 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * FIXME we don't use savedInstance mechanism. useful?S
+ * Abstract class representing an UI widget.
+ *
+ * All widgets have at least an optional title.
  */
 public abstract class WidgetFragment extends Fragment
 {
 
-	private final static int UI_MARGIN_SIZE = 22;
 
 	/**
 	 * Reference height: if not 0, the widget will be set to this number of dp.
 	 * This allows us to adapt the height depending on the content of the widget.
 	 */
 	protected int referenceHeight;
+
+	/**
+	 * The root View
+	 */
 	protected View rootView;
+
+	/**
+	 * Current {@link WidgetInstance} of interest, that will be used to create
+	 * this {@code Fragment}.
+	 */
 	WidgetInstance widgetInstance;
 
 	/**
-	 * Get the WidgetFragment subtype depending on the input parameter
+	 * Factory function to get the WidgetFragment subtype depending on the input parameter
 	 */
 	public static WidgetFragment getWidgetFragmentByType(WidgetInstance wi)
 	{
@@ -110,46 +118,25 @@ public abstract class WidgetFragment extends Fragment
 		return null;
 	}
 
+	/**
+	 * Create the view. To be overriden by children classes.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-	@Override
-	public void onDestroyView()
-	{
-		// FIXME useless?	FocusAppLogic.getDataManager().unregisterActiveInstance(this.widgetInstance);
-		super.onDestroyView();
-	}
-
-	protected void setWidgetLayout()
-	{
-		Bundle arguments = getArguments();
-		int width = 0; // width is determined by the weight only
-		int numOfCols = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT);
-		int positionInRow = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT, numOfCols);
-
-		// set a reasonable margin between fragments
-		int margin = UiHelper.dpToPixels(UI_MARGIN_SIZE, this.getActivity());
-		params.setMargins(
-				positionInRow == 0 ? margin : margin / 2,
-				margin,
-				positionInRow + numOfCols == Constant.Ui.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
-				margin
-		);
-
-		this.rootView.setLayoutParams(params);
-
-		if (this.referenceHeight != 0) {
-			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
-			l.height = UiHelper.dpToPixels(this.referenceHeight, this.getActivity());
-			this.rootView.setLayoutParams(l);
-		}
-	}
-
 	/**
-	 * This function also sets the rootView instance variable, which must be returned by onCreateView
+	 * Setup the new widget:
+	 * - retrieve {@link WidgetInstance} of interest
+	 * - apply reference height alteration
+	 * - setup the layout
+	 * - set the title
 	 *
-	 * @param rootView
+	 * @param rootView The root View
 	 */
 	protected void setupWidget(View rootView)
 	{
@@ -164,13 +151,12 @@ public abstract class WidgetFragment extends Fragment
 		if (path != null) {
 			this.widgetInstance = (WidgetInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
 			if (this.widgetInstance == null) {
-				// FIXME if a page is not valid anymore and the user wants to access it, this redirection
-				// will be triggered for all widgets contained in the page, not only one.
-				// Possible solution: detect missing page when user clicks on the page link
+				// FIXME	if a page is not valid anymore and the user wants to access it, this redirection
+				// FIXME	will be triggered for all widgets contained in the page, not only one.
+				// FIXME	Possible solution: detect missing page when user clicks on the page link
 				UiHelper.redirectTo(ProjectsListingActivity.class, ApplicationHelper.getResources().getString(R.string.page_not_found), getActivity());
 				return;
 			}
-			// FIXME useful????		dm.registerActiveInstance(this.widgetInstance);
 		}
 
 		// alter the reference height if necessary
@@ -191,22 +177,48 @@ public abstract class WidgetFragment extends Fragment
 		}
 	}
 
+
 	/**
-	 * The reference height is not altered by default. Subclasses can override this behavior.
+	 * Setup widget layout. We set width, height and margins and apply the overridden
+	 * {@link #referenceHeight} if necessary.
+	 * <p/>
+	 * See {@link #setupWidget(View)}.
+	 */
+	protected void setWidgetLayout()
+	{
+		Bundle arguments = getArguments();
+		int width = 0; // width is determined by the weight only
+		int numOfCols = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_WEIGHT);
+		int positionInRow = arguments.getInt(Constant.Extra.UI_EXTRA_LAYOUT_POSITION_IN_ROW);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT, numOfCols);
+
+		// set a reasonable margin between fragments
+		int margin = UiHelper.dpToPixels(Constant.Ui.UI_MARGIN_SIZE_DP, this.getActivity());
+		params.setMargins(
+				positionInRow == 0 ? margin : margin / 2,
+				margin,
+				positionInRow + numOfCols == Constant.Ui.LAYOUT_NUM_OF_COLUMNS ? margin : margin / 2,
+				margin
+		);
+
+		this.rootView.setLayoutParams(params);
+
+		if (this.referenceHeight != 0) {
+			ViewGroup.LayoutParams l = this.rootView.getLayoutParams();
+			l.height = UiHelper.dpToPixels(this.referenceHeight, this.getActivity());
+			this.rootView.setLayoutParams(l);
+		}
+	}
+
+
+	/**
+	 * The reference height is not altered by default. In this case WRAP_CONTENT will be used.
+	 * Subclasses can override this behavior.
+	 * <p/>
+	 * See {@link #setupWidget(View)} and {@link #setWidgetLayout()}.
 	 */
 	protected void alterReferenceHeight()
 	{
 
 	}
-
-	public float getDisplayHeightInDp()
-	{
-		Display display = getActivity().getWindowManager().getDefaultDisplay();
-		DisplayMetrics outMetrics = new DisplayMetrics();
-		display.getMetrics(outMetrics);
-
-		float density = getResources().getDisplayMetrics().density;
-		return (outMetrics.heightPixels / density);
-	}
-
 }

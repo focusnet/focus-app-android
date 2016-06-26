@@ -1,5 +1,3 @@
-package eu.focusnet.app.ui.fragment.widget;
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
@@ -19,6 +17,9 @@ package eu.focusnet.app.ui.fragment.widget;
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+
+package eu.focusnet.app.ui.fragment.widget;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -40,10 +41,24 @@ import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * An application launcher.
+ * {@code Fragment} rendering an external application launcher widget
  */
 public class ExternalAppFragment extends WidgetFragment
 {
+	/**
+	 * Create the View. The launch listener button is modified depending if the external
+	 * application is installed or not. If it is not, then the button triggers the installation
+	 * in Google Play. If it is, then the external application is launched.
+	 * <p/>
+	 * The external application has an optional stringified {@link FocusSample}
+	 * input parameter passed in
+	 * the {@link eu.focusnet.app.util.Constant.Extra#UI_EXTRA_EXTERNAL_APP_INPUT} extra.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -109,12 +124,22 @@ public class ExternalAppFragment extends WidgetFragment
 		return this.rootView;
 	}
 
+	/**
+	 * When the external application returns, retrieve the result from the
+	 * {@link Constant.Extra#UI_EXTRA_EXTERNAL_APP_OUTPUT} extra, which comes as a stringified
+	 * {@link FocusSample}.
+	 *
+	 * @param requestCode Must be the same as the one that has been set when launching the
+	 *                    external app.
+	 * @param resultCode  Must be {@code Activity.RESULT_OK}
+	 * @param intent      The returning {@code Intent}
+	 */
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
 		if (requestCode == ((ExternalAppWidgetInstance) widgetInstance).getRequestCode()) {
 			if (resultCode == Activity.RESULT_OK) {
-				String response = data.getStringExtra(Constant.Extra.UI_EXTRA_EXTERNAL_APP_OUTPUT);
+				String response = intent.getStringExtra(Constant.Extra.UI_EXTRA_EXTERNAL_APP_OUTPUT);
 				if (response != null && !response.equals("")) {
 					((ExternalAppWidgetInstance) widgetInstance).saveResponse(response);
 				}

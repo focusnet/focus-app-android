@@ -21,14 +21,12 @@
 package eu.focusnet.app.ui.fragment.widget;
 
 import android.Manifest;
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,128 +40,175 @@ import eu.focusnet.app.model.widgets.GPSWidgetInstance;
 import eu.focusnet.app.util.ApplicationHelper;
 
 /**
+ * A {@code Fragment} rendering the GPS coordinates fetching form widget.
+ * <p/>
+ * FIXME move to same code as MOTI. Much better.
  */
 public class GPSWidgetFragment extends WidgetFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
-	private volatile boolean positionAsked;
-	private GoogleApiClient googleApiClient;
-	private TextView longitudeValue, latitudeValue, accuracyValue;
+	/**
+	 * Polling interval for location updates
+	 */
+	final public static int LOCATION_POLLING_INTERVAL = 3_000;
 
+	/**
+	 * Fast polling interval for location updates
+	 */
+	final public static int LOCATION_POLLING_FAST_INTERVAL = 1_500;
+
+	/**
+	 * Google API client for GPS localization
+	 */
+	private GoogleApiClient googleApiClient;
+
+	/**
+	 * The different {@code View}s for displaying localization information
+	 */
+	private TextView longitudeView, latitudeView, accuracyView;
+
+	/**
+	 * Create the View holding location information
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		// setup
 		super.onCreate(savedInstanceState);
 		this.setupWidget(inflater.inflate(R.layout.fragment_widget_gps, container, false));
 
-		// --------------------------------- debug FIXME DEBUG TODO
-		LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		boolean networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		this.longitudeView = (TextView) this.rootView.findViewById(R.id.text_longitude_value);
+		this.latitudeView = (TextView) this.rootView.findViewById(R.id.text_latitude_value);
+		this.accuracyView = (TextView) this.rootView.findViewById(R.id.text_accuracy_value);
 
-
-		longitudeValue = (TextView) this.rootView.findViewById(R.id.text_longitude_value);
-		latitudeValue = (TextView) this.rootView.findViewById(R.id.text_latitude_value);
-		accuracyValue = (TextView) this.rootView.findViewById(R.id.text_accuracy_value);
-
-		Button gpsPosition = (Button) this.rootView.findViewById(R.id.button_gps_position);
-		gpsPosition.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				positionAsked = true;
-			}
-		});
+		this.setUnavailableMessage();
 
 		return this.rootView;
 	}
 
+	/**
+	 * Start localization updates
+	 */
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		this.startLocationUpdates();
+	}
+
+	/**
+	 * Resume location updating
+	 */
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		startLocationUpdates();
-
+		this.startLocationUpdates();
 	}
 
+	/**
+	 * Pause location updating
+	 */
 	@Override
 	public void onPause()
 	{
-		stopLocationUpdates();
+		this.stopLocationUpdates();
 		super.onPause();
 	}
 
-
+	/**
+	 * Start localization updates
+	 */
 	private void startLocationUpdates()
 	{
-		if (googleApiClient == null) {
-			googleApiClient = new GoogleApiClient.Builder(getActivity())
+		if (this.googleApiClient == null) {
+			this.googleApiClient = new GoogleApiClient.Builder(getActivity())
 					.addApi(LocationServices.API)
 					.addConnectionCallbacks(this)
 					.addOnConnectionFailedListener(this)
 					.build();
 		}
-		googleApiClient.connect();
+		this.googleApiClient.connect();
 	}
 
+	/**
+	 * Stop localization updates
+	 */
 	private void stopLocationUpdates()
 	{
-		if (googleApiClient.isConnected()) { // !!!! important to check for service connection
+		if (this.googleApiClient.isConnected()) { // !!!! important to check for service connection
 			LocationServices.FusedLocationApi.removeLocationUpdates(
-					googleApiClient, this);
+					this.googleApiClient, this);
 		}
 
-		googleApiClient.disconnect();
+		this.googleApiClient.disconnect();
 	}
 
+	/**
+	 * When connected, configure localization updates.
+	 * @param bundle Inherited
+	 */
 	@Override
 	public void onConnected(Bundle bundle)
 	{
 		LocationRequest locationRequest = new LocationRequest();
-		locationRequest.setInterval(3000);
-		locationRequest.setFastestInterval(1500);
+		locationRequest.setInterval(LOCATION_POLLING_INTERVAL);
+		locationRequest.setFastestInterval(LOCATION_POLLING_FAST_INTERVAL);
 		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-		if (!ApplicationHelper.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-				&& !ApplicationHelper.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-			// TODO: Consider calling
-			//    ActivityCompat#requestPermissions
-			// here to request the missing permissions, and then overriding
-			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-			//                                          int[] grantResults)
-			// to handle the case where the user grants the permission. See the documentation
-			// for ActivityCompat#requestPermissions for more details.
-
-			// API: 23 : must check permissions at run-time because may be revoked.
-			return;
+		if (ApplicationHelper.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+				|| ApplicationHelper.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+			LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 		}
-		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 	}
 
+	/**
+	 * When the connection is suspended
+	 * @param i Inherited
+	 */
 	@Override
 	public void onConnectionSuspended(int i)
 	{
+		this.setUnavailableMessage();
 	}
 
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult)
-	{
-	}
-
-
+	/**
+	 * When location has changed, update the UI to show where we are.
+	 *
+	 * @param location The new location
+	 */
 	@Override
 	public void onLocationChanged(Location location)
 	{
-		if (positionAsked) {
-			((GPSWidgetInstance) this.widgetInstance).saveSample(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy());
-			longitudeValue.setText("" + location.getLongitude());
-			latitudeValue.setText("" + location.getLatitude());
-			accuracyValue.setText("" + location.getAccuracy());
-			positionAsked = false;
-		}
+		((GPSWidgetInstance) this.widgetInstance).saveSample(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy());
+		this.longitudeView.setText("" + location.getLongitude());
+		this.latitudeView.setText("" + location.getLatitude());
+		this.accuracyView.setText("" + location.getAccuracy());
 	}
 
 
+	/**
+	 * On connection failure, display an error message in place of the coordinates.
+	 *
+	 * @param connectionResult Inherited
+	 */
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+	{
+		this.setUnavailableMessage();
+	}
+
+	/**
+	 * Set dummy "non available" message to all location fields in the UI
+	 */
+	private void setUnavailableMessage()
+	{
+		this.longitudeView.setText(R.string.n_a);
+		this.latitudeView.setText(R.string.n_a);
+		this.accuracyView.setText(R.string.n_a);
+	}
 }

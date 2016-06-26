@@ -48,16 +48,37 @@ import eu.focusnet.app.model.widgets.fields.TextfieldFieldInstance;
 import eu.focusnet.app.ui.common.UiHelper;
 
 /**
- * FIXME better modularity
+ * {@code Fragment} rendering a form widget, with different field types.
  */
 public class FormWidgetFragment extends WidgetFragment
 {
+	/**
+	 * Maximum number of lines in textareas
+	 */
 	private static final int TEXTAREA_MAX_NUM_OF_LINES = 10;
+
+	/**
+	 * Default padding at the bottom of a control (in dp)
+	 */
 	private static final int UI_DEFAULT_PADDING_BOTTOM = 16;
-	Context context;
+
+	/**
+	 * Android context
+	 */
+	private Context context;
+
+	/**
+	 * Default padding in pixels
+	 */
 	private int defaultPaddingInPixels;
 
 
+	/**
+	 * Add a field to the UI, based on the input parameters
+	 *
+	 * @param f  The {@link FieldInstance} of interest
+	 * @param tl The {@code TableLayout} where to include the new field
+	 */
 	private void addFieldToUI(FieldInstance f, TableLayout tl)
 	{
 		if (f instanceof TextfieldFieldInstance) {
@@ -74,7 +95,12 @@ public class FormWidgetFragment extends WidgetFragment
 		}
 	}
 
-
+	/**
+	 * Include a new Select list to the UI
+	 *
+	 * @param f  The {@link FieldInstance} of interest
+	 * @param tl The {@code TableLayout} where to include the new field
+	 */
 	private void addSelectToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
@@ -120,6 +146,12 @@ public class FormWidgetFragment extends WidgetFragment
 		tl.addView(tr);
 	}
 
+	/**
+	 * Insert a new checkbox into the UI
+	 *
+	 * @param f  The {@link FieldInstance} of interest
+	 * @param tl The {@code TableLayout} where to include the new field
+	 */
 	private void addCheckboxToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
@@ -164,6 +196,12 @@ public class FormWidgetFragment extends WidgetFragment
 		tl.addView(tr);
 	}
 
+	/**
+	 * Insert a textarea in the UI
+	 *
+	 * @param f  The {@link FieldInstance} of interest
+	 * @param tl The {@code TableLayout} where to include the new field
+	 */
 	private void addTextareaToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow.LayoutParams layout = new TableRow.LayoutParams();
@@ -197,6 +235,12 @@ public class FormWidgetFragment extends WidgetFragment
 		tl.addView(tr2);
 	}
 
+	/**
+	 * Insert a textfield in the UI
+	 *
+	 * @param f  The {@link FieldInstance} of interest
+	 * @param tl The {@code TableLayout} where to include the new field
+	 */
 	private void addTextfieldToUI(FieldInstance f, TableLayout tl)
 	{
 		TableRow tr = new TableRow(this.context);
@@ -234,7 +278,7 @@ public class FormWidgetFragment extends WidgetFragment
 				}
 				break;
 			case TEXTFIELD_TYPE_EMAIL:
-				editorType = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS; // FIXME NOT SURE IT WORKS
+				editorType = EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
 				break;
 			case TEXTFIELD_TYPE_NUMBER:
 				editorType = EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_FLAG_SIGNED;
@@ -263,6 +307,15 @@ public class FormWidgetFragment extends WidgetFragment
 	}
 
 
+	/**
+	 * Create the View, i.e. iterate over the fields of the {@link FormWidgetInstance} and add
+	 * each of them to the UI
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{

@@ -72,6 +72,6 @@ public class TextWidgetInstance extends WidgetInstance
 	 */
 	public String getContent()
 	{
-		return content;
+		return this.content;
 	}
 }

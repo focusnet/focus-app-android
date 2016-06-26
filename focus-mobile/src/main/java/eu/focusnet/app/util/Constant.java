@@ -323,7 +323,8 @@ final public class Constant
 	 * Tools (Pages) and widgets are uniquely identified by a path within the application, and these
 	 * constants define the format of this path.
 	 *
-	 * The different list item types are also defined here.
+	 * The different list item types and constants used for referencing specific menu entries
+	 * are also defined here.
 	 */
 	final public static class Navigation
 	{
@@ -394,6 +395,31 @@ final public class Constant
 		 * the list is empty. (non clickable, {@link eu.focusnet.app.ui.common.SimpleListItem}).
 		 */
 		final public static int LIST_TYPE_EMPTY = 2;
+
+		/**
+		 * Target fragment index for the drawer menu: non-clickable header image.
+		 */
+		final public static int UI_MENU_ENTRY_HEADER_NON_CLICKABLE = 0;
+
+		/**
+		 * Target fragment index for the drawer menu: projects listing.
+		 */
+		final public static int UI_MENU_ENTRY_PROJECTS_LISTING = 1;
+
+		/**
+		 * Target fragment index for the drawer menu: bookmark page.
+		 */
+		final public static int UI_MENU_ENTRY_BOOKMARK = 2;
+
+		/**
+		 * Target fragment index for the drawer menu: About dialog.
+		 */
+		final public static int UI_MENU_ENTRY_ABOUT = 3;
+
+		/**
+		 * Target fragment index for the drawer menu: logout.
+		 */
+		final public static int UI_MENU_ENTRY_LOGOUT = 4;
 	}
 
 	/**
@@ -691,30 +717,11 @@ final public class Constant
 		 */
 		final public static String WIDGET_LAYOUT_WIDTH_LABEL = "width";
 
-		/**
-		 * Target fragment index for the drawer menu: non-clickable header image.
-		 */
-		final public static int UI_MENU_ENTRY_HEADER_NON_CLICKABLE = 0;
 
 		/**
-		 * Target fragment index for the drawer menu: projects listing.
+		 * Default margin size around widgets in dp.
 		 */
-		final public static int UI_MENU_ENTRY_PROJECTS_LISTING = 1;
-
-		/**
-		 * Target fragment index for the drawer menu: bookmark page.
-		 */
-		final public static int UI_MENU_ENTRY_BOOKMARK = 2;
-
-		/**
-		 * Target fragment index for the drawer menu: About dialog.
-		 */
-		final public static int UI_MENU_ENTRY_ABOUT = 3;
-
-		/**
-		 * Target fragment index for the drawer menu: logout.
-		 */
-		final public static int UI_MENU_ENTRY_LOGOUT = 4;
+		final public static int UI_MARGIN_SIZE_DP = 22;
 	}
 
 

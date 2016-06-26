@@ -31,10 +31,19 @@ import eu.focusnet.app.R;
 import eu.focusnet.app.model.widgets.TextWidgetInstance;
 
 /**
+ * A {@code Fragment} displaying a simple TextView, which possibly contains HTML markup.
  */
 public class TextWidgetFragment extends WidgetFragment
 {
 
+	/**
+	 * Create the View
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{

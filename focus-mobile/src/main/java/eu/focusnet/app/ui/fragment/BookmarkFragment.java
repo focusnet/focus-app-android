@@ -53,12 +53,25 @@ import static eu.focusnet.app.model.PageInstance.PageType;
 
 
 /**
+ * This fragment is inserted in the {@link eu.focusnet.app.ui.activity.ProjectsListingActivity}
+ * when the user clicks the "Bookmarks" entry in the Drawer menu.
  */
 public class BookmarkFragment extends ListFragment
 {
 
+	/**
+	 * Items to include in the ListView
+	 */
 	private ArrayList<SimpleListItem> listItems;
 
+	/**
+	 * Create the view.
+	 *
+	 * @param inflater Inherited
+	 * @param container Inherited
+	 * @param savedInstanceState Inherited
+	 * @return
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -66,13 +79,24 @@ public class BookmarkFragment extends ListFragment
 		return inflater.inflate(R.layout.list_fragment, container, false);
 	}
 
+	/**
+	 * Start the fragment. Retrieve the content of the ListView.
+	 */
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-		this.updateListAdapter();
+		this.fillListAdapter(); // FIXME why like this and not in background task like in ProjectFragment? to check.
 	}
 
+	/**
+	 * Click listener for the bookmark list
+	 *
+	 * @param l Inherited
+	 * @param v Inherited
+	 * @param position Position of the clicked item
+	 * @param id Inherited
+	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
@@ -94,11 +118,11 @@ public class BookmarkFragment extends ListFragment
 		}
 	}
 
-
 	/**
-	 * Update the current bookmark list with data from the User Preferences
+	 * Fill the ListView with data from the User Preferences and using
+	 * a {@link NavigationListAdapter}.
 	 */
-	private void updateListAdapter()
+	private void fillListAdapter()
 	{
 		UserPreferences preferences = FocusAppLogic.getUserManager().getUserPreferences();
 
@@ -116,7 +140,14 @@ public class BookmarkFragment extends ListFragment
 	}
 
 
-	private void addListItems(ArrayList<Bookmark> source, int icon, int label)
+	/**
+	 * Add list items from a give source, also adding a user-friendly header.
+	 *
+	 * @param source The source of items
+	 * @param headerIcon The icon of the header
+	 * @param headerLabel The label of the header
+	 */
+	private void addListItems(ArrayList<Bookmark> source, int headerIcon, int headerLabel)
 	{
 		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
 
@@ -124,8 +155,8 @@ public class BookmarkFragment extends ListFragment
 
 		// header
 		SimpleListItem headerProjectsListItem = new SimpleListItem(
-				UiHelper.getBitmap(getActivity(), icon),
-				getResources().getString(label)
+				UiHelper.getBitmap(getActivity(), headerIcon),
+				getResources().getString(headerLabel)
 		);
 		newItems.add(headerProjectsListItem);
 

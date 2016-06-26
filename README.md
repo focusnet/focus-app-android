@@ -83,3 +83,17 @@ SOFTWARE.
 - scroll on TouchTableView does not work anymore??? TouchTableView
 - fix NavigationListAdapter#getView() recycling.
 - NavigationListADapter.SaveUserPreferencesTask :  what happens if we save user preferences when user preference saving is not finished, yet. To check.
+- Projectfragment.ProjectBuilderTask : modularize code (duplicate) / also consider other classes
+- user / prefersnces instances -> child of gson objects -> into model, not gson directory
+- use savedInstanceState, especially if we must survive configuration changes (rotation of screen)
+- WidgetFragment#setupWidget: redirect if missing WidgetInstance for all widgets, which is not optimal.
+- SubmitWidgetFragment: implement action on click submit.
+- improve layout of pie chart, line chart and bar chart widgets
+- possible to modularize bar chart and line chart widgets? mostly similar.
+- WebAppInterface: 
+ - implement non-blocking methods with {@code Future}s
+ - implement getResource()
+ - implement getAccessControlToken()
+- GPSWidgetFragment: 
+ - move to MOTI code
+ - test current code. Does it also work without Internet connection?

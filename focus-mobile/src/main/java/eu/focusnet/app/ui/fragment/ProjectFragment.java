@@ -49,14 +49,30 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * This fragment will be loaded from the ProjectActivity and displays
- * the characteristics of a project
+ * This fragment will be loaded from {@link eu.focusnet.app.ui.activity.ProjectActivity}
+ * or {@link ProjectInProjectActivity} and displays the different dashboards, tools and
+ * inner projects of {@link ProjectInstance}.
  */
 public class ProjectFragment extends ListFragment
 {
+	/**
+	 * List of items to render in the {@code ListView}
+	 */
 	private ArrayList<SimpleListItem> listItems;
+
+	/**
+	 * The path of the currently displayed {@link ProjectInstance}
+	 */
 	private String path;
 
+	/**
+	 * Create the view and load items via a background task.
+	 *
+	 * @param inflater Inherited
+	 * @param container Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -64,23 +80,23 @@ public class ProjectFragment extends ListFragment
 
 		View viewRoot = inflater.inflate(R.layout.list_fragment, container, false);
 		Bundle bundle = getArguments();
-		//Path is the same as path
 		path = bundle.getString(Constant.Extra.UI_EXTRA_PATH);
 		new ProjectBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 		return viewRoot;
 	}
 
-	@Override
-	public void onDestroyView()
-	{
-		// useful for our custom garbage collection in DataManager
-// FIXME useful ?????		FocusApplication.getInstance().getDataManager().unregisterActiveInstance(this.projectInstance);
 
-		super.onDestroyView();
-	}
-
-
+	/**
+	 * Click listener for when we click an item. We redirect to a new {@code Activity}. Its type
+	 * depends on the target of the item link ({@link PageActivity}
+	 * or {@link ProjectInProjectActivity}).
+	 *
+	 * @param l Inherited
+	 * @param v Inherited
+	 * @param position Position of the item being clicked
+	 * @param id Inherited
+	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
@@ -100,21 +116,33 @@ public class ProjectFragment extends ListFragment
 			intent.putExtra(Constant.Extra.UI_EXTRA_PATH, path);
 			intent.putExtra(Constant.Extra.UI_EXTRA_TITLE, selectedItem.getTitle());
 			startActivity(intent);
+			// FIXME not finish()?
 		}
 	}
 
 	/**
-	 * This class loads the project characteristics from the database
+	 * This task loads the list items for the {@link ProjectInstance} being represented in the
+	 * current {@code Activity}.
 	 */
 	private class ProjectBuilderTask extends AsyncTask<String, Void, NavigationListAdapter>
 	{
 
-		// used for delaying redirection to another page to postExecute(), which runs on the
-		// UI thread and therefore can display the associated toast
+		/**
+		 * Tells whether the {@link ProjectInstance} has been found or not.
+		 *
+		 * Used for delaying redirection to another page to postExecute(), which runs on the
+		 * UI thread and therefore can display the associated toast
+		 */
 		private boolean projectNotFound;
 
+		/**
+		 * Fetch the items and put them in a new {@link NavigationListAdapter}.
+		 *
+		 * @param ignored Nothing
+		 * @return A new {@link NavigationListAdapter}
+		 */
 		@Override
-		protected NavigationListAdapter doInBackground(String... params)
+		protected NavigationListAdapter doInBackground(String... ignored)
 		{
 			this.projectNotFound = false;
 			ProjectInstance projectInstance = (ProjectInstance) FocusAppLogic.getCurrentApplicationContent().lookupByPath(path);
@@ -123,14 +151,11 @@ public class ProjectFragment extends ListFragment
 				return null;
 			}
 
-			// useful for our custom garbage collection in DataManager
-			// FIXME uesless?		dm.registerActiveInstance(projectInstance);
 			UserPreferences preference = FocusAppLogic.getUserManager().getUserPreferences();
 
 			listItems = new ArrayList<>();
 
 			// FIXME TODO modularize
-
 			ArrayList<PageInstance> dashboards = projectInstance.getDashboards();
 
 			Bitmap rightIconNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);
@@ -163,7 +188,6 @@ public class ProjectFragment extends ListFragment
 					listItems.add(drawListItem);
 				}
 			}
-
 
 			ArrayList<PageInstance> tools = projectInstance.getTools();
 			if (!tools.isEmpty()) {
@@ -206,13 +230,11 @@ public class ProjectFragment extends ListFragment
 				for (ProjectInstance p : projects) {
 
 					String projectPath = p.getPath();
-
 					String projectTitle = p.getTitle();
 					String projectDesc = p.getDescription();
-
 					boolean disabled = p.isDisabled();
 
-					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString(); // useless in this case
+					String bookmarkLinkType = Bookmark.BookmarkLinkType.PAGE.toString();
 					boolean checkedBookmark = (preference != null) && (-1 != preference.findBookmarkLinkInSpecificSet(projectPath, projectTitle, Bookmark.BookmarkLinkType.PAGE.toString()));
 
 					FeaturedListItem drawListItem = new FeaturedListItem(
@@ -232,6 +254,12 @@ public class ProjectFragment extends ListFragment
 			return new NavigationListAdapter(getActivity(), listItems);
 		}
 
+		/**
+		 * When the project could not be found, redirect to the {@link ProjectsListingActivity}.
+		 * Otherwise, set the list adapter
+		 *
+		 * @param navigationListAdapter The list adapter to set.
+		 */
 		@Override
 		protected void onPostExecute(NavigationListAdapter navigationListAdapter)
 		{

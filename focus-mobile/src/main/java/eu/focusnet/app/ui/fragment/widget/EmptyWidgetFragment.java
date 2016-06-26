@@ -28,13 +28,22 @@ import android.view.ViewGroup;
 import eu.focusnet.app.R;
 
 /**
+ * {@code Fragment} rendering of an empty widget. This is used for filling end of rows in our column-based grid
+ * layout.
  */
 public class EmptyWidgetFragment extends WidgetFragment
 {
+	/**
+	 * Create a simple View with an empty {@code LinearLayout}
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new view
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		// setup
 		super.onCreate(savedInstanceState);
 		this.setupWidget(inflater.inflate(R.layout.fragment_widget_empty, container, false));
 

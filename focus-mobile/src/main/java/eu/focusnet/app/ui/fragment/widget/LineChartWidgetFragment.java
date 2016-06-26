@@ -44,18 +44,25 @@ import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
- * <p/>
- * We may need to adapt these functions, though.
- * <p/>
- * NOTE: the caption is not rendered. We use this UI location to display the x-axis label instead.
- * <p/>
+ * A {@code Fragment} rendering a Pie Chart widget, using MPAndroidChart
+ *
  * FIXME very similar to BarChartWidget -> modularize?
  */
 public class LineChartWidgetFragment extends WidgetFragment
 {
+	/**
+	 * The height of the widget if it takes the full width of the screen.
+	 */
 	final private static int HEIGHT_DP_FOR_FULL_WIDTH = 350;
 
-
+	/**
+	 * Create the view. Define reasonable layout defaults and get data.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -163,6 +170,9 @@ public class LineChartWidgetFragment extends WidgetFragment
 		return this.rootView;
 	}
 
+	/**
+	 * Alter the default height
+	 */
 	@Override
 	protected void alterReferenceHeight()
 	{

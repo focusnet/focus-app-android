@@ -123,6 +123,7 @@ public class HttpRequest
 		}
 
 		// add custom headers when necessary
+		// FIXME should imply the UserManager and not simply being gotten from the Properties
 		String headers = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost());
 		// FIXME For now, multiple headers per host are not supported.
 		if (headers != null) {

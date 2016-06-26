@@ -35,12 +35,24 @@ import eu.focusnet.app.ui.common.TouchTableView;
 import eu.focusnet.app.ui.common.UiHelper;
 
 /**
- * Uses TouchTableView instead of TableView to overcome scrolling issues
+ * A {@code Fragment} that renders a table widget. Depends on {@code TableView}, but uses
+ * {@link TouchTableView} instead of {@code TableView} to overcome scrolling issues.
  */
 public class TableWidgetFragment extends WidgetFragment
 {
+	/**
+	 * Indication on the height to use for each row.
+	 */
 	private final static int HEIGHT_DP_PER_ROW = 50;
 
+	/**
+	 * Create the View, setting reasonable layout defaults.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -64,12 +76,15 @@ public class TableWidgetFragment extends WidgetFragment
 		return this.rootView;
 	}
 
+	/**
+	 * Compute a realistic height for the widget.
+	 */
 	@Override
 	protected void alterReferenceHeight()
 	{
-		int computed = UiHelper.dpToPixels((int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity());
-		//int max = UiHelper.dpToPixels((int) this.getDisplayHeightInDp(), this.getActivity());
-		this.referenceHeight = computed; //  Math.min(computed, max);
+		this.referenceHeight = UiHelper.dpToPixels(
+				(int) (1.1f + (float) ((TableWidgetInstance) this.widgetInstance).getNumberOfRows()) * HEIGHT_DP_PER_ROW, this.getActivity()
+		);
 	}
 
 

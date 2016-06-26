@@ -32,11 +32,19 @@ import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
 
 /**
- * Created by admin on 28.01.2016.
+ * {@code Fragment} displaying a submit button widget.
  */
 public class SubmitWidgetFragment extends WidgetFragment
 {
 
+	/**
+	 * Create the View
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -52,7 +60,6 @@ public class SubmitWidgetFragment extends WidgetFragment
 			@Override
 			public void onClick(View v)
 			{
-				//TODO FIXME depends on ACTION configuration
 				UiHelper.displayToast(getActivity(), ApplicationHelper.getResources().getString(R.string.saved));
 			}
 		});

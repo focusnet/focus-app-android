@@ -24,13 +24,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -47,16 +45,39 @@ import eu.focusnet.app.ui.common.TouchWebView;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 
-
+/**
+ * A {@code Fragment} rendering a webapp inside a {@code WebView}. We in fact use a {@link TouchWebView} to
+ * overcome problems when including such a {@code View} type inside a {@code ScrollView}.
+ */
 public class Html5WidgetFragment extends WidgetFragment
 {
-
-
+	/**
+	 * Global JavaScript variable that can be accessed from the webapp to interact with the
+	 * application.
+	 */
 	private static final String JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME = "FocusApp";
+
+	/**
+	 * JavaScript initilization function in the webapp that will be called by the application after
+	 * loading.
+	 */
 	private static final String JAVASCRIPT_INIT_FUNCTION = JAVASCRIPT_EXPOSED_INTERFACE_OBJECT_NAME + ".init";
+
+	/**
+	 * The context to be passed to the {@link #JAVASCRIPT_INIT_FUNCTION}.
+	 */
 	private String context;
 
 
+	/**
+	 * Create the view. In this method, we configure our custom {@link TouchWebView}, enabling all
+	 * features that we may need. We also load the webapp entrypoint from the assets.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View.
+	 */
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -101,25 +122,32 @@ public class Html5WidgetFragment extends WidgetFragment
 
 
 	/**
-	 * Create a web client, which loads internal html pages with the Webview(pages saved in the app, the url has not host)
-	 * other pages will be loaded for instance with the chrome browser
+	 * Create a web client, which loads internal HTML pages with the custom {@link TouchWebView}.
+	 * Other pages will be loaded for instance with the chrome browser
 	 */
 	private class FocusAppWebViewClient extends WebViewClient
 	{
 		/**
-		 * FIXME FIXME DEBUG TODO
-		 * remove this if all certificates have a proper CA. Or handle errors properly!! BIG SECURITY ISSUE
+		 * If remote hosts being directly accessed by the webapp do not have a valid certificate,
+		 * this overridden function will grant access to all resource without further checking.
 		 *
-		 * @param view
-		 * @param handler
-		 * @param error
+		 * @deprecated This is bad. Don't enable it.
 		 */
+		/*
 		@Override
 		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error)
 		{
 			handler.proceed(); // if set, I get 403, but i should get 200
 		}
+		*/
 
+		/**
+		 * Override URL loading. External pages are loaded in the browser.
+		 *
+		 * @param view Inherited
+		 * @param url  Inherited
+		 * @return Inherited
+		 */
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
@@ -134,6 +162,12 @@ public class Html5WidgetFragment extends WidgetFragment
 			return true;
 		}
 
+		/**
+		 * When the page has finished loading, call the initialization function if it exists.
+		 *
+		 * @param view Inherited
+		 * @param url  Inherited
+		 */
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
@@ -154,48 +188,50 @@ public class Html5WidgetFragment extends WidgetFragment
 	}
 
 	/**
-	 * JavaScript interface definition
-	 *
-	 * FIXME javascript interface will fuly work only if instance data context is fully loaded.
-	 * Also, webapps may request new resources that are not refered to in the building of the app
-	 * FIXME what do we do with these resources on app syncrhonization? delete? keep? do we need a
-	 * special flag in the database?
-	 *
-	 * In the webapp, these calls are blocking -> use Web Workers
-	 * OR we could implement a non-blocking interface, with Future objects
-	 * That would help overcome the problem of max 6 connections per host in the browser.
+	 * JavaScript interface definition.
+	 * <p/>
+	 * Using this interface grants access to all facilities provided by the application to the
+	 * webapp, such as access control tokens, offline usage of data, etc.
+	 * <p/>
+	 * The browser imposes a maximum of 6 concurrent downloads. This can be overcome by using the
+	 * below interface.
+	 * <p/>
+	 * In the webapp, these calls are blocking. Therefore the webapp must implement Web Workers.
+	 * <p/>
+	 * FIXME implement non-blocking methods with {@code Future}s
 	 */
 	private class WebAppInterface
 	{
+		/**
+		 * Android Context
+		 */
 		Context context;
-		DataManager dm;
+
+		/**
+		 * Current application {@link DataManager}
+		 */
+		DataManager dataManager;
 
 		/**
 		 * Instantiate the interface and set the context
 		 */
 		WebAppInterface(Context c)
 		{
-			this.dm = widgetInstance.getDataManager();
-			//	this.dm = FocusAppLogic.getDataManager();
+			this.dataManager = widgetInstance.getDataManager();
 			this.context = c;
 		}
 
 		/**
-		 * Get FOCUS data
-		 * <p/>
-		 * advantages of going through app:
-		 * - take benefit of auth/access control
-		 * - permanent storage of accessed data
-		 * - not relying on buggy/unstable local storage
-		 * <p/>
-		 * disadvantages:
-		 * - no browser security (e.g. CORS) - but we only consume data, no scripts.
+		 * Get a {@link FocusSample} as a String
+		 *
+		 * @param url the URL of the resource to fetch
+		 * @return The String representation of the returned object, or {@code null}.
 		 */
 		@JavascriptInterface
 		public String getFocusData(String url)
 		{
 			try {
-				FocusSample fs = this.dm.getSample(url);
+				FocusSample fs = this.dataManager.getSample(url);
 				return fs.toString();
 			}
 			catch (FocusMissingResourceException ex) {
@@ -204,68 +240,63 @@ public class Html5WidgetFragment extends WidgetFragment
 		}
 
 		/**
-		 * POST Focus data
-		 * <p/>
-		 * create data to localstore (will later be pushed to server)
+		 * Create a new {@link FocusSample}
+		 *
+		 * @param url      URL of the resource to create
+		 * @param jsonData The stringified JSON data to create
+		 * @return The return status of the operation
 		 */
 		@JavascriptInterface
-		public DataManager.ResourceOperationStatus postFocusData(String url, String data)
+		public DataManager.ResourceOperationStatus postFocusData(String url, String jsonData)
 		{
-			FocusSample fs = (FocusSample) FocusObject.factory(data, FocusSample.class);
-			return this.dm.create(fs);
+			FocusSample fs = (FocusSample) FocusObject.factory(jsonData, FocusSample.class);
+			return this.dataManager.create(fs);
 		}
 
 		/**
-		 * PUT Focus data
-		 * <p/>
-		 * register data to local store (will later be pushed to server)
+		 * Update a {@link FocusSample}
+		 *
+		 * @param url      URL of the resource to update
+		 * @param jsonData The stringified JSON data to update
+		 * @return The return status of the operation
 		 */
 		@JavascriptInterface
 		public DataManager.ResourceOperationStatus putFocusData(String url, String jsonData)
 		{
 			FocusSample fs = (FocusSample) FocusObject.factory(jsonData, FocusSample.class);
-			return this.dm.update(fs);
+			return this.dataManager.update(fs);
 		}
 
 		/**
-		 * DELETE Focus data
-		 * <p/>
-		 * announce deletion in local store (will later be deleted on server)
+		 * Delete a {@link FocusSample}
+		 *
+		 * @param url URL of the resource to delete
+		 * @return The return status of the operation
 		 */
 		@JavascriptInterface
 		public DataManager.ResourceOperationStatus deleteFocusData(String url)
 		{
-			return this.dm.delete(url);
+			return this.dataManager.delete(url);
 		}
 
 		/**
-		 * GET a non-FOCUS resource
+		 * Get a non-FOCUS resource
+		 *
+		 * @param url The resource to get
+		 * @return A base64 String containing the fetched resource.
 		 * <p/>
-		 * get from local resources store
-		 * otherwise from network
-		 * if no network -> FALSE (should have been detected by HTML5)
+		 * FIXME mimetype?
 		 */
 		@JavascriptInterface
 		public String getResource(String url)
 		{
 			throw new FocusNotImplementedException("Html5WidgetFragment.WebAppInterface.getResource()");
-			/*
-			try {
-				HttpResponse response = this.dm.get(url);
-				return response.getData();
-			}
-			catch (IOException e) {
-				return null;
-			}
-			*/
-			//      return "{\"mimetype\": \"image/png\", \"data\":\"base64encodeddata\"}"; // or exception
 		}
 
 		/**
 		 * Get an access control token directly from the application
-		 * <p/>
-		 * FIXME - in the end, this information should come from UserManager, and not
-		 * from a simple hard-coded property
+		 *
+		 * FIXME this information should come from the UserManager
 		 */
 		@JavascriptInterface
 		public String getAccessControlToken(String which)

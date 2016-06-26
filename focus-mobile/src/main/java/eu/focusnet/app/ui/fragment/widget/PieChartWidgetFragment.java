@@ -41,12 +41,24 @@ import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
 
 /**
+ * A {@code Fragment} rendering a Pie Chart widget, using MPAndroidChart
  */
 public class PieChartWidgetFragment extends WidgetFragment
 {
 
+	/**
+	 * The height of the widget if it takes the full width of the screen.
+	 */
 	private final static int HEIGHT_DP_FOR_FULL_WIDTH = 500;
 
+	/**
+	 * Create the view.
+	 *
+	 * @param inflater           Inherited
+	 * @param container          Inherited
+	 * @param savedInstanceState Inherited
+	 * @return The new View
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -67,14 +79,10 @@ public class PieChartWidgetFragment extends WidgetFragment
 		dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
 		PieData data = new PieData(((PieChartWidgetInstance) this.widgetInstance).getLabels(), dataSet);
-		// data.setValueFormatter(new PercentFormatter()); // PERCENT FORMATTER ??? FIXME FIXME FIXME
-		// not compiling after lib update
 		data.setValueTextSize(11f);
 		data.setValueTextColor(Color.WHITE);
 
-
 		PieChart pieChart = (PieChart) this.rootView.findViewById(R.id.pie_chart);
-
 		pieChart.setUsePercentValues(true);
 		pieChart.setDescription(((PieChartWidgetInstance) this.widgetInstance).getCaption());
 		pieChart.setDragDecelerationFrictionCoef(0.95f);
@@ -84,14 +92,10 @@ public class PieChartWidgetFragment extends WidgetFragment
 		pieChart.setTransparentCircleAlpha(110);
 		pieChart.setTransparentCircleRadius(61f);
 		pieChart.setRotationAngle(0);
-		// enable rotation of the chart by touch
 		pieChart.setRotationEnabled(false);
 		pieChart.setDrawCenterText(false);
-		// pieChart.setCenterText("This is the center text");
-		// undo all highlights
 		pieChart.highlightValues(null);
 		pieChart.invalidate();
-		//	pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
 
 		pieChart.setData(data);
 
@@ -104,10 +108,12 @@ public class PieChartWidgetFragment extends WidgetFragment
 		return this.rootView;
 	}
 
+	/**
+	 * Alter the default height
+	 */
 	@Override
 	protected void alterReferenceHeight()
 	{
-		// Alter reference height of the widget
 		int widthCols = this.widgetInstance.getNumberOfColumnsInUi();
 		this.referenceHeight = UiHelper.dpToPixels(HEIGHT_DP_FOR_FULL_WIDTH * widthCols / Constant.Ui.LAYOUT_NUM_OF_COLUMNS, this.getActivity());
 	}

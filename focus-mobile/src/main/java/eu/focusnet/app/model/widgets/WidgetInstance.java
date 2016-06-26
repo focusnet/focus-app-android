@@ -233,12 +233,23 @@ public abstract class WidgetInstance extends AbstractInstance
 		return Integer.valueOf(width.substring(0, indexOf).trim());
 	}
 
+	/**
+	 * No need to return anything. We never refer to widget instances directly.
+	 *
+	 * @param searchedPath The path to look after.
+	 * @return {@code null}
+	 */
 	@Override
 	protected AbstractInstance propagatePathLookup(String searchedPath)
 	{
 		return null;
 	}
 
+	/**
+	 * Build the widget path
+	 *
+	 * @param parentPath The parent path on the top of which the new path must be defined.
+	 */
 	@Override
 	public void buildPaths(String parentPath)
 	{

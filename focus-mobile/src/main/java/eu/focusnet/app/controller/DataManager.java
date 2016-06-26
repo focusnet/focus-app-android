@@ -514,7 +514,6 @@ public class DataManager implements ApplicationStatusObserver
 			throw new FocusInternalErrorException("Template is not yet available. Error in the application workflows.");
 		}
 		AppContentTemplate template = this.getAppContentTemplate(templateUri);
-		// FIXME useless ? ???this.registerActiveInstance(this.appContentInstance);
 
 		AppContentInstance app = null; // FIXME wait for completion? required?
 		try {
@@ -733,7 +732,8 @@ public class DataManager implements ApplicationStatusObserver
 		return this.dataRetrievingExecutor;
 	}
 
-
+// FIXME wait on which thread??? not the one where we do the hard work?$
+	// should we have a queue for fillingWithRealData() and wait for it, too? or only for it.
 	public void waitForCompletion() throws InterruptedException
 	{
 		this.dataRetrievingExecutor.shutdown();

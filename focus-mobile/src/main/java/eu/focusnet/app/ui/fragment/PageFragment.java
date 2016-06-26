@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class PageFragment extends Fragment
 	 */
 	private void buildPage()
 	{
-		LinkedHashMap<String, WidgetInstance> widgetInstances = this.pageInstance.getWidgets();
+		ArrayList<WidgetInstance> widgetInstances = this.pageInstance.getWidgets();
 
 		int currentayoutId = View.generateViewId();
 
@@ -114,8 +115,7 @@ public class PageFragment extends Fragment
 
 		int spaceLeft = Constant.Ui.LAYOUT_NUM_OF_COLUMNS;
 
-		for (Map.Entry<String, WidgetInstance> entry : widgetInstances.entrySet()) {
-			WidgetInstance widgetInstance = entry.getValue();
+		for (WidgetInstance widgetInstance : widgetInstances) {
 
 			//Get the width of the widget (e.g. 2of4)
 			int requiredSpace = widgetInstance.getNumberOfColumnsInUi();

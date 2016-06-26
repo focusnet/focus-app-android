@@ -350,7 +350,7 @@ public class DataContext extends HashMap<String, String>
 		}
 	}
 
-	public void toExecuteWhenReady(FutureTask<Boolean> todo)
+	public void execute(FutureTask<Boolean> todo)
 	{
 		Thread t = new Thread(todo);
 		t.start();

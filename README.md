@@ -60,6 +60,8 @@ SOFTWARE.
 
 # DOC
 - MVC-like
+- Entry point of app is FocusApplication
+- Entry point of controller is FocusAppLogic
 
 # TODO
 - check if we set synchronized methods and volatile properties correctly
@@ -96,6 +98,12 @@ SOFTWARE.
  - implement getAccessControlToken()
 - GPSWidgetFragment: 
  - move to MOTI code
- - test current code. Does it also work without Internet connection?
+ - test current code. Does it also work without Intenet connection?
 - improve TypesHelper. Always same constructs -> any way to make more readable?
 - FOCUSOBJET: we use a static reference to the current {@link UserInstance}. Would it be possible to use a better pattern?
+- solve problems when building logic (download/build/fillWithData/...)
+- depthInHierarchy - related to datacontext -> move this into the DataContext object?much easier: dataCtxhierarchy++ on each constructor
+- AppContentInstance - ctor: definne strategy for when application is not valid. Report? why would it be invalid? Distinguish cases?
+- README.md
+- content of About
+- Google map api key outside of github.

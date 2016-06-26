@@ -1,16 +1,16 @@
 /**
  * The MIT License (MIT)
  * Copyright (c) 2015 Berner Fachhochschule (BFH) - www.bfh.ch
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,35 +23,53 @@ package eu.focusnet.app.model;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
-import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.util.Constant;
 
 /**
- * An Application content instance, i.e. the application template has been resolved and real
- * instances of the different contained objects are accessible through the present object.
+ * This object contains the whole content of the application (projects, pages, widgets). It is
+ * based on a corresponding {@link AppContentTemplate} and the content is resolved iteratively
+ * to obtain each part of the application with a proper data context.
  */
 public class AppContentInstance extends AbstractInstance
 {
 
+	/**
+	 * Template on which the application content instantication is based.
+	 */
 	private AppContentTemplate appTemplate;
+
+	/**
+	 * List of projects in this application content
+	 */
 	private ArrayList<ProjectInstance> projects;
+
+	/**
+	 * Title of this application content
+	 */
 	private String title;
+
+	/**
+	 * Language in which we should display the UI when this application content is loaded.
+	 */
 	private String language;
 
 	/**
-	 * C'tor
+	 * C'tor.
 	 *
-	 * @param tpl
+	 * @param template    Base template
+	 * @param dataManager {@link DataManager} used for retrieving data for this application content.
 	 */
-	public AppContentInstance(AppContentTemplate tpl, DataManager dm) throws InterruptedException
+	public AppContentInstance(AppContentTemplate template, DataManager dataManager) throws InterruptedException
 	{
-		super(dm);
+		super(dataManager);
 
-		this.depthInHierarchy = 1; // root
+		// we are at the root -> level = 1
+		this.depthInHierarchy = 1;
 
-		this.appTemplate = tpl;
+		this.appTemplate = template;
 		this.projects = new ArrayList<>();
 		this.dataContext = new DataContext(this.dataManager);
 
@@ -60,19 +78,19 @@ public class AppContentInstance extends AbstractInstance
 		this.waitForCompletion();
 
 		// when all is done, build the paths of all instances
-		// we MUST wait for completion
+		// we MUST wait for completion, otherwise some parts of the application may not be ready
+		// and the paths will be broken.
 		this.buildPaths(null);
 
 		if (!this.isValid()) {
 			//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
+			// FIXME define strategy. In some cases it may be better not to crash. Be resilient.
 		}
 	}
 
 
 	/**
 	 * Build the instance based on the template, using the DataManager
-	 *
-	 * @return
 	 */
 	private void build()
 	{
@@ -89,6 +107,17 @@ public class AppContentInstance extends AbstractInstance
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
 		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext, this.depthInHierarchy + 1);
+
+		// is everything valid?
+		this.checkValidity();
+
+	}
+
+	/**
+	 * Check validity of the content and mark this instance as invalid if an error is found.
+	 */
+	private void checkValidity()
+	{
 		for (ProjectInstance pi : this.projects) {
 			if (!pi.isValid()) {
 				this.markAsInvalid();
@@ -98,15 +127,24 @@ public class AppContentInstance extends AbstractInstance
 	}
 
 	/**
+	 * Wait for the application instance building to be terminated.
+	 * @throws InterruptedException
+	 */
+	public void waitForCompletion() throws InterruptedException
+	{
+		this.dataManager.waitForCompletion();
+		this.freeDataContext();
+	}
+
+	/**
 	 * Return the application projects instances.
 	 *
-	 * @return
+	 * @return a list of {@link ProjectInstance}s
 	 */
 	public ArrayList<ProjectInstance> getProjects()
 	{
 		return this.projects;
 	}
-
 
 	public String getTitle()
 	{
@@ -121,6 +159,12 @@ public class AppContentInstance extends AbstractInstance
 		return this.language;
 	}
 
+	/**
+	 * Inherited.
+	 *
+	 * @param searchedPath The path to look after.
+	 * @return Inherited.
+	 */
 	@Override
 	protected AbstractInstance propagatePathLookup(String searchedPath)
 	{
@@ -133,7 +177,11 @@ public class AppContentInstance extends AbstractInstance
 		return null;
 	}
 
-
+	/**
+	 * Inherited
+	 *
+	 * @param parentPath The parent path on the top of which the new path must be defined.
+	 */
 	@Override
 	public void buildPaths(String parentPath)
 	{
@@ -143,10 +191,5 @@ public class AppContentInstance extends AbstractInstance
 		}
 	}
 
-	public void waitForCompletion() throws InterruptedException
-	{
-		this.dataManager.waitForCompletion();
-		this.freeDataContext();
-	}
 
 }

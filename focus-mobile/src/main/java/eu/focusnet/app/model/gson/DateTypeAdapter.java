@@ -46,9 +46,7 @@ public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<D
 	private final DateFormat dateFormat;
 
 	/**
-	 * Constructor.
-	 * <p/>
-	 * We initialize our Date formatter here.
+	 * Constructor. We initialize our Date formatter here.
 	 */
 	@SuppressLint("SimpleDateFormat")
 	public DateTypeAdapter()

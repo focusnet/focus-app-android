@@ -23,18 +23,34 @@ package eu.focusnet.app.controller;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
-//http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
+
+/**
+ * A priority task for our custom priority-based pool
+ *
+ * See http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
+
+ * @param <T> The response to {@code call()}.
+ */
 public final class PriorityTask<T> extends FutureTask<T> implements Comparable<PriorityTask<T>>
 {
+	/**
+	 * The priority. The higher it is, the sooner the task will be run.
+	 */
 	private final int priority;
 
+	/**
+	 * Constructor for use with {@code Callable}
+	 *
+	 * @param priority The priority
+	 * @param tCallable The {@code Callable}
+	 */
 	public PriorityTask(final int priority, final Callable<T> tCallable)
 	{
 		super(tCallable);
 
 		this.priority = priority;
 	}
-
+/*
 	public PriorityTask(final int priority, final Runnable runnable,
 						final T result)
 	{
@@ -42,11 +58,20 @@ public final class PriorityTask<T> extends FutureTask<T> implements Comparable<P
 
 		this.priority = priority;
 	}
-
+*/
+	/**
+	 * Comparision method
+	 * @param o The object to compare to
+	 * @return {@codce 0} if the current object and the campared object have the same priority,
+	 * {@code -1} if the other object has higher priority and {@code +1} if the current object
+	 * has higher priority.
+	 *
+	 * FIXME check that priority comparison is in correct order with a simple test.
+ 	 */
 	@Override
 	public int compareTo(final PriorityTask<T> o)
 	{
-		final long diff = o.priority - priority;
-		return 0 == diff ? 0 : 0 > diff ? -1 : 1;
+		final long diff = this.priority - o.priority;
+		return 0 == diff ? 0 : (diff > 0 ? +1 : -1) ;
 	}
 }

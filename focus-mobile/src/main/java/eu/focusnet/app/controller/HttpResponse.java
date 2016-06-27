@@ -42,15 +42,14 @@ public class HttpResponse
 	/**
 	 * An HttpResponse contains all information that may be useful by the application to
 	 * decide what to do after a network call.
-	 * <p/>
+	 *
 	 * Returns even in case of on-success (e.g. 404).
 	 *
-	 * @param connection
-	 * @throws IOException
+	 * @param connection The connection on the top of which we build the response
+	 * @throws IOException If the connection input stream cannot be read properly
 	 */
 	public HttpResponse(HttpURLConnection connection) throws IOException
 	{
-		// String method = connection.getRequestMethod(); // FIXME if required.
 		this.returnCode = connection.getResponseCode();
 		this.data = "";
 
@@ -67,7 +66,7 @@ public class HttpResponse
 		// basically, only application/json is text
 		if (contentTypes.contains("application/json")) {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				buffer.append(line);
@@ -94,9 +93,9 @@ public class HttpResponse
 
 
 	/**
-	 * Does the response successfully returned?
+	 * Did the response successfully return?
 	 *
-	 * @return
+	 * @return {@code true} if this is the case, {@code false} otherwise.
 	 */
 	public boolean isSuccessful()
 	{
@@ -106,7 +105,7 @@ public class HttpResponse
 	/**
 	 * Return the body of the response
 	 *
-	 * @return
+	 * @return A string containing the body.
 	 */
 	public String getData()
 	{

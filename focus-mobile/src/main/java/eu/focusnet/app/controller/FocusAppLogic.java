@@ -251,10 +251,10 @@ public class FocusAppLogic
 			this.dataManager.handleLogout();
 		}
 
-		this.dataManager.onApplicationLoad(this.applicationReady);
-		this.userManager.onApplicationLoad(this.applicationReady);
+		this.dataManager.onChangeStatus(this.applicationReady);
+		this.userManager.onChangeStatus(this.applicationReady);
 		if (cronBound) {
-			this.cronService.onApplicationLoad(this.applicationReady);
+			this.cronService.onChangeStatus(this.applicationReady);
 		}
 
 		// be nice and willingly free memory that we don't need anymore
@@ -308,8 +308,8 @@ public class FocusAppLogic
 
 		if (newApplicationContent != null) {
 			// advertise that we are ready to our new objects
-			newUserManager.onApplicationLoad(true);
-			newDataManager.onApplicationLoad(true);
+			newUserManager.onChangeStatus(true);
+			newDataManager.onChangeStatus(true);
 
 			// everything went fine, then replace the current objects by the new ones
 			this.userManager = newUserManager;

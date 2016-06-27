@@ -88,7 +88,6 @@ public class UserManager implements ApplicationStatusObserver
 
 	private boolean loggedIn;
 	private boolean applicationReady;
-	private String userIdentification;
 
 	public UserManager(DataManager dm)
 	{
@@ -262,7 +261,7 @@ public class UserManager implements ApplicationStatusObserver
 
 
 	@Override
-	public void onApplicationLoad(boolean appStatus)
+	public void onChangeStatus(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
 	}

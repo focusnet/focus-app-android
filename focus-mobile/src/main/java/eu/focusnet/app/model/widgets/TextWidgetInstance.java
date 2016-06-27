@@ -28,7 +28,7 @@ import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
- * Instanciation of a widget containing a simple text field
+ * Instantiation of a widget containing a simple text field
  */
 public class TextWidgetInstance extends WidgetInstance
 {

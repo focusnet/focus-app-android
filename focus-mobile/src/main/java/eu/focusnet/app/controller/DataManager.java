@@ -38,21 +38,10 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
- * The DataManager is responsible for building the application content and data management.
- * <p/>
- * Its specific tasks are:
- * <ul>
- * <li>Serve as a single contact entity for data CRUD operations.</li>
- * <li>Initialize and construct the application content</li>
- * </ul>
- * <p/>
- * The DataManager is hence the Model of the application. It does not provide any UI-related
- * feature, and does not run tasks in the background. This is left to the View aspect of
- * the application.
- * <p/>
- * TODO move user/login-related operations to a standalone {@code AccessControlManager}
- * <p/>
- * FIXME we instantiate all application contentn parts (projects, pages, widgets) at start-time. Should we rather do it on-demand?
+ * The DataManager is responsible for granting access to resources. They may be online or in the
+ * local SQlite repository. Other classes may not have to interact with data handling objects such
+ * as the {@link DatabaseAdapter} or the {@link NetworkManager}, and only use this present object.
+ * It also contains the required logic to build the application content.
  */
 public class DataManager implements ApplicationStatusObserver
 {
@@ -88,16 +77,28 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * The object responsible for providing networking facilities
 	 */
-	public NetworkManager net; // FIXME set to private, debugging.
+	final private NetworkManager net;
+
+	/**
+	 * Tells whether the application is ready or not.
+	 */
 	private boolean applicationReady;
+
+	/**
+	 * Pool for retrieving data
+	 */
 	private ExecutorService dataRetrievingExecutor;
+
 	/**
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
-	 * instanciation of the application content, by avoiding to retrieve many time the same
+	 * instantiation of the application content, by avoiding to retrieve many time the same
 	 * resources from the network and/or the local database.
 	 * <p/>
 	 * This cache is only used when initializing the application content instance, and is
 	 * then freed, as resources are not required after that anymore.
+	 *
+	 * If the system requires memory, it is also safe to free it as the data still exist in the
+	 * localt SQLite database.
 	 */
 	private HashMap<String, FocusObject> cache;
 
@@ -107,13 +108,10 @@ public class DataManager implements ApplicationStatusObserver
 	private DatabaseAdapter databaseAdapter;
 
 	/**
-	 * This List keeps track of the currently active instances
-	 * <p/>
-	 * We use this such that the instances are not garbage collected
-	 * <p/>
-	 * FIXME check that last sentence, I have a doubt now. Not really useful?
+	 * Application template
+	 *
+	 * FIXME should not be in this class?
 	 */
-	// private ArrayList<AbstractInstance> activeInstances;
 	private AppContentTemplate appContentTemplate;
 
 
@@ -124,7 +122,6 @@ public class DataManager implements ApplicationStatusObserver
 	public DataManager()
 	{
 		this.applicationReady = false;
-// FIXME		this.activeInstances = new ArrayList<>();
 
 		// setup database
 		this.databaseAdapter = new DatabaseAdapter();
@@ -139,6 +136,11 @@ public class DataManager implements ApplicationStatusObserver
 		this.cache = new HashMap<>();
 	}
 
+	/**
+	 * Factory for creating the priority-based pool used to retrieve data with reasonable settings.
+	 *
+	 * @return A new pool
+	 */
 	private static ExecutorService DataPoolFactory()
 	{
 		return new ThreadPoolExecutor(
@@ -157,12 +159,11 @@ public class DataManager implements ApplicationStatusObserver
 	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
-	 * <p/>
-	 * The application cannot live without this object and will therefore crash if it does not
-	 * succeed in retrieving this object.
 	 *
 	 * @return A {@link AppContentTemplate} object
 	 * @throws FocusMissingResourceException If the object could not be found
+	 *
+	 * FIXME should not be here?
 	 */
 	public AppContentTemplate getAppContentTemplate(String templateUri) throws FocusMissingResourceException
 	{
@@ -211,17 +212,23 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * Get a sample history.
 	 * <p/>
-	 * FIXME give a proper description of the output
+	 * Output:
+	 * <pre>
+	 * {
+	 * 		url: ...,
+	 * 		...,
+	 * 		data: {
+	 * 			timestamp: [epoch1, ..., epochN],
+	 * 			prop1: [v1, ..., vN],
+	 * 			...
+	 * 			propN: [w1, ..., wN]
+	 * 		}
+	 * }
+	 * </pre>
 	 *
 	 * @param url    The URL of the resource for which we want an history
 	 * @param params The parameters to be passed to the history retrieving service
 	 * @return A {@link FocusSample} containing the history of intereset
-	 * <p/>
-	 * <p/>
-	 * FIXME params are passed without any validation.
-	 * <p/>
-	 * FIXME important: the returned FocusSample MUST have a url property that is set to the
-	 * same one as the accessed url.
 	 */
 	public FocusSample getHistory(String url, String params) throws FocusMissingResourceException
 	{
@@ -231,18 +238,18 @@ public class DataManager implements ApplicationStatusObserver
 
 
 	/**
-	 * Get the appropriate copy of the data identified by the provided url.
+	 * Get the data identified by the provided url.
 	 * <p/>
-	 * This method first tries to acquire the resource from the local database and then from the
-	 * network if not available. It also stores the object in the local database such that it
-	 * can later be quickly accessed.
+	 * This method first tries to acquire the resource from the local cache or database and then
+	 * from the network if not available. It also stores the object in the local database such that
+	 * it can later be quickly accessed.
 	 *
 	 * @param url         The URL of the resource to retrieve
 	 * @param targetClass The retrieved object will be converted to a Java object matching this class
 	 * @return A FocusObject, or mor specifically one of its inherited classes matching {@code targetclass}
 	 * @throws IOException If an inrecoverable netowrk error occurs
 	 */
-	FocusObject get(String url, Class targetClass) throws IOException
+	public FocusObject get(String url, Class targetClass) throws IOException
 	{
 		// do we have it in the cache?
 		if (this.cache.get(url) != null) {
@@ -459,29 +466,7 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * Adds the specified instance to the list of currently active instances.
-	 *
-	 * @param i The instance to add
-	 */
-	/*public void registerActiveInstance(AbstractInstance i)
-	{
-		this.activeInstances.add(i);
-	}*/
-
-	/**
-	 * Removes the specified instance from the list of active instances.
-	 *
-	 * @param i the instance to remove
-	 */
-	/*public void unregisterActiveInstance(AbstractInstance i)
-	{
-		this.activeInstances.remove(i);
-	}*/
-
-	/**
 	 * Clean the samples table from useless entries.
-	 * <p/>
-	 * FIXME we should not do anything if app not ready.
 	 */
 	public void cleanDataStore()
 	{
@@ -498,10 +483,12 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * return new app instance if success or null on failure.
+	 * Create a new application instance.
 	 *
-	 * @return
-	 * @throws FocusMissingResourceException FIXME this should rather go elsewhere, in FocusAppLogic? this is not strickly speaking data management.
+	 * @return New app instance if success or {@code null} on failure.
+	 * @throws FocusMissingResourceException If the application template could not be found
+	 *
+	 * FIXME this should rather go elsewhere, in FocusAppLogic? this is not strickly speaking data management.
 	 */
 
 	public AppContentInstance retrieveApplicationData() throws FocusMissingResourceException
@@ -515,7 +502,7 @@ public class DataManager implements ApplicationStatusObserver
 		}
 		AppContentTemplate template = this.getAppContentTemplate(templateUri);
 
-		AppContentInstance app = null; // FIXME wait for completion? required?
+		AppContentInstance app; // FIXME wait for completion? required?
 		try {
 			app = new AppContentInstance(template, this);
 		}
@@ -526,7 +513,6 @@ public class DataManager implements ApplicationStatusObserver
 
 		return app;
 	}
-
 
 	/**
 	 * Retrieve the size of the current local database.
@@ -555,7 +541,7 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * logout
+	 * logout. Inherited from {@link ApplicationStatusObserver} interface.
 	 */
 	public void handleLogout()
 	{
@@ -577,18 +563,23 @@ public class DataManager implements ApplicationStatusObserver
 		}
 	}
 
-	public void onApplicationLoad(boolean success)
+	/**
+	 * Inherited from {@link ApplicationStatusObserver} interface.
+	 *
+	 * @param success Inherited
+	 */
+	public void onChangeStatus(boolean success)
 	{
 		if (!this.applicationReady && success) {
-			this.applicationReady = success;
+			this.applicationReady = true;
 			this.databaseAdapter.makeDataPersistent();
 		}
-		// otherwise, statu quo
+		// otherwise, keep current status
 	}
 
 	/**
 	 * Acquire the last data set id that was used in the local database
-	 * and assign it to our DatabaseAdapter
+	 * and assign it to our {@link DatabaseAdapter}
 	 */
 	public void useExistingDataSet()
 	{
@@ -645,16 +636,20 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * push modification for a single sample of speciifed class type
 	 *
-	 * @param sample
-	 * @param targetClass
-	 * @param typeOfOperation
-	 * @param dao
-	 * @return
+	 * @param sample the database {@link Sample} to push
+	 * @param targetClass The type of object to push
+	 * @param typeOfOperation The type of operation to perform on the object, which may be
+	 *                        {@link Constant.Database#TO_CREATE},
+	 *                        {@link Constant.Database#TO_UPDATE} or
+	 *                        {@link Constant.Database#TO_DELETE}
+	 * @param dao The Data Access Object to use for performing the operation
+	 * @return A network error status: {@link Constant.Networking#NETWORK_REQUEST_STATUS_SUCCESS},
+	 * {@link Constant.Networking#NETWORK_REQUEST_STATUS_NETWORK_FAILURE} or
+	 * {@link Constant.Networking#NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE}
 	 */
 	private int pushLocalModification(Sample sample, Class targetClass, String typeOfOperation, SampleDao dao)
 	{
 		int reportFailure = Constant.Networking.NETWORK_REQUEST_STATUS_SUCCESS;
-
 
 		String networkOperation;
 		switch (typeOfOperation) {
@@ -700,10 +695,15 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * same but public, and hence we create the dao ourselves and fetch the Sample for local store for the caller
-	 * <p/>
-	 * <p/>
-	 * also, we only allow UPDATE of data.
+	 * Same as {@link #pushLocalModification(Sample, Class, String, SampleDao)} but public,
+	 * and hence we create the DAO ourselves and fetch the Sample for local store for the caller.
+	 * Also, we only allow UPDATEs of data.
+	 *
+	 * @param url the resource to push
+	 * @param targetClass The type of object to push
+	 * @return A network error status: {@link Constant.Networking#NETWORK_REQUEST_STATUS_SUCCESS},
+	 * {@link Constant.Networking#NETWORK_REQUEST_STATUS_NETWORK_FAILURE} or
+	 * {@link Constant.Networking#NETWORK_REQUEST_STATUS_NON_SUCCESSFUL_RESPONSE}
 	 */
 	public int pushLocalModification(String url, Class targetClass)
 	{
@@ -727,13 +727,21 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 
+	/**
+	 * Get the pool for data retrieving.
+	 *
+	 * @return The pool
+	 */
 	public ExecutorService getDataRetrievingExecutor()
 	{
 		return this.dataRetrievingExecutor;
 	}
 
-	// FIXME wait on which thread??? not the one where we do the hard work?$
-	// should we have a queue for fillingWithRealData() and wait for it, too? or only for it.
+
+	/**
+	 * Wait for the completion of the pool that retrieves data for us
+	 * @throws InterruptedException
+	 */
 	public void waitForCompletion() throws InterruptedException
 	{
 		this.dataRetrievingExecutor.shutdown();
@@ -741,6 +749,7 @@ public class DataManager implements ApplicationStatusObserver
 		//noinspection StatementWithEmptyBody
 		while (!this.dataRetrievingExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
 			// wait silently
+			// FIXME wait for 5 seconds? too blocking?
 		}
 		// create a new pool in case we need it in the future (e.g. resync)
 		this.dataRetrievingExecutor = DataManager.DataPoolFactory();

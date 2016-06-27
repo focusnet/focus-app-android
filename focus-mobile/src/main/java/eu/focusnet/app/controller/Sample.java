@@ -27,7 +27,7 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
- * A Sample is the object representation of the rows in the "samples" database table
+ * A Sample is the object representation of each row in the "samples" local database table
  */
 public class Sample
 {

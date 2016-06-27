@@ -53,7 +53,6 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusNotImplementedException;
 
-
 /**
  * This class contains all methods pertaining to networking.
  * <p/>
@@ -62,35 +61,28 @@ import eu.focusnet.app.util.FocusNotImplementedException;
 public class NetworkManager
 {
 
-	private final static SSLContext sslContext = NetworkManager.initSslContext();
-
-
-	// FIXME get the root of REST server on first request (such that we have the root of services)
+	/**
+	 * Reference to the SSL Context we have built, and that validates our approved list of
+	 * self-signed certificates.
+	 */
+	final private static SSLContext sslContext = NetworkManager.initSslContext();
 
 	/**
 	 * C'tor.
 	 */
 	public NetworkManager()
 	{
-		System.setProperty("http.maxConnections", "5"); // FIXME remove!
-
+// 		System.setProperty("http.maxConnections", "5"); // FIXME remove! useless. after concurrency tests
 	}
 
 	/**
-	 * init SSL context
+	 * Init our custom SSL context.
 	 * <p/>
-	 * We must create a custom TrustManagerFactory because some of our certificates are self-signed.
-	 * <p/>
-	 * Android developer doc: https://developer.android.com/training/articles/security-ssl.html#SelfSigned
-	 * and we also fallback to the default manager
-	 * <p/>
-	 * FIXME FIXME DEBUG: we probably should not accept self-signed certificates in the future.
-	 * <p/>
-	 * FIXME we do a big try/catch, that quite ugly.
+	 * We must create a custom TrustManagerFactory because some of our certificates are self-signed
+	 * and we also fallback to the default manager.
 	 *
-	 * @return
+	 * @return The new SSL context
 	 */
-	//
 	private static SSLContext initSslContext()
 	{
 		SSLContext newSslContext;
@@ -110,27 +102,18 @@ public class NetworkManager
 			// Init certificate factory
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-
 			// Create an empty KeyStore to hold our trusted certificates
 			String keyStoreType = KeyStore.getDefaultType();
-			KeyStore myKeyStore = null;
-
-			myKeyStore = KeyStore.getInstance(keyStoreType);
-
+			KeyStore myKeyStore = KeyStore.getInstance(keyStoreType);
 			myKeyStore.load(null, null);
-
 
 			// Add each certificate in the keystore
 			AssetManager am = ApplicationHelper.getAssets();
 			List<String> certificates = Arrays.asList(am.list(Constant.AppConfig.ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER));
 			for (String cert : certificates) {
-				InputStream caInput = new BufferedInputStream(am.open(Constant.AppConfig.ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER + "/" + cert));
 				Certificate ca;
-				try {
+				try (InputStream caInput = new BufferedInputStream(am.open(Constant.AppConfig.ASSETS_SELF_SIGNED_CERTIFICATES_FOLDER + "/" + cert))) {
 					ca = cf.generateCertificate(caInput);
-				}
-				finally {
-					caInput.close();
 				}
 				myKeyStore.setCertificateEntry(cert, ca);
 			}
@@ -207,16 +190,10 @@ public class NetworkManager
 	}
 
 
-	// FIXME TODO copy RefreshData service from Yandy's code
-	// FIXME useful in the end?
-
-
 	/**
 	 * Is the network currently available?
-	 * <p/>
-	 * FIXME perhaps move to another Helper class, such that NetworkManager does not need a Context at all
 	 *
-	 * @return true if network is available, false otherwise.
+	 * @return {@code true} if network is available, {@code false} otherwise.
 	 */
 	public static boolean isNetworkAvailable() throws RuntimeException
 	{
@@ -243,9 +220,9 @@ public class NetworkManager
 	/**
 	 * Get the latest version of an existing resource
 	 *
-	 * @param url
-	 * @return
-	 * @throws IOException
+	 * @param url The URL of the resource to retrieve
+	 * @return An {@link HttpResponse} object
+	 * @throws IOException If a network error occurs.
 	 */
 	public HttpResponse get(String url) throws IOException
 	{
@@ -261,10 +238,10 @@ public class NetworkManager
 	/**
 	 * Update an existing resource
 	 *
-	 * @param url
-	 * @param data
-	 * @return
-	 * @throws IOException
+	 * @param url  The URL of the resource to update
+	 * @param data The data to use as the content of the new version of the resource
+	 * @return An {@link HttpResponse} object
+	 * @throws IOException If a network error occurs.
 	 */
 	public HttpResponse put(String url, FocusObject data) throws IOException
 	{
@@ -273,26 +250,25 @@ public class NetworkManager
 	}
 
 	/**
-	 * Create a new resource
+	 * Create an existing resource
 	 *
-	 * @param url
-	 * @param data
-	 * @return
-	 * @throws IOException
+	 * @param url  The URL of the resource to create
+	 * @param data The data to use as the content of the new resource
+	 * @return An {@link HttpResponse} object
+	 * @throws IOException If a network error occurs.
 	 */
 	public HttpResponse post(String url, FocusObject data) throws IOException
 	{
 		HttpRequest request = new HttpRequest(Constant.Networking.HTTP_METHOD_POST, url, data);
-		HttpResponse r = request.execute();
-		return r;
+		return request.execute();
 	}
 
 	/**
-	 * Delete a remote resource.
+	 * Delete an existing resource
 	 *
-	 * @param url
-	 * @return
-	 * @throws IOException
+	 * @param url  The URL of the resource to delete
+	 * @return An {@link HttpResponse} object
+	 * @throws IOException If a network error occurs.
 	 */
 	public HttpResponse delete(String url) throws IOException
 	{
@@ -302,19 +278,22 @@ public class NetworkManager
 
 	/**
 	 * Do login to remote endpoint
-	 * FIXME wait for Jussi's authentication server
 	 *
-	 * @param user
-	 * @param password
-	 * @param server
-	 * @return true on success or false on failure (access forbidden). If a network error occurs,
-	 * throw a IOException.
+	 * FIXME wait for authentication server. Not implemented.
 	 */
-	public boolean login(String user, String password, String server) throws IOException
+	public boolean login(String user, String password, String server)
 	{
 		throw new FocusNotImplementedException("NetworkManager.login()");
 	}
 
+	/**
+	 * Push a modification on the network
+	 * @param networkOperation The type of operation to be performed on the network (an HTTP method)
+	 * @param url The URL of the resource to modify
+	 * @param fo The source object to use as the payload of the modification
+	 * @return A {@link HttpResponse} object
+	 * @throws IOException If a network error occurs
+	 */
 	public HttpResponse pushModification(String networkOperation, String url, FocusObject fo) throws IOException
 	{
 		switch (networkOperation) {
@@ -326,25 +305,5 @@ public class NetworkManager
 				return this.delete(url);
 		}
 		return null;
-	}
-
-
-	/**
-	 * Custom (and dummy) host name verifier
-	 * <p/>
-	 * This is prototype code and is not secure. It may be used to bypass hostname validation of SSL certificates.
-	 * <p/>
-	 * If required, put in NetworkManager constructor
-	 * HttpsURLConnection.setDefaultHostnameVerifier(new DummyHostNameVerifier());
-	 *
-	 * @deprecated prototpye
-	 */
-	private static class DummyHostNameVerifier implements HostnameVerifier
-	{
-		@Override
-		public boolean verify(String hostname, SSLSession session)
-		{
-			return true;
-		}
 	}
 }

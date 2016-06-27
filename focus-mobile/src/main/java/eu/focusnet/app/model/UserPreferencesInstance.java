@@ -27,7 +27,7 @@ import eu.focusnet.app.model.gson.BookmarksList;
 import eu.focusnet.app.model.gson.UserPreferences;
 
 /**
- * Instanciation of the {@link UserPreferences} template object. These objects are similar,
+ * Instantiation of the {@link UserPreferences} template object. These objects are similar,
  * but we keep the distinction between template and instances explicitly. Operations by controllers
  * are performed on instances, not templates.
  */

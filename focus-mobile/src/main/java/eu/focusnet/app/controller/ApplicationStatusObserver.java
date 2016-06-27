@@ -20,11 +20,22 @@
 
 package eu.focusnet.app.controller;
 
-
+/**
+ * Interface defining behaviour of classes that must be informed of a change in the application
+ * status.
+ */
 public interface ApplicationStatusObserver
 {
 
-	void onApplicationLoad(boolean appStatus);
+	/**
+	 * Actions to be performed when the application status changes.
+	 *
+	 * @param appStatus {@code true} if the application is now ready, {@code false} otherwise.
+	 */
+	void onChangeStatus(boolean appStatus);
 
+	/**
+	 * Actions to perform on logout.
+	 */
 	void handleLogout();
 }

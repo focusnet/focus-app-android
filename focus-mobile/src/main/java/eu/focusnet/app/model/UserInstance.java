@@ -24,7 +24,7 @@ import eu.focusnet.app.controller.UserManager;
 import eu.focusnet.app.model.gson.User;
 
 /**
- * Instanciation of the {@link User} template object. These objects are very similar, but we keep
+ * Instantiation of the {@link User} template object. These objects are very similar, but we keep
  * the distinction between template and instances explicitly. Operations by controllers
  * are performed on instances, not templates.
  */

@@ -36,45 +36,66 @@ import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
-
-// TOOD FIXME also clean SQL db from old entries (i.e. ones that are not refered by fully loaded instances (? to check ?)
-
-// FIXME synchronized functions
-// FIXME how to interrupt (schedulor AND manually launched sync)
-
 /**
  * This class is a service responsible for calling periodic tasks:
- * - cleaning of SQL database every N hours
  * - retrieving new version of data every N minutes
  * <p/>
  * Schedulor behavior regarding sleep/wake:
  * - will not wake the device up
  * - we use wake locks to ensure that started tasks are indeed finished
- * - when waking up, the device will wait for CRON_SERVICE_POLLING_PERIOD_IN_MINUTES before executing the tasks again
- * - in tasks, we then make sure we do now execute the sync/clean tasks too often
- * (, CRON_SERVICE_REFRESH_DATA_PERIOD)
- * - this way, we don't expect the user to work with the app for CRON_SERVICE_REFRESH_DATA_PERIOD minutes,
- * the periodic tasks are run as long as he is on the app for more than CRON_SERVICE_POLLING_PERIOD_IN_MINUTES minutes
+ * - when waking up, the device will wait for
+ * {@link Constant.AppConfig#CRON_SERVICE_POLLING_INTERVAL_IN_MINUTES}
+ * before trying to execute the tasks again
+ * - When an execution is triggered, we then make sure we do not execute the sync/clean tasks too
+ * often by comparing the
+ * last execution time with {@link Constant.AppConfig#CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES}.
+ * - this way, we don't expect the user to work with the app for
+ * {@link Constant.AppConfig#CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES} minutes,
+ * the periodic tasks are launched as long as he is on the app for more than
+ * {@link Constant.AppConfig#CRON_SERVICE_POLLING_INTERVAL_IN_MINUTES}  minutes
  */
 public class CronService extends Service implements ApplicationStatusObserver
 {
-	// FIXME move some of these vales to properties (and load them in onCreate)
 
-	private final IBinder cronBinder = new CronBinder();
-	PowerManager powerManager;
+	/**
+	 * Link used to bind against this service
+	 */
+	final private IBinder cronBinder = new CronBinder();
+
+	/**
+	 * Last synchronization time (epoch in milliseconds)
+	 */
 	private long lastSync;
+
+	/**
+	 * Execution pool for our task
+	 */
 	private ScheduledExecutorService scheduleTaskExecutor;
+
+	/**
+	 * Number of encountered consecutive failures
+	 */
 	private int failures;
-	private boolean syncInProgress; // does not apply to db cleaning
+
+	/**
+	 * Tells whether the synchronization process is in progress
+	 */
+	private boolean syncInProgress;
+
+	/**
+	 * Tells whether the applicatin is in the ready status or if it still needs configuration
+	 */
 	private boolean applicationReady;
 
+	/**
+	 * Create the service, setting reasonable defaults.
+	 */
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
 		this.applicationReady = false;
 		this.scheduleTaskExecutor = Executors.newScheduledThreadPool(3);
-		this.powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		this.syncInProgress = false;
 
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
@@ -83,6 +104,14 @@ public class CronService extends Service implements ApplicationStatusObserver
 		this.failures = 0;
 	}
 
+	/**
+	 * Start the service
+	 *
+	 * @param intent Inherited
+	 * @param flags Inherited
+	 * @param startId Inherited
+	 * @return Inherited
+	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
@@ -90,13 +119,57 @@ public class CronService extends Service implements ApplicationStatusObserver
 		return START_REDELIVER_INTENT;
 	}
 
+	/**
+	 * Kill the scheduler on service destruction
+	 */
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		scheduleTaskExecutor.shutdown();
+	}
 
 	/**
-	 * Sync data operations
-	 * <p/>
-	 * * return false if already in progress OR application nto ready, true otherwise
-	 * <p/>
-	 * FIXME if I call this in a separate thread, I can then interrupt it.
+	 * Synchronize data periodically
+	 */
+	private void periodicallySyncData()
+	{
+		this.scheduleTaskExecutor.scheduleWithFixedDelay(
+				new Runnable()
+				{
+					@Override
+					public void run()
+					{
+
+						if (!applicationReady) {
+							return;
+						}
+
+						// last sync is too recent, let's wait more
+						long limit = System.currentTimeMillis() - (Constant.AppConfig.CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES * 60 * 1_000);
+						if (lastSync == 0 || lastSync >= limit) {
+							return;
+						}
+
+						syncData();
+
+					}
+				},
+				Constant.AppConfig.CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES,
+				Constant.AppConfig.CRON_SERVICE_POLLING_INTERVAL_IN_MINUTES,
+				TimeUnit.MINUTES
+		);
+	}
+
+
+
+	/**
+	 * Sync data operation. In this method, we prepare everything for the sync to happen in good
+	 * conditions (wake lock, progress flag), but the actual synchronization is made by calling
+	 * {@link FocusAppLogic#sync()}.
+	 *
+	 * @return {@code false} if already in progress OR application not ready,
+	 * {@code true} otherwise.
 	 */
 	public boolean syncData()
 	{
@@ -104,7 +177,6 @@ public class CronService extends Service implements ApplicationStatusObserver
 		if (!this.applicationReady) {
 			return false;
 		}
-
 
 		// acquire the synchronization lock
 		if (!setSyncInProgress(true)) {
@@ -152,63 +224,21 @@ public class CronService extends Service implements ApplicationStatusObserver
 	}
 
 	/**
-	 * Sync data with remote backends
-	 */
-	private void periodicallySyncData()
-	{
-		this.scheduleTaskExecutor.scheduleWithFixedDelay(
-				new Runnable()
-				{
-					@Override
-					public void run()
-					{
-
-						if (!applicationReady) {
-							return;
-						}
-
-						// last sync is too recent, let's wait more
-						long limit = System.currentTimeMillis() - (Constant.AppConfig.CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES * 60 * 1_000);
-						if (lastSync == 0 || lastSync >= limit) {
-							return;
-						}
-
-						syncData();
-
-					}
-				},
-				Constant.AppConfig.CRON_SERVICE_DURATION_TO_WAIT_BEFORE_FIRST_SYNC_IN_MINUTES,
-				Constant.AppConfig.CRON_SERVICE_POLLING_INTERVAL_IN_MINUTES,
-				TimeUnit.MINUTES
-		);
-	}
-
-
-	/**
-	 * Kill any current sync data operation
-	 * - from scheduler
-	 * - from explicit synching
-	 */
-	public void killPendingSync()
-	{
-		//
-	}
-
-
-	/**
 	 * Get the work-in-progress flag
 	 *
-	 * @return
+	 * @return {@code true} if the sync operation is in progress, {@code false} otherwise
 	 */
-	synchronized public boolean getSyncInProgress()
+	public boolean getSyncInProgress()
 	{
 		return this.syncInProgress;
 	}
 
 	/**
 	 * Set the work-in-progress flag
+	 *
+	 * @param flag {@code true} if the sync operation is in progress, {@code false} otherwise
 	 */
-	synchronized private boolean setSyncInProgress(boolean flag)
+	private boolean setSyncInProgress(boolean flag)
 	{
 		if (this.syncInProgress == flag) {
 			return false;
@@ -218,24 +248,10 @@ public class CronService extends Service implements ApplicationStatusObserver
 		return true;
 	}
 
-
-	/**
-	 * Kill the scheduler on service destruction
-	 */
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		scheduleTaskExecutor.shutdown();
-	}
-
 	/**
 	 * Get the last sync date
-	 * <p/>
-	 * NOTE: only available within a single application instance run. We do not permanently save
-	 * this information (e.g. in the db)
 	 *
-	 * @return
+	 * @return The last sync epoch in milliseconds
 	 */
 	public long getLastSync()
 	{
@@ -251,25 +267,28 @@ public class CronService extends Service implements ApplicationStatusObserver
 		return this.cronBinder;
 	}
 
-	// If the service was not bound when this method is called, then our applicationReady flag
-	// may be wrong.
-	// FIXME to circumvent that, call this method often?
+	/**
+	 * Inherited
+	 *
+	 * @param appStatus {@code true} if the application is now ready, {@code false} otherwise.
+	 */
 	@Override
-	public void onApplicationLoad(boolean appStatus)
+	public void onChangeStatus(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
 	}
 
-	// FIXME check what happens if called when not bound.
+	/**
+	 * Inherited
+	 */
 	@Override
 	public void handleLogout()
 	{
-		// FIXME TODO kill any pending process
-		// no need to commit the modification in the SharedPreferences. This is the job of UserManager.logout(), which will clear the whole prefs
+		// no need to commit the modification in the SharedPreferences. This is the job of
+		// UserManager.logout(), which will clear the whole prefs
 		this.lastSync = 0;
 		this.failures = 0;
 	}
-
 
 	/**
 	 * Class used for the client Binder.  Because we know this service always
@@ -277,13 +296,15 @@ public class CronService extends Service implements ApplicationStatusObserver
 	 */
 	public class CronBinder extends Binder
 	{
+		/**
+		 * Get the service.
+		 * @return The service.
+		 */
 		public CronService getService()
 		{
-			// Return this instance of LocalService so clients can call public methods
 			return CronService.this;
 		}
 	}
-
 
 }
 

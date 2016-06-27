@@ -124,7 +124,7 @@ public class ProjectsListingActivity extends ToolbarEnabledActivity
 			// something, so let's update the cron's applicationReady flag that may have not been
 			// set if the service was not bound in FocusAppLogic when we tried to do it.
 			// Not likely, though.
-			cronService.onApplicationLoad(true);
+			cronService.onChangeStatus(true);
 		}
 
 		@Override

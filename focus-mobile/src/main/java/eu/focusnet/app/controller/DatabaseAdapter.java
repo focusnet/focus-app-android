@@ -35,8 +35,14 @@ import eu.focusnet.app.util.Constant;
 public class DatabaseAdapter
 {
 
-
+	/**
+	 * Our helper for database managemment
+	 */
 	private DatabaseHelper databaseHelper;
+
+	/**
+	 * Direct access to the SQLite database object
+	 */
 	private SQLiteDatabase db;
 
 	/**
@@ -58,13 +64,14 @@ public class DatabaseAdapter
 	 * For the data loaded under this id to become the latest data set, call makeDataPersistent()
 	 */
 	private long uniqueInstanceIdentifier;
+
 	/**
 	 * Use to avoid concurrency issues
 	 */
 	private int numberOfConsumers;
 
 	/**
-	 * Constructor.
+	 * Constructor. Set reasonable defaults.
 	 */
 	public DatabaseAdapter()
 	{
@@ -77,11 +84,14 @@ public class DatabaseAdapter
 
 
 	/**
-	 * Open a database for writing
+	 * Open a database for writing.
+	 *
+	 * The {@link #numberOfConsumers} is used to keep track of the number of opening and closing
+	 * of the database, such that we don't close a database that is still in use.
 	 *
 	 * @return A DatabaseAdapter to interact with the database.
 	 */
-	private synchronized SQLiteDatabase openWritableDatabase()
+	synchronized private SQLiteDatabase openWritableDatabase()
 	{
 		if (this.db == null || !this.db.isOpen()) {
 			this.db = databaseHelper.getWritableDatabase();
@@ -93,7 +103,7 @@ public class DatabaseAdapter
 	/**
 	 * Close the database
 	 */
-	public synchronized void close()
+	synchronized public void close()
 	{
 		--this.numberOfConsumers;
 		if (this.numberOfConsumers == 0) {
@@ -104,7 +114,7 @@ public class DatabaseAdapter
 	/**
 	 * Helper function to obtain a Sample Data Access Object
 	 *
-	 * @return
+	 * @return A Sample Data Access Object
 	 */
 	public SampleDao getSampleDao()
 	{
@@ -113,6 +123,8 @@ public class DatabaseAdapter
 
 	/**
 	 * Get the databse size (whole database, not only entries with the current data set id)
+	 *
+	 * @return The database size in Bytes
 	 */
 	public long getDatabaseSize()
 	{
@@ -120,8 +132,13 @@ public class DatabaseAdapter
 	}
 
 	/**
-	 * use the most recent data set identifier in the database, or continue to use the one of the
+	 * Use the most recent data set identifier in the database, or continue to use the one of the
 	 * current object if none was found.
+	 *
+	 * As mention in the introduction of this class, when starting the application, this object
+	 * will obtain an artificially old {@link #uniqueInstanceIdentifier} until the application is
+	 * fully ready, and hence won't interfer with the behavior of this function that makes us
+	 * use the last valid data set in the database.
 	 */
 	public void useExistingDataSet()
 	{
@@ -137,7 +154,8 @@ public class DatabaseAdapter
 	}
 
 	/**
-	 *
+	 * Make data persistent. This is done by replacing our artificially old
+	 * {@link #uniqueInstanceIdentifier} by a very new one.
 	 */
 	public void makeDataPersistent()
 	{
@@ -169,13 +187,17 @@ public class DatabaseAdapter
 		}
 
 		/**
-		 * // Generate by a random number for more randomness
-		 * // however the time information is useful for knowing which dataset was the last one
-		 * // so we add randomness to the end
-		 * // 123456789 -> 456789<random>
-		 * // remove first 3 numbers
+		 * Generate a new data set identifier.
 		 *
-		 * @return
+		 * The time information is useful for knowing which dataset was the last one, but we would
+		 * like to add more randomness just in case 2 objects are created very close from eachother
+		 * (that would probably be a bug as there is only one {@code DatabaseAdapter} at a time in
+		 * the application).
+		 *
+		 * We therefore add randomness at the end of the string.
+		 * {@code 123456789 -> 123456789<random>}
+		 *
+		 * @return A new data set identifier that will be the most recent one
 		 */
 		public static long generateNewDataSetIdentifier()
 		{
@@ -190,7 +212,7 @@ public class DatabaseAdapter
 		 * This is used for temporarily saving new data before committing them when the data set
 		 * is complete by updating to a "new" data set id.
 		 *
-		 * @return
+		 * @return An "old" data set id
 		 */
 		public static long generateOldDataSetIdentifier()
 		{
@@ -198,7 +220,7 @@ public class DatabaseAdapter
 		}
 
 		/**
-		 * When creating the database, register tables.
+		 * When creating the database, create tables.
 		 *
 		 * @param db the object to work on
 		 */
@@ -221,6 +243,7 @@ public class DatabaseAdapter
 			if (newVersion >= oldVersion) {
 				return;
 			}
+			// here for documentation purpose
 			switch (oldVersion) {
 				case 1:
 					this.upgradeFromVersion1to2(db);

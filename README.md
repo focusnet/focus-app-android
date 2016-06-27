@@ -115,3 +115,19 @@ SOFTWARE.
     <resources>
         <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">FIXME</string>
     </resources>
+- how to stop sync task (manual AND automatic), and kill sync if application explicitely closed. do operations in a separate interruptable thread?
+- on-demand loading of resources instead of everything at startup
+- move application content creation out of DataManager
+- history DataManager#getHistory
+ - validate params
+ - url in object MUST be same as requested URL. Forge if not the case?
+- check logic of waitforcompletion
+ - wait on which thread??? not the one where we do the hard work?$
+ - should we have a queue for fillingWithRealData() and wait for it, too? or only for it.
+- HttpRequest:
+ - FIXME resolve redirections manually! Not done even if connection.setInstanceFollowRedirects(true)
+ - FIXME use a real access control manager (UserManager) instead of pushing headers registered in the application properties
+- HttpResponse: replace StringBuffer with StringBuilder (not thread-safe but more efficient)	
+- NetworkManager#initSslContext() bug try/catch - ugly.
+- NetworkManager: getNetworkInfo() is deprecated
+- use 'final' as much as possible

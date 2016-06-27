@@ -31,7 +31,7 @@ import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
- * SQL Sample Data Access Object
+ * SQLite Sample Data Access Object
  * <p/>
  * All samples being recorded belong to a specific data set id ({@link #dataSyncSetId}
  * instance variable) that is unique to each {@link DatabaseAdapter} being created. Most operations
@@ -40,8 +40,6 @@ import eu.focusnet.app.util.FocusInternalErrorException;
  */
 public class SampleDao
 {
-
-
 	private long dataSyncSetId;
 	private String[] columnsToRetrieve = {
 			Constant.Database.URL,

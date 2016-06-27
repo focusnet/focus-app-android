@@ -42,25 +42,50 @@ import eu.focusnet.app.util.FocusInternalErrorException;
  */
 public class HttpRequest
 {
-
-
+	/**
+	 * Type of HTTP method
+	 */
 	String method = null;
+
+	/**
+	 * Requested URL
+	 */
 	URL url = null;
+
+	/**
+	 * Payload of the request
+	 */
 	String payload = "";
+
+	/**
+	 * Response for the request
+	 */
 	HttpResponse response = null;
-	int errors = 0; // we count number of errors.
-	private SSLContext sslContext;
+
+	/**
+	 * Number of encountered errors when setting up the request
+	 */
+	int errors = 0;
 
 	/**
 	 * A simple Request without payload (GET or DELETE)
 	 *
-	 * @param method
-	 * @param url
+	 * @param method The HTTP method
+	 * @param url The requested URL
 	 */
 	public HttpRequest(String method, String url)
 	{
 		// check validity of url and method
-		this.method = method; // TODO check that is valid method -> ++this.errors;
+		switch (method) {
+			case Constant.Networking.HTTP_METHOD_GET:
+			case Constant.Networking.HTTP_METHOD_POST:
+			case Constant.Networking.HTTP_METHOD_PUT:
+			case Constant.Networking.HTTP_METHOD_DELETE:
+				this.method = method;
+				break;
+			default:
+				++this.errors;
+		}
 		try {
 			this.url = new URL(url);
 		}
@@ -73,8 +98,8 @@ public class HttpRequest
 	/**
 	 * A request with associated payload to be passed in the body (POST or PUT)
 	 *
-	 * @param method
-	 * @param url
+	 * @param method The HTTP method
+	 * @param url The requested URL
 	 * @param payload An object to be GSON-ified
 	 */
 	public HttpRequest(String method, String url, FocusObject payload)
@@ -96,23 +121,24 @@ public class HttpRequest
 	}
 
 	/**
-	 * We may need to include the access control token or any other mean; they would come from the NetworkManager (?)
-	 * <p/>
-	 * FIXME HttpsURLConnection for HTTPS connections?
-	 * <p/>
+	 * Create an HTTP(S) connection.
+	 *
 	 * keepalive and persistent connections are automatically handled by Anroid. Nothing to do.
 	 *
-	 * @param url
-	 * @param httpMethod
-	 * @return
-	 * @throws IOException
+	 * FIXME resolve redirections manually! Not done even if connection.setInstanceFollowRedirects(true)
+	 * FIXME use a real access control manager (UserManager) instead of pushing headers registered in the application properties
+	 *
+	 * @param url The URL to connect to
+	 * @param httpMethod The HTTP method
+	 * @return An HTTP(S) URL connection
+	 * @throws IOException If the connection cannot be open
 	 */
 	private static HttpURLConnection httpConnectionFactory(URL url, String httpMethod) throws IOException
 	{
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 		// HTTP-related configuration
-		connection.setInstanceFollowRedirects(true); // FIXME we still have to resolve the redirection manually! TODO TODO
+		connection.setInstanceFollowRedirects(true);
 		connection.setRequestMethod(httpMethod);
 		// When appropriate, HTTPS-related configuration
 		// Works out of the box if certificates are valid (with valid and registered CA)
@@ -122,9 +148,7 @@ public class HttpRequest
 		}
 
 		// add custom headers when necessary
-		// FIXME should imply the UserManager and not simply being gotten from the Properties
 		String headers = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_HTTP_REQUEST_MODIFIER_PREFIX + url.getHost());
-		// FIXME For now, multiple headers per host are not supported.
 		if (headers != null) {
 			Pattern p = Pattern.compile("^([^\\s:]+):\\s*(.*)$");
 			Matcher m = p.matcher(headers);
@@ -145,11 +169,10 @@ public class HttpRequest
 	/**
 	 * Actually run the request and build the output Response object.
 	 *
-	 * @return
-	 * @throws RuntimeException
-	 * @throws IOException
+	 * @return An {@link HttpResponse} object
+	 * @throws IOException If the connection cannot be open
 	 */
-	public HttpResponse execute() throws RuntimeException, IOException
+	public HttpResponse execute() throws IOException
 	{
 		if (this.errors != 0) {
 			throw new FocusInternalErrorException("Bad configuration for HTTP Request");

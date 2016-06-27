@@ -37,7 +37,7 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
- * Abstract class being the common parent to all Widget instanciations.
+ * Abstract class being the common parent to all Widget instantiations.
  */
 public abstract class WidgetInstance extends AbstractInstance
 {

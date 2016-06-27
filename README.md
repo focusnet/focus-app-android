@@ -131,3 +131,7 @@ SOFTWARE.
 - NetworkManager#initSslContext() bug try/catch - ugly.
 - NetworkManager: getNetworkInfo() is deprecated
 - use 'final' as much as possible
+- UserManager:
+ - getUserData: if fail, crash. not very user-friendly. should gracefully fallback to entry point activity for example.
+ - implement login()
+ - getUser() : hard-coded values for user infos.

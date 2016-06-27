@@ -20,6 +20,8 @@
 
 package eu.focusnet.app.controller;
 
+import android.support.annotation.NonNull;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -51,6 +53,8 @@ public final class PriorityTask<T> extends FutureTask<T> implements Comparable<P
 		this.priority = priority;
 	}
 /*
+
+FIXME remove
 	public PriorityTask(final int priority, final Runnable runnable,
 						final T result)
 	{
@@ -62,14 +66,14 @@ public final class PriorityTask<T> extends FutureTask<T> implements Comparable<P
 	/**
 	 * Comparision method
 	 * @param o The object to compare to
-	 * @return {@codce 0} if the current object and the campared object have the same priority,
+	 * @return {@code 0} if the current object and the campared object have the same priority,
 	 * {@code -1} if the other object has higher priority and {@code +1} if the current object
 	 * has higher priority.
 	 *
 	 * FIXME check that priority comparison is in correct order with a simple test.
  	 */
 	@Override
-	public int compareTo(final PriorityTask<T> o)
+	public int compareTo(@NonNull final PriorityTask<T> o)
 	{
 		final long diff = this.priority - o.priority;
 		return 0 == diff ? 0 : (diff > 0 ? +1 : -1) ;

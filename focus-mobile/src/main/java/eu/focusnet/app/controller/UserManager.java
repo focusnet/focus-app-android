@@ -35,20 +35,40 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.FocusNotImplementedException;
 
+
+/**
+ * This class is responsible for handling user-related tasks, such as authentication and
+ * access control.
+ */
 public class UserManager implements ApplicationStatusObserver
 {
 
+	/**
+	 * The {@link DataManager} to use for data operations
+	 */
 	private DataManager dataManager;
+
+	/**
+	 * The current user object
+	 */
 	private UserInstance user;
+
+	/**
+	 * The current user preferences object
+	 */
 	private UserPreferencesInstance userPreferences;
+
 	/**
 	 * Login-related input information: username
 	 */
 	private String loginUser;
+
 	/**
 	 * Login-related input information: password
 	 */
+
 	private String loginPassword;
+
 	/**
 	 * Login-related input information: connection server
 	 */
@@ -74,30 +94,41 @@ public class UserManager implements ApplicationStatusObserver
 	 * used to generate the content of the application.
 	 */
 	private String userUrl;
+
 	/**
 	 * URI to resource holding user information.
 	 *
 	 * @see #userUrl;
 	 */
 	private String prefUrl;
+
 	/**
 	 * URI to resource holding application template.
 	 */
 	private String appContentUrl;
 
-
+	/**
+	 * Tells whether the user is logged in or not.
+	 */
 	private boolean loggedIn;
+
+	/**
+	 * Tells whether the application is ready or not.
+	 */
 	private boolean applicationReady;
 
+	/**
+	 * Constructor
+	 * @param dm The {@link DataManager} to use for data operations.
+	 */
 	public UserManager(DataManager dm)
 	{
 		this.dataManager = dm;
 		this.loggedIn = false;
 	}
 
-
 	/**
-	 * Try to login without network, just by looking at existin glogin information in shared prefs.
+	 * Try to login without network, just by looking at existin login information in shared prefs.
 	 */
 	public void quickLoginInfoAcquisition()
 	{
@@ -117,7 +148,6 @@ public class UserManager implements ApplicationStatusObserver
 		}
 	}
 
-
 	/**
 	 * Tells whether the user has already logged in.
 	 *
@@ -128,11 +158,9 @@ public class UserManager implements ApplicationStatusObserver
 		return this.loggedIn;
 	}
 
-
 	/**
-	 * Login and if successful, save the login information in the permanent store, as the internal
-	 * configuration resource.
-	 * <p/>
+	 * Login
+	 *
 	 * FIXME TODO implementation to be completed once we have an authentication server.
 	 *
 	 * @param user     The login user
@@ -260,12 +288,22 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 
+	/**
+	 * Inherited.
+	 *
+	 * @param appStatus {@code true} if the application is now ready, {@code false} otherwise.
+	 */
 	@Override
 	public void onChangeStatus(boolean appStatus)
 	{
 		this.applicationReady = appStatus;
 	}
 
+	/**
+	 * Inherited.
+	 *
+	 * Reset all shared preferences.
+	 */
 	public void handleLogout()
 	{
 		if (this.applicationReady) {
@@ -293,21 +331,20 @@ public class UserManager implements ApplicationStatusObserver
 	public void logout()
 	{
 		this.handleLogout();
-		this.dataManager.handleLogout(); // in case it needs to do something.
+		this.dataManager.handleLogout();
 	}
 
-
 	/**
-	 * The {@link User} is one of the 3 mandatory objects for the application to run. This method
+	 * The {@link UserInstance} is one of the 3 mandatory objects for the application to run. This method
 	 * retrieves this object based on the URI that has been obtained during the login procedure.
 	 * If the object does not exist, a new one is created on the network.
 	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
-	 * @return A {@link User} object
+	 * @return A {@link UserInstance} object
 	 */
-	public synchronized User getUser()
+	synchronized public UserInstance getUser()
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -329,7 +366,8 @@ public class UserManager implements ApplicationStatusObserver
 		}
 		if (user == null) {
 			// FIXME information not used for now, must still must be valid to pass JSON Schema valiation on the server-side
-			user = new UserInstance(this.userUrl, "first", "last", "email@email.com", "company", this); // FIXME all information should come from login step -> only pass UserManager to User()
+			// FIXME all information should come from login step -> only pass UserManager to User()
+			user = new UserInstance(this.userUrl, "first", "last", "email@email.com", "company", this);
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(user);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
 				throw new FocusInternalErrorException("Cannot create User object.");
@@ -340,12 +378,11 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * Return the user in its current state, it may be null
-	 * <p/>
-	 * FIXME this is a little trick because we need the user in the FocusObject initiatilization.
-	 * FIXME must fix the logic.
+	 * Return the user in its current state. This is useful because
+	 * the {@link eu.focusnet.app.model.gson.FocusObject}
+	 * objects depend on the user for setting the owner and/or editor.
 	 *
-	 * @return
+	 * @return The current {@link UserInstance}, or null if it is not set, yet.
 	 */
 	public UserInstance getUserAsIs()
 	{
@@ -353,14 +390,14 @@ public class UserManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * The {@link UserPreferences} is one of the 3 mandatory objects for the application to run.
+	 * The {@link UserPreferencesInstance} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object does not exist, a new one is created on the network.
 	 * <p/>
 	 * The application cannot live without this object and will therefore crash if it does not
 	 * succeed in retrieving or creating this object.
 	 *
-	 * @return A {@link UserPreferences} object
+	 * @return A {@link UserPreferencesInstance} object
 	 */
 	public synchronized UserPreferencesInstance getUserPreferences()
 	{
@@ -371,7 +408,7 @@ public class UserManager implements ApplicationStatusObserver
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		UserPreferencesInstance userPreferences = null;
+		UserPreferencesInstance userPreferences;
 		try {
 			userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferencesInstance.class);
 		}
@@ -393,11 +430,7 @@ public class UserManager implements ApplicationStatusObserver
 
 
 	/**
-	 * Those 2 objects are mandatory, and fatal exception is triggered if sth goes wrong.
-	 * <p/>
-	 * Access control setup should come here, too (if not already done in login() )
-	 * <p/>
-	 * FIXME if fail, crash. not very user-friendly. should gracefully fallback to entry point activity for example.
+	 * Those 2 objects are mandatory, and fatal exception is triggered if something goes wrong.
 	 */
 	public void getUserData()
 	{
@@ -405,14 +438,22 @@ public class UserManager implements ApplicationStatusObserver
 		this.getUserPreferences();
 	}
 
+	/**
+	 * Register a new {@link DataManager} in this object
+	 * @param dataManager The new data manager
+	 */
 	public void registerNewDataManager(DataManager dataManager)
 	{
 		this.dataManager = dataManager;
 	}
 
+	/**
+	 * Push modifications done on the user and user preferences.
+	 *
+	 * @throws FocusMissingResourceException If the remote resource cannot be found
+	 */
 	public void pushPendingocalUserData() throws FocusMissingResourceException
 	{
-		// Acquire user and preferencee Dao -> how to to do that?
 		this.dataManager.pushLocalModification(this.userUrl, User.class);
 		this.dataManager.pushLocalModification(this.prefUrl, UserPreferences.class);
 	}
@@ -420,7 +461,9 @@ public class UserManager implements ApplicationStatusObserver
 	/**
 	 * Information obtained from login, such as a user id on the network.
 	 *
-	 * @return
+	 * FIXME forged to userUrl for now.
+	 *
+	 * @return The user identification
 	 */
 	public String getUserIdentification()
 	{

@@ -120,7 +120,7 @@ public class TypesHelper
 		if (!(obj instanceof ArrayList)) {
 			throw new FocusBadTypeException("Provided values are not an ArrayList");
 		}
-		ArrayList<Double> ret = new ArrayList<Double>();
+		ArrayList<Double> ret = new ArrayList<>();
 		for (Object o2 : (ArrayList) obj) {
 			if (o2 instanceof Double || o2 instanceof Integer) {
 				ret.add((Double) o2);

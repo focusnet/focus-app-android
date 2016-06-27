@@ -306,19 +306,20 @@ public class LineChartWidgetInstance extends WidgetInstance
 						return;
 					}
 
-					if (type.equals("max")) {
-						this.limitsMaxLabels.add(label);
-						this.limitsMaxValues.add(value);
-						++this.numberOfMaxLimits;
-					}
-					else if (type.equals("min")) {
-						this.limitsMinLabels.add(label);
-						this.limitsMinValues.add(value);
-						++this.numberOfMinLimits;
-					}
-					else {
-						this.markAsInvalid();
-						return;
+					switch (type) {
+						case "max":
+							this.limitsMaxLabels.add(label);
+							this.limitsMaxValues.add(value);
+							++this.numberOfMaxLimits;
+							break;
+						case "min":
+							this.limitsMinLabels.add(label);
+							this.limitsMinValues.add(value);
+							++this.numberOfMinLimits;
+							break;
+						default:
+							this.markAsInvalid();
+							return;
 					}
 				}
 			}

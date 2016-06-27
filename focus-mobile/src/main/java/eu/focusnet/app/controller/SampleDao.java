@@ -175,7 +175,7 @@ public class SampleDao
 	/**
 	 * Update a sample with new values.
 	 *
-	 * @param sample
+	 * @param sample The sample to update
 	 */
 	public void update(Sample sample)
 	{
@@ -238,11 +238,9 @@ public class SampleDao
 
 	/**
 	 * Retrieve all urls marked with a certain type of operation
-	 * <p/>
-	 * We only manipulate FocusSamples here, not other types.
 	 *
-	 * @param flagType
-	 * @return
+	 * @param flagType The type of operation to perform
+	 * @return A set of {@link Sample}s
 	 */
 	public HashSet<Sample> getAllMarkedFocusSamples(String flagType)
 	{

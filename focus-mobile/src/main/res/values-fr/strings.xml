@@ -121,4 +121,5 @@
     <string name="project_not_found">Le projet que vous avez sélectionné n\'existe plus.</string>
     <string name="focus_related_projects">Plus de détails</string>
     <string name="saved">Sauvegardé</string>
+    <string name="launch">Démarrer</string>
 </resources>

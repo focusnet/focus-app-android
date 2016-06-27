@@ -41,11 +41,11 @@ public class ProjectTemplate implements Serializable
 
 	private LinkedHashMap<String, String> data = new LinkedHashMap<>();
 
-	private ArrayList<WidgetTemplate> widgets;
-	private ArrayList<PageTemplate> pages;
+	private ArrayList<WidgetTemplate> widgets = new ArrayList<>();
+	private ArrayList<PageTemplate> pages = new ArrayList<>();
 
-	private ArrayList<PageReference> dashboards;
-	private ArrayList<PageReference> tools;
+	private ArrayList<PageReference> dashboards = new ArrayList<>();
+	private ArrayList<PageReference> tools = new ArrayList<>();
 	private ArrayList<ProjectTemplate> projects = new ArrayList<>();
 	private boolean disabled;
 

@@ -262,7 +262,7 @@ public class PageInstance extends AbstractInstance
 	/**
 	 * Return the type of page (dashboards or tools or null)
 	 *
-	 * @return
+	 * @return The page type
 	 */
 	public PageType getType()
 	{
@@ -277,7 +277,7 @@ public class PageInstance extends AbstractInstance
 	/**
 	 * Get the page title (resolved within the current data context)
 	 *
-	 * @return
+	 * @return The title
 	 */
 	public String getTitle()
 	{

@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import eu.focusnet.app.model.gson.FocusObject;
@@ -71,7 +70,7 @@ public class HttpRequest
 	 * A simple Request without payload (GET or DELETE)
 	 *
 	 * @param method The HTTP method
-	 * @param url The requested URL
+	 * @param url    The requested URL
 	 */
 	public HttpRequest(String method, String url)
 	{
@@ -98,8 +97,8 @@ public class HttpRequest
 	/**
 	 * A request with associated payload to be passed in the body (POST or PUT)
 	 *
-	 * @param method The HTTP method
-	 * @param url The requested URL
+	 * @param method  The HTTP method
+	 * @param url     The requested URL
 	 * @param payload An object to be GSON-ified
 	 */
 	public HttpRequest(String method, String url, FocusObject payload)
@@ -110,8 +109,8 @@ public class HttpRequest
 	/**
 	 * A request with associated payload to be passed in the body (POST or PUT)
 	 *
-	 * @param method
-	 * @param url
+	 * @param method The HTTP method
+	 * @param url The URL to request
 	 * @param payload A simple string, to be inserted into the body as-is
 	 */
 	public HttpRequest(String method, String url, String payload)
@@ -122,13 +121,13 @@ public class HttpRequest
 
 	/**
 	 * Create an HTTP(S) connection.
-	 *
+	 * <p/>
 	 * keepalive and persistent connections are automatically handled by Anroid. Nothing to do.
-	 *
+	 * <p/>
 	 * FIXME resolve redirections manually! Not done even if connection.setInstanceFollowRedirects(true)
 	 * FIXME use a real access control manager (UserManager) instead of pushing headers registered in the application properties
 	 *
-	 * @param url The URL to connect to
+	 * @param url        The URL to connect to
 	 * @param httpMethod The HTTP method
 	 * @return An HTTP(S) URL connection
 	 * @throws IOException If the connection cannot be open

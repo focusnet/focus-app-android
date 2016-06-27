@@ -39,10 +39,8 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -266,7 +264,7 @@ public class NetworkManager
 	/**
 	 * Delete an existing resource
 	 *
-	 * @param url  The URL of the resource to delete
+	 * @param url The URL of the resource to delete
 	 * @return An {@link HttpResponse} object
 	 * @throws IOException If a network error occurs.
 	 */
@@ -278,7 +276,7 @@ public class NetworkManager
 
 	/**
 	 * Do login to remote endpoint
-	 *
+	 * <p/>
 	 * FIXME wait for authentication server. Not implemented.
 	 */
 	public boolean login(String user, String password, String server)
@@ -288,9 +286,10 @@ public class NetworkManager
 
 	/**
 	 * Push a modification on the network
+	 *
 	 * @param networkOperation The type of operation to be performed on the network (an HTTP method)
-	 * @param url The URL of the resource to modify
-	 * @param fo The source object to use as the payload of the modification
+	 * @param url              The URL of the resource to modify
+	 * @param fo               The source object to use as the payload of the modification
 	 * @return A {@link HttpResponse} object
 	 * @throws IOException If a network error occurs
 	 */

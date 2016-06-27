@@ -168,7 +168,6 @@ public class DataContext extends HashMap<String, String>
 	 */
 	private Object resolve(String request) throws FocusMissingResourceException
 	{
-		String a = Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN;
 		Pattern toSearch = Pattern.compile(Constant.DataReference.SELECT_CONTEXT_FULL_PATTERN);
 		Matcher m = toSearch.matcher(request);
 		while (m.find()) {
@@ -420,11 +419,10 @@ public class DataContext extends HashMap<String, String>
 		/**
 		 * Do the data fetching.
 		 *
-		 * @return
-		 * @throws Exception
+		 * @return The url of the fetched data
 		 */
 		@Override
-		public String call() throws Exception
+		public String call() throws Exception // FIXME too broad
 		{
 			FocusSample f;
 			try {
@@ -483,7 +481,7 @@ public class DataContext extends HashMap<String, String>
 		 * and we want to return the corresponding URL.
 		 *
 		 * @param description The description of the resource to retrieve
-		 * @return
+		 * @return The url of the retrieved resource
 		 */
 		private String resolveReferencedUrl(String description) throws FocusMissingResourceException
 		{

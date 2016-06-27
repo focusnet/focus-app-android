@@ -46,7 +46,7 @@ public class ImageActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image);
-		ImageView tookImage = (ImageView) findViewById(R.id.tookImage);
+		ImageView tookImage = (ImageView) findViewById(R.id.capturedImage);
 		Bundle extras = getIntent().getExtras();
 		if (extras == null) {
 			throw new FocusInternalErrorException("ImageActivity MUST have an extra.");

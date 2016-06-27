@@ -70,7 +70,7 @@ public class BookmarkFragment extends ListFragment
 	 * @param inflater           Inherited
 	 * @param container          Inherited
 	 * @param savedInstanceState Inherited
-	 * @return
+	 * @return The new View
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -151,7 +151,7 @@ public class BookmarkFragment extends ListFragment
 	{
 		AppContentInstance appContentInstance = FocusAppLogic.getCurrentApplicationContent();
 
-		ArrayList<SimpleListItem> newItems = new ArrayList<SimpleListItem>();
+		ArrayList<SimpleListItem> newItems = new ArrayList<>();
 
 		// header
 		SimpleListItem headerProjectsListItem = new SimpleListItem(

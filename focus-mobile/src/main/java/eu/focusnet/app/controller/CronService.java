@@ -195,6 +195,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 			// Call the controller and ask him to start syncing
 			FocusAppLogic.getInstance().sync();
 			success = true;
+			failures = 0;
 		}
 		catch (FocusMissingResourceException ex) {
 			// report once in a while, but do not crash the app

@@ -135,5 +135,6 @@
     <string name="project_not_found">The project you have selected does not exist anymore.</string>
     <string name="focus_related_projects">More details</string>
     <string name="saved">Saved</string>
+    <string name="launch">Launch</string>
 
 </resources>

@@ -142,25 +142,32 @@ public class PieChartWidgetInstance extends WidgetInstance
 			this.values.add(value);
 			++this.numberOfParts;
 		}
-
-		return;
 	}
 
 	/**
 	 * Get the caption. It may be the empty string.
 	 *
-	 * @return
+	 * @return The caption
 	 */
 	public String getCaption()
 	{
 		return this.caption;
 	}
 
+	/**
+	 * Get the labels as a list
+	 * @return The labels
+	 */
 	public ArrayList<String> getLabels()
 	{
 		return this.labels;
 	}
 
+	/**
+	 * Get the values as a list
+	 *
+	 * @return the values
+	 */
 	public ArrayList<Double> getValues()
 	{
 		return this.values;

@@ -54,7 +54,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
                 android:layout_marginStart="30dp"
                 android:ems="15"
                 android:maxLines="1"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:inputType="text"/>
 
         </TableRow>
 
@@ -101,7 +102,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
                 android:layout_marginStart="30dp"
                 android:ems="15"
                 android:maxLines="1"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:inputType="textUri"/>
 
         </TableRow>
 

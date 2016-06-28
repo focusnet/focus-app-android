@@ -10,7 +10,8 @@
 
     <ImageView
         style="@style/FocusDrawerLogo"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:contentDescription="@string/focus_logo"/>
 
     <TextView
         android:id="@+id/drawer_app_info"

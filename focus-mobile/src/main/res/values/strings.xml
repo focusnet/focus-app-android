@@ -136,5 +136,8 @@
     <string name="focus_related_projects">More details</string>
     <string name="saved">Saved</string>
     <string name="launch">Launch</string>
+    <string name="access_link">Access content</string>
+    <string name="captured_image">Captured image</string>
+    <string name="focus_logo">FOCUS logo</string>
 
 </resources>

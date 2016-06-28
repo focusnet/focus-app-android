@@ -10,7 +10,8 @@
     <ImageView
         style="@style/FocusListChevron"
         android:src="@drawable/ic_chevron_right"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/access_link" />
 
     <TextView
         style="@style/FocusListItem"

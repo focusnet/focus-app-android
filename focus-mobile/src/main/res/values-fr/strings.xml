@@ -122,4 +122,7 @@
     <string name="focus_related_projects">Plus de détails</string>
     <string name="saved">Sauvegardé</string>
     <string name="launch">Démarrer</string>
+    <string name="access_link">Accéder au contenu</string>
+    <string name="captured_image">Image capturée</string>
+    <string name="focus_logo">Logo FOCUS</string>
 </resources>

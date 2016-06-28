@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:maxHeight="@dimen/focus_max_image_preview_height"
         android:scaleType="fitCenter"
+        android:contentDescription="@string/captured_image"
         />
 
     <LinearLayout
@@ -25,20 +26,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="@string/view"/>
+            android:text="@string/view"
+            style="?android:attr/buttonBarButtonStyle"
+            />
 
         <Button
             android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="@string/delete"/>
+            android:text="@string/delete"
+            style="?android:attr/buttonBarButtonStyle"
+            />
 
         <Button
             android:id="@+id/button_take_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/take_a_picture"/>
+            android:text="@string/take_a_picture"
+            style="?android:attr/buttonBarButtonStyle"
+            />
 
     </LinearLayout>
 

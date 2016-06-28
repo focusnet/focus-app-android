@@ -45,7 +45,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_username"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:labelFor="@+id/login_username_edit"/>
 
             <EditText
                 android:id="@+id/login_username_edit"
@@ -69,7 +70,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_password"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:labelFor="@+id/login_password_editText"/>
 
             <EditText
                 android:id="@+id/login_password_editText"
@@ -93,7 +95,8 @@ FIXME to style, use @style and remove hard-coded dimenstions
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_server"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:labelFor="@+id/login_server_editText"/>
 
             <EditText
                 android:id="@+id/login_server_editText"

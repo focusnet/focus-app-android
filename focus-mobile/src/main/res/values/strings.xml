@@ -19,14 +19,17 @@
     </string-array>
     <string-array name="demo_use_cases_values">
         <item>pilot-case-1</item>
+        <item>i18n-example</item>
         <item>pilot-case-3</item>
     </string-array>
     <string-array name="demo_use_cases_labels">
         <item>@string/use_case_ui_pc1</item>
+        <item>@string/use_case_i18n_example</item>
         <item>@string/use_case_ui_pc3</item>
     </string-array>
     <string-array name="demo_use_cases_app_content_uris">
         <item>http://focus.yatt.ch/application-contents/pilot-case-1.json</item>
+        <item>http://focus.yatt.ch/application-contents/i18n-example.json</item>
         <item>http://focus.yatt.ch/application-contents/pilot-case-3.json</item>
     </string-array>
 
@@ -139,5 +142,6 @@
     <string name="access_link">Access content</string>
     <string name="captured_image">Captured image</string>
     <string name="focus_logo">FOCUS logo</string>
+    <string name="use_case_i18n_example">Example of application content internationalization</string>
 
 </resources>

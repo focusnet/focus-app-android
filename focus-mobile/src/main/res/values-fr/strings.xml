@@ -125,4 +125,5 @@
     <string name="access_link">Accéder au contenu</string>
     <string name="captured_image">Image capturée</string>
     <string name="focus_logo">Logo FOCUS</string>
+    <string name="use_case_i18n_example">Exemple d\'internationalisation du contenu de l\'application</string>
 </resources>

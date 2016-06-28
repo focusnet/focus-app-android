@@ -201,7 +201,7 @@ public class FocusAppLogic
 		this.context = context;
 
 		// setup GSON
-		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+		this.gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 
 		// setup DataManager
 		this.dataManager = new DataManager();

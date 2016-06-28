@@ -102,7 +102,7 @@ SOFTWARE.
     </tr>
     <tr>
         <td>Simosol Map web component</td>
-        <td>Copyright (c) 2016, Simosol Oy</td>
+        <td>Copyright 2016 Simosol Oy</td>
         <td><a href="https://github.com/focusnet/fi.simosol.focus.map">Link</a></td>
     </tr>
     
@@ -128,4 +128,4 @@ https://web.ti.bfh.ch/~flu1/
 
 TO TEST
 - HttpResponse: replace StringBuffer with StringBuilder (not thread-safe but more efficient)	
- -- GPSWidgetFragment:  test current code. Does it also work without Intenet connection?
+- GPSWidgetFragment:  test current code. Does it also work without Intenet connection?

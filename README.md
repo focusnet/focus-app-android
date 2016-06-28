@@ -1,8 +1,18 @@
 # FOCUS Mobile
 
-FOCUS Android application
 
-(still in active development ... may not compile at all)
+<p>The objective of the FOCUS Mobile solution is to offer means for workers to take benefit from the
+    data consensus provided by the FOCUS platform when they are working on-site.</p>
+
+<p>This solution is implemented as an open-source Android application and consists of three
+    complementary aspects: (a) information visualization, (b) data collection, and (c) decision
+    support.</p>
+
+<p>This software has been developped by the Berner Fachhochschule (BFH). Sources are available on
+    <a href="https://github.com/focusnet/focus-app-android">GitHub</a>.</p>
+
+<p><a href="http://www.focusnet.eu">www.focusnet.eu</a></p>
+<p><a href="http://www.bfh.ch">www.bfh.ch</a></p>
 
 ## Introduction
 

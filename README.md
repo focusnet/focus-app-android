@@ -28,13 +28,15 @@ $ git clone --recursive git@github.com:focusnet/focus-app-android.git
 - This application will run on devices running Android SDK 19 or more recent. 
 - The dependencies are defined in the `focus-mobile/build.gradle` file.
 
-## Compilation
+### Compilation
 
 - This project can be built with AndroidStudio, although other building environments should work.
 - Before building, see documented procedure in issues #9 and #10
 
 
-## License
+## Licenses
+
+### FOCUS Mobile
 
 This software is released under the commercial-friendly and open-source MIT license.
 
@@ -63,7 +65,7 @@ SOFTWARE.
 ````
 
 
-## Third-party software
+### Third-party software
 
 
 <p>FOCUS Mobile is using the following software components, also released under open-source

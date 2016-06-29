@@ -109,6 +109,11 @@ public abstract class WidgetInstance extends AbstractInstance
 		if (cfg != null) {
 			this.config = (LinkedTreeMap<String, Object>) cfg;
 		}
+
+		processSpecificConfig();
+		processCommonConfig();
+
+		freeDataContext();
 	}
 
 	/**
@@ -170,52 +175,9 @@ public abstract class WidgetInstance extends AbstractInstance
 				throw new FocusInternalErrorException("Instance type does not exist.");
 		}
 
-		w.fillWithAcquiredData();
-
 		return w;
 	}
 
-	private void fillWithAcquiredData()
-	{
-		// post-pone setting information after having fetched all resources related to this object
-		Callable todo = new Callable()
-		{
-			@Override
-			public Boolean call() throws Exception
-			{
-				processSpecificConfig();
-				processCommonConfig();
-				freeDataContext();
-
-
-				/*
-
-				 FIXME todo check validity
-				 if (!w.isValid()) {
-			w = new InvalidWidgetInstance(layoutConfig, w);
-		}
-
-		// then validity is infered AFTER app creation. like buildPaths.
-
-*/
-
-
-				return true;
-			}
-		};
-
-		try {
-			todo.call();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// priority: just a little bit less than the current data context priority, such that is executed
-		// just after all data from the data context have been retrieved
-		// PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - 2 * Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
-		// this.dataManager.executeOnPool(future);
-	}
 
 	/**
 	 * Process configuration elements that are common to all widget types.

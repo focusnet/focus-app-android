@@ -56,7 +56,7 @@ public class PageTemplate
 
 	public String getDescription()
 	{
-		return description;
+		return description == null ? "" : description;
 	}
 
 	public ArrayList<WidgetReference> getWidgets()

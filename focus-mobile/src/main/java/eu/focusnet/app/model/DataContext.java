@@ -123,8 +123,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			String key = (String) e.getKey();
 			PriorityTask<String> task = (PriorityTask<String>) e.getValue();
 			// if there is a parent project, skip. We will not use a project iterator. If we do, we will save it in the 'data'.
-			if (key.startsWith(Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)) { // FIXME I CANNOT REMOVE PAGE ITERATOR !!!!
-				continue;
+			if (key.startsWith(Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)) {
+		//		continue;
 			}
 			this.put(key, task);
 		}

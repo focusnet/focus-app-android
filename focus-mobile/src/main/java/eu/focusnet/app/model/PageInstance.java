@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.PageReference;
@@ -42,7 +41,7 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
- * The instantiation of a page template, consisting of widgets. A {@code PageInstance} can have
+ * The instantiation of a page pageTemplate, consisting of widgets. A {@code PageInstance} can have
  * an iterator, too. In this case, one page will be created for each item in the iterator.
  */
 public class PageInstance extends AbstractInstance
@@ -56,10 +55,12 @@ public class PageInstance extends AbstractInstance
 		TOOL
 	}
 
+	private final ProjectTemplate parentProjectTemplate;
+
 	/**
-	 * Page template
+	 * Page pageTemplate
 	 */
-	private PageTemplate template;
+	private PageTemplate pageTemplate;
 
 	/**
 	 * Page unique identifier. If the page has an iterator, then the {@code guid} will be updated
@@ -96,28 +97,29 @@ public class PageInstance extends AbstractInstance
 	/**
 	 * C'tor
 	 *
-	 * @param pageTpl Page template on the top of which we build this instance
+	 * @param pageTpl Page pageTemplate on the top of which we build this instance
 	 * @param dataCtx {@link DataContext} being used to resolve data
 	 */
-	public PageInstance(PageTemplate pageTpl, PageType type, @NonNull DataContext dataCtx)
+	public PageInstance(PageTemplate pageTpl, ProjectTemplate projectTemplate, PageType type, @NonNull DataContext dataCtx)
 	{
 		super(dataCtx.getDataManager());
 
-		this.template = pageTpl;
+		this.pageTemplate = pageTpl;
+		this.parentProjectTemplate = projectTemplate;
 		this.guid = null;
 		this.type = type;
 		this.widgets = new ArrayList<>();
 		this.dataContext = dataCtx;
-		this.disabled = this.template.isDisabled();
+		this.disabled = this.pageTemplate.isDisabled();
 
 		// register page-specific data to our current data context
-		this.dataContext.provideData(this.template.getData());
+		this.dataContext.provideData(this.pageTemplate.getData());
 	}
 
 	/**
 	 * Factory to create page instances
 	 *
-	 * @param projectTemplate The project template to take as a basis for generating the page instances.
+	 * @param projectTemplate The project pageTemplate to take as a basis for generating the page instances.
 	 * @param pageType        The category of page we are interested in
 	 * @param parentContext   The {@link DataContext} to use as a basis for data resolution
 	 * @return A list of {@link PageInstance}s
@@ -162,19 +164,19 @@ public class PageInstance extends AbstractInstance
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
-					PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx);
+					PageInstance page = createPageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
 					newPages.add(page);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
 				DataContext newPageCtx = new DataContext(parentContext);
-				PageInstance page = PageInstance.createPageInstance(projectTemplate, pageTpl, pageType, newPageCtx);
+				PageInstance page = createPageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
 				newPages.add(page);
 			}
 		}
 
-		// All template information have been gathered, let's know build the actual
+		// All pageTemplate information have been gathered, let's know build the actual
 		// objects with real data.
 		// We do that AFTER having filled the basic information in the contructor to avoid
 		// sequences of datacontext.register() / datacontext.get() that would end up in
@@ -193,28 +195,25 @@ public class PageInstance extends AbstractInstance
 	 * <p/>
 	 * FIXME the structure of the project/page/widget definition could be improved, hence simplifying these methods.
 	 *
-	 * @param projectTemplate The project template where the page is defined.
-	 * @param pageTpl         The page template on the top of which we create this instance
+	 * @param parentProjectTemplate The project pageTemplate where the page is defined.
+	 * @param pageTemplate         The page pageTemplate on the top of which we create this instance
 	 * @param pageType        The category of page to create
 	 * @param newPageCtx      The {@link DataContext} of the new page instance
 	 * @return A new {@link PageInstance}
 	 */
 	private static PageInstance createPageInstance(
-			ProjectTemplate projectTemplate,
-			PageTemplate pageTpl,
+
+			PageTemplate pageTemplate,
+			ProjectTemplate parentProjectTemplate,
 			PageType pageType,
 			DataContext newPageCtx
 	)
 	{
-		PageInstance page = new PageInstance(pageTpl, pageType, newPageCtx);
+		PageInstance page = new PageInstance(pageTemplate, parentProjectTemplate, pageType, newPageCtx);
 
-		for (WidgetReference wr : pageTpl.getWidgets()) {
-			WidgetTemplate wTpl = projectTemplate.findWidget(wr.getWidgetid());
 
-			// we can simply pass the same DataContext as widgets do not augment it (or alter it)
-			WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), newPageCtx);
-			page.addWidget(wi);
-		}
+
+
 		return page;
 	}
 
@@ -232,8 +231,8 @@ public class PageInstance extends AbstractInstance
 			@Override
 			public Boolean call() throws Exception
 			{
-				guid = template.getGuid();
-				if (template.getIterator() != null) {
+				guid = pageTemplate.getGuid();
+				if (pageTemplate.getIterator() != null) {
 					guid = guid +
 							Constant.Navigation.PATH_SELECTOR_OPEN +
 							dataContext.getIteratorValue() +
@@ -241,8 +240,9 @@ public class PageInstance extends AbstractInstance
 				}
 
 				try {
-					title = dataContext.resolveToString(template.getTitle());
-					description = dataContext.resolveToString(template.getDescription());
+					title = dataContext.resolveToString(pageTemplate.getTitle());
+					description = dataContext.resolveToString(pageTemplate.getDescription());
+					description += "";
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					FocusApplication.reportError(ex);
@@ -253,11 +253,18 @@ public class PageInstance extends AbstractInstance
 					description = "";
 				}
 
-				freeDataContext();
+				for (WidgetReference wr : pageTemplate.getWidgets()) {
+					WidgetTemplate wTpl = parentProjectTemplate.findWidget(wr.getWidgetid());
+
+					// we can simply pass the same DataContext as widgets do not augment it (or alter it)
+					WidgetInstance wi = WidgetInstance.factory(wTpl, wr.getLayout(), dataContext);
+					addWidget(wi);
+				}
+
+
+				//	freeDataContext();
+
 				return true;
-
-
-				// FIXME widget creation should come here!!!!!!!!
 			}
 		};
 

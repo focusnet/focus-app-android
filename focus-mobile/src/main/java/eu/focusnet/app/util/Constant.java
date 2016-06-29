@@ -410,7 +410,7 @@ final public class Constant
 		 * Special property to refer to the current {@link FocusSample}'s URL, i.e. will retrieve
 		 * the URL instead of a specific property
 		 */
-		public static final String LABEL_SELF_REFERENCE = "$this$";
+		public static final String LABEL_SELF_REFERENCE_URL = "$url$";
 
 		/**
 		 * List item type corresponding the a header

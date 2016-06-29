@@ -72,27 +72,11 @@ public class FocusSample extends FocusObject
 	 */
 	public Object get(String key)
 	{
-		if (key.equals(Constant.Navigation.LABEL_SELF_REFERENCE)) {
+		if (key.equals(Constant.Navigation.LABEL_SELF_REFERENCE_URL)) {
 			return this.getUrl();
 		}
 		else {
 			return this.data.get(key);
-		}
-	}
-
-	/**
-	 * Get the String representation of the object identified by the key in the map
-	 *
-	 * @param key the key being accessed in the map
-	 * @return the String representation of the Object of interest
-	 */
-	public String getString(String key)
-	{
-		if (key.equals("$this$")) {
-			return this.getUrl();
-		}
-		else {
-			return this.data.get(key).toString();
 		}
 	}
 

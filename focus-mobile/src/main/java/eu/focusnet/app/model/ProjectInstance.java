@@ -227,7 +227,8 @@ public class ProjectInstance extends AbstractInstance
 				if (template.getIterator() != null) {
 					guid = guid +
 							Constant.Navigation.PATH_SELECTOR_OPEN +
-							dataContext.resolveToString(Constant.Navigation.LABEL_PROJECT_ITERATOR) +
+							dataContext.get(Constant.Navigation.LABEL_PROJECT_ITERATOR).get() +
+					//		dataContext.resolveToString(Constant.Navigation.LABEL_PROJECT_ITERATOR) +
 							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 

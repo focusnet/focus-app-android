@@ -236,7 +236,8 @@ public class PageInstance extends AbstractInstance
 				if (template.getIterator() != null) {
 					guid = guid +
 							Constant.Navigation.PATH_SELECTOR_OPEN +
-							dataContext.resolveToString(Constant.Navigation.LABEL_PAGE_ITERATOR) +
+							dataContext.get(Constant.Navigation.LABEL_PAGE_ITERATOR).get() + // FIXME NOT sync
+					//		dataContext.resolveToString(Constant.Navigation.LABEL_PAGE_ITERATOR) +
 							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 

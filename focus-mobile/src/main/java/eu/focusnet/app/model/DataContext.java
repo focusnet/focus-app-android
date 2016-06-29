@@ -181,7 +181,6 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 
 		// once the task is saved for later reference, let's execute it
 		this.dataManager.executeOnPool(future);
-
 	}
 
 	/**
@@ -538,7 +537,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			}
 			// This is ok to getSample(res) here as res has already been gotten
 			FocusSample fs = dataManager.getSample(res);
-			res = fs.getString(parts[2]);
+			res = fs.get(parts[2]).toString();
 			if (res == null) {
 				throw new FocusInternalErrorException("Cannot find this field."); // quite strict. would be better to have checked exception FIXME
 			}

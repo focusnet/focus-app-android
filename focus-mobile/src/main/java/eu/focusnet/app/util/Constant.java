@@ -390,21 +390,17 @@ final public class Constant
 		final public static String PATH_SELECTOR_CLOSE = "]";
 
 		/**
-		 * When iterating over multiple objects at the project level, a variable is created in the
-		 * {@link ProjectInstance}'s
+		 * When iterating over multiple objects at the project or page level, a variable is created in the
+		 * {@link ProjectInstance} or {@link PageInstance}'s
 		 * {@link DataContext} and this constant defines the
 		 * name of this variable. This variable is also available
 		 * to child {@link PageInstance}s.
+		 *
+		 * FIXME outdated doc
 		 */
-		final public static String LABEL_PROJECT_ITERATOR = "$project-iterator$";
-
-		/**
-		 * When iterating over multiple objects at the page level, a variable is created in the
-		 * {@link PageInstance}'s
-		 * {@link DataContext} and this constant defines the
-		 * name of this variable.
-		 */
-		final public static String LABEL_PAGE_ITERATOR = "$page-iterator$";
+		final public static String LABEL_ITERATOR_PROJECT_PREFIX = "$iterator:project:";
+		final public static String LABEL_ITERATOR_PAGE_PREFIX = "$iterator:page:";
+		final public static String LABEL_ITERATOR_SUFFIX = "$";
 
 		/**
 		 * Special property to refer to the current {@link FocusSample}'s URL, i.e. will retrieve

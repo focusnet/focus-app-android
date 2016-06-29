@@ -135,7 +135,7 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(parentContext);
-					newCtx.register(Constant.Navigation.LABEL_PROJECT_ITERATOR, url);
+					newCtx.registerIterator(projTpl.getGuid(), url, false);
 					contexts.add(newCtx);
 				}
 
@@ -227,8 +227,7 @@ public class ProjectInstance extends AbstractInstance
 				if (template.getIterator() != null) {
 					guid = guid +
 							Constant.Navigation.PATH_SELECTOR_OPEN +
-							dataContext.get(Constant.Navigation.LABEL_PROJECT_ITERATOR).get() +
-					//		dataContext.resolveToString(Constant.Navigation.LABEL_PROJECT_ITERATOR) +
+							dataContext.getIteratorValue() +
 							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 

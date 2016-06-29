@@ -204,10 +204,17 @@ public abstract class WidgetInstance extends AbstractInstance
 			}
 		};
 
+		try {
+			todo.call();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		// priority: just a little bit less than the current data context priority, such that is executed
 		// just after all data from the data context have been retrieved
-		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - 2 * Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
-		this.dataManager.executeOnPool(future);
+		// PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - 2 * Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
+		// this.dataManager.executeOnPool(future);
 	}
 
 	/**

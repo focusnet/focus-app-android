@@ -158,7 +158,7 @@ public class PageInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(parentContext);
-					newPageCtx.register(Constant.Navigation.LABEL_PAGE_ITERATOR, url);
+					newPageCtx.registerIterator(pageTpl.getGuid(), url, true);
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
@@ -236,8 +236,7 @@ public class PageInstance extends AbstractInstance
 				if (template.getIterator() != null) {
 					guid = guid +
 							Constant.Navigation.PATH_SELECTOR_OPEN +
-							dataContext.get(Constant.Navigation.LABEL_PAGE_ITERATOR).get() + // FIXME NOT sync
-					//		dataContext.resolveToString(Constant.Navigation.LABEL_PAGE_ITERATOR) +
+							dataContext.getIteratorValue() +
 							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 
@@ -256,6 +255,9 @@ public class PageInstance extends AbstractInstance
 
 				freeDataContext();
 				return true;
+
+
+				// FIXME widget creation should come here!!!!!!!!
 			}
 		};
 

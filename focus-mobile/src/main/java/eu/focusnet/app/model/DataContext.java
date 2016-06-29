@@ -78,6 +78,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 */
 	private int priority;
 
+	private String iteratorLabel;
+
 
 	/*
 	 * random doc
@@ -121,7 +123,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			String key = (String) e.getKey();
 			PriorityTask<String> task = (PriorityTask<String>) e.getValue();
 			// if there is a parent project, skip. We will not use a project iterator. If we do, we will save it in the 'data'.
-			if (key.equals(Constant.Navigation.LABEL_PROJECT_ITERATOR)) {
+			if (key.startsWith(Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)) { // FIXME I CANNOT REMOVE PAGE ITERATOR !!!!
 				continue;
 			}
 			this.put(key, task);
@@ -152,6 +154,23 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 */
 	synchronized public void register(String key, String description)
 	{
+		this.nonSynchronizedRegister(key, description, this.priority);
+	}
+
+	// if we give the same priority to iterators, we may have problems
+	// if the 'data' array contains a reference to the iterator (for example for
+	// saving the iterator as a variable for use in inner project).
+	// so let's make sure that the priority of our iterators is slightly higher than the
+	// one of other objects acquired in this context
+	synchronized public void registerIterator(String guid, String description, boolean isPage)
+	{
+		this.iteratorLabel = (isPage ? Constant.Navigation.LABEL_ITERATOR_PAGE_PREFIX : Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)
+				+ guid + Constant.Navigation.LABEL_ITERATOR_SUFFIX;
+		this.nonSynchronizedRegister(this.iteratorLabel, description, this.priority + Constant.AppConfig.PRIORITY_SMALL_DELTA);
+	}
+
+	private void nonSynchronizedRegister(String key, String description, int priority)
+	{
 		// check if key already exists. if this is the case, then raise an error. We don't support that
 		// we use super.get() as this.get() would be blocking, waiting for the result of the task
 		// having 2 times the same key in a 'data' object array would trigger a
@@ -164,19 +183,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		// Create the data retrieving task
 		DataAcquisitionTask task = new DataAcquisitionTask(description);
 
-		// if we give the same priority to iterators, we may have problems
-		// if the 'data' array contains a reference to the iterator (for example for
-		// saving the iterator as a variable for use in inner project).
-		// so let's make sure that the priority of our iterators is slightly higher than the
-		// one of other objects acquired in this context
-		int prio = this.priority;
-		switch(key) {
-			case Constant.Navigation.LABEL_PROJECT_ITERATOR:
-			case Constant.Navigation.LABEL_PAGE_ITERATOR:
-				 prio += Constant.AppConfig.PRIORITY_SMALL_DELTA;
-				break;
-		}
-		PriorityTask future = new PriorityTask(prio, task);
+		// Create the future
+		PriorityTask future = new PriorityTask(priority, task);
 		this.put(key, future);
 
 		// once the task is saved for later reference, let's execute it
@@ -398,6 +406,19 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	public int getPriority()
 	{
 		return priority;
+	}
+
+	public String getIteratorValue()
+	{
+		try {
+
+			// FIXME get(key) is synchronized. is that ok? should we relax that?
+			return this.get(this.iteratorLabel).get();
+		}
+		catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace(); // FIXME exception handling
+		}
+		return null;
 	}
 
 	/**

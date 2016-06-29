@@ -122,10 +122,6 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		for (Map.Entry e : parentContext.entrySet()) {
 			String key = (String) e.getKey();
 			PriorityTask<String> task = (PriorityTask<String>) e.getValue();
-			// if there is a parent project, skip. We will not use a project iterator. If we do, we will save it in the 'data'.
-			if (key.startsWith(Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)) {
-		//		continue;
-			}
 			this.put(key, task);
 		}
 	}
@@ -162,9 +158,9 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	// saving the iterator as a variable for use in inner project).
 	// so let's make sure that the priority of our iterators is slightly higher than the
 	// one of other objects acquired in this context
-	synchronized public void registerIterator(String guid, String description, boolean isPage)
+	synchronized public void registerIterator(String guid, String description)
 	{
-		this.iteratorLabel = (isPage ? Constant.Navigation.LABEL_ITERATOR_PAGE_PREFIX : Constant.Navigation.LABEL_ITERATOR_PROJECT_PREFIX)
+		this.iteratorLabel = Constant.Navigation.LABEL_ITERATOR_PREFIX
 				+ guid + Constant.Navigation.LABEL_ITERATOR_SUFFIX;
 		this.nonSynchronizedRegister(this.iteratorLabel, description, this.priority + Constant.AppConfig.PRIORITY_SMALL_DELTA);
 	}

@@ -206,31 +206,4 @@ public class FocusApplication extends Application
 
 	}
 
-	/**
-	 * Explictly free memory when requested to do so.
-	 *
-	 * @param level inherited
-	 */
-	@Override
-	public void onTrimMemory(int level)
-	{
-		super.onTrimMemory(level);
-		if (FocusAppLogic.getInstance() != null) {
-			FocusAppLogic.getInstance().freeMemory();
-		}
-	}
-
-	/**
-	 * Explicitly free memory when requested to do so.
-	 */
-	@Override
-	public void onLowMemory()
-	{
-		super.onLowMemory();
-		if (FocusAppLogic.getInstance() != null) {
-			FocusAppLogic.getInstance().freeMemory();
-		}
-	}
-
-
 }

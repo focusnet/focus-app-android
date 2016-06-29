@@ -79,12 +79,13 @@ public class AppContentInstance extends AbstractInstance
 		// and the paths will be broken.
 		this.buildPaths(null);
 
-		// is everything valid? FIXME validity check should be done AFTER completion. change logic everywhere?
+		// is everything valid?
 		this.checkValidity();
 
 		if (!this.isValid()) {
 			//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
-			// FIXME define strategy. In some cases it may be better not to crash. Be resilient.
+			// FIXME define strategy. Be resilient.
+			// statu quo is not bad. If not valid, then widget will be shown as invalid.
 		}
 	}
 
@@ -107,21 +108,22 @@ public class AppContentInstance extends AbstractInstance
 		ArrayList<ProjectTemplate> projectTemplates = this.appTemplate.getProjects();
 
 		this.projects = ProjectInstance.createProjects(projectTemplates, this.dataContext);
-
-
-
 	}
 
 	/**
 	 * Check validity of the content and mark this instance as invalid if an error is found.
+	 *
+	 * This method is intended to be called after the full application content has been built.
 	 */
 	private void checkValidity()
 	{
+		boolean isValid = true;
 		for (ProjectInstance pi : this.projects) {
-			if (!pi.isValid()) {
-				this.markAsInvalid();
-				break;
-			}
+			pi.checkValidity();
+			isValid &= pi.isValid();
+		}
+		if (!isValid) {
+			this.markAsInvalid();
 		}
 	}
 
@@ -129,8 +131,6 @@ public class AppContentInstance extends AbstractInstance
 	 * Wait for the application instance building to be terminated.
 	 *
 	 * @throws InterruptedException
-	 *
-	 * FIXME we should wait for completion of fillData() but
 	 */
 	public void waitForCompletion() throws InterruptedException
 	{

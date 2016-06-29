@@ -86,7 +86,7 @@ final public class Constant
 		/**
 		 * How long should we wait between 2 consecutive automatic data synchronization?
 		 */
-		final public static int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 30;
+		final public static int CRON_SERVICE_REFRESH_DATA_PERIOD_IN_MINUTES = 60;
 
 		/**
 		 * How long should we wait before the first data synchronization after application startup?
@@ -153,7 +153,7 @@ final public class Constant
 		/**
 		 * Maximum number of concurrent tasks for building the app.
 		 */
-		final public static int MAX_CONCURRENT_BUILD_TASKS = 40;
+		final public static int MAX_CONCURRENT_BUILD_TASKS = 30;
 
 		/**
 		 * Big priority increment. Used for differentiating the levels of hierarchy of our
@@ -392,14 +392,17 @@ final public class Constant
 		/**
 		 * When iterating over multiple objects at the project or page level, a variable is created in the
 		 * {@link ProjectInstance} or {@link PageInstance}'s
-		 * {@link DataContext} and this constant defines the
+		 * {@link DataContext} and this constant defines the prefix of
 		 * name of this variable. This variable is also available
-		 * to child {@link PageInstance}s.
-		 *
-		 * FIXME outdated doc
+		 * to children {@link ProjectInstance}s and {@link PageInstance}s.
 		 */
-		final public static String LABEL_ITERATOR_PROJECT_PREFIX = "$iterator:project:";
-		final public static String LABEL_ITERATOR_PAGE_PREFIX = "$iterator:page:";
+		final public static String LABEL_ITERATOR_PREFIX = "$iterator:";
+
+		/**
+		 * Suffix of iterator variables.
+		 *
+		 * See {@link #LABEL_ITERATOR_PREFIX}
+		 */
 		final public static String LABEL_ITERATOR_SUFFIX = "$";
 
 		/**

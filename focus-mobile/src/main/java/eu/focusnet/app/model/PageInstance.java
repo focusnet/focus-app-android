@@ -160,18 +160,18 @@ public class PageInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newPageCtx = new DataContext(parentContext);
-					newPageCtx.registerIterator(pageTpl.getGuid(), url, true);
+					newPageCtx.registerIterator(pageTpl.getGuid(), url);
 					contexts.add(newPageCtx);
 				}
 				for (DataContext newPageCtx : contexts) {
-					PageInstance page = createPageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
+					PageInstance page = new PageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
 					newPages.add(page);
 				}
 			}
 			else {
 				// no iterator, render a simple PageInstance
 				DataContext newPageCtx = new DataContext(parentContext);
-				PageInstance page = createPageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
+				PageInstance page = new PageInstance(pageTpl, projectTemplate, pageType, newPageCtx);
 				newPages.add(page);
 			}
 		}
@@ -183,38 +183,12 @@ public class PageInstance extends AbstractInstance
 		// sequential loading of resources. Also, this function is called outside of the loops
 		// for the same reason.
 		// Ideally, no datacontext.get() (or resolve()) should occure before this point.
+		// This is done as parallel tasks
 		for (PageInstance pi : newPages) {
 			pi.fillWithAcquiredData();
 		}
 
 		return newPages;
-	}
-
-	/**
-	 * Create a single page instance.
-	 * <p/>
-	 * FIXME the structure of the project/page/widget definition could be improved, hence simplifying these methods.
-	 *
-	 * @param parentProjectTemplate The project pageTemplate where the page is defined.
-	 * @param pageTemplate         The page pageTemplate on the top of which we create this instance
-	 * @param pageType        The category of page to create
-	 * @param newPageCtx      The {@link DataContext} of the new page instance
-	 * @return A new {@link PageInstance}
-	 */
-	private static PageInstance createPageInstance(
-
-			PageTemplate pageTemplate,
-			ProjectTemplate parentProjectTemplate,
-			PageType pageType,
-			DataContext newPageCtx
-	)
-	{
-		PageInstance page = new PageInstance(pageTemplate, parentProjectTemplate, pageType, newPageCtx);
-
-
-
-
-		return page;
 	}
 
 
@@ -242,17 +216,14 @@ public class PageInstance extends AbstractInstance
 				try {
 					title = dataContext.resolveToString(pageTemplate.getTitle());
 					description = dataContext.resolveToString(pageTemplate.getDescription());
-					description += "";
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					FocusApplication.reportError(ex);
 					return false;
 				}
 
-				if (description == null) {
-					description = "";
-				}
-
+				// at this point, we should have at least requested all required data and it is
+				// therefore safe to start building widgets on the same thread.
 				for (WidgetReference wr : pageTemplate.getWidgets()) {
 					WidgetTemplate wTpl = parentProjectTemplate.findWidget(wr.getWidgetid());
 
@@ -261,8 +232,7 @@ public class PageInstance extends AbstractInstance
 					addWidget(wi);
 				}
 
-
-				//	freeDataContext();
+				freeDataContext();
 
 				return true;
 			}
@@ -375,6 +345,4 @@ public class PageInstance extends AbstractInstance
 	{
 		return disabled;
 	}
-
-
 }

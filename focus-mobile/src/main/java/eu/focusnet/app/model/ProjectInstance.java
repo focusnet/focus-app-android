@@ -135,7 +135,7 @@ public class ProjectInstance extends AbstractInstance
 				ArrayList<DataContext> contexts = new ArrayList<>();
 				for (String url : urls) {
 					DataContext newCtx = new DataContext(parentContext);
-					newCtx.registerIterator(projTpl.getGuid(), url, false);
+					newCtx.registerIterator(projTpl.getGuid(), url);
 					contexts.add(newCtx);
 				}
 
@@ -153,11 +153,8 @@ public class ProjectInstance extends AbstractInstance
 		}
 
 		// fill projects with real data
-		// FIXME we could imagine putting this part in a separate thread, too, such that
-		// we don't block the main thread.
-		// Let's first see how are performance.
-		// in the present state, it should process all projects in parallel before continuing to
-		// the pages
+		// this is done as parallel tasks
+		// See similar logic in PageInstance
 		for (ProjectInstance pi : projInstancesTemp) {
 			pi.fillWithAcquiredData();
 		}
@@ -181,31 +178,29 @@ public class ProjectInstance extends AbstractInstance
 		this.dashboards = PageInstance.createPageInstances(this.template, PageInstance.PageType.DASHBOARD, this.dataContext);
 		this.tools = PageInstance.createPageInstances(this.template, PageInstance.PageType.TOOL, this.dataContext);
 		this.projects = ProjectInstance.createProjects(this.template.getProjects(), this.dataContext);
-
-		// Check validity of created objects and mark as invalid if not fully valid.
-		this.checkValidity();
 	}
 
 	/**
 	 * Check that all the content is valid, and if this is not the case, mark this project instance
 	 * as invalid.
+	 *
+	 * This method is intended to be called after the full application content has been built.
 	 */
-	private void checkValidity()
+	public void checkValidity()
 	{
+		boolean isValid = true;
 		for (PageInstance pi : this.dashboards) {
-			if (!pi.isValid()) {
-				this.markAsInvalid();
-			}
+			isValid &= pi.isValid();
 		}
 		for (PageInstance pi : this.tools) {
-			if (!pi.isValid()) {
-				this.markAsInvalid();
-			}
+			isValid &= pi.isValid();
 		}
 		for (ProjectInstance pi : this.projects) {
-			if (!pi.isValid()) {
-				this.markAsInvalid();
-			}
+			pi.checkValidity();
+			isValid &= pi.isValid();
+		}
+		if (!isValid) {
+			this.markAsInvalid();
 		}
 	}
 
@@ -238,7 +233,7 @@ public class ProjectInstance extends AbstractInstance
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					// silent skipping
 					FocusApplication.reportError(ex);
-					return false; // FIXME real problem may be here. not ready, yet.
+					return false;
 				}
 
 				freeDataContext();

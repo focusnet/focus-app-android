@@ -19,15 +19,12 @@
     </string-array>
     <string-array name="demo_use_cases_values">
         <item>pilot-case-1</item>
-        <item>pilot-case-3</item>
     </string-array>
     <string-array name="demo_use_cases_labels">
         <item>@string/use_case_ui_pc1</item>
-        <item>@string/use_case_ui_pc3</item>
     </string-array>
     <string-array name="demo_use_cases_app_content_uris">
-        <item>http://focus.yatt.ch/application-contents/pilot-case-1.json</item>
-        <item>http://focus.yatt.ch/application-contents/pilot-case-3.json</item>
+        <item>http://focus.yatt.ch/application-contents/pilot-case-1-v2.json</item>
     </string-array>
 
     <string name="app_name">FOCUS Mobile</string>

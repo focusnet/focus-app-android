@@ -86,7 +86,7 @@ public class BookmarkFragment extends ListFragment
 	public void onStart()
 	{
 		super.onStart();
-		this.fillListAdapter(); // FIXME why like this and not in background task like in ProjectFragment? to check.
+		this.fillListAdapter();
 	}
 
 	/**

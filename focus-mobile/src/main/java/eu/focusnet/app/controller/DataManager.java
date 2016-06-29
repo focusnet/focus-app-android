@@ -23,7 +23,6 @@ package eu.focusnet.app.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -102,13 +101,14 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * An in-memory cache of {@link FocusObject}s that helps to speed up the
 	 * instantiation of the application content, by avoiding to retrieve many time the same
-	 * resources from the network and/or the local database.
+	 * resources from the network and/or the local database. It consists of {@code FutureTask}s
+	 * of {@link DataRetrievalTask}s.
 	 * <p/>
 	 * This cache is only used when initializing the application content instance, and is
 	 * then freed, as resources are not required after that anymore.
-	 * <p/>
-	 * If the system requires memory, it is also safe to free it as the data still exist in the
-	 * localt SQLite database.
+	 *
+	 * This cache mechanism is also used to avoid multiple concurrent downloads of the same
+	 * resource, so it is NOT safe to free it when needing memory.
 	 */
 	private HashMap<String, FutureTask<FocusObject>> cache;
 
@@ -120,7 +120,7 @@ public class DataManager implements ApplicationStatusObserver
 	/**
 	 * Application template
 	 * <p/>
-	 * FIXME should not be in this class?
+	 * FIXME logically should not be in this class - DataManager is responsible for data manipulation only.
 	 */
 	private AppContentTemplate appContentTemplate;
 
@@ -168,8 +168,14 @@ public class DataManager implements ApplicationStatusObserver
 		);
 	}
 
-	// FIXME doc
-	// fifo
+	/**
+	 * Factory for creating the fifo pool used to retrieve data with reasonable settings.
+	 *
+	 * The prioritized {@link #BuilderPoolFactory()} will define the order in which the
+	 * data are requested in this pool.
+	 *
+	 * @return A new pool
+	 */
 	private static ExecutorService DataRetrievalPoolFactory()
 	{
 		return new ThreadPoolExecutor(
@@ -179,30 +185,6 @@ public class DataManager implements ApplicationStatusObserver
 				TimeUnit.MILLISECONDS,
 				new LinkedBlockingQueue<Runnable>(128)
 		);
-	}
-
-	/**
-	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
-	 * This method retrieves this object based on the URI that has been obtained during the
-	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
-	 * 
-	 * FIXME should not be here?
-	 *
-	 * @return A {@link AppContentTemplate} object
-	 * @throws FocusMissingResourceException If the object could not be found
-	 *                                       
-	 */
-	public AppContentTemplate getAppContentTemplate(String templateUri) throws FocusMissingResourceException
-	{
-		if (this.appContentTemplate != null) {
-			return this.appContentTemplate;
-		}
-		this.appContentTemplate = (AppContentTemplate) (this.get(templateUri, AppContentTemplate.class));
-		if (this.appContentTemplate == null) {
-			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.", templateUri);
-		}
-
-		return this.appContentTemplate;
 	}
 
 	/**
@@ -263,19 +245,30 @@ public class DataManager implements ApplicationStatusObserver
 	 * @return A FocusObject, or mor specifically one of its inherited classes matching {@code targetclass}
 	 * @throws IOException If an inrecoverable netowrk error occurs
 	 */
-	public FocusObject get(String url, Class targetClass) // FIXME throws IOException ?
+	public FocusObject get(String url, Class targetClass)
 	{
 		FutureTask<FocusObject> future = getFutureForGet(url, targetClass);
 		try {
 			return future.get();
 		}
 		catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace(); // FIXME IOException should be here in ExecutionException. Throwable.getCause() can retrieve it.
+			throw new FocusInternalErrorException("Error while executing future.call()");
 		}
-		return null;
 	}
 
-	// FIXME synchronized :)
+	/**
+	 * Acquire the {@code FutureTask} matching the resource to get. If the task is not created, yet,
+	 * do create it and launch data retrieval on the data retrieval pool. If it already exists,
+	 * simply return a pointer to the task's future such that the caller can wait for the resource
+	 * to become available.
+	 *
+	 * This way of organizing code allows us to mark this method as synchronized and hence avoid
+	 * having multiple parallel downloads of the same resource.
+	 *
+	 * @param url The URL of the resource to retrieve
+	 * @param targetClass The retrieved object will be converted to a Java object matching this class.
+	 * @return The future of the task
+	 */
 	synchronized private FutureTask<FocusObject> getFutureForGet(String url, Class targetClass)
 	{
 		FutureTask<FocusObject> future;
@@ -284,8 +277,6 @@ public class DataManager implements ApplicationStatusObserver
 			DataRetrievalTask task = new DataRetrievalTask(url, targetClass);
 			future = new FutureTask<>(task);
 			this.cache.put(url, future);
-		// 	Thread t = new Thread(future);
-		// 	t.start();
 			 this.dataRetrievalPool.execute(future);
 		}
 		else {
@@ -423,7 +414,7 @@ public class DataManager implements ApplicationStatusObserver
 	public ResourceOperationStatus delete(String url)
 	{
 		// remove from RAM cache
-		this.cache.remove(url); // must be synchronized !! FIXME
+		this.deleteFromCache(url);
 
 		// mark data for deletion in local database
 		try {
@@ -457,6 +448,16 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
+	 * Delete the specified url from the local RAM cache.
+	 *
+	 * @param url The resource to remove
+	 */
+	synchronized private void deleteFromCache(String url)
+	{
+		this.cache.remove(url);
+	}
+
+	/**
 	 * Clean the samples table from useless entries.
 	 */
 	public void cleanDataStore()
@@ -471,6 +472,30 @@ public class DataManager implements ApplicationStatusObserver
 		finally {
 			this.databaseAdapter.close();
 		}
+	}
+
+	/**
+	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
+	 * This method retrieves this object based on the URI that has been obtained during the
+	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
+	 *
+	 * FIXME logically should not be in this class - DataManager is responsible for data manipulation only.
+	 *
+	 * @return A {@link AppContentTemplate} object
+	 * @throws FocusMissingResourceException If the object could not be found
+	 *
+	 */
+	public AppContentTemplate getAppContentTemplate(String templateUri) throws FocusMissingResourceException
+	{
+		if (this.appContentTemplate != null) {
+			return this.appContentTemplate;
+		}
+		this.appContentTemplate = (AppContentTemplate) (this.get(templateUri, AppContentTemplate.class));
+		if (this.appContentTemplate == null) {
+			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.", templateUri);
+		}
+
+		return this.appContentTemplate;
 	}
 
 	/**
@@ -493,7 +518,7 @@ public class DataManager implements ApplicationStatusObserver
 		}
 		AppContentTemplate template = this.getAppContentTemplate(templateUri);
 
-		AppContentInstance app; // FIXME wait for completion? required?
+		AppContentInstance app;
 		try {
 			app = new AppContentInstance(template, this);
 		}
@@ -513,23 +538,6 @@ public class DataManager implements ApplicationStatusObserver
 	public long getDatabaseSize()
 	{
 		return this.databaseAdapter.getDatabaseSize();
-	}
-
-
-	/**
-	 * Delete non-mandatory data structure for freeing memory.
-	 * <p/>
-	 * The application will continue to work, but might require more disk accesses and will
-	 * then be slower.
-	 */
-	public void freeMemory()
-	{
-		// the in-memory cache is anyway delete after the building of the application content
-		// instance, but it is not required for the this task to complete, so we may garbabe collect
-		// its content, and the application will then fallback to the local database when accessing
-		// resources.
-		// FIXME we cannot delete that anymore, as Future depends on us.
-		// this.cache = new HashMap<>();
 	}
 
 	/**
@@ -553,8 +561,9 @@ public class DataManager implements ApplicationStatusObserver
 		this.applicationReady = false;
 	}
 
-
-	// FIXME reset
+	/**
+	 * Reset what can be reset. Used when logging out.
+	 */
 	private void reset()
 	{
 		this.cache = new HashMap<>();
@@ -737,8 +746,6 @@ public class DataManager implements ApplicationStatusObserver
 		//noinspection StatementWithEmptyBody
 		while (!this.appBuilderPool.awaitTermination(5, TimeUnit.SECONDS)) {
 			// wait silently
-			// FIXME wait for 5 seconds? too blocking?
-			System.out.println("waited");
 		}
 		// create a new pool in case we need it in the future (e.g. resync)
 		this.appBuilderPool = DataManager.BuilderPoolFactory();
@@ -755,14 +762,28 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 
-	// FIXME
+	/**
+	 * Task for retrieving data, either in our local database or on the network.
+	 */
 	private class DataRetrievalTask implements Callable
 	{
 
+		/**
+		 * The URL of the resource to retrieve
+		 */
 		private String url;
+
+		/**
+		 * The target class of the object to retrieve
+		 */
 		private Class targetClass;
 
 
+		/**
+		 * Constructor
+		 * @param url Input value for instance variable
+		 * @param targetClass Input value for instance variable
+		 */
 		private DataRetrievalTask(String url, Class targetClass)
 		{
 			this.url = url;
@@ -770,8 +791,13 @@ public class DataManager implements ApplicationStatusObserver
 		}
 
 
+		/**
+		 * Perform data retrieval
+		 * @return A FocusObject mathing {@link #targetClass}
+		 * @throws IOException If a network error occurs.
+		 */
 		@Override
-		public FocusObject call() throws IOException // FIXME how to handle this exception???
+		public FocusObject call() throws IOException
 		{
 			FocusObject result = null;
 
@@ -791,7 +817,7 @@ public class DataManager implements ApplicationStatusObserver
 
 				// try to get it from the network
 				if (NetworkManager.isNetworkAvailable()) {
-					HttpResponse response = net.get(url); // FIXME IOException
+					HttpResponse response = net.get(url);
 
 					if (response.isSuccessful()) {
 						String json = response.getData();

@@ -46,7 +46,11 @@ public class TypesHelper
 			return "";
 		}
 		if (obj instanceof String || obj instanceof Double || obj instanceof Integer) {
-			return obj.toString();
+			String x = obj.toString();
+			if (obj instanceof Double && (((Double)obj) == Math.floor(((Double)obj))) && !Double.isInfinite(((Double)obj))) {
+				x = x.replaceFirst("\\.\\d+$", "");
+			}
+			return x;
 		}
 		throw new FocusBadTypeException("Unsupported type");
 	}

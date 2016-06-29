@@ -256,9 +256,6 @@ public class FocusAppLogic
 		if (cronBound) {
 			this.cronService.onChangeStatus(this.applicationReady);
 		}
-
-		// be nice and willingly free memory that we don't need anymore
-		this.dataManager.freeMemory(); //FIXME does nothing. should we delete DataManager.cache?
 	}
 
 	/**
@@ -320,7 +317,6 @@ public class FocusAppLogic
 			this.userManager.registerNewDataManager(this.dataManager);
 
 			// do some cleaning
-			this.dataManager.freeMemory(); // FIXME does nothing. should we delete DataManager.cache here?
 			this.dataManager.cleanDataStore();
 		}
 	}
@@ -339,13 +335,5 @@ public class FocusAppLogic
 		}
 
 		ApplicationHelper.resetLanguage();
-	}
-
-	/**
-	 * Recycle memory
-	 */
-	public void freeMemory()
-	{
-		this.dataManager.freeMemory();
 	}
 }

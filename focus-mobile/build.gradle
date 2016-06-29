@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 3
-        versionName "v0.9.11"
+        versionName "v0.9.42"
         multiDexEnabled true
         // rename output archive name
         setProperty("archivesBaseName", "FOCUS-Mobile-$versionName") 

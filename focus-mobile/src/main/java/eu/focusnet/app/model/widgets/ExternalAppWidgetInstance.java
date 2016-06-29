@@ -153,7 +153,7 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 
 		// input object
 		String url;
-		/* FIXME active me
+
 		Object rawInput = this.config.get(CONFIG_LABEL_INPUT_OBJECT);
 		if (rawInput == null) {
 			this.inputObject = null;
@@ -179,7 +179,6 @@ public class ExternalAppWidgetInstance extends DataCollectionWidgetInstance
 				return;
 			}
 		}
-		*/
 
 		// set requestCode
 		// only can use 16-bit for calls to external apps

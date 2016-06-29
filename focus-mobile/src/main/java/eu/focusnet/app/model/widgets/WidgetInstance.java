@@ -175,6 +175,9 @@ public abstract class WidgetInstance extends AbstractInstance
 				throw new FocusInternalErrorException("Instance type does not exist.");
 		}
 
+		if (!w.isValid()) {
+			w = new InvalidWidgetInstance(layoutConfig, w);
+		}
 		return w;
 	}
 

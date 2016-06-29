@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.ProjectTemplate;
 import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.util.Constant;
@@ -169,7 +170,8 @@ public class ProjectInstance extends AbstractInstance
 	private void build()
 	{
 		// register the project-specific data to our data context
-		this.dataContext.provideData(this.template.getData()); // provide data called AFTER projects set iterator
+		// provide data called AFTER projects set iterator
+		this.dataContext.provideData(this.template.getData()); // I don't wait for iterator here, and that's not good. SO iterators should ALWAYS have higher priority! FIXME
 
 		if (this.description == null) {
 			this.description = "";
@@ -223,7 +225,10 @@ public class ProjectInstance extends AbstractInstance
 			{
 				guid = template.getGuid();
 				if (template.getIterator() != null) {
-					guid = guid + Constant.Navigation.PATH_SELECTOR_OPEN + dataContext.get(Constant.Navigation.LABEL_PROJECT_ITERATOR) + Constant.Navigation.PATH_SELECTOR_CLOSE;
+					guid = guid +
+							Constant.Navigation.PATH_SELECTOR_OPEN +
+							dataContext.resolveToString(Constant.Navigation.LABEL_PROJECT_ITERATOR) +
+							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 
 				try {
@@ -241,8 +246,10 @@ public class ProjectInstance extends AbstractInstance
 			}
 		};
 
-		FutureTask future = new FutureTask<>(todo);
-		this.dataContext.execute(future);
+		// priority: just a little bit less than the current data context priority, such that is executed
+		// just after all data from the data context have been retrieved
+		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
+		this.dataManager.executeOnPool(future);
 		return future;
 	}
 

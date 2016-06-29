@@ -119,6 +119,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Constructor
+	 *
 	 * @param dm The {@link DataManager} to use for data operations.
 	 */
 	public UserManager(DataManager dm)
@@ -160,7 +161,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Login
-	 *
+	 * <p/>
 	 * FIXME TODO implementation to be completed once we have an authentication server.
 	 *
 	 * @param user     The login user
@@ -301,28 +302,26 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Inherited.
-	 *
+	 * <p/>
 	 * Reset all shared preferences.
 	 */
 	public void handleLogout()
 	{
-		if (this.applicationReady) {
-			this.loginUser = null;
-			this.loginPassword = null;
-			this.loginServer = null;
-			this.userUrl = null;
-			this.prefUrl = null;
-			this.appContentUrl = null;
-			this.user = null;
-			this.userPreferences = null;
-			this.demoUseCase = null;
+		this.loginUser = null;
+		this.loginPassword = null;
+		this.loginServer = null;
+		this.userUrl = null;
+		this.prefUrl = null;
+		this.appContentUrl = null;
+		this.user = null;
+		this.userPreferences = null;
+		this.demoUseCase = null;
 
-			// and clear the internal config
-			ApplicationHelper.resetPreferences();
+		// and clear the internal config
+		ApplicationHelper.resetPreferences();
 
-			this.loggedIn = false;
-			this.applicationReady = false;
-		}
+		this.loggedIn = false;
+		this.applicationReady = false;
 	}
 
 	/**
@@ -353,17 +352,7 @@ public class UserManager implements ApplicationStatusObserver
 		if (this.user != null) {
 			return this.user;
 		}
-		UserInstance user;
-		try {
-			// UserInstance is child of User, so safe to cast
-			user = (UserInstance) this.dataManager.get(this.userUrl, UserInstance.class);
-		}
-		catch (IOException ex) {
-			// we cannot survive without a user
-			// this case is triggered if there was network + no user in local db + network outage
-			// while retrieving object of interest
-			throw new FocusInternalErrorException("Object may exist on the network but network error occurred.");
-		}
+		UserInstance user = (UserInstance) this.dataManager.get(this.userUrl, UserInstance.class);
 		if (user == null) {
 			// FIXME information not used for now, must still must be valid to pass JSON Schema valiation on the server-side
 			// FIXME all information should come from login step -> only pass UserManager to User()
@@ -408,15 +397,7 @@ public class UserManager implements ApplicationStatusObserver
 		if (this.userPreferences != null) {
 			return this.userPreferences;
 		}
-		UserPreferencesInstance userPreferences;
-		try {
-			userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferencesInstance.class);
-		}
-		catch (IOException ex) {
-			// we cannot survive without userpreferences
-			// this case is triggered if there was network + no userprerferences in local db + network outage while retrieving object of interest
-			throw new FocusInternalErrorException("Object may exist on network but network error occurred");
-		}
+		UserPreferencesInstance userPreferences = (UserPreferencesInstance) this.dataManager.get(this.prefUrl, UserPreferencesInstance.class);
 		if (userPreferences == null) {
 			userPreferences = new UserPreferencesInstance(this.prefUrl);
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(userPreferences);
@@ -440,6 +421,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Register a new {@link DataManager} in this object
+	 *
 	 * @param dataManager The new data manager
 	 */
 	public void registerNewDataManager(DataManager dataManager)
@@ -460,7 +442,7 @@ public class UserManager implements ApplicationStatusObserver
 
 	/**
 	 * Information obtained from login, such as a user id on the network.
-	 *
+	 * <p/>
 	 * FIXME forged to userUrl for now.
 	 *
 	 * @return The user identification

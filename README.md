@@ -23,6 +23,13 @@ This git repository contains a submodule, so for cloning:
 $ git clone --recursive git@github.com:focusnet/focus-app-android.git
 ````
 
+To retrieve the latest modifications from Simosol's map submodule:
+
+````
+$ cd focus-mobile/src/main/assets/webapps/fi.simosol.focus.map
+$ git pull origin master
+````
+
 ### Requirements
 
 - This application will run on devices running Android SDK 19 or more recent. 

@@ -22,6 +22,8 @@ package eu.focusnet.app.model;
 
 import android.support.annotation.NonNull;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +42,10 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.FocusNotImplementedException;
 
+
+// FIXME review doc. major rewrite.
+// synchronized / volatile methods?
+
 /**
  * In our model, all {@link AbstractInstance} have an associated {@code DataContext}. This data
  * context is used to perform data resolution, i.e. determine iterators and interpolate
@@ -55,7 +61,7 @@ import eu.focusnet.app.util.FocusNotImplementedException;
  * {@link #register(String, String)}-ed resources are processed in order of {@link #priority}.
  * The later the instance is created in the application content, the lower is its priority.
  */
-public class DataContext extends HashMap<String, String>
+public class DataContext extends HashMap<String, PriorityTask<String>>
 {
 
 	/**
@@ -63,16 +69,31 @@ public class DataContext extends HashMap<String, String>
 	 */
 	private DataManager dataManager;
 
-	/**
-	 * A prioritized queue for requesting the data. FIXME, a DataContext should be a queue in itself. Check stash and debug.
-	 */
-	private HashMap<String, PriorityTask<String>> queue;
 
 	/**
 	 * Priority of this data context. The deeper it is created in the application content, the lower
 	 * it is.
+	 *
+	 * The higher the number is, the sooner the operation will be executed.
 	 */
 	private int priority;
+
+
+	/*
+	 * random doc
+	 *
+	 * project -> project -> project -> page
+	 * page is always a leaf
+	 * HENCE if in a context we have:
+	 * project iterator -> this context can be used as parent context, and we should NOT use the project-iterator in child context. NEVER.
+	 * page iterator -> we are in a leaf context, and we therefore will never use this context as parent
+	 *
+	 * conclusion: in a new context, ALWAYS dismiss project iterators.
+	 * If they need to be used later in the hierarchy, we will save them in 'data'
+	 * it is useless to dismiss page iterators as we will never build a new context on top of a context that has a page iterator (they are leaf contexts)
+	 *
+	 *
+	 */
 
 	/**
 	 * Default c'tor
@@ -80,27 +101,30 @@ public class DataContext extends HashMap<String, String>
 	public DataContext(@NonNull DataManager dm)
 	{
 		super();
-		this.priority = 1000;
+		this.priority = 0;
 		this.dataManager = dm;
-		this.queue = new HashMap<>();
 	}
 
 	/**
 	 * Construct a new DataContext from another one.
 	 *
-	 * @param c The {@code DataContext} on the top of which we must create the new one.
+	 * @param parentContext The {@code DataContext} on the top of which we must create the new one.
 	 */
-	public DataContext(@NonNull DataContext c)
+	public DataContext(@NonNull DataContext parentContext)
 	{
-		super(c);
-		this.dataManager = c.dataManager;
-		this.priority = c.getPriority() - 1;
+		this(parentContext.getDataManager());
 
-		// keep reference to the existing queue
-		// FIXME should we lock before starting? queue may be expanded while we are copying.
-		this.queue = new HashMap<>();
-		for (Map.Entry e : c.getQueue().entrySet()) {
-			this.queue.put((String) e.getKey(), (PriorityTask<String>) e.getValue());
+		// increment priority by a big enough number such that we can later insert intermediate priority tasks
+		this.priority = parentContext.getPriority() - Constant.AppConfig.PRIORITY_BIG_DELTA;
+
+		for (Map.Entry e : parentContext.entrySet()) {
+			String key = (String) e.getKey();
+			PriorityTask<String> task = (PriorityTask<String>) e.getValue();
+			// if there is a parent project, skip. We will not use a project iterator. If we do, we will save it in the 'data'.
+			if (key.equals(Constant.Navigation.LABEL_PROJECT_ITERATOR)) {
+				continue;
+			}
+			this.put(key, task);
 		}
 	}
 
@@ -121,19 +145,43 @@ public class DataContext extends HashMap<String, String>
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a history request with a reference to a previously registered entry, e.g.
 	 * <history|ctx/machine-ABC/woodpile-url|since=$date$>
+	 *
+	 *     FIXME *always* expect url back, not object.
+	 *             iterators and 'data' expect single url to be returned. values are accessed in projects/pages/widgets
+	 *
 	 */
-	public void register(String key, String description)
+	synchronized public void register(String key, String description)
 	{
-		// just in case, delete the existing entry in the context
-		// this avoids problems when nesting projects (we share the same variable name, no matter
-		// level of nesting we are).
+		// check if key already exists. if this is the case, then raise an error. We don't support that
+		// we use super.get() as this.get() would be blocking, waiting for the result of the task
+		// having 2 times the same key in a 'data' object array would trigger a
+		// com.google.gson.JsonSyntaxException: duplicate key: ... exception
+		// so we are consistent by using an unchecked exception here
+		if (this.get(key) != null) {
+			throw new FocusInternalErrorException("We do not support DataContext entry overriding.");
+		}
 
-		this.put(key, null); // FIXME not a good idea. resolve handles null?? check stash
+		// Create the data retrieving task
+		DataAcquisitionTask task = new DataAcquisitionTask(description);
 
-		DataAcquisitionTask task = new DataAcquisitionTask(key, description);
-		PriorityTask p = new PriorityTask(this.priority, task); // FIXME crappy
-		this.dataManager.getDataRetrievingExecutor().execute(p);
-		this.queue.put(key, p);
+		// if we give the same priority to iterators, we may have problems
+		// if the 'data' array contains a reference to the iterator (for example for
+		// saving the iterator as a variable for use in inner project).
+		// so let's make sure that the priority of our iterators is slightly higher than the
+		// one of other objects acquired in this context
+		int prio = this.priority;
+		switch(key) {
+			case Constant.Navigation.LABEL_PROJECT_ITERATOR:
+			case Constant.Navigation.LABEL_PAGE_ITERATOR:
+				 prio += Constant.AppConfig.PRIORITY_SMALL_DELTA;
+				break;
+		}
+		PriorityTask future = new PriorityTask(prio, task);
+		this.put(key, future);
+
+		// once the task is saved for later reference, let's execute it
+		this.dataManager.executeOnPool(future);
+
 	}
 
 	/**
@@ -141,6 +189,11 @@ public class DataContext extends HashMap<String, String>
 	 *
 	 * @param data A list of descriptions for data fetching, as defined
 	 *             in {@link #register(String, String)}
+	 *
+	 *
+	 *             FIXME *always* expect url back, not object.
+	 *             iterators and 'data' expect single url to be returned. values are accessed in projects/pages/widgets
+	 *
 	 */
 	public void provideData(HashMap<String, String> data)
 	{
@@ -148,6 +201,30 @@ public class DataContext extends HashMap<String, String>
 			this.register(entry.getKey(), entry.getValue());
 		}
 	}
+
+	// FIXME doc
+	private String getResolved(String key)
+	{
+		if (this.get(key) == null) {
+			throw new FocusInternalErrorException("Attempt to access a non-registered resource");
+		}
+		try {
+			return this.get(key).get(); // FIXME BLOCKING
+		}
+		// FIXME how to handle these errors?
+		catch (InterruptedException e) {
+			throw new FocusInternalErrorException("Interrupted data resolution");
+		}
+		catch (ExecutionException e) { // FIXME especially this one!
+			throw new FocusInternalErrorException("ExecutionException at data resolution");
+		}
+	}
+
+	synchronized private PriorityTask<String> get(String key)
+	{
+		return super.get(key);
+	}
+
 
 	/**
 	 * Resolve the supplied request in the current data context.
@@ -195,7 +272,7 @@ public class DataContext extends HashMap<String, String>
 	 * interpolation within the string. e.g.
 	 * - <ctx/simple-example/field-to-get> -> will retrieve the field-to-get field of the
 	 * data being stored under the simple-example entry.
-	 * - <ctx/simple-example> -> will return the url of the context identfied by simple-example
+	 * - <ctx/simple-example/$this$> -> will return the url of the context identfied by simple-example
 	 *
 	 * @param request The request to satisfy
 	 * @return Same as {@link #resolve(String)}, except that there is never variable
@@ -218,29 +295,20 @@ public class DataContext extends HashMap<String, String>
 				.replaceFirst(Constant.DataReference.SELECTOR_CLOSE + "$", "");
 
 		String[] parts = request.split(Constant.DataReference.SELECTOR_CONTEXT_SEPARATOR);
-		if (parts.length < 2) {
+		if (parts.length != 3) {
 			throw new FocusInternalErrorException("Invalid context in resolve request.");
 		}
 
-		String url = this.get(parts[1]);
+		String url = this.getResolved(parts[1]); // FIXME blocking
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve the request in the current data context.", request);
 		}
 		// this is ok to call getSample(url) as url as we have already gotten the url.
 		FocusSample fs = this.dataManager.getSample(url);
-		if (parts.length == 3) {
-			if (fs == null) {
-				return null;
-			}
-			if (parts[2].equals("$this$")) {
-				// FIXME
-				return fs.getUrl();
-			}
-			return fs.get(parts[2]);
+		if (fs == null) {
+			return null;
 		}
-		else {
-			return fs.getUrl();
-		}
+		return fs.get(parts[2]);
 	}
 
 
@@ -334,16 +402,6 @@ public class DataContext extends HashMap<String, String>
 	}
 
 	/**
-	 * Get the queue
-	 *
-	 * @return The queue
-	 */
-	public HashMap<String, PriorityTask<String>> getQueue()
-	{
-		return this.queue;
-	}
-
-	/**
 	 * Block and wait for some data to be retrieved, and then return it to the caller.
 	 * <p/>
 	 * FIXME check stash, better version there.
@@ -353,8 +411,9 @@ public class DataContext extends HashMap<String, String>
 	 * @return the url of the object that is gotten, or null if an error occured and the object
 	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
 	 */
+	/*
 	@Override
-	public String get(Object key)
+	public String xxxxget(Object key)
 	{
 		if (super.get(key) != null) {
 			return super.get(key);
@@ -374,29 +433,14 @@ public class DataContext extends HashMap<String, String>
 			return null;
 		}
 	}
+	*/
 
-	/**
-	 * Execute the supplied task on a new Thread
-	 * <p/>
-	 * FIXME is that really on a new thread? my be interesting to push it to an execution queue?
-	 *
-	 * @param todo The task to execute
-	 */
-	public void execute(FutureTask<Boolean> todo)
-	{
-		Thread t = new Thread(todo);
-		t.start();
-	}
 
 	/**
 	 * Task responsible for acquiring data
 	 */
 	private class DataAcquisitionTask implements Callable
 	{
-		/**
-		 * Key as it has been {@link #register(String, String)}-ed.
-		 */
-		private String key;
 
 		/**
 		 * Description of the data to retrieve, also as {@link #register(String, String)}-ed.
@@ -407,12 +451,10 @@ public class DataContext extends HashMap<String, String>
 		/**
 		 * Constructor
 		 *
-		 * @param key         Input value for instance variable
 		 * @param description Input value for instance variable
 		 */
-		private DataAcquisitionTask(String key, String description)
+		private DataAcquisitionTask(String description)
 		{
-			this.key = key;
 			this.description = description;
 		}
 
@@ -422,7 +464,7 @@ public class DataContext extends HashMap<String, String>
 		 * @return The url of the fetched data
 		 */
 		@Override
-		public String call() throws Exception // FIXME too broad
+		public String call()
 		{
 			FocusSample f;
 			try {
@@ -465,14 +507,13 @@ public class DataContext extends HashMap<String, String>
 					f = dataManager.getSample(description);
 				}
 			}
-			catch (FocusMissingResourceException ex) {
+			catch (FocusMissingResourceException ex) { // FIXME very big try/catch block
 				// we highlight the fact that we could not retrieve a resource by NOT saving
 				// it into the DataContext. When get()-ing, the caller will
 				// receive null, and can act accordingly.
 				// FIXME is that really the case? might be a problem if we remove put(key, null) from register(); check the stash.
 				return null;
 			}
-			DataContext.this.put(key, f.getUrl());
 			return f.getUrl();
 		}
 
@@ -491,7 +532,7 @@ public class DataContext extends HashMap<String, String>
 			}
 
 			String ref = parts[1];
-			String res = get(ref); // FIXME block
+			String res = getResolved(ref); // FIXME blocking
 			if (res == null) {
 				throw new FocusInternalErrorException("invalid object reference");
 			}
@@ -499,10 +540,15 @@ public class DataContext extends HashMap<String, String>
 			FocusSample fs = dataManager.getSample(res);
 			res = fs.getString(parts[2]);
 			if (res == null) {
-				throw new FocusInternalErrorException("Cannot find this field.");
+				throw new FocusInternalErrorException("Cannot find this field."); // quite strict. would be better to have checked exception FIXME
 			}
-			// if that's indeed a url, then we can retrieve it.
-			// FIXME check that this is a url!
+			// we onyl refer to urls, so check if that is a valid one.
+			try {
+				new URL(res);
+			}
+			catch (MalformedURLException e) {
+				throw new FocusInternalErrorException("Reference to a non-URL."); // quite strict. would be better to have checked exception FIXME
+			}
 			return res;
 		}
 

@@ -67,12 +67,17 @@ public class FocusSample extends FocusObject
 	/**
 	 * Generic get() method for the content of the data map
 	 *
-	 * @param identifier the key being accessed in the map
+	 * @param key the key being accessed in the map
 	 * @return the Object of interest
 	 */
-	public Object get(String identifier)
+	public Object get(String key)
 	{
-		return this.data.get(identifier);
+		if (key.equals(Constant.Navigation.LABEL_SELF_REFERENCE)) {
+			return this.getUrl();
+		}
+		else {
+			return this.data.get(key);
+		}
 	}
 
 	/**
@@ -83,7 +88,12 @@ public class FocusSample extends FocusObject
 	 */
 	public String getString(String key)
 	{
-		return this.data.get(key).toString();
+		if (key.equals("$this$")) {
+			return this.getUrl();
+		}
+		else {
+			return this.data.get(key).toString();
+		}
 	}
 
 }

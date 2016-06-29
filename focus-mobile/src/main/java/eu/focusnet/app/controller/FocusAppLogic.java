@@ -201,7 +201,7 @@ public class FocusAppLogic
 		this.context = context;
 
 		// setup GSON
-		this.gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
+		this.gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 
 		// setup DataManager
 		this.dataManager = new DataManager();
@@ -258,7 +258,7 @@ public class FocusAppLogic
 		}
 
 		// be nice and willingly free memory that we don't need anymore
-		this.dataManager.freeMemory();
+		this.dataManager.freeMemory(); //FIXME does nothing. should we delete DataManager.cache?
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class FocusAppLogic
 			this.userManager.registerNewDataManager(this.dataManager);
 
 			// do some cleaning
-			this.dataManager.freeMemory();
+			this.dataManager.freeMemory(); // FIXME does nothing. should we delete DataManager.cache here?
 			this.dataManager.cleanDataStore();
 		}
 	}

@@ -129,6 +129,8 @@ public class AppContentInstance extends AbstractInstance
 	 * Wait for the application instance building to be terminated.
 	 *
 	 * @throws InterruptedException
+	 *
+	 * FIXME we should wait for completion of fillData() but
 	 */
 	public void waitForCompletion() throws InterruptedException
 	{

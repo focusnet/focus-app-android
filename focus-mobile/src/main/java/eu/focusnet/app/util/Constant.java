@@ -23,6 +23,7 @@ package eu.focusnet.app.util;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.PageInstance;
 import eu.focusnet.app.model.ProjectInstance;
+import eu.focusnet.app.model.gson.FocusSample;
 
 /**
  * Contains constants that are not class-specific.
@@ -148,6 +149,23 @@ final public class Constant
 		 * Entry point of webapps
 		 */
 		final public static String ASSETS_HTML5_WEBAPPS_ENTRY_POINT = "index.html";
+
+		/**
+		 * Maximum number of concurrent tasks for building the app.
+		 */
+		final public static int MAX_CONCURRENT_BUILD_TASKS = 40;
+
+		/**
+		 * Big priority increment. Used for differentiating the levels of hierarchy of our
+		 * application.
+		 */
+		final public static int PRIORITY_BIG_DELTA = 10;
+
+		/**
+		 * Small priority delta, used to prioritize tasks within a level of application
+		 * hierarchy
+		 */
+		final public static int PRIORITY_SMALL_DELTA = 1;
 	}
 
 	/**
@@ -389,6 +407,12 @@ final public class Constant
 		final public static String LABEL_PAGE_ITERATOR = "$page-iterator$";
 
 		/**
+		 * Special property to refer to the current {@link FocusSample}'s URL, i.e. will retrieve
+		 * the URL instead of a specific property
+		 */
+		public static final String LABEL_SELF_REFERENCE = "$this$";
+
+		/**
 		 * List item type corresponding the a header
 		 * (non clickable, {@link eu.focusnet.app.ui.common.SimpleListItem}).
 		 */
@@ -600,9 +624,9 @@ final public class Constant
 	final public static class Networking
 	{
 		/**
-		 * Maximum number of concurrent downloads.
+		 * Maximum number of concurrent downloads
 		 */
-		final public static int MAX_CONCURRENT_DOWNLOADS = 40;
+		final public static int MAX_CONCURRENT_DOWNLOADS = AppConfig.MAX_CONCURRENT_BUILD_TASKS + 1;
 
 		/**
 		 * Success status code. This is a bitmask.

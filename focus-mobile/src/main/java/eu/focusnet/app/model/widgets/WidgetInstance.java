@@ -26,11 +26,14 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import eu.focusnet.app.controller.DataManager;
+import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
+import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusInternalErrorException;
@@ -106,11 +109,6 @@ public abstract class WidgetInstance extends AbstractInstance
 		if (cfg != null) {
 			this.config = (LinkedTreeMap<String, Object>) cfg;
 		}
-
-		this.processSpecificConfig();
-		this.processCommonConfig();
-
-		this.freeDataContext();
 	}
 
 	/**
@@ -171,10 +169,45 @@ public abstract class WidgetInstance extends AbstractInstance
 			default:
 				throw new FocusInternalErrorException("Instance type does not exist.");
 		}
-		if (!w.isValid()) {
+
+		w.fillWithAcquiredData();
+
+		return w;
+	}
+
+	private void fillWithAcquiredData()
+	{
+		// post-pone setting information after having fetched all resources related to this object
+		Callable todo = new Callable()
+		{
+			@Override
+			public Boolean call() throws Exception
+			{
+				processSpecificConfig();
+				processCommonConfig();
+				freeDataContext();
+
+
+				/*
+
+				 FIXME todo check validity
+				 if (!w.isValid()) {
 			w = new InvalidWidgetInstance(layoutConfig, w);
 		}
-		return w;
+
+		// then validity is infered AFTER app creation. like buildPaths.
+
+*/
+
+
+				return true;
+			}
+		};
+
+		// priority: just a little bit less than the current data context priority, such that is executed
+		// just after all data from the data context have been retrieved
+		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - 2 * Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
+		this.dataManager.executeOnPool(future);
 	}
 
 	/**

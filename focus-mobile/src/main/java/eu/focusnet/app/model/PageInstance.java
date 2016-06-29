@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.PageReference;
 import eu.focusnet.app.model.gson.PageTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
@@ -233,7 +234,10 @@ public class PageInstance extends AbstractInstance
 			{
 				guid = template.getGuid();
 				if (template.getIterator() != null) {
-					guid = guid + Constant.Navigation.PATH_SELECTOR_OPEN + dataContext.get(Constant.Navigation.LABEL_PAGE_ITERATOR) + Constant.Navigation.PATH_SELECTOR_CLOSE;
+					guid = guid +
+							Constant.Navigation.PATH_SELECTOR_OPEN +
+							dataContext.resolveToString(Constant.Navigation.LABEL_PAGE_ITERATOR) +
+							Constant.Navigation.PATH_SELECTOR_CLOSE;
 				}
 
 				try {
@@ -254,9 +258,12 @@ public class PageInstance extends AbstractInstance
 			}
 		};
 
-		FutureTask future = new FutureTask<>(todo);
-		this.dataContext.execute(future);
+		// priority: just a little bit less than the current data context priority, such that is executed
+		// just after all data from the data context have been retrieved
+		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority()  - Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
+		this.dataManager.executeOnPool(future);
 		return future;
+
 	}
 
 	/**

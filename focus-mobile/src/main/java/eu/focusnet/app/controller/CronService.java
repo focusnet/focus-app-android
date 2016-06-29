@@ -95,7 +95,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 	{
 		super.onCreate();
 		this.applicationReady = false;
-		this.scheduleTaskExecutor = Executors.newScheduledThreadPool(3);
+		this.scheduleTaskExecutor = Executors.newScheduledThreadPool(2);
 		this.syncInProgress = false;
 
 		HashMap<String, String> prefs = ApplicationHelper.getPreferences();

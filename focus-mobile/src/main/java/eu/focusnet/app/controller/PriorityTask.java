@@ -38,44 +38,31 @@ public final class PriorityTask<T> extends FutureTask<T> implements Comparable<P
 	/**
 	 * The priority. The higher it is, the sooner the task will be run.
 	 */
-	private final int priority;
+	final private int priority;
 
 	/**
 	 * Constructor for use with {@code Callable}
 	 *
 	 * @param priority The priority
-	 * @param tCallable The {@code Callable}
+	 * @param callable The {@code Callable}
 	 */
-	public PriorityTask(final int priority, final Callable<T> tCallable)
+	public PriorityTask(final int priority, final Callable<T> callable)
 	{
-		super(tCallable);
+		super(callable);
 
 		this.priority = priority;
 	}
-/*
-
-FIXME remove
-	public PriorityTask(final int priority, final Runnable runnable,
-						final T result)
-	{
-		super(runnable, result);
-
-		this.priority = priority;
-	}
-*/
 	/**
 	 * Comparision method
 	 * @param o The object to compare to
 	 * @return {@code 0} if the current object and the campared object have the same priority,
-	 * {@code -1} if the other object has higher priority and {@code +1} if the current object
+	 * {@code +1} if the other object has higher priority and {@code -1} if the current object
 	 * has higher priority.
-	 *
-	 * FIXME check that priority comparison is in correct order with a simple test.
  	 */
 	@Override
 	public int compareTo(@NonNull final PriorityTask<T> o)
 	{
 		final long diff = this.priority - o.priority;
-		return 0 == diff ? 0 : (diff > 0 ? +1 : -1) ;
+		return 0 == diff ? 0 : (diff > 0 ? -1 : +1) ;
 	}
 }

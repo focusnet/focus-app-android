@@ -756,7 +756,7 @@ public class DataManager implements ApplicationStatusObserver
 	 *
 	 * @param task The {@link PriorityTask} to execute.
 	 */
-	synchronized public void executeOnPool(PriorityTask task)
+	synchronized public void executeOnAppBuilderPool(PriorityTask task)
 	{
 		this.appBuilderPool.execute(task);
 	}

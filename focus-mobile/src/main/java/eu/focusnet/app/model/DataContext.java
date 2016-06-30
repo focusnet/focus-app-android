@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,24 +41,29 @@ import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 import eu.focusnet.app.util.FocusNotImplementedException;
 
-
-// FIXME review doc. major rewrite.
-// synchronized / volatile methods?
-
 /**
  * In our model, all {@link AbstractInstance} have an associated {@code DataContext}. This data
  * context is used to perform data resolution, i.e. determine iterators and interpolate
  * variables in the instance content. The basic functioning is as follows:
- * - Instance request to {@link #register(String, String)} data to their {@code DataContext}.
+ * - Instances request to {@link #register(String, String)} data to their {@code DataContext}.
+ * - Instances request their iterators to {@link #registerIterator(String, String)}. It has a higher
+ * priority.
  * - The {@code DataContext} then pushes the request in a queue such that the resource will
  * be downloaded. The queue is actually maintained by the {@link DataManager} of the application,
  * which is common to all {@code DataContext}s.
- * - Instances can consume data by calling {@code #resolve*()} methods. WThe
+ * - Instances can consume data by calling {@code #resolve*()} methods. The
  * calling thread will then block until the resource is available. The actual blocking and waiting
  * is done in {@link #get(Object)}.
  * <p/>
  * {@link #register(String, String)}-ed resources are processed in order of {@link #priority}.
  * The later the instance is created in the application content, the lower is its priority.
+ *
+ * Iterators are saved with a special name based on the guid of the instance creating the iterator,
+ * such that they can be re-used by children instances. {@code $iterator:<guid>$>}
+ *
+ * Generally speaking, our application is constructed as a tree. {@link ProjectInstance}s
+ * and {@link PageInstance}s are nodes, and only {@link PageInstance}s can be leaves.
+ *
  */
 public class DataContext extends HashMap<String, PriorityTask<String>>
 {
@@ -78,24 +82,10 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 */
 	private int priority;
 
-	private String iteratorLabel;
-
-
-	/*
-	 * random doc
-	 *
-	 * project -> project -> project -> page
-	 * page is always a leaf
-	 * HENCE if in a context we have:
-	 * project iterator -> this context can be used as parent context, and we should NOT use the project-iterator in child context. NEVER.
-	 * page iterator -> we are in a leaf context, and we therefore will never use this context as parent
-	 *
-	 * conclusion: in a new context, ALWAYS dismiss project iterators.
-	 * If they need to be used later in the hierarchy, we will save them in 'data'
-	 * it is useless to dismiss page iterators as we will never build a new context on top of a context that has a page iterator (they are leaf contexts)
-	 *
-	 *
+	/**
+	 * {@code DataContext}-specific iterator label
 	 */
+	private String iteratorLabel;
 
 	/**
 	 * Default c'tor
@@ -144,20 +134,29 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 * - a history request with a reference to a previously registered entry, e.g.
 	 * <history|ctx/machine-ABC/woodpile-url|since=$date$>
 	 *
-	 *     FIXME *always* expect url back, not object.
-	 *             iterators and 'data' expect single url to be returned. values are accessed in projects/pages/widgets
+	 * We only expect urls to be returned when registering. Value fetching is done in {@code resolve*()}
 	 *
+	 * @param key The key under which we save this registration for later use
+	 * @param description Description for data retrieval
 	 */
 	synchronized public void register(String key, String description)
 	{
 		this.nonSynchronizedRegister(key, description, this.priority);
 	}
 
-	// if we give the same priority to iterators, we may have problems
-	// if the 'data' array contains a reference to the iterator (for example for
-	// saving the iterator as a variable for use in inner project).
-	// so let's make sure that the priority of our iterators is slightly higher than the
-	// one of other objects acquired in this context
+	/**
+	 * Register a new iterator. Give it an instance-specific name based on the guid and a higher
+	 * priority to avoid deadlocks.
+	 *
+	 * if we give the same priority to iterators, we may have problems
+	 * if the 'data' array contains a reference to the iterator (for example for
+	 * saving the iterator as a variable for use in inner project).
+	 * so let's make sure that the priority of our iterators is slightly higher than the
+	 * one of other objects acquired in this context
+	 *
+	 * @param guid Guid of the instance registering the iterator
+	 * @param description Description for data retrieval
+	 */
 	synchronized public void registerIterator(String guid, String description)
 	{
 		this.iteratorLabel = Constant.Navigation.LABEL_ITERATOR_PREFIX
@@ -165,6 +164,15 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		this.nonSynchronizedRegister(this.iteratorLabel, description, this.priority + Constant.AppConfig.PRIORITY_SMALL_DELTA);
 	}
 
+	/**
+	 * Helper function for registration.
+	 *
+	 * Registrations are in fact {@link DataAcquisitionTask}s being pushed to the app builder pool.
+	 *
+	 * @param key The key under which we save this registration for later use
+	 * @param description Description for data retrieval
+	 * @param priority Priority of the registration
+	 */
 	private void nonSynchronizedRegister(String key, String description, int priority)
 	{
 		// check if key already exists. if this is the case, then raise an error. We don't support that
@@ -184,18 +192,19 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		this.put(key, future);
 
 		// once the task is saved for later reference, let's execute it
-		this.dataManager.executeOnPool(future);
+		this.dataManager.executeOnAppBuilderPool(future);
 	}
 
 	/**
 	 * Fill data in this context based on the provided data input definition.
 	 *
+	 * {@link AppContentInstance}, {@link ProjectInstance}s and {@link PageInstance}s
+	 * can define a {@code data} property that contains data to retrieve and made available in
+	 * their context. These resources are fetched after the iterator, with a slightly lower
+	 * priority to avoid deadlocks.
+	 *
 	 * @param data A list of descriptions for data fetching, as defined
 	 *             in {@link #register(String, String)}
-	 *
-	 *
-	 *             FIXME *always* expect url back, not object.
-	 *             iterators and 'data' expect single url to be returned. values are accessed in projects/pages/widgets
 	 *
 	 */
 	public void provideData(HashMap<String, String> data)
@@ -205,24 +214,35 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		}
 	}
 
-	// FIXME doc
+	/**
+	 * Get the resolved result of a registration
+	 *
+	 * @param key The key of the registration to retrieve
+	 * @return A URL
+	 */
 	private String getResolved(String key)
 	{
 		if (this.get(key) == null) {
 			throw new FocusInternalErrorException("Attempt to access a non-registered resource");
 		}
 		try {
-			return this.get(key).get(); // FIXME BLOCKING
+			return this.get(key).get();
 		}
-		// FIXME how to handle these errors?
 		catch (InterruptedException e) {
 			throw new FocusInternalErrorException("Interrupted data resolution");
 		}
-		catch (ExecutionException e) { // FIXME especially this one!
+		catch (ExecutionException e) {
 			throw new FocusInternalErrorException("ExecutionException at data resolution");
 		}
 	}
 
+
+	/**
+	 * Synchronized function used to get a registration based on its key
+	 *
+	 * @param key Registration key
+	 * @return The {@link PriorityTask} for this registration
+	 */
 	synchronized private PriorityTask<String> get(String key)
 	{
 		return super.get(key);
@@ -302,7 +322,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			throw new FocusInternalErrorException("Invalid context in resolve request.");
 		}
 
-		String url = this.getResolved(parts[1]); // FIXME blocking
+		String url = this.getResolved(parts[1]);
 		if (url == null) {
 			throw new FocusMissingResourceException("Impossible to resolve the request in the current data context.", request);
 		}
@@ -404,53 +424,19 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		return priority;
 	}
 
+	/**
+	 * Get the value for the iterator registered in this context
+	 * @return a URL
+	 */
 	public String getIteratorValue()
 	{
 		try {
-
-			// FIXME get(key) is synchronized. is that ok? should we relax that?
 			return this.get(this.iteratorLabel).get();
 		}
 		catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace(); // FIXME exception handling
-		}
-		return null;
-	}
-
-	/**
-	 * Block and wait for some data to be retrieved, and then return it to the caller.
-	 * <p/>
-	 * FIXME check stash, better version there.
-	 *
-	 * @param key Key corresponding to the data retrieval request that was
-	 *            {@link #register(String, String)}-ed.
-	 * @return the url of the object that is gotten, or null if an error occured and the object
-	 * could not be retrieved. Callers of this method MUST check for null and act accordingly.
-	 */
-	/*
-	@Override
-	public String xxxxget(Object key)
-	{
-		if (super.get(key) != null) {
-			return super.get(key);
-		}
-		FutureTask<String> task = this.queue.get(key);
-		if (task == null) {
-			throw new FocusInternalErrorException("No task for requested data. Logic problem. Perhaps a badly written JSON file with invalid variables?");
-// FIXME problem here with nested projects?
-		}
-		try {
-			return task.get();
-		}
-		catch (InterruptedException e) {
-			return null;
-		}
-		catch (ExecutionException e) {
-			return null;
+			throw new FocusInternalErrorException("Cannot get iterator value");
 		}
 	}
-	*/
-
 
 	/**
 	 * Task responsible for acquiring data
@@ -527,8 +513,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 				// we highlight the fact that we could not retrieve a resource by NOT saving
 				// it into the DataContext. When get()-ing, the caller will
 				// receive null, and can act accordingly.
-				// FIXME is that really the case? might be a problem if we remove put(key, null) from register(); check the stash.
-				return null;
+				return null; // FIXME not good
 			}
 			return f.getUrl();
 		}
@@ -548,7 +533,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			}
 
 			String ref = parts[1];
-			String res = getResolved(ref); // FIXME blocking
+			String res = getResolved(ref);
 			if (res == null) {
 				throw new FocusInternalErrorException("invalid object reference");
 			}
@@ -556,14 +541,14 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			FocusSample fs = dataManager.getSample(res);
 			res = fs.get(parts[2]).toString();
 			if (res == null) {
-				throw new FocusInternalErrorException("Cannot find this field."); // quite strict. would be better to have checked exception FIXME
+				throw new FocusInternalErrorException("Cannot find this field.");
 			}
 			// we onyl refer to urls, so check if that is a valid one.
 			try {
 				new URL(res);
 			}
 			catch (MalformedURLException e) {
-				throw new FocusInternalErrorException("Reference to a non-URL."); // quite strict. would be better to have checked exception FIXME
+				throw new FocusInternalErrorException("Reference to a non-URL.");
 			}
 			return res;
 		}

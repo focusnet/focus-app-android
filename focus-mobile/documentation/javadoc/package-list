@@ -1,0 +1,11 @@
+eu.focusnet.app.controller
+eu.focusnet.app.model
+eu.focusnet.app.model.gson
+eu.focusnet.app.model.widgets
+eu.focusnet.app.model.widgets.fields
+eu.focusnet.app.ui
+eu.focusnet.app.ui.activity
+eu.focusnet.app.ui.common
+eu.focusnet.app.ui.fragment
+eu.focusnet.app.ui.fragment.widget
+eu.focusnet.app.util

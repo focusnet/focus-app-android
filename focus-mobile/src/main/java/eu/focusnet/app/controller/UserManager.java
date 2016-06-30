@@ -231,11 +231,11 @@ public class UserManager implements ApplicationStatusObserver
 	 * @throws IOException If a network error occured
 	 * @deprecated Only valid for the prototype
 	 */
-	public boolean demoLogin(String useCase) throws IOException
+	public boolean demoLogin(String useCase)
 	{
 		// if there is no network available, trigger a failure right away
 		if (!NetworkManager.isNetworkAvailable()) {
-			throw new IOException("No network");
+			return false;
 		}
 
 		// Demo URIs:

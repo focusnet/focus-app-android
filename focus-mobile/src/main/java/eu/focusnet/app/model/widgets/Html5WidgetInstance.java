@@ -115,7 +115,6 @@ public class Html5WidgetInstance extends DataCollectionWidgetInstance
 			return;
 		}
 
-		// context
 		// the context can basically be any string, but is likely to be a unique identifier such as a URI
 		Object rawContext = this.config.get(CONFIG_CONTEXT_FIELD);
 		if (rawContext == null) {

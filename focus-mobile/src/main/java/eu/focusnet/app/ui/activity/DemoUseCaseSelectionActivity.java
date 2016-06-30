@@ -118,17 +118,16 @@ public class DemoUseCaseSelectionActivity extends Activity implements AdapterVie
 					String[] useCases = ApplicationHelper.getResources().getStringArray(R.array.demo_use_cases_values);
 					String selectedUseCase = useCases[DemoUseCaseSelectionActivity.this.selectedUseCase];
 
-					try {
-						FocusAppLogic.getUserManager().demoLogin(selectedUseCase);
+					boolean success = FocusAppLogic.getUserManager().demoLogin(selectedUseCase);
+					if (success) {
+						Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
+						i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
+						startActivity(i);
+						finish();
 					}
-					catch (IOException ex) {
-						throw new FocusInternalErrorException("No network. Cannot login, even for the demo.");
+					else {
+						UiHelper.displayToast(DemoUseCaseSelectionActivity.this, R.string.focus_login_error_no_network);
 					}
-
-					Intent i = new Intent(DemoUseCaseSelectionActivity.this, EntryPointActivity.class);
-					i.putExtra(Constant.Extra.UI_EXTRA_LOADING_INFO_TEXT, getString(R.string.load_info_load_demo));
-					startActivity(i);
-					finish();
 				}
 			};
 			login.start();

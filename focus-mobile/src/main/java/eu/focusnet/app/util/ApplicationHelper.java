@@ -52,7 +52,6 @@ import eu.focusnet.app.ui.FocusApplication;
  */
 final public class ApplicationHelper
 {
-
 	/**
 	 * Retrieve a property.
 	 *

@@ -242,8 +242,9 @@ public class DataManager implements ApplicationStatusObserver
 	 *
 	 * @param url         The URL of the resource to retrieve
 	 * @param targetClass The retrieved object will be converted to a Java object matching this class
-	 * @return A FocusObject, or mor specifically one of its inherited classes matching {@code targetclass}
-	 * @throws IOException If an inrecoverable netowrk error occurs
+	 * @return A FocusObject, or mor specifically one of its inherited classes matching {@code targetclass},
+	 * or {@code null} if the object could not be retrieved, e.g. because of network error or any
+	 * other exception raised in {@link DataRetrievalTask}, or if the task was interrupted.
 	 */
 	public FocusObject get(String url, Class targetClass)
 	{
@@ -252,7 +253,7 @@ public class DataManager implements ApplicationStatusObserver
 			return future.get();
 		}
 		catch (InterruptedException | ExecutionException e) {
-			throw new FocusInternalErrorException("Error while executing future.call()");
+			return null;
 		}
 	}
 

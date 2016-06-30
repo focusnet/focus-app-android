@@ -61,8 +61,20 @@ final public class ApplicationHelper
 	 */
 	public static String getProperty(String key)
 	{
-		Properties properties = new Properties();
 		AssetManager assetManager = getAssets();
+		return getProperty(key, assetManager);
+	}
+
+	/**
+	 * Same as {@link #getProperty(String)}, but used when no asset application is ready, yet
+	 *
+	 * @param key          The key of the property to retrieve
+	 * @param assetManager Asset Manager
+	 * @return A String containing the value of the property, or {@code null} on failure.
+	 */
+	public static String getProperty(String key, AssetManager assetManager)
+	{
+		Properties properties = new Properties();
 		try {
 			InputStream inputStream = assetManager.open(Constant.AppConfig.ASSETS_PROPERTY_FILE);
 			properties.load(inputStream);

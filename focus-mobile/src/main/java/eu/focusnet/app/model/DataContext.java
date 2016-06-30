@@ -218,7 +218,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 * Get the resolved result of a registration
 	 *
 	 * @param key The key of the registration to retrieve
-	 * @return A URL
+	 * @return A URL, or {@code null} if an error occurred (exception in task, interruption, no data found)
 	 */
 	private String getResolved(String key)
 	{
@@ -228,11 +228,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		try {
 			return this.get(key).get();
 		}
-		catch (InterruptedException e) {
-			throw new FocusInternalErrorException("Interrupted data resolution");
-		}
-		catch (ExecutionException e) {
-			throw new FocusInternalErrorException("ExecutionException at data resolution");
+		catch (InterruptedException | ExecutionException e) {
+			return null;
 		}
 	}
 
@@ -434,6 +431,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 			return this.get(this.iteratorLabel).get();
 		}
 		catch (InterruptedException | ExecutionException e) {
+			// fatal error, iterators are required for continuing application building
 			throw new FocusInternalErrorException("Cannot get iterator value");
 		}
 	}

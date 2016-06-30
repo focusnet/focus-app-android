@@ -343,7 +343,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return A {@link UserInstance} object
 	 */
-	synchronized public UserInstance getUser()
+	synchronized public UserInstance getUser() throws FocusMissingResourceException
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -359,7 +359,7 @@ public class UserManager implements ApplicationStatusObserver
 			user = new UserInstance(this.userUrl, "first", "last", "email@email.com", "company", this);
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(user);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
-				throw new FocusInternalErrorException("Cannot create User object.");
+				throw new FocusMissingResourceException("Cannot create User object.");
 			}
 		}
 		this.user = user;
@@ -388,7 +388,7 @@ public class UserManager implements ApplicationStatusObserver
 	 *
 	 * @return A {@link UserPreferencesInstance} object
 	 */
-	public synchronized UserPreferencesInstance getUserPreferences()
+	public synchronized UserPreferencesInstance getUserPreferences() throws FocusMissingResourceException
 	{
 		if (!this.isLoggedIn()) {
 			throw new FocusInternalErrorException("No login information. Cannot continue.");
@@ -402,18 +402,31 @@ public class UserManager implements ApplicationStatusObserver
 			userPreferences = new UserPreferencesInstance(this.prefUrl);
 			DataManager.ResourceOperationStatus ret = this.dataManager.create(userPreferences);
 			if (ret == DataManager.ResourceOperationStatus.ERROR) {
-				throw new FocusInternalErrorException("Cannot create UserPreferences object.");
+				throw new FocusMissingResourceException("Cannot create UserPreferences object.");
 			}
 		}
 		this.userPreferences = userPreferences;
 		return this.userPreferences;
 	}
 
+	/**
+	 * Get the user preferences, but do return null if their are not found.
+	 */
+	public UserPreferencesInstance getUserPreferencesOrNull()
+	{
+		try {
+			return this.getUserPreferences();
+		}
+		catch (FocusMissingResourceException e) {
+			return null;
+		}
+	}
+
 
 	/**
 	 * Those 2 objects are mandatory, and fatal exception is triggered if something goes wrong.
 	 */
-	public void getUserData()
+	public void getUserData() throws FocusMissingResourceException
 	{
 		this.getUser();
 		this.getUserPreferences();

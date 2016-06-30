@@ -291,14 +291,9 @@ public class FocusAppLogic
 		if (!newUserManager.isLoggedIn()) {
 			throw new FocusInternalErrorException("Inconsistent state reached: we should have enough information for logging in at this point.");
 		}
-		try {
-			newUserManager.getUserData();
-		}
-		catch (FocusInternalErrorException ex) {
-			// if we crash, this is because the user objects could not be retrieved and they are mandatory.
-			// Let the application survive anyway (we are in a background job, invisible to end user..
-			throw new FocusMissingResourceException("Cannot retrieve user object when syncing data", "newUserManager.getUserData()");
-		}
+
+		// Get user data
+		newUserManager.getUserData();
 
 		// throws FocusMissingResourceException if any error
 		AppContentInstance newApplicationContent = newDataManager.retrieveApplicationData();

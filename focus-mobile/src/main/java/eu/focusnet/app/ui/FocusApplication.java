@@ -23,6 +23,7 @@ package eu.focusnet.app.ui;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
@@ -107,9 +108,9 @@ public class FocusApplication extends Application
 			String user;
 			String pass;
 
-			formUri = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_FORM_URI);
-			user = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_USERNAME);
-			pass = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_PASSWORD);
+			formUri = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_FORM_URI, getAssets());
+			user = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_USERNAME, getAssets());
+			pass = ApplicationHelper.getProperty(Constant.AppConfig.PROPERTY_ACRA_PASSWORD, getAssets());
 
 			// fully programmatic ACRA configuration (no annotation)
 			try {

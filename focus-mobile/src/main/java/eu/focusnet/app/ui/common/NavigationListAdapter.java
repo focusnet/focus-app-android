@@ -307,26 +307,28 @@ public class NavigationListAdapter extends BaseAdapter
 						@Override
 						public void onClick(View view)
 						{
-							UserPreferencesInstance userPreferences = FocusAppLogic.getUserManager().getUserPreferences();
+							UserPreferencesInstance userPreferences = FocusAppLogic.getUserManager().getUserPreferencesOrNull();
 
-							if (isExistingBookmark) {
-								featuredListItem.setIsBookmarked(false);
-								Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
-								featuredListItem.setSecondaryIcon(rightIcon);
-								imageView.setImageBitmap(rightIcon);
-								bookmarkTitle.setEnabled(false);
-								userPreferences.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
-							}
-							else {
-								featuredListItem.setIsBookmarked(true);
-								Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
-								featuredListItem.setSecondaryIcon(rightIcon);
-								imageView.setImageBitmap(rightIcon);
-								Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
-								userPreferences.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
-							}
+							if (userPreferences != null) {
+								if (isExistingBookmark) {
+									featuredListItem.setIsBookmarked(false);
+									Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_not_selected);
+									featuredListItem.setSecondaryIcon(rightIcon);
+									imageView.setImageBitmap(rightIcon);
+									bookmarkTitle.setEnabled(false);
+									userPreferences.removeBookmarkLink(featuredListItem.getPath(), featuredListItem.getTitle(), featuredListItem.getTypeOfBookmark());
+								}
+								else {
+									featuredListItem.setIsBookmarked(true);
+									Bitmap rightIcon = UiHelper.getBitmap(context, R.drawable.ic_bookmark_selected);
+									featuredListItem.setSecondaryIcon(rightIcon);
+									imageView.setImageBitmap(rightIcon);
+									Bookmark bookmarkLink = new Bookmark(bookmarkTitle.getText().toString(), featuredListItem.getPath());
+									userPreferences.addBookmarkLink(bookmarkLink, featuredListItem.getTypeOfBookmark());
+								}
 
-							new SaveUserPreferencesTask(userPreferences, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								new SaveUserPreferencesTask(userPreferences, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							}
 							dialog.dismiss();
 						}
 					});

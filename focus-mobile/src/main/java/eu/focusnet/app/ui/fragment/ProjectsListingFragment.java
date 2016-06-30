@@ -44,6 +44,7 @@ import eu.focusnet.app.ui.common.NavigationListAdapter;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 
 /**
@@ -120,7 +121,7 @@ public class ProjectsListingFragment extends ListFragment
 					getString(R.string.focus_header_project));
 
 			listItems.add(headerProjectsListItem);
-			UserPreferencesInstance preference = FocusAppLogic.getUserManager().getUserPreferences();
+			UserPreferencesInstance preference = FocusAppLogic.getUserManager().getUserPreferencesOrNull();
 
 			ArrayList<ProjectInstance> projects = FocusAppLogic.getCurrentApplicationContent().getProjects();
 			Bitmap rightIconIfNotActive = UiHelper.getBitmap(getActivity(), R.drawable.ic_bookmark_not_selected);

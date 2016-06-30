@@ -47,6 +47,7 @@ import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * This fragment will be loaded from {@link eu.focusnet.app.ui.activity.ProjectActivity}
@@ -151,7 +152,7 @@ public class ProjectFragment extends ListFragment
 				return null;
 			}
 
-			UserPreferencesInstance preference = FocusAppLogic.getUserManager().getUserPreferences();
+			UserPreferencesInstance preference = FocusAppLogic.getUserManager().getUserPreferencesOrNull();
 
 			listItems = new ArrayList<>();
 

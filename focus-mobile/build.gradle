@@ -7,11 +7,11 @@ android {
         applicationId "eu.focusnet.app"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 3
-        versionName "v0.9.42"
+        versionCode 5
+        versionName "v0.9.41"
         multiDexEnabled true
         // rename output archive name
-        setProperty("archivesBaseName", "FOCUS-Mobile-$versionName") 
+        setProperty("archivesBaseName", "FOCUS-Mobile-$versionName")
     }
     productFlavors {
         dev {
@@ -27,7 +27,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false // FIXME to enable
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -42,7 +42,6 @@ android {
         checkReleaseBuilds false
         enable 'deprecation', 'NewerVersionAvailable' // only works for Google libs
     }
-
 }
 
 repositories {

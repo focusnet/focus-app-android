@@ -124,15 +124,18 @@ public class BookmarkFragment extends ListFragment
 	 */
 	private void fillListAdapter()
 	{
-		UserPreferencesInstance preferences = FocusAppLogic.getUserManager().getUserPreferences();
-
-		BookmarksList bookmark = preferences.getBookmarks();
-		ArrayList<Bookmark> pages = bookmark.getPages();
-		ArrayList<Bookmark> tools = bookmark.getTools();
+		UserPreferencesInstance preferences = FocusAppLogic.getUserManager().getUserPreferencesOrNull();
 
 		listItems = new ArrayList<>();
-		this.addListItems(pages, R.drawable.ic_category_dashboard_negative, R.string.header_dashboard_and_projects);
-		this.addListItems(tools, R.drawable.ic_category_tool_negative, R.string.header_tools);
+		if (preferences != null) {
+			BookmarksList bookmark = preferences.getBookmarks();
+			ArrayList<Bookmark> pages = bookmark.getPages();
+			ArrayList<Bookmark> tools = bookmark.getTools();
+
+
+			this.addListItems(pages, R.drawable.ic_category_dashboard_negative, R.string.header_dashboard_and_projects);
+			this.addListItems(tools, R.drawable.ic_category_tool_negative, R.string.header_tools);
+		}
 
 		NavigationListAdapter adapter = new NavigationListAdapter(getActivity(), listItems);
 

@@ -85,7 +85,7 @@ public class DatabaseAdapter
 
 	/**
 	 * Open a database for writing.
-	 *
+	 * <p/>
 	 * The {@link #numberOfConsumers} is used to keep track of the number of opening and closing
 	 * of the database, such that we don't close a database that is still in use.
 	 *
@@ -134,7 +134,7 @@ public class DatabaseAdapter
 	/**
 	 * Use the most recent data set identifier in the database, or continue to use the one of the
 	 * current object if none was found.
-	 *
+	 * <p/>
 	 * As mention in the introduction of this class, when starting the application, this object
 	 * will obtain an artificially old {@link #uniqueInstanceIdentifier} until the application is
 	 * fully ready, and hence won't interfer with the behavior of this function that makes us
@@ -188,12 +188,12 @@ public class DatabaseAdapter
 
 		/**
 		 * Generate a new data set identifier.
-		 *
+		 * <p/>
 		 * The time information is useful for knowing which dataset was the last one, but we would
 		 * like to add more randomness just in case 2 objects are created very close from eachother
 		 * (that would probably be a bug as there is only one {@code DatabaseAdapter} at a time in
 		 * the application).
-		 *
+		 * <p/>
 		 * We therefore add randomness at the end of the string.
 		 * {@code 123456789 -> 123456789<random>}
 		 *

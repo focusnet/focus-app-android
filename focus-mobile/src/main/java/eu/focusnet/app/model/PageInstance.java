@@ -240,7 +240,7 @@ public class PageInstance extends AbstractInstance
 
 		// priority: just a little bit less than the current data context priority, such that is executed
 		// just after all data from the data context have been retrieved
-		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority()  - Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
+		PriorityTask<Object> future = new PriorityTask<>(this.getDataContext().getPriority() - Constant.AppConfig.PRIORITY_SMALL_DELTA, todo);
 		this.dataManager.executeOnAppBuilderPool(future);
 		return future;
 

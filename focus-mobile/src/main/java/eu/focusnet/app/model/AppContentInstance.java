@@ -112,7 +112,7 @@ public class AppContentInstance extends AbstractInstance
 
 	/**
 	 * Check validity of the content and mark this instance as invalid if an error is found.
-	 *
+	 * <p/>
 	 * This method is intended to be called after the full application content has been built.
 	 */
 	private void checkValidity()

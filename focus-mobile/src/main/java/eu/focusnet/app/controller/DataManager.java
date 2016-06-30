@@ -106,7 +106,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * <p/>
 	 * This cache is only used when initializing the application content instance, and is
 	 * then freed, as resources are not required after that anymore.
-	 *
+	 * <p/>
 	 * This cache mechanism is also used to avoid multiple concurrent downloads of the same
 	 * resource, so it is NOT safe to free it when needing memory.
 	 */
@@ -170,7 +170,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Factory for creating the fifo pool used to retrieve data with reasonable settings.
-	 *
+	 * <p/>
 	 * The prioritized {@link #BuilderPoolFactory()} will define the order in which the
 	 * data are requested in this pool.
 	 *
@@ -262,11 +262,11 @@ public class DataManager implements ApplicationStatusObserver
 	 * do create it and launch data retrieval on the data retrieval pool. If it already exists,
 	 * simply return a pointer to the task's future such that the caller can wait for the resource
 	 * to become available.
-	 *
+	 * <p/>
 	 * This way of organizing code allows us to mark this method as synchronized and hence avoid
 	 * having multiple parallel downloads of the same resource.
 	 *
-	 * @param url The URL of the resource to retrieve
+	 * @param url         The URL of the resource to retrieve
 	 * @param targetClass The retrieved object will be converted to a Java object matching this class.
 	 * @return The future of the task
 	 */
@@ -278,7 +278,7 @@ public class DataManager implements ApplicationStatusObserver
 			DataRetrievalTask task = new DataRetrievalTask(url, targetClass);
 			future = new FutureTask<>(task);
 			this.cache.put(url, future);
-			 this.dataRetrievalPool.execute(future);
+			this.dataRetrievalPool.execute(future);
 		}
 		else {
 			future = this.cache.get(url);
@@ -479,12 +479,11 @@ public class DataManager implements ApplicationStatusObserver
 	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
 	 * This method retrieves this object based on the URI that has been obtained during the
 	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
-	 *
+	 * <p/>
 	 * FIXME logically should not be in this class - DataManager is responsible for data manipulation only.
 	 *
 	 * @return A {@link AppContentTemplate} object
 	 * @throws FocusMissingResourceException If the object could not be found
-	 *
 	 */
 	public AppContentTemplate getAppContentTemplate(String templateUri) throws FocusMissingResourceException
 	{
@@ -501,7 +500,7 @@ public class DataManager implements ApplicationStatusObserver
 
 	/**
 	 * Create a new application instance.
-	 *
+	 * <p/>
 	 * FIXME this should rather go elsewhere, in FocusAppLogic? this is not strickly speaking data management.
 	 *
 	 * @return New app instance if success or {@code null} on failure.
@@ -706,7 +705,7 @@ public class DataManager implements ApplicationStatusObserver
 	 * and hence we create the DAO ourselves and fetch the Sample for local store for the caller.
 	 * Also, we only allow UPDATEs of data.
 	 *
-	 * @param url the resource to push
+	 * @param url         the resource to push
 	 * @param targetClass The type of object to push
 	 * @return A network error status: {@link Constant.Networking#NETWORK_REQUEST_STATUS_SUCCESS},
 	 * {@link Constant.Networking#NETWORK_REQUEST_STATUS_NETWORK_FAILURE} or
@@ -732,7 +731,6 @@ public class DataManager implements ApplicationStatusObserver
 			this.databaseAdapter.close();
 		}
 	}
-
 
 
 	/**
@@ -782,7 +780,8 @@ public class DataManager implements ApplicationStatusObserver
 
 		/**
 		 * Constructor
-		 * @param url Input value for instance variable
+		 *
+		 * @param url         Input value for instance variable
 		 * @param targetClass Input value for instance variable
 		 */
 		private DataRetrievalTask(String url, Class targetClass)
@@ -794,6 +793,7 @@ public class DataManager implements ApplicationStatusObserver
 
 		/**
 		 * Perform data retrieval
+		 *
 		 * @return A FocusObject mathing {@link #targetClass}
 		 * @throws IOException If a network error occurs.
 		 */

@@ -47,7 +47,7 @@ public class TypesHelper
 		}
 		if (obj instanceof String || obj instanceof Double || obj instanceof Integer) {
 			String x = obj.toString();
-			if (obj instanceof Double && (((Double)obj) == Math.floor(((Double)obj))) && !Double.isInfinite(((Double)obj))) {
+			if (obj instanceof Double && (((Double) obj) == Math.floor(((Double) obj))) && !Double.isInfinite(((Double) obj))) {
 				x = x.replaceFirst("\\.\\d+$", "");
 			}
 			return x;

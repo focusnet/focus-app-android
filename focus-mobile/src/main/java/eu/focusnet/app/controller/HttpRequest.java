@@ -109,8 +109,8 @@ public class HttpRequest
 	/**
 	 * A request with associated payload to be passed in the body (POST or PUT)
 	 *
-	 * @param method The HTTP method
-	 * @param url The URL to request
+	 * @param method  The HTTP method
+	 * @param url     The URL to request
 	 * @param payload A simple string, to be inserted into the body as-is
 	 */
 	public HttpRequest(String method, String url, String payload)

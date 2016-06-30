@@ -107,8 +107,8 @@ public class CronService extends Service implements ApplicationStatusObserver
 	/**
 	 * Start the service
 	 *
-	 * @param intent Inherited
-	 * @param flags Inherited
+	 * @param intent  Inherited
+	 * @param flags   Inherited
 	 * @param startId Inherited
 	 * @return Inherited
 	 */
@@ -160,7 +160,6 @@ public class CronService extends Service implements ApplicationStatusObserver
 				TimeUnit.MINUTES
 		);
 	}
-
 
 
 	/**
@@ -299,6 +298,7 @@ public class CronService extends Service implements ApplicationStatusObserver
 	{
 		/**
 		 * Get the service.
+		 *
 		 * @return The service.
 		 */
 		public CronService getService()

@@ -400,7 +400,7 @@ final public class Constant
 
 		/**
 		 * Suffix of iterator variables.
-		 *
+		 * <p/>
 		 * See {@link #LABEL_ITERATOR_PREFIX}
 		 */
 		final public static String LABEL_ITERATOR_SUFFIX = "$";

@@ -26,14 +26,11 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import eu.focusnet.app.controller.DataManager;
-import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.AbstractInstance;
 import eu.focusnet.app.model.DataContext;
 import eu.focusnet.app.model.gson.WidgetTemplate;
-import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
 import eu.focusnet.app.util.FocusInternalErrorException;

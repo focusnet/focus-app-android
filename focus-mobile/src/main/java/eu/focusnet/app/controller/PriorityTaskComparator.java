@@ -24,7 +24,7 @@ import java.util.Comparator;
 
 /**
  * Our priority task comparator, used for pooling data retrieval.
- *
+ * <p/>
  * See http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
  */
 public class PriorityTaskComparator implements Comparator<Runnable>
@@ -32,7 +32,7 @@ public class PriorityTaskComparator implements Comparator<Runnable>
 	/**
 	 * Compare 2 tasks
 	 *
-	 * @param left Inherited
+	 * @param left  Inherited
 	 * @param right Inherited
 	 * @return Inherited
 	 */

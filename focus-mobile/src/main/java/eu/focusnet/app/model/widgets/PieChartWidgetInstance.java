@@ -156,6 +156,7 @@ public class PieChartWidgetInstance extends WidgetInstance
 
 	/**
 	 * Get the labels as a list
+	 *
 	 * @return The labels
 	 */
 	public ArrayList<String> getLabels()

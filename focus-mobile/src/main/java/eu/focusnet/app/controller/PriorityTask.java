@@ -28,9 +28,9 @@ import java.util.concurrent.FutureTask;
 
 /**
  * A priority task for our custom priority-based pool
- *
+ * <p/>
  * See http://binkley.blogspot.fr/2009/04/jumping-work-queue-in-executor.html
-
+ *
  * @param <T> The response to {@code call()}.
  */
 public final class PriorityTask<T> extends FutureTask<T> implements Comparable<PriorityTask<T>>
@@ -52,17 +52,19 @@ public final class PriorityTask<T> extends FutureTask<T> implements Comparable<P
 
 		this.priority = priority;
 	}
+
 	/**
 	 * Comparision method
+	 *
 	 * @param o The object to compare to
 	 * @return {@code 0} if the current object and the campared object have the same priority,
 	 * {@code +1} if the other object has higher priority and {@code -1} if the current object
 	 * has higher priority.
- 	 */
+	 */
 	@Override
 	public int compareTo(@NonNull final PriorityTask<T> o)
 	{
 		final long diff = this.priority - o.priority;
-		return 0 == diff ? 0 : (diff > 0 ? -1 : +1) ;
+		return 0 == diff ? 0 : (diff > 0 ? -1 : +1);
 	}
 }

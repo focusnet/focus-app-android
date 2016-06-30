@@ -57,13 +57,12 @@ import eu.focusnet.app.util.FocusNotImplementedException;
  * <p/>
  * {@link #register(String, String)}-ed resources are processed in order of {@link #priority}.
  * The later the instance is created in the application content, the lower is its priority.
- *
+ * <p/>
  * Iterators are saved with a special name based on the guid of the instance creating the iterator,
  * such that they can be re-used by children instances. {@code $iterator:<guid>$>}
- *
+ * <p/>
  * Generally speaking, our application is constructed as a tree. {@link ProjectInstance}s
  * and {@link PageInstance}s are nodes, and only {@link PageInstance}s can be leaves.
- *
  */
 public class DataContext extends HashMap<String, PriorityTask<String>>
 {
@@ -77,7 +76,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	/**
 	 * Priority of this data context. The deeper it is created in the application content, the lower
 	 * it is.
-	 *
+	 * <p/>
 	 * The higher the number is, the sooner the operation will be executed.
 	 */
 	private int priority;
@@ -133,10 +132,10 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 * - a history request, e.g. <history|URL|since=now-86400;until=now;every=240>
 	 * - a history request with a reference to a previously registered entry, e.g.
 	 * <history|ctx/machine-ABC/woodpile-url|since=$date$>
-	 *
+	 * <p/>
 	 * We only expect urls to be returned when registering. Value fetching is done in {@code resolve*()}
 	 *
-	 * @param key The key under which we save this registration for later use
+	 * @param key         The key under which we save this registration for later use
 	 * @param description Description for data retrieval
 	 */
 	synchronized public void register(String key, String description)
@@ -147,14 +146,14 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	/**
 	 * Register a new iterator. Give it an instance-specific name based on the guid and a higher
 	 * priority to avoid deadlocks.
-	 *
+	 * <p/>
 	 * if we give the same priority to iterators, we may have problems
 	 * if the 'data' array contains a reference to the iterator (for example for
 	 * saving the iterator as a variable for use in inner project).
 	 * so let's make sure that the priority of our iterators is slightly higher than the
 	 * one of other objects acquired in this context
 	 *
-	 * @param guid Guid of the instance registering the iterator
+	 * @param guid        Guid of the instance registering the iterator
 	 * @param description Description for data retrieval
 	 */
 	synchronized public void registerIterator(String guid, String description)
@@ -166,12 +165,12 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 
 	/**
 	 * Helper function for registration.
-	 *
+	 * <p/>
 	 * Registrations are in fact {@link DataAcquisitionTask}s being pushed to the app builder pool.
 	 *
-	 * @param key The key under which we save this registration for later use
+	 * @param key         The key under which we save this registration for later use
 	 * @param description Description for data retrieval
-	 * @param priority Priority of the registration
+	 * @param priority    Priority of the registration
 	 */
 	private void nonSynchronizedRegister(String key, String description, int priority)
 	{
@@ -197,7 +196,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 
 	/**
 	 * Fill data in this context based on the provided data input definition.
-	 *
+	 * <p/>
 	 * {@link AppContentInstance}, {@link ProjectInstance}s and {@link PageInstance}s
 	 * can define a {@code data} property that contains data to retrieve and made available in
 	 * their context. These resources are fetched after the iterator, with a slightly lower
@@ -205,7 +204,6 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 *
 	 * @param data A list of descriptions for data fetching, as defined
 	 *             in {@link #register(String, String)}
-	 *
 	 */
 	public void provideData(HashMap<String, String> data)
 	{
@@ -423,6 +421,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 
 	/**
 	 * Get the value for the iterator registered in this context
+	 *
 	 * @return a URL
 	 */
 	public String getIteratorValue()

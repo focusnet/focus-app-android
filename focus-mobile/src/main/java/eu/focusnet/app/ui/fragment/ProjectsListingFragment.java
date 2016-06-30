@@ -44,7 +44,6 @@ import eu.focusnet.app.ui.common.NavigationListAdapter;
 import eu.focusnet.app.ui.common.SimpleListItem;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.FocusMissingResourceException;
 
 
 /**

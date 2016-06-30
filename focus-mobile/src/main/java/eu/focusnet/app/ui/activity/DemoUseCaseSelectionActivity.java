@@ -28,15 +28,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import java.io.IOException;
-
 import eu.focusnet.app.R;
 import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.controller.NetworkManager;
 import eu.focusnet.app.ui.common.UiHelper;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * Demo use case selection activity.

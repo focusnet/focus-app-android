@@ -182,7 +182,7 @@ public class ProjectInstance extends AbstractInstance
 	/**
 	 * Check that all the content is valid, and if this is not the case, mark this project instance
 	 * as invalid.
-	 *
+	 * <p/>
 	 * This method is intended to be called after the full application content has been built.
 	 */
 	public void checkValidity()

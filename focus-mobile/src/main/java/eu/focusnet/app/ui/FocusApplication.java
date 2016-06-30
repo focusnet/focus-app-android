@@ -23,7 +23,6 @@ package eu.focusnet.app.ui;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 

@@ -127,12 +127,3 @@ FIXME Google Maps API ?
 
 https://web.ti.bfh.ch/~flu1/
 
-
-# TODO
- 
-
-
-
-TO TEST
-- HttpResponse: replace StringBuffer with StringBuilder (not thread-safe but more efficient)	
-- GPSWidgetFragment:  test current code. Does it also work without Intenet connection?

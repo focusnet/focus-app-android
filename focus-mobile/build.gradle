@@ -7,8 +7,8 @@ android {
         applicationId "eu.focusnet.app"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 7
-        versionName "v0.9.107"
+        versionCode 8
+        versionName "v0.9.108"
         multiDexEnabled true
         // rename output archive name
         setProperty("archivesBaseName", "FOCUS-Mobile-$versionName")

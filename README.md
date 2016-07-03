@@ -71,7 +71,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ````
 
-
 ### Third-party software
 
 
@@ -127,3 +126,14 @@ FIXME Google Maps API ?
 
 https://web.ti.bfh.ch/~flu1/
 
+## CHANGELOG
+
+### v0.9.108 - 2016-07-04
+
+- Migrate backend components to core.focusnet.eu (jlnknz) 
+- Fix #58: Application Not Responding when loading data (jlnknz)
+- Fix #53: Order iterator-created instances alphabetically (jlnknz)
+
+### v0.9.107 - 2016-07-01
+
+- First official release (jlnknz)

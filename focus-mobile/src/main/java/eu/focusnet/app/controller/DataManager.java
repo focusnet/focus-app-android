@@ -199,7 +199,7 @@ public class DataManager implements ApplicationStatusObserver
 	{
 		FocusSample fs = (FocusSample) (this.get(url, FocusSample.class));
 		if (fs == null) {
-			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.", url);
+			throw new FocusMissingResourceException("Cannot retrieve requested FocusSample.");
 		}
 
 		return fs;
@@ -492,7 +492,7 @@ public class DataManager implements ApplicationStatusObserver
 		}
 		this.appContentTemplate = (AppContentTemplate) (this.get(templateUri, AppContentTemplate.class));
 		if (this.appContentTemplate == null) {
-			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.", templateUri);
+			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
 		}
 
 		return this.appContentTemplate;

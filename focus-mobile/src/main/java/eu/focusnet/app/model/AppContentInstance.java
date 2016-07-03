@@ -79,6 +79,9 @@ public class AppContentInstance extends AbstractInstance
 		// and the paths will be broken.
 		this.buildPaths(null);
 
+		// reorder objects in lists
+	//	this.reorderListElements();
+
 		// is everything valid?
 		this.checkValidity();
 

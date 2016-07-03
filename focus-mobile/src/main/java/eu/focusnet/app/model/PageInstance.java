@@ -152,8 +152,7 @@ public class PageInstance extends AbstractInstance
 					urls = parentContext.resolveToArrayOfUrls(pageTpl.getIterator());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException e) {
-					// should not happen, but let's continue silently
-					FocusApplication.reportError(e);
+					// If a value cannot be found for the iterator, continue silently
 					continue;
 				}
 
@@ -218,7 +217,7 @@ public class PageInstance extends AbstractInstance
 					description = dataContext.resolveToString(pageTemplate.getDescription());
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
-					FocusApplication.reportError(ex);
+					freeDataContext();
 					return false;
 				}
 

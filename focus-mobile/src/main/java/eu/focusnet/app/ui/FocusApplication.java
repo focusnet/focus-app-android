@@ -70,6 +70,8 @@ public class FocusApplication extends Application
 	 * monitor the application performance and send a report if it is too slow, for knowing what
 	 * happens.
 	 *
+	 * IMPORTANT: do not use too frequently. May cause ANR.
+	 *
 	 * @param e The exception to be transmitted on the remote reporting server.
 	 */
 	public static void reportError(Exception e)

@@ -319,7 +319,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 
 		String url = this.getResolved(parts[1]);
 		if (url == null) {
-			throw new FocusMissingResourceException("Impossible to resolve the request in the current data context.", request);
+			throw new FocusMissingResourceException("Impossible to resolve the request in the current data context.");
 		}
 		// this is ok to call getSample(url) as url as we have already gotten the url.
 		FocusSample fs = this.dataManager.getSample(url);

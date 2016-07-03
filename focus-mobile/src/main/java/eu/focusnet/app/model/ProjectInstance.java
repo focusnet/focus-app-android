@@ -126,8 +126,7 @@ public class ProjectInstance extends AbstractInstance
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException e) {
 					// Resource not found or invalid iterator.
-					// should not happen, but let's continue silently
-					FocusApplication.reportError(e);
+					// continue silently
 					continue;
 				}
 
@@ -231,7 +230,6 @@ public class ProjectInstance extends AbstractInstance
 				}
 				catch (FocusMissingResourceException | FocusBadTypeException ex) {
 					// silent skipping
-					FocusApplication.reportError(ex);
 					return false;
 				}
 

@@ -23,7 +23,12 @@ package eu.focusnet.app.model;
 
 import android.support.annotation.NonNull;
 
+import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import eu.focusnet.app.controller.DataManager;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * In our model, we distinguish between template objects and instance objects. Template objects
@@ -180,4 +185,56 @@ abstract public class AbstractInstance
 	 */
 	public abstract void buildPaths(String parentPath);
 
+	/**
+	 * Get a comparator for {@code ProjectInstance}s. The comparison is based on the title, but
+	 * we do not reorder if the 2 evaluated instances do not have the same current iterator. E.g.
+	 *
+	 * For example:
+	 *
+	 * From
+	 * - Wonderful forest information (wonderfulforest)
+	 * - Stand 2 (stand[http://2])
+	 * - Stand 3 (stand[http://3])
+	 * - Stand 1 (stand[http://1])
+	 *
+	 * We obtain
+	 * - Wonderful forest information
+	 * - Stand 1
+	 * - Stand 2
+	 * - Stand 3
+	 *
+	 * and not
+	 * - Stand 1
+	 * - Stand 2
+	 * - Stand 3
+	 * - Wonderful forest information
+	 *
+	 * FIXME check that return 0 keeps the same ordering as the original object.
+	 *
+	 * @return A comparator.
+	 */
+	public static Comparator<? super ComparableInstance> getComparator()
+	{
+		return new Comparator<ComparableInstance>() {
+			@Override
+			public int compare(ComparableInstance pLeft, ComparableInstance pRight)
+			{
+				Pattern pattern = Pattern.compile("^(.+/)([^/]+)(\\[[^\\]+]\\])?$");
+				Matcher matcherLeft = pattern.matcher(pLeft.getPath());
+				Matcher matcherRight = pattern.matcher(pRight.getPath());
+				if (!matcherLeft.matches() || !matcherRight.matches()) {
+					throw new FocusInternalErrorException("Invalid path");
+				}
+				String currentIteratorLeft = matcherLeft.group(1);
+				String currentIteratorRight = matcherLeft.group(1);
+
+				if (currentIteratorLeft.equals(currentIteratorRight)) {
+					return 0;
+				}
+				else {
+					return pLeft.getTitle().compareTo(pRight.getTitle());
+				}
+			}
+		};
+	}
 }

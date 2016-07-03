@@ -23,8 +23,11 @@ package eu.focusnet.app.model;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.PageReference;
@@ -44,7 +47,7 @@ import eu.focusnet.app.util.FocusMissingResourceException;
  * The instantiation of a page pageTemplate, consisting of widgets. A {@code PageInstance} can have
  * an iterator, too. In this case, one page will be created for each item in the iterator.
  */
-public class PageInstance extends AbstractInstance
+public class PageInstance extends AbstractInstance implements ComparableInstance
 {
 	/**
 	 * Page type, i.e. in which category the page belongs.
@@ -344,4 +347,5 @@ public class PageInstance extends AbstractInstance
 	{
 		return disabled;
 	}
+
 }

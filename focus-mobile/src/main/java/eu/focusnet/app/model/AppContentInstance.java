@@ -21,12 +21,17 @@
 package eu.focusnet.app.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * This object contains the whole content of the application (projects, pages, widgets). It is
@@ -74,13 +79,14 @@ public class AppContentInstance extends AbstractInstance
 		this.build();
 		this.waitForCompletion();
 
-		// when all is done, build the paths of all instances
-		// we MUST wait for completion, otherwise some parts of the application may not be ready
-		// and the paths will be broken.
+		// after this point, the full application instance is created
+		// we iterator over the structure to correct/check a few things.
+
+		// paths
 		this.buildPaths(null);
 
 		// reorder objects in lists
-	//	this.reorderListElements();
+		this.reorderListElements();
 
 		// is everything valid?
 		this.checkValidity();
@@ -89,6 +95,19 @@ public class AppContentInstance extends AbstractInstance
 			//	throw new FocusInternalErrorException("Invalid Application Content. Error found while parsing widgets/pages/projects.");
 			// FIXME define strategy. Be resilient.
 			// statu quo is not bad. If not valid, then widget will be shown as invalid.
+		}
+	}
+
+	/**
+	 * Reorder list elements in this instance. This must be done after application content
+	 * instance construction because the title is not known until then.
+	 */
+	private void reorderListElements()
+	{
+		Collections.sort(this.projects, ProjectInstance.getComparator());
+
+		for (ProjectInstance p : this.projects) {
+			p.reorderListEelments();
 		}
 	}
 

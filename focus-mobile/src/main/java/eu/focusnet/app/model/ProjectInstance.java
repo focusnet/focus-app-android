@@ -23,20 +23,25 @@ package eu.focusnet.app.model;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.ProjectTemplate;
 import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
+import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * This object instantiates a project, out of a {@link ProjectTemplate}.
  */
-public class ProjectInstance extends AbstractInstance
+public class ProjectInstance extends AbstractInstance implements ComparableInstance
 {
 
 	/**
@@ -350,5 +355,20 @@ public class ProjectInstance extends AbstractInstance
 	public boolean isDisabled()
 	{
 		return this.disabled;
+	}
+
+	/**
+	 * Reorder list elements in this instance. This must be done after application content
+	 * instance construction because the title is not known until then.
+	 */
+	public void reorderListEelments()
+	{
+		Collections.sort(this.dashboards, PageInstance.getComparator());
+		Collections.sort(this.tools, PageInstance.getComparator());
+		Collections.sort(this.projects, ProjectInstance.getComparator());
+
+		for (ProjectInstance p : this.projects) {
+			p.reorderListEelments();
+		}
 	}
 }

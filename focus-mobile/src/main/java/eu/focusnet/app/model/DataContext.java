@@ -431,7 +431,7 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		}
 		catch (InterruptedException | ExecutionException e) {
 			// fatal error, iterators are required for continuing application building
-			throw new FocusInternalErrorException("Cannot get iterator value");
+			throw new FocusInternalErrorException(e);
 		}
 	}
 
@@ -545,7 +545,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 				new URL(res);
 			}
 			catch (MalformedURLException e) {
-				throw new FocusInternalErrorException("Reference to a non-URL.");
+				// Reference to a non-URL.
+				throw new FocusInternalErrorException(e);
 			}
 			return res;
 		}

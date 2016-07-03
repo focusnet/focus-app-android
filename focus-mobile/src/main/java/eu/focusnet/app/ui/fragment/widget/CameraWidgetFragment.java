@@ -159,7 +159,8 @@ public class CameraWidgetFragment extends WidgetFragment
 				((CameraWidgetInstance) (this.widgetInstance)).saveImage(bitmap);
 			}
 			catch (IOException ex) {
-				throw new FocusInternalErrorException("Cannot retrieve bitmap from file.");
+				// Cannot retrieve bitmap from file.
+				throw new FocusInternalErrorException(ex);
 			}
 
 			imageUri = tmpImageUri;

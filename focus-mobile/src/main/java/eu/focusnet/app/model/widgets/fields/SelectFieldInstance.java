@@ -91,7 +91,7 @@ public class SelectFieldInstance extends FieldInstance
 			this.values = TypesHelper.asArrayOfStrings(rawValues);
 		}
 		catch (FocusBadTypeException ex) {
-			throw new FocusInternalErrorException("Invalid values in select");
+			throw new FocusInternalErrorException(ex);
 		}
 
 		// resolve

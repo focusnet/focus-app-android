@@ -22,16 +22,12 @@ package eu.focusnet.app.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
 import eu.focusnet.app.util.Constant;
-import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * This object contains the whole content of the application (projects, pages, widgets). It is

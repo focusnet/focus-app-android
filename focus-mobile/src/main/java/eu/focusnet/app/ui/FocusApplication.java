@@ -69,7 +69,7 @@ public class FocusApplication extends Application
 	 * This also allows us to send reports even if no exception is triggered. We may for example
 	 * monitor the application performance and send a report if it is too slow, for knowing what
 	 * happens.
-	 *
+	 * <p/>
 	 * IMPORTANT: do not use too frequently. May cause ANR.
 	 *
 	 * @param e The exception to be transmitted on the remote reporting server.

@@ -78,6 +78,61 @@ abstract public class AbstractInstance
 	}
 
 	/**
+	 * Get a comparator for {@code AbstractInstance}s that can have iterators.
+	 * The comparison is based on the title, but
+	 * we do not reorder if the 2 evaluated instances do not have the same current iterator. E.g.
+	 * <p/>
+	 * For example:
+	 * <p/>
+	 * From
+	 * - Wonderful forest information (wonderfulforest)
+	 * - Stand 2 (stand[http://2])
+	 * - Stand 3 (stand[http://3])
+	 * - Stand 1 (stand[http://1])
+	 * <p/>
+	 * We obtain
+	 * - Wonderful forest information
+	 * - Stand 1
+	 * - Stand 2
+	 * - Stand 3
+	 * <p/>
+	 * and not
+	 * - Stand 1
+	 * - Stand 2
+	 * - Stand 3
+	 * - Wonderful forest information
+	 * <p/>
+	 * FIXME check that return 0 keeps the same ordering as the original object.
+	 *
+	 * @return A comparator.
+	 */
+	public static Comparator<? super IterableInstance> getComparator()
+	{
+		return new Comparator<IterableInstance>()
+		{
+			@Override
+			public int compare(IterableInstance pLeft, IterableInstance pRight)
+			{
+				Pattern pattern = Pattern.compile("^(.+/)([^/]+)(\\[[^\\]+]\\])?$");
+				Matcher matcherLeft = pattern.matcher(pLeft.getPath());
+				Matcher matcherRight = pattern.matcher(pRight.getPath());
+				if (!matcherLeft.matches() || !matcherRight.matches()) {
+					throw new FocusInternalErrorException("Invalid path");
+				}
+				String currentIteratorLeft = matcherLeft.group(1);
+				String currentIteratorRight = matcherLeft.group(1);
+
+				if (currentIteratorLeft.equals(currentIteratorRight)) {
+					return 0;
+				}
+				else {
+					return pLeft.getTitle().compareTo(pRight.getTitle());
+				}
+			}
+		};
+	}
+
+	/**
 	 * Get current {@link DataContext}
 	 *
 	 * @return The {@link DataContext}
@@ -184,58 +239,4 @@ abstract public class AbstractInstance
 	 * @param parentPath The parent path on the top of which the new path must be defined.
 	 */
 	public abstract void buildPaths(String parentPath);
-
-	/**
-	 * Get a comparator for {@code AbstractInstance}s that can have iterators.
-	 * The comparison is based on the title, but
-	 * we do not reorder if the 2 evaluated instances do not have the same current iterator. E.g.
-	 *
-	 * For example:
-	 *
-	 * From
-	 * - Wonderful forest information (wonderfulforest)
-	 * - Stand 2 (stand[http://2])
-	 * - Stand 3 (stand[http://3])
-	 * - Stand 1 (stand[http://1])
-	 *
-	 * We obtain
-	 * - Wonderful forest information
-	 * - Stand 1
-	 * - Stand 2
-	 * - Stand 3
-	 *
-	 * and not
-	 * - Stand 1
-	 * - Stand 2
-	 * - Stand 3
-	 * - Wonderful forest information
-	 *
-	 * FIXME check that return 0 keeps the same ordering as the original object.
-	 *
-	 * @return A comparator.
-	 */
-	public static Comparator<? super IterableInstance> getComparator()
-	{
-		return new Comparator<IterableInstance>() {
-			@Override
-			public int compare(IterableInstance pLeft, IterableInstance pRight)
-			{
-				Pattern pattern = Pattern.compile("^(.+/)([^/]+)(\\[[^\\]+]\\])?$");
-				Matcher matcherLeft = pattern.matcher(pLeft.getPath());
-				Matcher matcherRight = pattern.matcher(pRight.getPath());
-				if (!matcherLeft.matches() || !matcherRight.matches()) {
-					throw new FocusInternalErrorException("Invalid path");
-				}
-				String currentIteratorLeft = matcherLeft.group(1);
-				String currentIteratorRight = matcherLeft.group(1);
-
-				if (currentIteratorLeft.equals(currentIteratorRight)) {
-					return 0;
-				}
-				else {
-					return pLeft.getTitle().compareTo(pRight.getTitle());
-				}
-			}
-		};
-	}
 }

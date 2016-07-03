@@ -29,7 +29,7 @@ public interface IterableInstance
 	/**
 	 * Get the Path. When sorting, we do not reorder elements if the path does not reflect the same
 	 * iterator for the 2 evaluated elements.
-	 *
+	 * <p/>
 	 * See {@link AbstractInstance#getComparator()}
 	 *
 	 * @return The path of the current instance
@@ -38,7 +38,7 @@ public interface IterableInstance
 
 	/**
 	 * Get the title
-	 *
+	 * <p/>
 	 * See {@link AbstractInstance#getComparator()}
 	 *
 	 * @return The title

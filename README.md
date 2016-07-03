@@ -131,9 +131,12 @@ https://web.ti.bfh.ch/~flu1/
 ### v0.9.108 - 2016-07-04
 
 - Migrate backend components to core.focusnet.eu (jlnknz) 
+- Fix #6: Anonymize ACRA reports (jlnknz)
+- Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
+- Fix #30: Be more userfriendly when the application cannot retrieve user data (jlnknz)
 - Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #53: Order iterator-created instances alphabetically (jlnknz)
-- Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
+- Fix #61: Acquire wake lock when loading data (jlnknz)
 
 ### v0.9.107 - 2016-07-01
 

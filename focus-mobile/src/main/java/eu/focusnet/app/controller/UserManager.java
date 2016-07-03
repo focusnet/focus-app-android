@@ -369,7 +369,6 @@ public class UserManager implements ApplicationStatusObserver
 	/**
 	 * Return the user in its current state. This is useful because
 	 * the {@link eu.focusnet.app.model.gson.FocusObject}
-	 * objects depend on the user for setting the owner and/or editor.
 	 *
 	 * @return The current {@link UserInstance}, or null if it is not set, yet.
 	 */

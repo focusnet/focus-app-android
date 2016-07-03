@@ -206,10 +206,6 @@ public class FocusAppLogic
 		// setup DataManager
 		this.dataManager = new DataManager();
 
-		// if at first run there is already something in the database, then we should use it
-		// and not overwrite it by refetching data.
-		this.dataManager.useExistingDataSet();
-
 		// Access control facility
 		this.userManager = new UserManager(this.dataManager);
 
@@ -226,6 +222,9 @@ public class FocusAppLogic
 	 * Do the full login.
 	 * <p/>
 	 * Get the 3 basic objects and construct the application content instance.
+	 *
+	 * This method will be called in a background task
+	 * ({@link eu.focusnet.app.ui.activity.EntryPointActivity.InitTask})
 	 * <p/>
 	 * ({@link eu.focusnet.app.model.gson.User},
 	 * {@link eu.focusnet.app.model.gson.UserPreferences},
@@ -237,6 +236,10 @@ public class FocusAppLogic
 	 */
 	public void acquireApplicationData() throws FocusMissingResourceException
 	{
+		// if there is already something in the database, then we should use it
+		// and not overwrite it by refetching data.
+		this.dataManager.useExistingDataSet();
+
 		// Get data from access control handler.
 		this.userManager.getUserData();
 

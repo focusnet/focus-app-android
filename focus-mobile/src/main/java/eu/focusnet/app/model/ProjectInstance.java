@@ -24,24 +24,19 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import eu.focusnet.app.controller.PriorityTask;
 import eu.focusnet.app.model.gson.ProjectTemplate;
-import eu.focusnet.app.ui.FocusApplication;
 import eu.focusnet.app.util.Constant;
 import eu.focusnet.app.util.FocusBadTypeException;
-import eu.focusnet.app.util.FocusInternalErrorException;
 import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * This object instantiates a project, out of a {@link ProjectTemplate}.
  */
-public class ProjectInstance extends AbstractInstance implements ComparableInstance
+public class ProjectInstance extends AbstractInstance implements IterableInstance
 {
 
 	/**

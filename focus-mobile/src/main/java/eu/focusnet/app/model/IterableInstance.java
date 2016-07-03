@@ -24,7 +24,7 @@ package eu.focusnet.app.model;/*
  * An interface for instances that can be compared and therefore sorted in
  * the navigation listings
  */
-public interface ComparableInstance
+public interface IterableInstance
 {
 	/**
 	 * Get the Path. When sorting, we do not reorder elements if the path does not reflect the same

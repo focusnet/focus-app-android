@@ -184,8 +184,10 @@ public class CronService extends Service implements ApplicationStatusObserver
 
 		// acquire CPU lock
 		PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-		PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constant.AppConfig.CRON_WAKE_LOCK_NAME);
+		PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
+				PowerManager.PARTIAL_WAKE_LOCK,
+				Constant.AppConfig.CRON_WAKE_LOCK_NAME
+		);
 		wakeLock.acquire();
 
 		// perform the sync

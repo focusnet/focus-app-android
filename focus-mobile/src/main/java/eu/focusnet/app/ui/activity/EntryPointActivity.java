@@ -21,10 +21,12 @@
 package eu.focusnet.app.ui.activity;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -146,6 +148,14 @@ public class EntryPointActivity extends Activity
 			UserManager accessControl = FocusAppLogic.getUserManager();
 			accessControl.quickLoginInfoAcquisition();
 			if (accessControl.isLoggedIn()) {
+				// acquire CPU lock such that the operation will be done until the end even if the device
+				// enters sleep mode
+				PowerManager powerManager = (PowerManager) ApplicationHelper.getSystemService(Service.POWER_SERVICE);
+				PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
+						PowerManager.PARTIAL_WAKE_LOCK,
+						Constant.AppConfig.CRON_WAKE_LOCK_NAME
+				);
+				wakeLock.acquire();
 				try {
 					FocusAppLogic.getInstance().acquireApplicationData();
 				}
@@ -157,6 +167,10 @@ public class EntryPointActivity extends Activity
 					this.remediationDialog = true;
 					// leave this.finished to false
 					return null;
+				}
+				finally {
+					// release the wakelock
+					wakeLock.release();
 				}
 			}
 

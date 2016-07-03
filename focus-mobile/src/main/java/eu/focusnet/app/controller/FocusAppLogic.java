@@ -225,7 +225,8 @@ public class FocusAppLogic
 	/**
 	 * Do the full login.
 	 * <p/>
-	 * Get the 3 basic objects
+	 * Get the 3 basic objects and construct the application content instance.
+	 *
 	 * ({@link eu.focusnet.app.model.gson.User},
 	 * {@link eu.focusnet.app.model.gson.UserPreferences},
 	 * {@link AppContentTemplate}),

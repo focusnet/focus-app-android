@@ -186,7 +186,8 @@ abstract public class AbstractInstance
 	public abstract void buildPaths(String parentPath);
 
 	/**
-	 * Get a comparator for {@code ProjectInstance}s. The comparison is based on the title, but
+	 * Get a comparator for {@code AbstractInstance}s that can have iterators.
+	 * The comparison is based on the title, but
 	 * we do not reorder if the 2 evaluated instances do not have the same current iterator. E.g.
 	 *
 	 * For example:
@@ -213,11 +214,11 @@ abstract public class AbstractInstance
 	 *
 	 * @return A comparator.
 	 */
-	public static Comparator<? super ComparableInstance> getComparator()
+	public static Comparator<? super IterableInstance> getComparator()
 	{
-		return new Comparator<ComparableInstance>() {
+		return new Comparator<IterableInstance>() {
 			@Override
-			public int compare(ComparableInstance pLeft, ComparableInstance pRight)
+			public int compare(IterableInstance pLeft, IterableInstance pRight)
 			{
 				Pattern pattern = Pattern.compile("^(.+/)([^/]+)(\\[[^\\]+]\\])?$");
 				Matcher matcherLeft = pattern.matcher(pLeft.getPath());

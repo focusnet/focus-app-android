@@ -133,6 +133,7 @@ https://web.ti.bfh.ch/~flu1/
 - Migrate backend components to core.focusnet.eu (jlnknz) 
 - Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #53: Order iterator-created instances alphabetically (jlnknz)
+- Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
 
 ### v0.9.107 - 2016-07-01
 

@@ -216,7 +216,10 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 	 * Get the resolved result of a registration
 	 *
 	 * @param key The key of the registration to retrieve
-	 * @return A URL, or {@code null} if an error occurred (exception in task, interruption, no data found)
+	 * @return A URL, or {@code null} if an error occurred (exception in task, interruption,
+	 * no data found). The {@link DataAcquisitionTask#call()} also returns null if there is such
+	 * an error for being consistent. The caller can then decide what to do, such as throwing
+	 * a {@link FocusMissingResourceException}.
 	 */
 	private String getResolved(String key)
 	{
@@ -460,7 +463,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 		/**
 		 * Do the data fetching.
 		 *
-		 * @return The url of the fetched data
+		 * @return The url of the fetched data, or {@code null} if an error occurs.
+		 * See {@link DataContext#getResolved(String)}
 		 */
 		@Override
 		public String call()
@@ -510,7 +514,8 @@ public class DataContext extends HashMap<String, PriorityTask<String>>
 				// we highlight the fact that we could not retrieve a resource by NOT saving
 				// it into the DataContext. When get()-ing, the caller will
 				// receive null, and can act accordingly.
-				return null; // FIXME not good
+				// See {@link DataContext#getResolved(String)}
+				return null;
 			}
 			return f.getUrl();
 		}

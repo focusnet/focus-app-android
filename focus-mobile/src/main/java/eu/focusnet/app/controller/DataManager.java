@@ -118,14 +118,6 @@ public class DataManager implements ApplicationStatusObserver
 	private DatabaseAdapter databaseAdapter;
 
 	/**
-	 * Application template
-	 * <p/>
-	 * FIXME logically should not be in this class - DataManager is responsible for data manipulation only.
-	 */
-	private AppContentTemplate appContentTemplate;
-
-
-	/**
 	 * Constructor. Initialize all default values and facilities, but does not perform any
 	 * operation.
 	 */
@@ -476,61 +468,6 @@ public class DataManager implements ApplicationStatusObserver
 	}
 
 	/**
-	 * The {@link AppContentTemplate} is one of the 3 mandatory objects for the application to run.
-	 * This method retrieves this object based on the URI that has been obtained during the
-	 * login procedure. If the object cannot be found, this is considered as a permanent failure.
-	 * <p/>
-	 * FIXME logically should not be in this class - DataManager is responsible for data manipulation only.
-	 *
-	 * @return A {@link AppContentTemplate} object
-	 * @throws FocusMissingResourceException If the object could not be found
-	 */
-	public AppContentTemplate getAppContentTemplate(String templateUri) throws FocusMissingResourceException
-	{
-		if (this.appContentTemplate != null) {
-			return this.appContentTemplate;
-		}
-		this.appContentTemplate = (AppContentTemplate) (this.get(templateUri, AppContentTemplate.class));
-		if (this.appContentTemplate == null) {
-			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
-		}
-
-		return this.appContentTemplate;
-	}
-
-	/**
-	 * Create a new application instance.
-	 * <p/>
-	 * FIXME this should rather go elsewhere, in FocusAppLogic? this is not strickly speaking data management.
-	 *
-	 * @return New app instance if success or {@code null} on failure.
-	 * @throws FocusMissingResourceException If the application template could not be found
-	 */
-
-	public AppContentInstance retrieveApplicationData() throws FocusMissingResourceException
-	{
-		// the SHARED_PREFERENCES_APPLICATION_CONTENT preference was filled during the
-		// login procedure.
-		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
-		String templateUri = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT);
-		if (templateUri == null) {
-			throw new FocusInternalErrorException("Template is not yet available. Error in the application workflows.");
-		}
-		AppContentTemplate template = this.getAppContentTemplate(templateUri);
-
-		AppContentInstance app;
-		try {
-			app = new AppContentInstance(template, this);
-		}
-		catch (InterruptedException e) {
-			// we were interrupted. Let's not return our new object.
-			app = null;
-		}
-
-		return app;
-	}
-
-	/**
 	 * Retrieve the size of the current local database.
 	 *
 	 * @return The size in bytes.
@@ -545,8 +482,6 @@ public class DataManager implements ApplicationStatusObserver
 	 */
 	public void handleLogout()
 	{
-		this.appContentTemplate = null;
-
 		this.reset();
 
 		// delete the whole database content

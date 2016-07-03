@@ -22,12 +22,16 @@ package eu.focusnet.app.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 
 import eu.focusnet.app.controller.DataManager;
 import eu.focusnet.app.model.gson.AppContentTemplate;
 import eu.focusnet.app.model.gson.ProjectTemplate;
+import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
+import eu.focusnet.app.util.FocusMissingResourceException;
 
 /**
  * This object contains the whole content of the application (projects, pages, widgets). It is
@@ -56,6 +60,37 @@ public class AppContentInstance extends AbstractInstance
 	 * Language in which we should display the UI when this application content is loaded.
 	 */
 	private String language;
+
+	/**
+	 * Factory method for application content instance
+	 *
+	 * @return New app instance if success or {@code null} on failure.
+	 * @throws FocusMissingResourceException If the application template could not be found
+	 */
+	public static AppContentInstance factory(DataManager dataManager) throws FocusMissingResourceException
+	{
+		// the SHARED_PREFERENCES_APPLICATION_CONTENT preference was filled during the
+		// login procedure.
+		HashMap<String, String> prefs = ApplicationHelper.getPreferences();
+		String templateUri = prefs.get(Constant.SharedPreferences.SHARED_PREFERENCES_APPLICATION_CONTENT);
+		if (templateUri == null) {
+			throw new FocusInternalErrorException("Template is not yet available. Error in the application workflows.");
+		}
+		AppContentTemplate template =  (AppContentTemplate) (dataManager.get(templateUri, AppContentTemplate.class));
+		if (template == null) {
+			throw new FocusMissingResourceException("Cannot retrieve ApplicationTemplate object.");
+		}
+
+		AppContentInstance app;
+		try {
+			app = new AppContentInstance(template, dataManager);
+		}
+		catch (InterruptedException e) {
+			// we were interrupted. Let's not return our new object.
+			app = null;
+		}
+		return app;
+	}
 
 	/**
 	 * C'tor.

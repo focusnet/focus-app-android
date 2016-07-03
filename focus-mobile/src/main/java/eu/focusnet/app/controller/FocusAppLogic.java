@@ -244,7 +244,7 @@ public class FocusAppLogic
 		this.userManager.getUserData();
 
 		// Try to create the app content instance
-		this.currentApplicationContent = this.dataManager.retrieveApplicationData();
+		this.currentApplicationContent = AppContentInstance.factory(this.dataManager);
 
 		// if success, do set the current application content instance. Otherwise, announce logout
 		if (this.currentApplicationContent != null) {
@@ -300,7 +300,7 @@ public class FocusAppLogic
 		newUserManager.getUserData();
 
 		// throws FocusMissingResourceException if any error
-		AppContentInstance newApplicationContent = newDataManager.retrieveApplicationData();
+		AppContentInstance newApplicationContent = AppContentInstance.factory(newDataManager);
 
 		if (newApplicationContent != null) {
 			// advertise that we are ready to our new objects

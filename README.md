@@ -118,7 +118,7 @@ FIXME Google Maps API ?
 -->
 </table>
 
-<p>Artworks not specific to the specific project are provided by the <a href="http://fontawesome.io/">Font Awesome</a> icon library,
+<p>Artworks not specific to FOCUS are provided by the <a href="http://fontawesome.io/">Font Awesome</a> icon library,
     which is released under the SIL Open Font License (OFL).</p>
 
 
@@ -132,7 +132,9 @@ https://web.ti.bfh.ch/~flu1/
 
 - Migrate backend components to core.focusnet.eu (jlnknz) 
 - Fix #6: Anonymize ACRA reports (jlnknz)
+- Fix #17: useExistingDataSet() in FocusAppLogic#init() is running on the main thread (jlnknz)
 - Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
+- Fix #27: Move application content creation outside of DataManager (jlnknz)
 - Fix #30: Be more userfriendly when the application cannot retrieve user data (jlnknz)
 - Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #53: Order iterator-created instances alphabetically (jlnknz)
@@ -140,4 +142,4 @@ https://web.ti.bfh.ch/~flu1/
 
 ### v0.9.107 - 2016-07-01
 
-- First official release (jlnknz)
+- First official release (jlnknz, pry1)

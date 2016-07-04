@@ -24,7 +24,7 @@
         <item>@string/use_case_ui_pc1</item>
     </string-array>
     <string-array name="demo_use_cases_app_content_uris">
-        <item>http://focus.yatt.ch/application-contents/pilot-case-1-v2.json</item>
+        <item>http://core.focusnet.eu:8042/focus-application-contents/pilot-case-1-v3.json</item>
     </string-array>
 
     <!-- Application -->
@@ -44,14 +44,10 @@
     <string name="drawer_menu_entry_about">About</string>
     <string name="drawer_menu_entry_logout">Log out</string>
 
-    <string name="use_case_ui_lib">UI library</string>
     <string name="use_case_ui_pc1">FOCUS Pilot Case I - Forest Management</string>
-    <string name="use_case_ui_pc3">FOCUS Pilot Case III - Forest Logistics</string>
 
 
     <string name="focus_header_project">My Projects</string>
-
-
     <string name="header_dashboards">Dashboards</string>
     <string name="header_tools">Tools</string>
 

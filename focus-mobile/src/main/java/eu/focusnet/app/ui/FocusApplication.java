@@ -32,12 +32,16 @@ import org.acra.config.ACRAConfiguration;
 import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import eu.focusnet.app.BuildConfig;
 import eu.focusnet.app.R;
 import eu.focusnet.app.controller.CronService;
 import eu.focusnet.app.controller.FocusAppLogic;
 import eu.focusnet.app.util.ApplicationHelper;
 import eu.focusnet.app.util.Constant;
+import eu.focusnet.app.util.FocusInternalErrorException;
 
 /**
  * FOCUS Application

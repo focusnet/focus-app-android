@@ -46,6 +46,14 @@ abstract public class AbstractInstance
 	protected final DataManager dataManager;
 
 	/**
+	 * Time of instanciation of the instance. Used later for sorting entries
+	 * in the list menu
+	 *
+	 * FIXME this is quite buggy. To investigate how we can do that better.
+	 */
+	private final long instanciationTime;
+
+	/**
 	 * {@link DataContext} relevant to this instance.
 	 */
 	protected DataContext dataContext;
@@ -75,6 +83,8 @@ abstract public class AbstractInstance
 		this.path = null;
 		this.valid = true;
 		this.dataManager = dm;
+
+		this.instanciationTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -102,7 +112,7 @@ abstract public class AbstractInstance
 	 * - Stand 3
 	 * - Wonderful forest information
 	 * <p/>
-	 * FIXME check that return 0 keeps the same ordering as the original object.
+	 * FIXME check that return 0 keeps the same ordering as the original object. NO. Because we loose transitivity with our way of doing.
 	 *
 	 * @return A comparator.
 	 */
@@ -111,22 +121,28 @@ abstract public class AbstractInstance
 		return new Comparator<IterableInstance>()
 		{
 			@Override
-			public int compare(IterableInstance pLeft, IterableInstance pRight)
+			public int compare(IterableInstance iLeft, IterableInstance iRight)
 			{
-				Pattern pattern = Pattern.compile("^(.+/)([^/]+)(\\[[^\\]+]\\])?$");
-				Matcher matcherLeft = pattern.matcher(pLeft.getPath());
-				Matcher matcherRight = pattern.matcher(pRight.getPath());
+				Pattern pattern = Pattern.compile("^(.*?)(\\[[^\\]]+\\])?$");
+				Matcher matcherLeft = pattern.matcher(iLeft.getPath());
+				Matcher matcherRight = pattern.matcher(iRight.getPath());
 				if (!matcherLeft.matches() || !matcherRight.matches()) {
 					throw new FocusInternalErrorException("Invalid path");
 				}
 				String currentIteratorLeft = matcherLeft.group(1);
-				String currentIteratorRight = matcherLeft.group(1);
+				String currentIteratorRight = matcherRight.group(1);
 
 				if (currentIteratorLeft.equals(currentIteratorRight)) {
-					return 0;
+					return iLeft.getTitle().compareTo(iRight.getTitle());
 				}
 				else {
-					return pLeft.getTitle().compareTo(pRight.getTitle());
+					// keep the default order by NOT sorting.
+					//
+					// returning 0 is apparently sufficient. We MUST keep transitivity of the
+					// comparison function, and it seems to be the case. If not, we would have
+					// to remember the order of creation of instances (i.e. save it at instance
+					// creation).
+					return 0;
 				}
 			}
 		};
@@ -233,8 +249,6 @@ abstract public class AbstractInstance
 	/**
 	 * Build paths for this instanc and other instances it may contain. This cannot be done at
 	 * instance creation time because iterators may not be completely built, yet.
-	 * <p/>
-	 * See FIXME (for more details on how it works)
 	 *
 	 * @param parentPath The parent path on the top of which the new path must be defined.
 	 */

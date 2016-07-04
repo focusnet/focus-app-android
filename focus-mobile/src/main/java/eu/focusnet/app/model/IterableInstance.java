@@ -44,6 +44,4 @@ public interface IterableInstance
 	 * @return The title
 	 */
 	String getTitle();
-
-
 }

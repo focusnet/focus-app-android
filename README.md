@@ -126,11 +126,11 @@ FIXME Google Maps API ?
 
 https://web.ti.bfh.ch/~flu1/
 
+
 ## CHANGELOG
 
 ### v0.9.108 - 2016-07-04
 
-- Migrate backend components to core.focusnet.eu (jlnknz) 
 - Fix #6: Anonymize ACRA reports (jlnknz)
 - Fix #17: useExistingDataSet() in FocusAppLogic#init() is running on the main thread (jlnknz)
 - Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
@@ -139,7 +139,8 @@ https://web.ti.bfh.ch/~flu1/
 - Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #53: Order iterator-created instances alphabetically (jlnknz)
 - Fix #61: Acquire wake lock when loading data (jlnknz)
+- Fix #62: Migrate backend components to core.focusnet.eu and update references in app (jlnknz)
 
-### v0.9.107 - 2016-07-01
+### v0.9.107 - 2016-06-30
 
 - First official release (jlnknz, pry1)

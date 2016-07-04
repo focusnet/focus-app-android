@@ -136,8 +136,8 @@ https://web.ti.bfh.ch/~flu1/
 - Fix #21: Do not capture RunTimeException with FocusInternalErrorException (jlnknz)
 - Fix #27: Move application content creation outside of DataManager (jlnknz)
 - Fix #30: Be more userfriendly when the application cannot retrieve user data (jlnknz)
-- Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #53: Order iterator-created instances alphabetically (jlnknz)
+- Fix #58: Application Not Responding when loading data (jlnknz)
 - Fix #61: Acquire wake lock when loading data (jlnknz)
 - Fix #62: Migrate backend components to core.focusnet.eu and update references in app (jlnknz)
 
